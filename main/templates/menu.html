@@ -1,0 +1,6 @@
+<p>| <b>Меню сайта</b> |
+{% for item in menu %}
+<a href="{{ item.link }}">{{ item.text }}</a>&nbsp;|
+{% endfor %}
+</p>
+<hr>
