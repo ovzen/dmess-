@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ main_header }}</h1>
+<hr>
+<p> Сервис диалогов
+<p>
+{% if not_auth %}
+    {{ error }}
+{% else %}
+
+Текущий пользователь: {{ request.user }}
+
+{% endif %}
+{% endblock %}
