@@ -1,0 +1,14 @@
+<urlset xmlns="http://www.Dmess.ru/api/sitemap.xml (Путь к файлу sitemap.xml) ">
+ <url>
+  <loc>http://www.Dmess.ru/ (Ну главная страница, очевидно)</loc>
+ </url>
+ <url>
+  <loc>http://www.Dmess.ru/contacts (Ну тут все понятно, контакты) </loc>
+ </url>
+ <url>
+  <loc>http://www.Dmess.ru/chats (Тут будут чаты и сообщения по типу дискорда, слева чаты, справа сообщения) </loc>
+ </url>
+ <url>
+  <loc>http://www.Dmess.ru/auth (Вход/регистрация) </loc>
+ </url>
+</urlset>
