@@ -1,14 +1,14 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Dmess</a>
+        <a class="navbar-brand" href="{% url 'index' %}">Dmess</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 {% for item in menu %}
-                <a class="nav-link" href="{{ item.link }}">{{ item.text }}</a>
+                <a class="nav-link" href="{% url item.link_name %}">{{ item.text }}</a>
                 {% endfor %}
             </ul>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Вход</button>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Регистрация</button>
+            <a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Вход</a>
+            <a href="/register/" class="btn btn-outline-success my-2 my-sm-0">Регистрация</a>
       </div>
     </nav>
     <hr>

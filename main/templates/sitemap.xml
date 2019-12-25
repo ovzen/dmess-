@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.Dmess.ru/api/sitemap.xml">
+    {% for item in menu %}
+    <url>
+        <loc>{{ base_address }}{% url item.link_name %}</loc>
+    </url>
+    {% endfor %}
+</urlset>
