@@ -1,0 +1,13 @@
+.msg-body {
+    padding: 0.6rem;
+}
+
+.msg-container {
+    margin-top: 0.6rem;
+}
+
+.message-area {
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+}
