@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ main_header }}</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <div class="card" style="height: 60vh;">
+              <div id="messageArea" class="card-body message-area">
+<!-- Example message node wich create in js                  -->
+<!--                  <div class="container">-->
+<!--                    <div class="row">-->
+<!--                        <div class="card text-white bg-primary">-->
+<!--                            <div class="card-body msg-body">-->
+<!--                                <div class="card-text">-->
+<!--                                    test message-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+              </div>
+              <div class="card-footer bg-transparent">
+                  <div class="input-group mb-3">
+                      <input id="msgForSend" type="text" class="form-control" placeholder="Введите сообщение" aria-label="Введите сообщение" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button id="sendButton" class="btn btn-outline-primary" type="button">&#x27a4</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+</div>
+{% endblock %}

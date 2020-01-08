@@ -3,6 +3,9 @@
 {% block content %}
 <h1>{{ main_header }}</h1>
 <hr>
-<p>Добро пожаловать на главную страницу проекта
-    <a href="{% url 'admin:index' %}">Ссылка на страницу диалогов</a>
+<p>Добро пожаловать на главную страницу проекта</p>>
+<!--    <a href="{% url 'admin:index' %}">Ссылка на страницу диалогов</a>-->
+<p>Сейчас у нас: {{ current_time }}</p>
+<!--TODO: move it to navigation panel or menu-->
+<a href="/chat" class="btn btn-md btn-primary display-4">Открыть чат</a>
 {% endblock %}
