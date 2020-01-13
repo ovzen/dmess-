@@ -1,5 +1,7 @@
 Django==3.0
 channels==2.4
 channels_redis
-django-webpack-loader == 0.6.0 
+django-webpack-loader == 0.6.0
 pytz
+channels==2.4
+channels_redis

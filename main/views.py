@@ -13,6 +13,18 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+def index_chat(request):
+    context = get_base_context()
+    context['title'] = 'Главная страница - Dmess'
+    context['main_header'] = 'Digital Messages'
+    return render(request, 'chat/index.html', context)
+
+
+def index_page(request):
+    context = get_base_context()
+    # context['title'] = 'Основной чат'
+    context['main_header'] = 'Digital Messages'
+    return render(request, 'index.html', context)
 
         # Add custom claims
         token['name'] = user.username

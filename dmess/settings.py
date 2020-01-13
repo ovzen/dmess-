@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webpack_loader',
     'rest_framework',
+    'main',
+    'channels',
 ]
 
 REST_FRAMEWORK = {
@@ -120,9 +122,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -134,11 +136,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATICFILES_DIRS = (
-    os.path.join (BASE_DIR, 'dist'),
-    os.path.join (BASE_DIR, 'static'),
-)
+STATIC_URL = '/main/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "main/static")
+]
 
-STATIC_ROOT = os.path.join (BASE_DIR, 'public')
-
-STATIC_URL = '/static/'
+# Channels
+ASGI_APPLICATION = 'dmess.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

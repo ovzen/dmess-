@@ -18,7 +18,9 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from rest_framework_simplejwt import views as jwt_views
+from django.urls import path, include
 from main import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
