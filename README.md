@@ -26,3 +26,10 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 8. Создать конфигурацию запуска в PyCharm (файл `manage.py`, опция `runserver`)
+9. Установить npm
+10. Установить vue (Не точно что именно так)
+```bash
+npm install -g @vue/cli
+npm install --save-dev webpack-bundle-tracker
+npm install jsonwebtoken
+```
