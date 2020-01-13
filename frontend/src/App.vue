@@ -46,7 +46,7 @@ export default {
       api.axios.post('/api/token/', {"username": username, "password": password}).then((res) => {
         console.log(res.data)
         localStorage.setItem('jwt', res.data.access)
-        this.button=jwt.decode(localStorage.jwt)
+        this.button="Приветствуем " + jwt.decode(localStorage.jwt).name
         console.log(jwt.decode(localStorage.jwt))
       })
     }
