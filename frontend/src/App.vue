@@ -92,7 +92,12 @@ export default {
         localStorage.setItem('jwt', res.data.access)
         this.button="Приветствуем " + jwt.decode(localStorage.jwt).name
         console.log(jwt.decode(localStorage.jwt))
-      })
+      }).catch(error => {
+        if (error.response.status===401) {
+          this.button='Ошибка неправильное имя пользователя или пароль'
+        }
+    console.log(error.response.status)
+});
     },
   },
   created() {
