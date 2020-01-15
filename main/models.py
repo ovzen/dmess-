@@ -1,45 +1,33 @@
 # coding=utf-8
+from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
-# Create your models here.
 
-#Пользователей точно переопределять нужно? А то пароль прям так без шифровки будет...
+class UserSetting(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
+    avatar = models.ImageField()
 
-class users(models.Model):
-    iduser = models.IntegerField()
-    name = models.CharField(max_length=45)
-    surname = models.CharField(max_length=45)
-    password = models.CharField(max_length=45)
-    login = models.CharField(max_length=45)
 
-class contacts(models.Model):
-    idcontacts = models.IntegerField()
-    iduser = models.IntegerField()
-    their_contact = models.IntegerField()
+class Friend(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='user')
+    friend = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='friend')
 
-class statuses(models.Model):
-    idstatuses = models.IntegerField()
+
+class Status(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     status = models.CharField(max_length=200)
-    users_iduser = models.IntegerField()
 
-class messages(models.Model):
-    idmessage = models.IntegerField()
-    text = models.TextField()
-    idcreate_user = models.IntegerField()
-    dialogs_iddialogs = models.IntegerField()
-    create_date = models.DateField()
 
-class dialogs(models.Model):
-    iddilogs = models.IntegerField()
-    create_date = models.DateField()
-    last_change = models.DateField()
-    name = models.CharField(max_length=45)
+class Dialog(models.Model):
+    create_date = models.DateTimeField(default=timezone.now)
+    last_change = models.DateTimeField(default=timezone.now)
+    name = models.CharField(max_length=200)
+    users = models.ManyToManyField(User)
 
-class users_in_dialogs(models.Model):
-    idusers_in_dialogs = models.IntegerField()
-    users_iduser = models.IntegerField()
-    dialogs_iddialogs = models.IntegerField()
 
 class Message(models.Model):
-    subject = models.CharField(max_length=200)
-    body = models.TextField()
+    text = models.TextField(max_length=2000)
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
+    create_date = models.DateTimeField(default=timezone.now)
