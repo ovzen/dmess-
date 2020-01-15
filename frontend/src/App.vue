@@ -26,6 +26,7 @@
       <div class="text-center">
       <v-btn class="ma-2" outlined color="indigo" v-text="button" @click="auth(login,password)" >Войти</v-btn>
       <v-btn class="ma-2" outlined color="indigo" @click="Check()" >Проверить</v-btn>
+      <v-btn class="ma-2" outlined color="indigo" @click="Exit()" >Выйти</v-btn>
       </div>
     </v-container>
     </v-form>
@@ -91,6 +92,9 @@ export default {
       api.axios.get('/hello/').then((res) => {
         console.log(res.data)
       })
+    },
+    Exit() {
+      localStorage.removeItem('jwt')
     },
     auth(username,password) {
       api.axios.post('/api/token/', {"username": username, "password": password}).then((res) => {
