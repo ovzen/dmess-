@@ -54,7 +54,7 @@ WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': DEBUG,
         'BUNDLE_DIR_NAME': '/bundles/',  # must end with slash
-        'STATS_FILE': 'C:/Users/petrp/PycharmProjects/dmess/frontend/webpack-stats.json',
+        'STATS_FILE': os.path.join(BASE_DIR, 'frontend/webpack-stats.json'),
     }
 }
 
@@ -136,9 +136,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/main/static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "main/static")
+    os.path.join(TEMPLATES_DIR, "/static/")
 ]
 
 # Channels
