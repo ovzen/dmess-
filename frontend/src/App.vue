@@ -25,6 +25,7 @@
       </v-row>
       <div class="text-center">
       <v-btn class="ma-2" outlined color="indigo" v-text="button" @click="auth(login,password)" >Войти</v-btn>
+      <v-btn class="ma-2" outlined color="indigo" @click="Check()" >Проверить</v-btn>
       </div>
     </v-container>
     </v-form>
@@ -85,6 +86,11 @@ export default {
                 'message': message_text
             }))
         }
+    },
+    Check() {
+      api.axios.get('/hello/').then((res) => {
+        console.log(res.data)
+      })
     },
     auth(username,password) {
       api.axios.post('/api/token/', {"username": username, "password": password}).then((res) => {
