@@ -25,6 +25,7 @@
       </v-row>
       <div class="text-center">
       <v-btn class="ma-2" outlined color="indigo" v-text="button" @click="auth(login,password)" >Войти</v-btn>
+      <v-btn class="ma-2" outlined color="indigo" @click="Register(login,password)" >Регистрация</v-btn>
       <v-btn class="ma-2" outlined color="indigo" @click="Check()" >Проверить</v-btn>
       <v-btn class="ma-2" outlined color="indigo" @click="Exit()" >Выйти</v-btn>
       </div>
@@ -95,6 +96,19 @@ export default {
     },
     Exit() {
       localStorage.removeItem('jwt')
+    },
+    Register(username,password) {
+      api.axios.post('/api/register/', {"username": username, "password": password}).then((res) => {
+        console.log(res.data)
+        localStorage.setItem('jwt', res.data.access)
+        this.button="Приветствуем " + jwt.decode(localStorage.jwt).name
+        console.log(jwt.decode(localStorage.jwt))
+      }).catch(error => {
+        if (error.response.status===401) {
+          this.button='Ошибка неправильное имя пользователя или пароль'
+        }
+    console.log(error.response.status)
+    })
     },
     auth(username,password) {
       api.axios.post('/api/token/', {"username": username, "password": password}).then((res) => {
