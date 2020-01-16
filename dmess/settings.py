@@ -141,7 +141,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(TEMPLATES_DIR, "/static/")
+    os.path.join(TEMPLATES_DIR, "templates/static/")
 ]
 
 # Channels
