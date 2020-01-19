@@ -52,7 +52,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
-
+WSGIPassAuthorization = 'On'
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': DEBUG,
@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'dmess.middleware.SimpleMiddleware'
 ]
 
 ROOT_URLCONF = 'dmess.urls'

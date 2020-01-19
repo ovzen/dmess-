@@ -97,7 +97,9 @@
 import api from '@/api';
 import jwt from 'jsonwebtoken'
 import VueNativeSock from 'vue-native-websocket'
+import VueCookie from 'vue-cookie'
 import Vue from 'vue'
+Vue.use(VueCookie)
 Vue.use(VueNativeSock, 'ws://' + window.location.host + '/ws/chat/',)
 export default {
   name: 'App',
@@ -151,6 +153,7 @@ export default {
       api.axios.post('/api/token/', {"username": username, "password": password}).then((res) => {
         console.log(res.data)
         localStorage.setItem('jwt', res.data.access)
+        this.$cookie.set('Authentication', res.data.access , {expires: '5m'});
         this.button="Приветствуем " + jwt.decode(localStorage.jwt).name
         console.log(jwt.decode(localStorage.jwt))
       }).catch(error => {
