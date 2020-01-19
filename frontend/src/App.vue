@@ -135,16 +135,12 @@ export default {
     },
     Exit() {
       localStorage.removeItem('jwt')
+      this.$cookie.delete('Authentication')
     },
     Register(username,password) {
-      api.axios.post('/api/register/', {"username": username, "password": password}).then((res) => {
-        console.log(res.data)
-        localStorage.setItem('jwt', res.data.access)
-        this.button="Приветствуем " + jwt.decode(localStorage.jwt).name
-        console.log(jwt.decode(localStorage.jwt))
-      }).catch(error => {
+      api.axios.post('/api/register/', {"username": username, "password": password}).catch(error => {
         if (error.response.status===401) {
-          this.button='Ошибка неправильное имя пользователя или пароль'
+          this.button='Пользователь с таким именем уже существует'
         }
     console.log(error.response.status)
     })

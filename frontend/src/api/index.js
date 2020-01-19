@@ -2,7 +2,9 @@ import axios from 'axios';
 
 axios.interceptors.request.use(
     function (config) {
-        config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('jwt')
+        if (localStorage.getItem('jwt')) {
+            config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('jwt')
+        }
         return config;
     }, function (error) {
         return Promise.reject(error);

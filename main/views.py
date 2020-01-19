@@ -37,10 +37,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CreateUserView(CreateAPIView):
+    permission_classes = (AllowAny,)
     model = get_user_model()
-    permission_classes = [
-        permissions.AllowAny # Or anon users can't register
-    ]
     serializer_class = UserSerializer
 
 

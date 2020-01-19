@@ -15,7 +15,6 @@ class SimpleMiddleware:
             # the view (and later middleware) are called.
             val_token=JWTTokenUserAuthentication().get_validated_token(token)
             authenticated = JWTTokenUserAuthentication().get_user(val_token).id
-            print(User.objects.get(id=authenticated))
             request.user = User.objects.get(id=authenticated)
         response = self.get_response(request)
 
