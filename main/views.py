@@ -16,6 +16,7 @@ from dmess.settings import BASE_ADDRESS
 
 
 class CreateUserView(CreateAPIView):
+    # model используется только для информации
     model = get_user_model()
     permission_classes = [
         permissions.AllowAny # Or anon users can't register
