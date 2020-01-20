@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 from main import views
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('chat/', include('main.urls')),
@@ -26,6 +25,6 @@ urlpatterns = [
     path('about/', views.about_page, name='about'),
     path('sitemap.xml', views.sitemap_page, name='about'),
     path('accounts/', include('django.contrib.auth.urls')),
-
-
+    path('accounts/register/', views.register_page, name='register' ),
+    path('api/register/', views.CreateUserView.as_view(), name='api_register'),
 ]

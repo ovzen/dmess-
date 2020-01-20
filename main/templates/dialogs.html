@@ -5,7 +5,7 @@
 <hr>
 <p> Сервис диалогов
 <p>
-{% if not_auth %}
+{% if not user.is_authenticated %}
     {{ error }}
 {% else %}
 
