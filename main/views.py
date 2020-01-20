@@ -53,6 +53,12 @@ def get_base_context():
 
 
 def index_chat(request):
+    """
+    Тест документации. Назначение функции - отображение главной страница чата
+
+    :param request: объект с деталями запроса
+    :type request: :class:`django.HttpRequest`
+    """
     context = get_base_context()
     context['title'] = 'Главная страница - Dmess'
     context['main_header'] = 'Digital Messages'
