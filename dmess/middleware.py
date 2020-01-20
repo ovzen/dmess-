@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
+from rest_framework_simplejwt import exceptions
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 
@@ -14,8 +15,15 @@ class SimpleMiddleware:
             # Code to be executed for each request before
             # the view (and later middleware) are called.
             val_token=JWTTokenUserAuthentication().get_validated_token(token)
-            authenticated = JWTTokenUserAuthentication().get_user(val_token).id
-            request.user = User.objects.get(id=authenticated)
+            try:
+                authenticated = JWTTokenUserAuthentication().get_user(val_token).id
+                if authenticated:
+                    request.user = User.objects.get(id=authenticated)
+                else:
+                    request.user = AnonymousUser
+            except exceptions.AuthenticationFailed:
+                request.user = AnonymousUser
+
         response = self.get_response(request)
 
         # Code to be executed for each request/response after

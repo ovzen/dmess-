@@ -138,12 +138,13 @@ export default {
       this.$cookie.delete('Authentication')
     },
     Register(username,password) {
-      api.axios.post('/api/register/', {"username": username, "password": password}).catch(error => {
-        if (error.response.status===401) {
-          this.button='Пользователь с таким именем уже существует'
-        }
-    console.log(error.response.status)
-    })
+      if (username && password) {
+        api.axios.post('/api/register/', {"username": username, "password": password}).catch(error => {
+          if (error.response.status===400) {
+            alert('Пользователь с таким именем уже существует')
+          }
+        })
+      }
     },
     auth(username,password) {
       api.axios.post('/api/token/', {"username": username, "password": password}).then((res) => {
