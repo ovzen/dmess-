@@ -3,4 +3,4 @@ channels==2.4
 channels_redis
 Pillow==7.0.0
 sphinx
-
+djangorestframework

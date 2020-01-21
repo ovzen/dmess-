@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ main_header }}</h1>
+    <hr>
+    <div class="card mb-3" style="max-width: 540px;">
+      <div class="row">
+        <div class="col-md-4">
+          <img src="https://images.unsplash.com/photo-1574069498412-60e183438d5d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+               class="card-img" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <p class="card-text">
+                Логин пользователя: {{ request.user }}<br>
+                Дата регистрации: {{ request.user.date_joined.date }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

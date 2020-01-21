@@ -45,6 +45,7 @@ def get_base_context():
             {'link_name': 'dialogs', 'text': 'Диалоги'},
             {'link_name': 'about', 'text': 'Информация'},
             {'link_name': 'admin:index', 'text': 'Админ-панель'},
+            {'link_name': 'mypage', 'text': 'Личный кабинет'},
         ],
         'index_link_name': 'index',
         'title': 'untitled',
@@ -104,3 +105,10 @@ def about_page(request):
     context['title'] = 'Информация - Dmess'
     context['main_header'] = 'Информация'
     return render(request, 'about.html', context)
+
+
+def my_page(request):
+    context = get_base_context()
+    context['title'] = 'Личный кабинет - Dmess'
+    context['main_header'] = 'Личный кабинет'
+    return render(request, 'mypage.html', context)
