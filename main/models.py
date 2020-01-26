@@ -18,6 +18,9 @@ class Status(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     status = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.status
+
 
 class Dialog(models.Model):
     create_date = models.DateTimeField(default=timezone.now)

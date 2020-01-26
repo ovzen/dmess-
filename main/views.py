@@ -5,21 +5,24 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rest_framework import permissions
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main import serializers
 from dmess.settings import BASE_ADDRESS
-
-# Класс регистрации пользователей
+from main.models import Status
+from main.serializers import StatusSerializer
 
 
 class CreateUserView(CreateAPIView):
+    # Класс регистрации пользователей
     # model используется только для информации
     model = get_user_model()
     permission_classes = [
-        permissions.AllowAny # Or anon users can't register
+        permissions.AllowAny  # Or anon users can't register
     ]
     serializer_class = serializers.UserSerializer
 
@@ -85,6 +88,7 @@ def sitemap_page(request):
     context['base_address'] = BASE_ADDRESS
     return render(request, 'sitemap.xml', context)
 
+
 @login_required
 def dialog_page(request):
     context = get_base_context()
@@ -111,4 +115,49 @@ def my_page(request):
     context = get_base_context()
     context['title'] = 'Личный кабинет - Dmess'
     context['main_header'] = 'Личный кабинет'
+
+    user = request.user
+    context['status'] = Status.objects.filter(user=user)
     return render(request, 'mypage.html', context)
+
+
+class StatusView(APIView):
+    def get(self, request):
+        statuses = Status.objects.all()
+        # Сериализация статуса  (т.е. конвертация из объектов в формат JSON)
+        serializer = StatusSerializer(statuses, many=True)
+        return Response({"statuses": serializer.data})
+
+    def post(self, request):
+        """Метод для создания статуса"""
+        status = request.data.get("status")
+
+        # Create an article from the above data
+        serializer = StatusSerializer(data=status)
+        if serializer.is_valid(raise_exception=True):
+            status_saved = serializer.save()
+        return Response({"success": "Статус '{}' успешно создан".format(status_saved.status)})
+
+    def put(self, request, pk):
+        """
+        Метод для обработки запроса на обновление статьи.
+        Метод должен принять параметр  pk из URL, найти требуемый экземпляр из базы и
+        запустить сериалайзер на обновление
+        """
+        saved_status = get_object_or_404(Status.objects.all(), pk=pk)
+        data = request.data.get('status')
+        # partial=True - необходимо для возможности обноления только некоторых полей
+        serializer = StatusSerializer(instance=saved_status, data=data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            status_saved = serializer.save()
+        return Response({
+            "success": "Статус '{}' успешно обновлен".format(status_saved.status)
+        })
+
+    def delete(self, request, pk):
+        # Get object with this pk
+        status = get_object_or_404(Status.objects.all(), pk=pk)
+        status.delete()
+        return Response({
+            "message": "Статус с id `{}` был удален.".format(pk)
+        }, status=204)

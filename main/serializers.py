@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from main.models import Status
+
 UserModel = get_user_model()
 
 
@@ -22,3 +24,29 @@ class UserSerializer(serializers.ModelSerializer):
         model = UserModel
         # Tuple of serialized model fields (see link [2])
         fields = ( "id", "username", "password", )
+
+
+class StatusSerializer(serializers.Serializer):
+    """
+    Сериализатор преобразует статусы (объекты моделей) в список Python,
+    который мы может вернуть в API-запросе
+    """
+    status = serializers.CharField(max_length=200)
+    user_id = serializers.IntegerField()
+
+    def create(self, validated_data):
+        """
+        Метод сообщит сериализатору, что делать, когда вызывается метод save сериализатора
+        """
+        return Status.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Метод обновляет статус
+        В том случае если мы что-то передаем в экземпляр статуса, который мы хотим обновить,
+        мы переназначаем это значение, в противном случае мы сохраняем старое значение атрибута.
+        """
+        instance.status = validated_data.get('status', instance.status)
+        instance.user_id = validated_data.get('user_id', instance.user_id)
+        instance.save()
+        return instance
