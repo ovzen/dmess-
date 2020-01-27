@@ -21,6 +21,7 @@ from main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('chat/', include('main.urls')),
+    path('api/chat/', views.DialogView.as_view()),
     path('', views.index_page, name='index'),
     path('dialogs/', views.dialog_page, name='dialogs'),
     path('about/', views.about_page, name='about'),
