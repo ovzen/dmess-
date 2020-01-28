@@ -13,9 +13,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main import serializers
 from dmess.settings import BASE_ADDRESS
+
 from main.models import Status
 from main.serializers import StatusSerializer
 
+from .models import Dialog
+from .serializers import DialogSerializer
 
 class CreateUserView(CreateAPIView):
     # Класс регистрации пользователей
@@ -41,6 +44,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
+
 def get_base_context():
     context = {
         'menu': [
@@ -56,16 +60,12 @@ def get_base_context():
     return context
 
 
-def index_chat(request):
-    """
-    Тест документации. Назначение функции - отображение главной страница чата
 
-    :param request: объект с деталями запроса
-    :type request: :class:`django.HttpRequest`
-    """
+def index_chat(request, chat_number):
     context = get_base_context()
     context['title'] = 'Главная страница - Dmess'
     context['main_header'] = 'Digital Messages'
+    context['chat_number'] = chat_number
     return render(request, 'chat/index.html', context)
 
 
@@ -161,3 +161,19 @@ class StatusView(APIView):
         return Response({
             "message": "Статус с id `{}` был удален.".format(pk)
         }, status=204)
+
+
+class DialogView(APIView):
+    def get(self, request):
+        dialogs = Dialog.objects.all()
+        serializer = DialogSerializer(dialogs, many=True)
+        return Response({"dialogs": serializer.data})
+
+    def post(self, request):
+        dialog = request.data.get('dialog')
+        # Create an dialog from the above data
+        serializer = DialogSerializer(data=dialog)
+        if serializer.is_valid(raise_exception=True):
+            article_saved = serializer.save()
+        return Response({"success": "Dialog '{}' created successfully".format(article_saved.title)})
+

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-
 from main.models import Status
 
 UserModel = get_user_model()
@@ -50,3 +49,12 @@ class StatusSerializer(serializers.Serializer):
         instance.user_id = validated_data.get('user_id', instance.user_id)
         instance.save()
         return instance
+
+
+
+class DialogSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=200)
+    create_date = serializers.DateTimeField()
+    last_change = serializers.DateTimeField()
+    # users = serializers.
+

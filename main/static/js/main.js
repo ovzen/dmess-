@@ -26,12 +26,9 @@
     let sendButton = document.getElementById('sendButton');
     msgForSend.focus()
 
-// TODO: make diolog groups
-//    var chatSocket = new WebSocket(
-//        'ws://' + window.location.host +
-//        '/ws/chat/' + roomName + '/');
-
-    let chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+    let chatNumber = "{{ chat_number|escapejs }}";
+    console.log('chat number: ', chatNumber);
+    let chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + chatNumber + '/');
 
     chatSocket.onmessage = function(message) {
         let data = JSON.parse(message.data);
