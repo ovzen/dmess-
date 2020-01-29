@@ -5,4 +5,5 @@ Pillow==7.0.0
 sphinx
 djangorestframework
 djangorestframework-simplejwt
-
+django-admin-tools==0.9.0
+feedparser==5.2.1

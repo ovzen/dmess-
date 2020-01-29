@@ -31,4 +31,5 @@ urlpatterns = [
     path('api/status/', views.StatusView.as_view()),
     path('api/status/<int:pk>', views.StatusView.as_view()),
     path('mypage/', views.my_page, name='mypage'),
+    path('admin_tools/', include('admin_tools.urls')),
 ]
