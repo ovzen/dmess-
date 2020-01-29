@@ -8,11 +8,12 @@ class ChatConsumer(WebsocketConsumer):
         # TODO: make groups
         # self.room_name = self.scope['url_route']['kwargs']['room_name']
         # self.room_group_name = 'chat_%s' % self.room_name
-        self.dialog = 'base_dialog'
+        self.chat_number = self.scope['url_route']['kwargs']['chat_number']
+        self.chat_id = 'chat_%s' % self.chat_number
 
         # Join dialog group
         async_to_sync(self.channel_layer.group_add)(
-            self.dialog,
+            self.chat_id,
             self.channel_name
         )
 
@@ -21,7 +22,7 @@ class ChatConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Leave dialog group
         async_to_sync(self.channel_layer.group_discard)(
-            self.dialog,
+            self.chat_id,
             self.channel_name
         )
 
@@ -33,7 +34,7 @@ class ChatConsumer(WebsocketConsumer):
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            self.dialog,
+            self.chat_id,
             {
                 'type': 'chat_message',
                 'message': message,

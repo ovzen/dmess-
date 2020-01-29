@@ -28,7 +28,10 @@ urlpatterns = [
     path('api/register/', views.CreateUserView.as_view()),
     path('hello/', views.HelloView.as_view(), name='hello'),
     path("",
-         TemplateView.as_view(template_name="application.html"),
-         name="app",
+         TemplateView.as_view(template_name="index.html"),
+         name="index",
          ),
+    path("chat/",
+         TemplateView.as_view(template_name="chat.html"),
+         name="chat")
 ]
