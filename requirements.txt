@@ -1,8 +1,7 @@
 Django==3.0
-channels==2.4
-channels_redis
 django-webpack-loader == 0.6.0
-pytz
-djangorestframework-simplejwt
+pytz==2019.3
+djangorestframework-simplejwt==4.4.0
 channels==2.4
-channels_redis
+channels-redis==2.4.1
+django-admin-tools==0.9.0

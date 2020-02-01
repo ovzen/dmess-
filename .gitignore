@@ -2,6 +2,7 @@
 # Edit at https://www.gitignore.io/?templates=vue,venv,django,python,pycharm,visualstudiocode
 
 ### Django ###
+static/
 *.log
 *.pot
 *.pyc
