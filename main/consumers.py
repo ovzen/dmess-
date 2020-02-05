@@ -30,7 +30,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        author = text_data_json['author']
+        author = self.scope["user"].username
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(

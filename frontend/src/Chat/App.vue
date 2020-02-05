@@ -133,7 +133,6 @@ export default {
         if (messagetext) {
           this.$socket.send(JSON.stringify({
             'message': messagetext,
-            'author': jwt.decode(localStorage.jwt).name
           }))
         }
       } else {
