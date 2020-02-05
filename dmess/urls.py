@@ -17,21 +17,22 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from rest_framework_simplejwt import views as jwt_views
-from django.urls import path
+from django.urls import path, include, re_path
 from main import views
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin_tools/', include('admin_tools.urls')),
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.CreateUserView.as_view()),
     path('hello/', views.HelloView.as_view(), name='hello'),
-    path("",
-         TemplateView.as_view(template_name="index.html"),
-         name="index",
-         ),
-    path("chat/",
+    re_path('chat/',
          TemplateView.as_view(template_name="chat.html"),
-         name="chat")
+         name="chat"),
+    re_path('',
+            TemplateView.as_view(template_name="index.html"),
+            name="index",
+            ),
+
 ]

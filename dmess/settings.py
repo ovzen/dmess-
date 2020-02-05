@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,8 +81,6 @@ ROOT_URLCONF = 'dmess.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATES_DIR],
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -86,6 +88,12 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'loaders': [
+                ('admin_tools.template_loaders.Loader', ),
+                ('django.template.loaders.filesystem.Loader', [TEMPLATES_DIR]),
+                'django.template.loaders.app_directories.Loader',
+            ]
+
         },
     },
 ]
@@ -140,9 +148,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT=os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(TEMPLATES_DIR, "templates/static/")
+    os.path.join(BASE_DIR, "templates/static/")
 ]
 
 # Channels
