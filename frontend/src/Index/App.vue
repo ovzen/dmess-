@@ -81,6 +81,7 @@
         </v-row>
       </v-container>
     </v-form>
+    <router-view></router-view>
   </v-app>
 </template>
 
