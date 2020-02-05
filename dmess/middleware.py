@@ -9,7 +9,7 @@ class SimpleMiddleware:
         # One-time configuration and initialization.
 
     def __call__(self, request):
-        cookie=request.META.get('HTTP_COOKIE').split(' Authentication=')
+        cookie=request.META.get('HTTP_COOKIE', '').split(' Authentication=')
         if len(cookie) > 1:
             token = cookie[1].split(';')[0]
             # Code to be executed for each request before
