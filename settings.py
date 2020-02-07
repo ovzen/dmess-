@@ -14,14 +14,13 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
-
+BASE_ADDRESS = 'http://www.dmess.ru'
+LOGIN_REDIRECT_URL = '/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
+SECRET_KEY = 'i-^8zd99=&_axb4%_qsv2!fa4$m55wl7u^81@1(uj3i+obt*s1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-'admin_tools',
+    'admin_tools',
     'admin_tools.theming',
     'admin_tools.menu',
     'admin_tools.dashboard',
@@ -42,28 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webpack_loader',
     'rest_framework',
     'main',
     'channels',
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-}
-WSGIPassAuthorization = 'On'
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'CACHE': DEBUG,
-        'BUNDLE_DIR_NAME': '/bundles/',  # must end with slash
-        'STATS_FILE': os.path.join(BASE_DIR, 'frontend/webpack-stats.json'),
-    }
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'dmess.middleware.AuthMiddleware'
 ]
 
 ROOT_URLCONF = 'dmess.urls'
@@ -89,12 +69,12 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'loaders': [
-                ('admin_tools.template_loaders.Loader', ),
-                ('django.template.loaders.filesystem.Loader', [TEMPLATES_DIR]),
+                'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
+                ('admin_tools.template_loaders.Loader', ),
             ]
-
         },
+
     },
 ]
 
@@ -148,10 +128,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT=os.path.join(BASE_DIR, "static/")
-STATIC_URL = '/static/'
+STATIC_URL = '/main/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "main/static_root")
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "templates/static/")
+    os.path.join(BASE_DIR, "main/static")
 ]
 
 # Channels
