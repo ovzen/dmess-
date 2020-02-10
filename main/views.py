@@ -1,33 +1,45 @@
-import datetime
-from abc import ABC
-
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import render
-from rest_framework import permissions
-from rest_framework.generics import CreateAPIView, get_object_or_404
-from rest_framework.response import Response
+
+# Create your views here.
+from rest_framework import serializers, permissions
+from rest_framework.generics import CreateAPIView
+
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from main import serializers
-from dmess.settings import BASE_ADDRESS
 
-from main.models import Status
-from main.serializers import StatusSerializer
+UserModel = get_user_model()
 
-from .models import Dialog
-from .serializers import DialogSerializer
+
+class UserSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(write_only=True)
+
+    def create(self, validated_data):
+
+        user = UserModel.objects.create(
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+
+        return user
+
+    class Meta:
+        model = UserModel
+        # Tuple of serialized model fields (see link [2])
+        fields = ( "id", "username", "password", )
+
 
 class CreateUserView(CreateAPIView):
-    # Класс регистрации пользователей
-    # model используется только для информации
+    permission_classes = (AllowAny,)
     model = get_user_model()
-    permission_classes = [
-        permissions.AllowAny  # Or anon users can't register
-    ]
-    serializer_class = serializers.UserSerializer
+    serializer_class = UserSerializer
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -40,11 +52,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
-
-
-
 def get_base_context():
     context = {
         'menu': [
@@ -52,7 +59,6 @@ def get_base_context():
             {'link_name': 'dialogs', 'text': 'Диалоги'},
             {'link_name': 'about', 'text': 'Информация'},
             {'link_name': 'admin:index', 'text': 'Админ-панель'},
-            {'link_name': 'mypage', 'text': 'Личный кабинет'},
         ],
         'index_link_name': 'index',
         'title': 'untitled',
@@ -61,11 +67,10 @@ def get_base_context():
 
 
 
-def index_chat(request, chat_number):
+def index_chat(request):
     context = get_base_context()
     context['title'] = 'Главная страница - Dmess'
     context['main_header'] = 'Digital Messages'
-    context['chat_number'] = chat_number
     return render(request, 'chat/index.html', context)
 
 
@@ -76,104 +81,12 @@ def index_page(request):
     return render(request, 'index.html', context)
 
 
-def register_page(request):
-    context = get_base_context()
-    # context['title'] = 'Основной чат'
-    context['main_header'] = 'Digital Messages'
-    return render(request, 'registration/registration.html', context)
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
-def sitemap_page(request):
-    context = get_base_context()
-    context['base_address'] = BASE_ADDRESS
-    return render(request, 'sitemap.xml', context)
-
-
-@login_required
-def dialog_page(request):
-    context = get_base_context()
-    context['title'] = 'Диалоги - Dmess'
-    context['main_header'] = 'Диалоги'
-    # Код диалога
-    if False:  # Заглушка
-
-        context['not_auth'] = False
-    else:
-        context['not_auth'] = True
-        context['error'] = 'Вы не авторизованы!'
-    return render(request, 'dialogs.html', context)
-
-
-def about_page(request):
-    context = get_base_context()
-    context['title'] = 'Информация - Dmess'
-    context['main_header'] = 'Информация'
-    return render(request, 'about.html', context)
-
-
-def my_page(request):
-    context = get_base_context()
-    context['title'] = 'Личный кабинет - Dmess'
-    context['main_header'] = 'Личный кабинет'
-
-    user = request.user
-    context['status'] = Status.objects.filter(user=user)
-    return render(request, 'mypage.html', context)
-
-
-class StatusView(APIView):
+class HelloView(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request):
-        statuses = Status.objects.all()
-        # Сериализация статуса  (т.е. конвертация из объектов в формат JSON)
-        serializer = StatusSerializer(statuses, many=True)
-        return Response({"statuses": serializer.data})
-
-    def post(self, request):
-        """Метод для создания статуса"""
-        status = request.data.get("status")
-
-        # Create an article from the above data
-        serializer = StatusSerializer(data=status)
-        if serializer.is_valid(raise_exception=True):
-            status_saved = serializer.save()
-        return Response({"success": "Статус '{}' успешно создан".format(status_saved.status)})
-
-    def put(self, request, pk):
-        """
-        Метод для обработки запроса на обновление статьи.
-        Метод должен принять параметр  pk из URL, найти требуемый экземпляр из базы и
-        запустить сериалайзер на обновление
-        """
-        saved_status = get_object_or_404(Status.objects.all(), pk=pk)
-        data = request.data.get('status')
-        # partial=True - необходимо для возможности обноления только некоторых полей
-        serializer = StatusSerializer(instance=saved_status, data=data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            status_saved = serializer.save()
-        return Response({
-            "success": "Статус '{}' успешно обновлен".format(status_saved.status)
-        })
-
-    def delete(self, request, pk):
-        # Get object with this pk
-        status = get_object_or_404(Status.objects.all(), pk=pk)
-        status.delete()
-        return Response({
-            "message": "Статус с id `{}` был удален.".format(pk)
-        }, status=204)
-
-
-class DialogView(APIView):
-    def get(self, request):
-        dialogs = Dialog.objects.all()
-        serializer = DialogSerializer(dialogs, many=True)
-        return Response({"dialogs": serializer.data})
-
-    def post(self, request):
-        dialog = request.data.get('dialog')
-        # Create an dialog from the above data
-        serializer = DialogSerializer(data=dialog)
-        if serializer.is_valid(raise_exception=True):
-            article_saved = serializer.save()
-        return Response({"success": "Dialog '{}' created successfully".format(article_saved.title)})
-
+        content = {'message': 'Hello, World!'}
+        return Response(content)

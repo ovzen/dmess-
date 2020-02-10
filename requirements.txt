@@ -1,9 +1,11 @@
 Django==3.0
+django-admin-tools==0.9.0
+django-webpack-loader == 0.6.0
+djangorestframework
+djangorestframework-simplejwt==4.4.0
 channels==2.4
-channels_redis
+channels-redis==2.4.1
+pytz==2019.3
 Pillow==7.0.0
 sphinx
-djangorestframework
-djangorestframework-simplejwt
-django-admin-tools==0.9.0
 feedparser==5.2.1

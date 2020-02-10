@@ -14,22 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.views.generic import TemplateView
+from rest_framework_simplejwt import views as jwt_views
+from django.urls import path, include, re_path
 from main import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chat/', include('main.urls')),
-    path('api/chat/', views.DialogView.as_view()),
-    path('', views.index_page, name='index'),
-    path('dialogs/', views.dialog_page, name='dialogs'),
-    path('about/', views.about_page, name='about'),
-    path('sitemap.xml', views.sitemap_page, name='about'),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register/', views.register_page, name='register' ),
-    path('api/register/', views.CreateUserView.as_view(), name='api_register'),
-    path('api/status/', views.StatusView.as_view()),
-    path('api/status/<int:pk>', views.StatusView.as_view()),
-    path('mypage/', views.my_page, name='mypage'),
     path('admin_tools/', include('admin_tools.urls')),
+    path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/register/', views.CreateUserView.as_view()),
+    path('hello/', views.HelloView.as_view(), name='hello'),
+    re_path('chat/',
+         TemplateView.as_view(template_name="chat.html"),
+         name="chat"),
+    re_path('',
+            TemplateView.as_view(template_name="index.html"),
+            name="index",
+            ),
+    # path('api/status/', views.StatusView.as_view()),
+    # path('api/status/<int:pk>', views.StatusView.as_view()),
+    # path('mypage/', views.my_page, name='mypage'),
+    path('admin_tools/', include('admin_tools.urls')),
+
 ]
