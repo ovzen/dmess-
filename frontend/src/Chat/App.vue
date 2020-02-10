@@ -79,6 +79,7 @@
                 style="margin:auto;"
                 label="Сообщение"
                 color="blue lighten-1"
+                @keyup.enter="send(message_text)"
               />
               <v-btn
                 class="ma-2"
@@ -144,14 +145,16 @@ export default {
     send (messagetext) {
       if (localStorage.jwt) {
         if (messagetext) {
+          console.log('messagetext: ', messagetext);
           this.$socket.send(
             JSON.stringify({
               message: messagetext
             })
-          )
+          );
+          this.message_text = undefined;
         }
       } else {
-        this.dialog = true
+        this.dialog = true;
       }
     }
   }
