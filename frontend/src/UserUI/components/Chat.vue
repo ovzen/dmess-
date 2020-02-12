@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div class=Chat>
+    <div class="Chat">
       <v-card>
         <v-dialog
           v-model="dialog"
@@ -145,16 +145,16 @@ export default {
     send (messagetext) {
       if (localStorage.jwt) {
         if (messagetext) {
-          console.log('messagetext: ', messagetext);
+          console.log('messagetext: ', messagetext)
           this.$socket.send(
             JSON.stringify({
               message: messagetext
             })
-          );
-          this.message_text = undefined;
+          )
+          this.message_text = undefined
         }
       } else {
-        this.dialog = true;
+        this.dialog = true
       }
     }
   }
