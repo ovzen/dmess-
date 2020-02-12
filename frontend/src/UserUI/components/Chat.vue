@@ -94,6 +94,7 @@
         </v-list>
       </v-card>
     </div>
+    <v-btn @click="goBack()">Назад</v-btn>
   </v-app>
 </template>
 
@@ -129,6 +130,9 @@ export default {
     this.get()
   },
   methods: {
+    goBack() {
+      window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+    },
     GoAuth () {
       window.location.href = '/'
     },

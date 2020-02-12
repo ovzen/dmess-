@@ -93,6 +93,7 @@
         </v-row>
       </v-container>
     </v-form>
+    <router-link to="/chat/?1">Перейти к chat</router-link>
   </v-app>
 </template>
 

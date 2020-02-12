@@ -5,7 +5,6 @@ module.exports = {
   'transpileDependencies': [
     'vuetify'
   ],
-  publicPath: 'http://127.0.0.1:8080/',
   outputDir: './dist/',
   assetsDir: 'static',
   pages: {
