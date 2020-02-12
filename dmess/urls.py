@@ -21,15 +21,15 @@ from main import views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('django_admin', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.CreateUserView.as_view()),
     path('hello/', views.HelloView.as_view(), name='hello'),
-    re_path('chat/',
-         TemplateView.as_view(template_name="chat.html"),
-         name="chat"),
+    re_path('admin/',
+         TemplateView.as_view(template_name="admin.html"),
+         name="adminUI"),
     re_path('',
             TemplateView.as_view(template_name="index.html"),
             name="index",
