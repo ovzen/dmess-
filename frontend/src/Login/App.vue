@@ -1,29 +1,5 @@
 <template>
   <v-app>
-    <a
-      href="django_admin/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="indigo"
-      >
-        Комнатка админа
-      </v-btn>
-    </a>
-    <a
-      href="/admin"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="indigo"
-      >
-        Комнатка модератора
-      </v-btn>
-    </a>
     <v-form>
       <v-container>
         <v-row>
@@ -62,68 +38,32 @@
           >
             Регистрация
           </v-btn>
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="Exit()"
-          >
-            Выйти
-          </v-btn>
         </div>
       </v-container>
     </v-form>
-    <v-form>
-      <v-container>
-        <v-row>
-          <v-text-field
-            v-model="ChatId"
-            clearable
-            label="Chat id"
-            required
-          />
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="FindChat(ChatId)"
-          >
-            Перейти в чат
-          </v-btn>
-        </v-row>
-      </v-container>
-    </v-form>
-    <router-link to="/chat/?1">Перейти к chat</router-link>
   </v-app>
 </template>
 
 <script>
-import api from '../api'
+import api from './api'
 import jwt from 'jsonwebtoken'
-import VueCookie from 'vue-cookie'
 import Vue from 'vue'
+import VueCookie from 'vue-cookie'
 Vue.use(VueCookie)
 export default {
-  name: 'App',
+  name: 'Login',
   data: () => ({
     login: '',
     ChatId: null,
     button: 'Войти',
     password: '',
     message_text: '',
-    data: ''
+    next: ''
   }),
+  created () {
+    this.next = 'http://' + window.location.host + window.location.search.slice(6, 99)
+  },
   methods: {
-    FindChat (id) {
-      if (id) {
-        window.location.href = 'chat/?' + id
-      }
-    },
-    Exit () {
-      localStorage.removeItem('jwt')
-      this.$cookie.delete('Authentication')
-      location.reload()
-    },
     Register (username, password) {
       if (username && password) {
         api.axios
@@ -152,14 +92,16 @@ export default {
           })
           this.button = 'Приветствуем ' + jwt.decode(localStorage.jwt).name
           console.log(jwt.decode(localStorage.jwt))
-        })
-        .catch(error => {
-          if (error.response.status === 401) {
-            this.button = 'Ошибка неправильное имя пользователя или пароль'
-          }
-          console.log(error.response.status)
+          window.location.href = this.next
         })
     }
   }
 }
 </script>
+
+<style lang="scss">
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  color: #2c3e50;
+}
+</style>

@@ -94,7 +94,7 @@
         </v-list>
       </v-card>
     </div>
-    <v-btn class="blue lighten-1" dark="true" @click="goBack()">Назад</v-btn>
+    <v-btn class="blue lighten-1" dark @click="goBack()">Назад</v-btn>
   </v-app>
 </template>
 
