@@ -105,7 +105,6 @@
 </template>
 
 <script>
-import jwt from 'jsonwebtoken'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
@@ -130,8 +129,7 @@ export default {
     id: 0
   }),
   created () {
-    this.id = window.location.search.slice(1, 99)
-    console.log(window.location.host)
+    this.id = this.$route.params.id
     this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
     this.get()
   },
