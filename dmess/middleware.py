@@ -2,6 +2,7 @@ from channels.auth import UserLazyObject
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
 from django.contrib.auth.models import User, AnonymousUser
+from rest_framework import authentication
 from rest_framework_simplejwt import exceptions
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
@@ -77,3 +78,27 @@ class WebsocketAuthMiddleware(BaseMiddleware):
     async def resolve_scope(self, scope):
         scope["user"]._wrapped = await get_user(scope)
 
+
+class DRFAuthentication(authentication.BaseAuthentication):
+    def authenticate(self, request):
+        try:
+            cookie = request.META.get('HTTP_COOKIE').split(' Authentication=')
+        except AttributeError:
+            return None
+        if len(cookie) > 1:
+            token = cookie[1].split(';')[0]
+            # Code to be executed for each request before
+            # the view (and later middleware) are called.
+            val_token = JWTTokenUserAuthentication().get_validated_token(token)
+            try:
+                authenticated = JWTTokenUserAuthentication().get_user(val_token).id
+                if authenticated:
+                    user = User.objects.get(id=authenticated)
+                    return (user, None)
+                else:
+                    return None
+            except exceptions.AuthenticationFailed:
+                return None
+        # Code to be executed for each request/response after
+        # the view is called.
+        return None

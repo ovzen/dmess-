@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div class="cyan">
+    <div>
       <p>Это пример</p>
     </div>
   </v-app>
