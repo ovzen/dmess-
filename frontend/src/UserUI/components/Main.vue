@@ -93,7 +93,7 @@
         </v-row>
       </v-container>
     </v-form>
-    <router-link to="/chat/?1">Перейти к chat</router-link>
+    <router-link to="/chat/1">Перейти к chat</router-link>
   </v-app>
 </template>
 
@@ -116,7 +116,7 @@ export default {
   methods: {
     FindChat (id) {
       if (id) {
-        window.location.href = 'chat/?' + id
+        this.$router.push('chat/' + id)
       }
     },
     Exit () {

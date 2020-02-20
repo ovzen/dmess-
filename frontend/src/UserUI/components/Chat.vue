@@ -94,19 +94,24 @@
         </v-list>
       </v-card>
     </div>
-    <v-btn class="blue lighten-1" dark @click="goBack()">Назад</v-btn>
+    <v-btn
+      class="blue lighten-1"
+      dark
+      @click="goBack()"
+    >
+      Назад
+    </v-btn>
   </v-app>
 </template>
 
 <script>
-import jwt from 'jsonwebtoken'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
-  'ws://' + window.location.host + '/ws/chat/' + '1' + '/',
+  'ws://' + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
   {
     connectManually: true
   }
@@ -124,13 +129,15 @@ export default {
     id: 0
   }),
   created () {
-    this.id = window.location.search.slice(1, 99)
-    console.log(window.location.host)
+    this.id = this.$route.params.id
     this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
     this.get()
   },
+  beforeDestroy () {
+    this.$disconnect()
+  },
   methods: {
-    goBack() {
+    goBack () {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
     GoAuth () {

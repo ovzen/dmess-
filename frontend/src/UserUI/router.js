@@ -15,7 +15,7 @@ export default new Router({
       component: Main
     },
     {
-      path: '/chat',
+      path: '/chat/:id',
       name: 'Chat',
       component: Chat
     }
