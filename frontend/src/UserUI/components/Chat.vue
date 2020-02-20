@@ -154,7 +154,7 @@ export default {
       }
     },
     send (messagetext) {
-      if (localStorage.jwt) {
+      if (this.$cookie.get('Authentication')) {
         if (messagetext) {
           console.log('messagetext: ', messagetext)
           this.$socket.send(
