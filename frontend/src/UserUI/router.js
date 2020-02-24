@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Chat from './components/Chat'
 import Main from './components/Main'
+import Profile from './components/Profile'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/chat',
       name: 'Chat',
       component: Chat
+    },
+    {
+      path: '/profile',
+      name: 'Профиль',
+      component: Profile
     }
   ]
 })
