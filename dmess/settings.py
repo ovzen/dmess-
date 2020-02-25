@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webpack_loader',
     'rest_framework',
+    'rest_framework_swagger',
     'main',
     'channels',
 ]
@@ -55,6 +56,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'dmess.middleware.DRFAuthentication'
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
     ],
 }
 WSGIPassAuthorization = 'On'
@@ -165,6 +172,16 @@ CHANNEL_LAYERS = {
             "hosts": [('127.0.0.1', 6379)],
         },
     },
+}
+
+SWAGGER_SETTINGS = {
+    'enabled_methods': [
+            'get',
+            'post',
+            'put',
+            'patch',
+            'delete'
+    ],
 }
 
 LOGIN_URL='/login/'
