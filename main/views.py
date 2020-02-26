@@ -66,7 +66,6 @@ def get_base_context():
     return context
 
 
-
 def index_chat(request):
     context = get_base_context()
     context['title'] = 'Главная страница - Dmess'
@@ -87,6 +86,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class HelloView(APIView):
     permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         content = {'message': 'Hello, World!'}
         return Response(content)

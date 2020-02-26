@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <p>UserUI</p>
-    <router-view/>
+    <router-view />
   </v-app>
 </template>
 
@@ -9,7 +9,7 @@
 export default {
   name: 'Example',
   data: () => ({
-  }),
+  })
 }
 </script>
 
