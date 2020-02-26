@@ -1,10 +1,97 @@
 <template>
   <v-app>
     <div class="Chat">
-      <v-card>
-        <v-dialog
+      <v-card class="overflow-hidden">
+        <v-app-bar
+          absolute
+          dark
+          scroll-target = "#scrolling-techniques"
+        >
+          <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+
+          <v-toolbar-title>Диалог</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+          <v-btn icon>
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </v-app-bar>
+        <v-container>
+        <v-navigation-drawer
+          v-model="drawer"
+          absolute
+          temporary
+        >
+          <v-row no-gutters>
+            <v-navigation-drawer
+              dark
+              mini-variant
+              mini-variant-width="58px"
+              permanent
+              absolute
+            >
+              <v-list>
+                <v-list-item @click="">
+                  <v-list-item-action>
+                    <v-icon>mdi-chat</v-icon>
+                  </v-list-item-action>
+                </v-list-item>
+
+                <v-divider></v-divider>
+                
+                <v-list-item @click="">
+                  <v-list-item-avatar> 
+                    <v-img src="https://www.technistone.com/color-range/image-slab/deska_gobi_black_p.jpg"></v-img>
+                  </v-list-item-avatar>
+                </v-list-item>
+                <v-list-item @click="">
+                  <v-list-item-avatar>
+                    <v-img src="https://www.technistone.com/color-range/image-slab/deska_gobi_black_p.jpg"></v-img>
+                  </v-list-item-avatar>
+                </v-list-item>
+              </v-list>
+            </v-navigation-drawer>
+            <v-list
+              class="pa-9"
+              nav
+              dense
+            >
+              <v-list-item-group
+                v-model="group"
+              >
+                <v-list-item class="grow">
+                  <v-list-item-icon>
+                    <v-icon>mdi-chat</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-text>Другой диалог</v-list-item-text>
+                </v-list-item>
+
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>mdi-chat</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-text>Другой диалог</v-list-item-text>
+                </v-list-item>
+
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>mdi-chat</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-text>Другой диалог</v-list-item-text>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-row>
+        </v-navigation-drawer>
+        </v-container>
+        <v-sheet
+          id="scrolling-techniques"
+          class="overflow-y-auto"
+          v-bind:height="windowHeight"
+        >
+          <v-dialog
           v-model="dialog"
-          width="500"
+          width="100%"          
         >
           <v-card dark>
             <v-card-title
@@ -35,18 +122,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-toolbar
-          color="blue lighten-1"
-          dark
-        >
-          <v-toolbar-title style="font-weight:1;">
-            Сообщения
-          </v-toolbar-title>
-          <v-spacer />
-          <v-btn icon>
-            <v-icon />
-          </v-btn>
-        </v-toolbar>
         <v-list two-line>
           <v-card
             v-for="message in messages"
@@ -68,7 +143,9 @@
               </span>
             </div>
           </v-card>
-          <v-flex
+        </v-list>
+        </v-sheet>
+      <v-flex
             xs12
             style="margin-top:-5px;margin-left:30px;margin-right:30px;margin-bottom:-10px"
           >
@@ -91,10 +168,12 @@
               </v-btn>
             </v-row>
           </v-flex>
-        </v-list>
+          
+        <v-btn width="99%" class="blue lighten-1" dark @click="goBack()">Назад</v-btn>
       </v-card>
+        
     </div>
-    <v-btn class="blue lighten-1" dark @click="goBack()">Назад</v-btn>
+    
   </v-app>
 </template>
 
@@ -121,7 +200,9 @@ export default {
     data: '',
     messages: [],
     dialog: false,
-    id: 0
+    id: 0,
+    drawer: false,
+    windowHeight: window.innerHeight-160,
   }),
   created () {
     this.id = window.location.search.slice(1, 99)
@@ -166,6 +247,20 @@ export default {
 </script>
 
 <style lang="scss">
+::-webkit-scrollbar {
+  width: 4px;
+}
+ 
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  border-radius: 4px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  background-color:rgba(0,0,0,0.7); 
+}
 .Chat {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
