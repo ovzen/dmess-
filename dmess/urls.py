@@ -20,17 +20,16 @@ from rest_framework_simplejwt import views as jwt_views
 from django.urls import path, include, re_path
 from main import views
 
-
 urlpatterns = [
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/register/', views.CreateUserView.as_view()),
+    path('api/register/', views.UserView.as_view()),
     path('login/', TemplateView.as_view(template_name="Login.html"), name='login'),
     re_path('admin/',
-         login_required(TemplateView.as_view(template_name="admin.html")),
-         name="adminUI"),
+            login_required(TemplateView.as_view(template_name="admin.html")),
+            name="adminUI"),
     re_path('',
             login_required(TemplateView.as_view(template_name="index.html")),
             name="index",
