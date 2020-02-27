@@ -28,7 +28,7 @@ urlpatterns = [
     path('admin_tools/', include('admin_tools.urls')),
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/register/', views.CreateUserView.as_view()),
+    path('api/register/', views.UserView.as_view()),
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path('admin/',
             login_required(TemplateView.as_view(template_name="admin.html")),
