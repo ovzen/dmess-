@@ -1,3 +1,5 @@
+import datetime
+
 from channels.auth import UserLazyObject
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
@@ -27,6 +29,8 @@ class AuthMiddleware:
                 authenticated = JWTTokenUserAuthentication().get_user(val_token).id
                 if authenticated:
                     request.user = User.objects.get(id=authenticated)
+                    request.user.last_login = datetime.datetime.now()
+                    request.user.save()
                 else:
                     request.user = AnonymousUser
             except exceptions.AuthenticationFailed:

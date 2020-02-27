@@ -1,6 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+from django.shortcuts import render
 
 # Create your views here.
+
+from rest_framework import serializers, permissions
 from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView
 from rest_framework.mixins import ListModelMixin
 
