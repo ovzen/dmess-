@@ -1,10 +1,24 @@
 from django.contrib import admin
-from .models import UserSetting, Friend, Status, Dialog, Message
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+from main.models import Status, UserSetting, Dialog, Message, Friend
+
+
+class UserSettingInline(admin.StackedInline):
+    model = UserSetting
+    can_delete = False
+
+
+class UserSettingAdmin(UserAdmin):
+    inlines = (UserSettingInline, )
+
 
 # Register your models here.
-admin.site.register(UserSetting)
-admin.site.register(Friend)
+admin.site.unregister(User)
 admin.site.register(Status)
 admin.site.register(Dialog)
+admin.site.register(User, UserSettingAdmin)
+admin.site.register(UserSetting)
+admin.site.register(Friend)
 admin.site.register(Message)
-# admin.site.register(Author)
+
