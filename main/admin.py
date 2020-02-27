@@ -1,9 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Dialog
-
-from main.models import Status, UserSetting
+from main.models import Status, UserSetting, Dialog, Message, Friend
 
 
 class UserSettingInline(admin.StackedInline):
@@ -20,4 +18,7 @@ admin.site.unregister(User)
 admin.site.register(Status)
 admin.site.register(Dialog)
 admin.site.register(User, UserSettingAdmin)
-# admin.site.register(Author)
+admin.site.register(UserSetting)
+admin.site.register(Friend)
+admin.site.register(Message)
+

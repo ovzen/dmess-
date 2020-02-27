@@ -21,10 +21,10 @@ module.exports = {
       title: 'Admin',
       chunks: [ 'chunk-vendors', 'chunk-common', 'admin' ]
     },
-    'login': {
+    'auth': {
       entry: './src/Login/main.js',
       template: 'public/index.html',
-      title: 'Login',
+      title: 'Auth',
       chunks: [ 'chunk-vendors', 'chunk-common', 'Login' ]
     }
   },
