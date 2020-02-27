@@ -20,7 +20,6 @@ from rest_framework_simplejwt import views as jwt_views
 from django.urls import path, include, re_path
 from main import views
 
-
 urlpatterns = [
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
