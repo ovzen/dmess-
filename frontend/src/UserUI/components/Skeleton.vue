@@ -93,7 +93,7 @@
 
 <script>
 export default {
-  name: 'App',
+  name: 'Skeleton',
   data: () => ({
     login: '',
     button: 'Войти',
@@ -110,6 +110,7 @@ export default {
 
 <style lang="scss">
 #app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #2c3e50;
   height: 100vh;
 }

@@ -1,183 +1,93 @@
 <template>
   <v-app>
     <div class="Chat">
-      <v-card class="overflow-hidden">
-        <v-app-bar
-          absolute
-          dark
-          scroll-target="#scrolling-techniques"
-        >
-          <v-app-bar-nav-icon @click="drawer = true" />
-
-          <v-toolbar-title>Диалог</v-toolbar-title>
-
-          <v-spacer />
-          <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
-        </v-app-bar>
-        <v-container>
-          <v-navigation-drawer
-            v-model="drawer"
-            absolute
-            temporary
+      <v-dialog
+        v-model="dialog"
+        width="100%"
+      >
+        <v-card dark>
+          <v-card-title
+            class="blue lighten-1"
+            primary-title
           >
-            <v-row no-gutters>
-              <v-navigation-drawer
-                v-model="drawer"
-                dark
-                mini-variant
-                mini-variant-width="58px"
-                absolute
-              >
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-action>
-                      <v-icon>mdi-chat</v-icon>
-                    </v-list-item-action>
-                  </v-list-item>
+            Ошибка
+          </v-card-title>
 
-                  <v-divider />
-
-                  <v-list-item>
-                    <v-list-item-avatar>
-                      <v-img src="https://www.technistone.com/color-range/image-slab/deska_gobi_black_p.jpg" />
-                    </v-list-item-avatar>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-avatar>
-                      <v-img src="https://www.technistone.com/color-range/image-slab/deska_gobi_black_p.jpg" />
-                    </v-list-item-avatar>
-                  </v-list-item>
-                </v-list>
-              </v-navigation-drawer>
-              <v-list
-                class="pa-9"
-                nav
-                dense
-              >
-                <v-list-item-group
-                  v-model="group"
-                >
-                  <v-list-item class="grow">
-                    <v-list-item-icon>
-                      <v-icon>mdi-chat</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-text>Другой диалог</v-list-item-text>
-                  </v-list-item>
-
-                  <v-list-item>
-                    <v-list-item-icon>
-                      <v-icon>mdi-chat</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-text>Другой диалог</v-list-item-text>
-                  </v-list-item>
-
-                  <v-list-item>
-                    <v-list-item-icon>
-                      <v-icon>mdi-chat</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-text>Другой диалог</v-list-item-text>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-row>
-          </v-navigation-drawer>
-        </v-container>
-        <v-sheet
-          id="scrolling-techniques"
-          class="overflow-y-auto"
-          :height="windowHeight"
-        >
-          <v-dialog
-            v-model="dialog"
-            width="100%"
+          <div
+            class="grey lighten-4"
+            style="color:red;"
           >
-            <v-card dark>
-              <v-card-title
-                class="blue lighten-1"
-                primary-title
-              >
-                Ошибка
-              </v-card-title>
-
-              <div
-                class="grey lighten-4"
-                style="color:red;"
-              >
-                <h2 style="font-weight:400;text-align: center;color:red;">
-                  Вы не вошли!!!
-                </h2>
-              </div>
-              <v-divider class="grey lighten-2" />
-              <v-card-actions class="grey lighten-4">
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  text
-                  @click="GoAuth()"
-                >
-                  Войти
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-list two-line>
-            <v-card
-              v-for="message in messages"
-              :key="message.id"
-              color="blue lighten-1"
-              dark
-              class="mx-auto"
-              style="margin-top:20px;margin-bottom:20px"
-              max-width="344"
-            >
-              <v-card-title>
-                <span class="title font-weight-light">
-                  {{ message.text }}
-                </span>
-              </v-card-title>
-              <div style="text-align: right; margin-right:10px;margin-top:-25px;">
-                <span class="font-weight-light">
-                  От: {{ message.author }}
-                </span>
-              </div>
-            </v-card>
-          </v-list>
-        </v-sheet>
-        <v-flex
-          xs12
-          style="margin-top:-5px;margin-left:30px;margin-right:30px;margin-bottom:-10px"
-        >
-          <v-row>
-            <v-text-field
-              v-model="message_text"
-              clearable
-              style="margin:auto;"
-              label="Сообщение"
-              color="blue lighten-1"
-              @keyup.enter="send(message_text)"
-            />
+            <h2 style="font-weight:400;text-align: center;color:red;">
+              Вы не вошли!!!
+            </h2>
+          </div>
+          <v-divider class="grey lighten-2" />
+          <v-card-actions class="grey lighten-4">
+            <v-spacer />
             <v-btn
-              class="ma-2"
-              outlined
               color="primary"
-              @click="send(message_text)"
+              text
+              @click="GoAuth()"
             >
-              Отправить
+              Войти
             </v-btn>
-          </v-row>
-        </v-flex>
-
-        <v-btn
-          width="99%"
-          class="blue lighten-1"
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-list two-line>
+        <v-card
+          v-for="message in messages"
+          :key="message.id"
+          color="blue lighten-1"
           dark
-          @click="goBack()"
+          class="mx-auto"
+          style="margin-top:20px;margin-bottom:20px"
+          max-width="344"
         >
-          Назад
-        </v-btn>
-      </v-card>
+          <v-card-title>
+            <span class="title font-weight-light">
+              {{ message.text }}
+            </span>
+          </v-card-title>
+          <div style="text-align: right; margin-right:10px;margin-top:-25px;">
+            <span class="font-weight-light">
+              От: {{ message.author }}
+            </span>
+          </div>
+        </v-card>
+      </v-list>
+      <v-flex
+        xs12
+        style="margin-top:-5px;margin-left:30px;margin-right:30px;margin-bottom:-10px"
+      >
+        <v-row>
+          <v-text-field
+            v-model="message_text"
+            clearable
+            style="margin:auto;"
+            label="Сообщение"
+            color="blue lighten-1"
+            @keyup.enter="send(message_text)"
+          />
+          <v-btn
+            class="ma-2"
+            outlined
+            color="primary"
+            @click="send(message_text)"
+          >
+            Отправить
+          </v-btn>
+        </v-row>
+      </v-flex>
+
+      <v-btn
+        width="99%"
+        class="blue lighten-1"
+        dark
+        @click="goBack()"
+      >
+        Назад
+      </v-btn>
     </div>
   </v-app>
 </template>

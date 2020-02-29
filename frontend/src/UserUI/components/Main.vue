@@ -104,7 +104,7 @@ import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 Vue.use(VueCookie)
 export default {
-  name: 'App',
+  name: 'Main',
   data: () => ({
     login: '',
     ChatId: null,
