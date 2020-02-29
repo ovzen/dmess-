@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <a
-      href="django_admin/"
+      href="/django_admin/"
       style="text-decoration: none;"
     >
       <v-btn
@@ -13,7 +13,7 @@
       </v-btn>
     </a>
     <a
-      href="/admin"
+      href="/admin/"
       style="text-decoration: none;"
     >
       <v-btn
@@ -93,7 +93,9 @@
         </v-row>
       </v-container>
     </v-form>
-    <router-link to="/chat/?1">Перейти к chat</router-link>
+    <router-link to="/chat/?1">
+      Перейти к chat
+    </router-link>
   </v-app>
 </template>
 
