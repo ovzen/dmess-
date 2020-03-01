@@ -97,7 +97,7 @@ import Vue from 'vue'
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
-  'ws://' + window.location.host + '/ws/chat/' + '1' + '/',
+  'ws://' + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
   {
     connectManually: true
   }
@@ -117,10 +117,12 @@ export default {
     windowHeight: window.innerHeight - 160
   }),
   created () {
-    this.id = window.location.search.slice(1, 99)
-    console.log(window.location.host)
+    this.id = this.$route.params.id
     this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
     this.get()
+  },
+  beforeDestroy () {
+    this.$disconnect()
   },
   methods: {
     goBack () {
@@ -140,7 +142,7 @@ export default {
       }
     },
     send (messagetext) {
-      if (localStorage.jwt) {
+      if (this.$cookie.get('Authentication')) {
         if (messagetext) {
           console.log('messagetext: ', messagetext)
           this.$socket.send(

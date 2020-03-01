@@ -156,6 +156,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "templates/static/")
 ]
 
+# Media files (Images, Video, Files)
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = MEDIA_DIR
+MEDIA_URL = '/media/'
+
 # Channels
 ASGI_APPLICATION = 'dmess.routing.application'
 CHANNEL_LAYERS = {
@@ -167,4 +172,4 @@ CHANNEL_LAYERS = {
     },
 }
 
-LOGIN_URL='/login/'
+LOGIN_URL='/auth/'

@@ -93,7 +93,7 @@
         </v-row>
       </v-container>
     </v-form>
-    <router-link to="/chat/?1">
+    <router-link to="/chat/1">
       Перейти к chat
     </router-link>
   </div>
@@ -118,7 +118,7 @@ export default {
   methods: {
     FindChat (id) {
       if (id) {
-        window.location.href = 'chat/?' + id
+        this.$router.push('chat/' + id)
       }
     },
     Exit () {
@@ -148,12 +148,10 @@ export default {
         })
         .then(res => {
           console.log(res.data)
-          localStorage.setItem('jwt', res.data.access)
           this.$cookie.set('Authentication', res.data.access, {
             expires: '5m'
           })
-          this.button = 'Приветствуем ' + jwt.decode(localStorage.jwt).name
-          console.log(jwt.decode(localStorage.jwt))
+          this.button = 'Приветствуем ' + jwt.decode(this.$cookie.get('Authentication')).name
         })
         .catch(error => {
           if (error.response.status === 401) {
