@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <v-form>
       <v-container>
         <v-text-field
@@ -68,7 +68,7 @@
         </div>
       </v-container>
     </v-form>
-  </v-app>
+  </div>
 </template>
 
 <script>
@@ -77,7 +77,7 @@ import Vue from 'vue'
 import VueCookie from 'vue-cookie'
 Vue.use(VueCookie)
 export default {
-  name: 'Login',
+  name: 'Register',
   data: () => ({
     login: '',
     password: '',

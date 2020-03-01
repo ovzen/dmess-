@@ -33,7 +33,11 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-list two-line>
+    <v-list
+      two-line
+      max-height="70vh"
+      style="overflow:auto;"
+    >
       <v-card
         v-for="message in messages"
         :key="message.id"
