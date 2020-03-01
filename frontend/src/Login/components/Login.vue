@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-form>
       <v-container>
         <v-row>
@@ -41,7 +41,7 @@
         </div>
       </v-container>
     </v-form>
-  </div>
+  </v-container>
 </template>
 
 <script>

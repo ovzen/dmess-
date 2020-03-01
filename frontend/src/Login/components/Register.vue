@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-form>
       <v-container>
         <v-text-field
@@ -68,7 +68,7 @@
         </div>
       </v-container>
     </v-form>
-  </div>
+  </v-container>
 </template>
 
 <script>

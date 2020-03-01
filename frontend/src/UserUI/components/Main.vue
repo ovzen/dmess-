@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <a
       href="/django_admin/"
       style="text-decoration: none;"
@@ -96,7 +96,7 @@
     <router-link to="/chat/1">
       Перейти к chat
     </router-link>
-  </div>
+  </v-container>
 </template>
 
 <script>

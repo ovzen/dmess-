@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-card
       class="mx-auto"
       max-width="500"
@@ -25,7 +25,7 @@
         </v-list-item-avatar>
       </v-list-item>
     </v-card>
-  </div>
+  </v-container>
 </template>
 
 <script>

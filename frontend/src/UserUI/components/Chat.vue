@@ -1,5 +1,5 @@
 <template>
-  <div class="Chat">
+  <v-container fluid>
     <v-dialog
       v-model="dialog"
       width="100%"
@@ -35,8 +35,8 @@
     </v-dialog>
     <v-list
       two-line
-      max-height="70vh"
-      style="overflow:auto;"
+      max-height="65vh"
+      style="overflow:auto"
     >
       <v-card
         v-for="message in messages"
@@ -91,7 +91,7 @@
     >
       Назад
     </v-btn>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -133,7 +133,7 @@ export default {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
     GoAuth () {
-      window.location.href = '/'
+      window.location.reload()
     },
     get () {
       this.$options.sockets.onmessage = data => {
@@ -164,7 +164,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -179,7 +179,7 @@ export default {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   background-color:rgba(0,0,0,0.7);
 }
-.Chat {
+.container {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

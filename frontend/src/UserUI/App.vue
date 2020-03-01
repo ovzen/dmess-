@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <v-app-bar
-      v-if="!(AlwaysOnDisplay || ExpandOnHover)"
-      :collapse-on-scroll="true"
-      absolute
+      app
+      :value="!(AlwaysOnDisplay || ExpandOnHover)"
+      collapse-on-scroll
       dark
       scroll-target="#scrolling-techniques-6"
     >
@@ -14,10 +14,10 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
     </v-app-bar>
-
     <v-navigation-drawer
       v-model="drawer"
       absolute
+      :app="AlwaysOnDisplay"
       :expand-on-hover="ExpandOnHover"
       :temporary="!(AlwaysOnDisplay || ExpandOnHover)"
     >
@@ -25,6 +25,7 @@
         <v-navigation-drawer
           v-model="drawer"
           dark
+          :app="ExpandOnHover"
           mini-variant
           mini-variant-width="56px"
           absolute
@@ -33,6 +34,11 @@
             <v-list-item>
               <v-list-item-action>
                 <v-icon>mdi-chat</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-action>
+                <v-icon>mdi-settings</v-icon>
               </v-list-item-action>
             </v-list-item>
             <v-divider />
@@ -93,15 +99,15 @@
         </div>
       </v-row>
     </v-navigation-drawer>
-    <v-content>
-      <v-sheet
-        id="scrolling-techniques-6"
-        class="overflow-y-auto"
-        max-height="100vh"
-      >
-        <router-view :style="ComputePaddingOfContent" />
-      </v-sheet>
-    </v-content>
+    <v-sheet
+      id="scrolling-techniques-6"
+      class="overflow-y-auto"
+      max-height="100vh"
+    >
+      <v-content>
+        <router-view />
+      </v-content>
+    </v-sheet>
   </v-app>
 </template>
 
@@ -121,18 +127,7 @@ export default {
     AlwaysOnDisplay: false,
     ExpandOnHover: false,
     group: []
-  }),
-  computed: {
-    ComputePaddingOfContent () {
-      if (this.ExpandOnHover) {
-        return 'padding-top: 0px;padding-left: 56px;'
-      }
-      if (this.AlwaysOnDisplay) {
-        return 'padding-top: 0px;padding-left: 256px;'
-      }
-      return 'padding-top: 64px'
-    }
-  }
+  })
 }
 </script>
 

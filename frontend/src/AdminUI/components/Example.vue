@@ -1,7 +1,7 @@
 <template>
-  <div class="content">
+  <v-container fluid>
     <p>Это пример</p>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -12,8 +12,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.content {
+<style lang="scss" scoped>
+.container {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #2c3e50;
 }
