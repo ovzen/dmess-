@@ -100,7 +100,7 @@
           class="overflow-y-auto"
           max-height="100vh"
         >
-          <router-view :style="'' + ComputeMarginOfContent" />
+          <router-view :style="ComputePaddingOfContent" />
         </v-sheet>
       </v-content>
     </div>
@@ -125,7 +125,7 @@ export default {
     group: []
   }),
   computed: {
-    ComputeMarginOfContent () {
+    ComputePaddingOfContent () {
       if (this.ExpandOnHover) {
         return 'padding-top: 0px;padding-left: 56px;'
       }
