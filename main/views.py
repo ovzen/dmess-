@@ -13,12 +13,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from main.serializers import UserSerializer
 
 from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
-class CreateUserView(CreateAPIView):
+
+class UserView(CreateAPIView, ListAPIView):
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer

@@ -1,28 +1,10 @@
 <template>
   <v-app>
-    <a
-      href="django_admin/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="indigo"
-      >
-        Комнатка админа
-      </v-btn>
+    <a href="django_admin/" style="text-decoration: none;">
+      <v-btn class="ma-2" outlined color="indigo">Комнатка админа</v-btn>
     </a>
-    <a
-      href="/admin"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="indigo"
-      >
-        Комнатка модератора
-      </v-btn>
+    <a href="/admin" style="text-decoration: none;">
+      <v-btn class="ma-2" outlined color="indigo">Комнатка модератора</v-btn>
     </a>
     <v-form>
       <v-container>
@@ -171,12 +153,10 @@ export default {
         })
         .then(res => {
           console.log(res.data)
-          localStorage.setItem('jwt', res.data.access)
           this.$cookie.set('Authentication', res.data.access, {
             expires: '5m'
           })
-          this.button = 'Приветствуем ' + jwt.decode(localStorage.jwt).name
-          console.log(jwt.decode(localStorage.jwt))
+          this.button = 'Приветствуем ' + jwt.decode(this.$cookie.get('Authentication')).name
         })
         .catch(error => {
           if (error.response.status === 401) {
