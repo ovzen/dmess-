@@ -1,7 +1,12 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+from django.shortcuts import render
 
-# Create your views here.get_user_model
-from rest_framework.generics import CreateAPIView
+# Create your views here.
+
+from rest_framework import serializers, permissions
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView
+from rest_framework.mixins import ListModelMixin
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,10 +18,14 @@ from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
 
-class CreateUserView(CreateAPIView):
+class UserView(CreateAPIView, ListAPIView):
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
+    queryset = model.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
 class DialogView(APIView):
