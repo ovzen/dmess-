@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from main.models import Status
+from main.models import Status, Dialog
 
 UserModel = get_user_model()
 
@@ -51,10 +51,9 @@ class StatusSerializer(serializers.Serializer):
         return instance
 
 
+class DialogSerializer(serializers.ModelSerializer):
+    users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
 
-class DialogSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=200)
-    create_date = serializers.DateTimeField()
-    last_change = serializers.DateTimeField()
-    # users = serializers.
-
+    class Meta:
+        model = Dialog
+        fields = ('id', 'name', 'users')
