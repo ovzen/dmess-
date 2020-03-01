@@ -129,16 +129,13 @@ export default {
               response.data.dialogs &&
               response.data.dialogs.length
             ) {
-              console.log("response dialogs:", response.data.dialogs);
+              // console.log("response dialogs:", response.data.dialogs);
               this.$router.push('chat/' + idChat);
             } else {
               api.axios
-                .post("/api/dialog/", {
-                  username: username,
-                  password: password
-                })
+                .post("/api/dialog/")
                 .then(response => {
-                  console.log('post response:', response)
+                  // console.log('post response:', response)
                   if (response && response.data && response.data.id_dialog) {
                     this.$router.push('chat/' + response.data.id_dialog);
                   }
