@@ -1,28 +1,10 @@
 <template>
   <v-app>
-    <a
-      href="django_admin/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="indigo"
-      >
-        Комнатка админа
-      </v-btn>
+    <a href="django_admin/" style="text-decoration: none;">
+      <v-btn class="ma-2" outlined color="indigo">Комнатка админа</v-btn>
     </a>
-    <a
-      href="/admin"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="indigo"
-      >
-        Комнатка модератора
-      </v-btn>
+    <a href="/admin" style="text-decoration: none;">
+      <v-btn class="ma-2" outlined color="indigo">Комнатка модератора</v-btn>
     </a>
     <v-form>
       <v-container>
@@ -170,14 +152,11 @@ export default {
           password: password
         })
         .then(res => {
-          console.log('auth response:', res.data);
+          console.log(res.data)
           this.$cookie.set('Authentication', res.data.access, {
             expires: '5m'
           })
-          console.log('vue cookie:', this.$cookie.get('Authentication'));
-          console.log('doc cookie:', document.cookie);
           this.button = 'Приветствуем ' + jwt.decode(this.$cookie.get('Authentication')).name
-          console.log('after get:', document.cookie);
         })
         .catch(error => {
           if (error.response.status === 401) {
