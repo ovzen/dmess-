@@ -1,9 +1,7 @@
 <template>
-  <v-app>
-    <div>
-      <p>Это пример</p>
-    </div>
-  </v-app>
+  <div class="content">
+    <p>Это пример</p>
+  </div>
 </template>
 
 <script>
@@ -15,7 +13,7 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
+.content {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #2c3e50;
 }

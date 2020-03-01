@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <a
       href="/django_admin/"
       style="text-decoration: none;"
@@ -96,7 +96,7 @@
     <router-link to="/chat/?1">
       Перейти к chat
     </router-link>
-  </v-app>
+  </div>
 </template>
 
 <script>

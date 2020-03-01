@@ -1,99 +1,96 @@
 <template>
-  <v-app>
-    <div class="Chat">
-      <v-dialog
-        v-model="dialog"
-        width="100%"
-      >
-        <v-card dark>
-          <v-card-title
-            class="blue lighten-1"
-            primary-title
-          >
-            Ошибка
-          </v-card-title>
-
-          <div
-            class="grey lighten-4"
-            style="color:red;"
-          >
-            <h2 style="font-weight:400;text-align: center;color:red;">
-              Вы не вошли!!!
-            </h2>
-          </div>
-          <v-divider class="grey lighten-2" />
-          <v-card-actions class="grey lighten-4">
-            <v-spacer />
-            <v-btn
-              color="primary"
-              text
-              @click="GoAuth()"
-            >
-              Войти
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-list two-line>
-        <v-card
-          v-for="message in messages"
-          :key="message.id"
-          color="blue lighten-1"
-          dark
-          class="mx-auto"
-          style="margin-top:20px;margin-bottom:20px"
-          max-width="344"
+  <div class="Chat">
+    <v-dialog
+      v-model="dialog"
+      width="100%"
+    >
+      <v-card dark>
+        <v-card-title
+          class="blue lighten-1"
+          primary-title
         >
-          <v-card-title>
-            <span class="title font-weight-light">
-              {{ message.text }}
-            </span>
-          </v-card-title>
-          <div style="text-align: right; margin-right:10px;margin-top:-25px;">
-            <span class="font-weight-light">
-              От: {{ message.author }}
-            </span>
-          </div>
-        </v-card>
-      </v-list>
-      <v-flex
-        xs12
-        style="margin-top:-5px;margin-left:30px;margin-right:30px;margin-bottom:-10px"
-      >
-        <v-row>
-          <v-text-field
-            v-model="message_text"
-            clearable
-            style="margin:auto;"
-            label="Сообщение"
-            color="blue lighten-1"
-            @keyup.enter="send(message_text)"
-          />
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="send(message_text)"
-          >
-            Отправить
-          </v-btn>
-        </v-row>
-      </v-flex>
+          Ошибка
+        </v-card-title>
 
-      <v-btn
-        width="99%"
-        class="blue lighten-1"
+        <div
+          class="grey lighten-4"
+          style="color:red;"
+        >
+          <h2 style="font-weight:400;text-align: center;color:red;">
+            Вы не вошли!!!
+          </h2>
+        </div>
+        <v-divider class="grey lighten-2" />
+        <v-card-actions class="grey lighten-4">
+          <v-spacer />
+          <v-btn
+            color="primary"
+            text
+            @click="GoAuth()"
+          >
+            Войти
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-list two-line>
+      <v-card
+        v-for="message in messages"
+        :key="message.id"
+        color="blue lighten-1"
         dark
-        @click="goBack()"
+        class="mx-auto"
+        style="margin-top:20px;margin-bottom:20px"
+        max-width="344"
       >
-        Назад
-      </v-btn>
-    </div>
-  </v-app>
+        <v-card-title>
+          <span class="title font-weight-light">
+            {{ message.text }}
+          </span>
+        </v-card-title>
+        <div style="text-align: right; margin-right:10px;margin-top:-25px;">
+          <span class="font-weight-light">
+            От: {{ message.author }}
+          </span>
+        </div>
+      </v-card>
+    </v-list>
+    <v-flex
+      xs12
+      style="margin-top:-5px;margin-left:30px;margin-right:30px;margin-bottom:-10px"
+    >
+      <v-row>
+        <v-text-field
+          v-model="message_text"
+          clearable
+          style="margin:auto;"
+          label="Сообщение"
+          color="blue lighten-1"
+          @keyup.enter="send(message_text)"
+        />
+        <v-btn
+          class="ma-2"
+          outlined
+          color="primary"
+          @click="send(message_text)"
+        >
+          Отправить
+        </v-btn>
+      </v-row>
+    </v-flex>
+
+    <v-btn
+      width="99%"
+      class="blue lighten-1"
+      dark
+      @click="goBack()"
+    >
+      Назад
+    </v-btn>
+  </div>
 </template>
 
 <script>
-import jwt from 'jsonwebtoken'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'

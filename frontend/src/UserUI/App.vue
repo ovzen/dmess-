@@ -94,13 +94,15 @@
           </div>
         </v-row>
       </v-navigation-drawer>
-      <v-sheet
-        id="scrolling-techniques-6"
-        class="overflow-y-auto"
-        max-height="100vh"
-      >
-        <router-view :style="ComputeMarginOfContent" />
-      </v-sheet>
+      <v-content>
+        <v-sheet
+          id="scrolling-techniques-6"
+          class="overflow-y-auto"
+          max-height="100vh"
+        >
+          <router-view :style="'' + ComputeMarginOfContent" />
+        </v-sheet>
+      </v-content>
     </div>
   </v-app>
 </template>
@@ -125,12 +127,12 @@ export default {
   computed: {
     ComputeMarginOfContent () {
       if (this.ExpandOnHover) {
-        return 'margin-top: 0px;margin-left: 58px;'
+        return 'padding-top: 0px;padding-left: 56px;'
       }
       if (this.AlwaysOnDisplay) {
-        return 'margin-top: 0px;margin-left: 256px;'
+        return 'padding-top: 0px;padding-left: 256px;'
       }
-      return 'margin-top: 64px'
+      return 'padding-top: 64px'
     }
   }
 }
