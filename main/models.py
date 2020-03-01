@@ -36,10 +36,11 @@ class Status(models.Model):
 
 
 class Dialog(models.Model):
-    create_date = models.DateTimeField(default=timezone.now)
-    last_change = models.DateTimeField(default=timezone.now)
+    create_date = models.DateTimeField(default=timezone.now, blank=True)
+    last_change = models.DateTimeField(default=timezone.now, blank=True)
     name = models.CharField(max_length=200)
     users = models.ManyToManyField(User)
+    last_message = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name

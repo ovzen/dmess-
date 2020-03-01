@@ -93,7 +93,7 @@
         </v-row>
       </v-container>
     </v-form>
-    <router-link to="/chat/1">Перейти к chat</router-link>
+    <router-link to="/chat/?1">Перейти к chat</router-link>
   </v-app>
 </template>
 
@@ -114,9 +114,34 @@ export default {
     data: ''
   }),
   methods: {
-    FindChat (id) {
-      if (id) {
-        this.$router.push('chat/' + id)
+    FindChat(idChat) {
+      if (idChat) {
+        api.axios
+          .get("/api/dialog/", {
+            params: {
+              id: idChat
+            }
+          })
+          .then(response => {
+            if (
+              response &&
+              response.data &&
+              response.data.dialogs &&
+              response.data.dialogs.length
+            ) {
+              console.log("response dialogs:", response.data.dialogs);
+              this.$router.push('chat/' + idChat);
+            } else {
+              api.axios
+                .post("/api/dialog/")
+                .then(response => {
+                  console.log('post response:', response)
+                  if (response && response.data && response.data.id_dialog) {
+                    this.$router.push('chat/' + response.data.id_dialog);
+                  }
+                  });
+            }
+          });
       }
     },
     Exit () {
@@ -146,10 +171,12 @@ export default {
         })
         .then(res => {
           console.log(res.data)
+          localStorage.setItem('jwt', res.data.access)
           this.$cookie.set('Authentication', res.data.access, {
             expires: '5m'
           })
-          this.button = 'Приветствуем ' + jwt.decode(this.$cookie.get('Authentication')).name
+          this.button = 'Приветствуем ' + jwt.decode(localStorage.jwt).name
+          console.log(jwt.decode(localStorage.jwt))
         })
         .catch(error => {
           if (error.response.status === 401) {

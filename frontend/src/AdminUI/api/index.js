@@ -1,9 +1,10 @@
 import axios from 'axios'
+import VueCookie from 'vue-cookie'
 
 axios.interceptors.request.use(
   function (config) {
-    if (localStorage.getItem('jwt')) {
-      config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('jwt')
+    if (VueCookie.get('Authentication')) {
+      config.headers['Authorization'] = 'Bearer ' + VueCookie.get('Authentication')
     }
     return config
   }, function (error) {
