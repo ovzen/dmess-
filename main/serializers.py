@@ -63,9 +63,20 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class FriendSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    friend = UserSerializer()
+    user = UserSerializer(read_only=True)
+    print(user.data)
+    friend = UserSerializer(read_only=True)
+    friend_id = serializers.IntegerField()
+
+    def create(self, validated_data):
+        friend = Friend.objects.create(
+            user=self._context['request']._user,
+            friend=UserModel.objects.get(id=validated_data['friend_id'])
+        )
+        friend.save()
+
+        return friend
 
     class Meta:
         model = Friend
-        fields = ('user', 'friend')
+        fields = ('user', 'friend', 'friend_id')
