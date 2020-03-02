@@ -5,7 +5,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from rest_framework import serializers, permissions
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView, DestroyAPIView
 from rest_framework.mixins import ListModelMixin
 
 from rest_framework.views import APIView
@@ -14,14 +14,24 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer
+from main.models import Dialog, Friend
+from main.serializers import UserSerializer, DialogSerializer, FriendSerializer
 
 
 class UserView(CreateAPIView, ListAPIView):
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
+    queryset = model.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class FriendView(CreateAPIView, ListAPIView):
+    permission_classes = (AllowAny,)
+    model = Friend
+    serializer_class = FriendSerializer
     queryset = model.objects.all()
 
     def get(self, request, *args, **kwargs):

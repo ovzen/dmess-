@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from main.models import Status, Dialog
+from main.models import Status, Dialog, Friend
 
 UserModel = get_user_model()
 
@@ -60,3 +60,12 @@ class DialogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dialog
         fields = ('id', 'name', 'users')
+
+
+class FriendSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+    friend_id = serializers.IntegerField()
+
+    class Meta:
+        model = Friend
+        fields = ('user_id', 'friend_id')
