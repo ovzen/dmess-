@@ -63,9 +63,9 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class FriendSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField()
-    friend_id = serializers.IntegerField()
+    user = UserSerializer()
+    friend = UserSerializer()
 
     class Meta:
         model = Friend
-        fields = ('user_id', 'friend_id')
+        fields = ('user', 'friend')
