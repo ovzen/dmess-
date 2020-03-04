@@ -1,7 +1,10 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.shortcuts import render
-
+from main.tasks import sendmail
 # Create your views here.
 
 from rest_framework import serializers, permissions
@@ -17,6 +20,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
+
 class UserView(CreateAPIView):
     """
        Registration of new user
@@ -28,6 +32,7 @@ class UserView(CreateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+
     def get(self, request):
         id = request.query_params.get('id')
         if id:
@@ -83,3 +88,11 @@ class MyTokenObtainPairView(TokenObtainPairView):
         This text is the description for this API
     """
     serializer_class = MyTokenObtainPairSerializer
+
+
+class MailView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        sendmail.delay()
+        return Response({"result": 1})
