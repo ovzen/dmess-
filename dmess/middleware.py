@@ -1,3 +1,5 @@
+import datetime
+
 from channels.auth import UserLazyObject
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
@@ -5,7 +7,7 @@ from django.contrib.auth.models import User, AnonymousUser
 from rest_framework import authentication
 from rest_framework_simplejwt import exceptions
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-
+from rest_framework_simplejwt.exceptions import InvalidToken
 
 
 class AuthMiddleware:
@@ -15,29 +17,28 @@ class AuthMiddleware:
 
     def __call__(self, request):
         try:
-            cookie = request.META.get('HTTP_COOKIE').split(' Authentication=')
-        except AttributeError:
-            return self.get_response(request)
-        if len(cookie) > 1:
-            token = cookie[1].split(';')[0]
-            # Code to be executed for each request before
-            # the view (and later middleware) are called.
-            val_token=JWTTokenUserAuthentication().get_validated_token(token)
+            token = request.COOKIES['Authentication']
             try:
-                authenticated = JWTTokenUserAuthentication().get_user(val_token).id
-                if authenticated:
-                    request.user = User.objects.get(id=authenticated)
-                else:
+                val_token = JWTTokenUserAuthentication().get_validated_token(token)
+                try:
+                    authenticated = JWTTokenUserAuthentication().get_user(val_token).id
+                    if authenticated:
+                        request.user = User.objects.get(id=authenticated)
+                        request.user.last_login = datetime.datetime.now()
+                        request.user.save()
+                    else:
+                        request.user = AnonymousUser
+                except exceptions.AuthenticationFailed:
                     request.user = AnonymousUser
-            except exceptions.AuthenticationFailed:
-                request.user = AnonymousUser
-
-        response = self.get_response(request)
+            except InvalidToken:
+                return self.get_response(request)
+        except KeyError:
+            return self.get_response(request)
 
         # Code to be executed for each request/response after
         # the view is called.
 
-        return response
+        return self.get_response(request)
 
 @database_sync_to_async
 def get_user(scope):
@@ -82,23 +83,26 @@ class WebsocketAuthMiddleware(BaseMiddleware):
 class DRFAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         try:
-            cookie = request.META.get('HTTP_COOKIE').split(' Authentication=')
-        except AttributeError:
-            return None
-        if len(cookie) > 1:
-            token = cookie[1].split(';')[0]
-            # Code to be executed for each request before
-            # the view (and later middleware) are called.
-            val_token = JWTTokenUserAuthentication().get_validated_token(token)
+            token = request._request.COOKIES['Authentication']
             try:
-                authenticated = JWTTokenUserAuthentication().get_user(val_token).id
-                if authenticated:
-                    user = User.objects.get(id=authenticated)
-                    return (user, None)
-                else:
+                val_token = JWTTokenUserAuthentication().get_validated_token(token)
+                try:
+                    authenticated = JWTTokenUserAuthentication().get_user(val_token).id
+                    if authenticated:
+                        user = User.objects.get(id=authenticated)
+                        user.last_login = datetime.datetime.now()
+                        user.save()
+                        return user, None
+                    else:
+                        return AnonymousUser
+                except exceptions.AuthenticationFailed:
                     return None
-            except exceptions.AuthenticationFailed:
+            except InvalidToken:
                 return None
+        except KeyError:
+            return None
+
         # Code to be executed for each request/response after
         # the view is called.
+
         return None

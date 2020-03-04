@@ -6,7 +6,20 @@ from django.utils import timezone
 
 class UserSetting(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
-    avatar = models.ImageField()
+    avatar = models.ImageField(upload_to='avatars',
+                               null=True,
+                               blank=True,
+                               width_field="width_field",
+                               height_field="height_field")
+    width_field = models.IntegerField(default=0)
+    height_field = models.IntegerField(default=0)
+
+    @property
+    def avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        else:
+            return '/static/user.png'
 
 
 class Friend(models.Model):
@@ -23,10 +36,11 @@ class Status(models.Model):
 
 
 class Dialog(models.Model):
-    create_date = models.DateTimeField(default=timezone.now)
-    last_change = models.DateTimeField(default=timezone.now)
+    create_date = models.DateTimeField(default=timezone.now, blank=True)
+    last_change = models.DateTimeField(default=timezone.now, blank=True)
     name = models.CharField(max_length=200)
     users = models.ManyToManyField(User)
+    last_message = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name

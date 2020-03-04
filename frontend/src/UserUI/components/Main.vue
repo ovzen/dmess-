@@ -1,7 +1,7 @@
 <template>
-  <v-app>
+  <v-container fluid>
     <a
-      href="django_admin/"
+      href="/django_admin/"
       style="text-decoration: none;"
     >
       <v-btn
@@ -13,7 +13,7 @@
       </v-btn>
     </a>
     <a
-      href="/admin"
+      href="/admin/"
       style="text-decoration: none;"
     >
       <v-btn
@@ -93,8 +93,10 @@
         </v-row>
       </v-container>
     </v-form>
-    <router-link to="/chat/?1">Перейти к chat</router-link>
-  </v-app>
+    <router-link to="/chat/1">
+      Перейти к chat
+    </router-link>
+  </v-container>
 </template>
 
 <script>
@@ -104,7 +106,7 @@ import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 Vue.use(VueCookie)
 export default {
-  name: 'App',
+  name: 'Main',
   data: () => ({
     login: '',
     ChatId: null,
@@ -114,9 +116,34 @@ export default {
     data: ''
   }),
   methods: {
-    FindChat (id) {
-      if (id) {
-        window.location.href = 'chat/?' + id
+    FindChat(idChat) {
+      if (idChat) {
+        api.axios
+          .get("/api/dialog/", {
+            params: {
+              id: idChat
+            }
+          })
+          .then(response => {
+            if (
+              response &&
+              response.data &&
+              response.data.dialogs &&
+              response.data.dialogs.length
+            ) {
+              // console.log("response dialogs:", response.data.dialogs);
+              this.$router.push('chat/' + idChat);
+            } else {
+              api.axios
+                .post("/api/dialog/")
+                .then(response => {
+                  // console.log('post response:', response)
+                  if (response && response.data && response.data.id_dialog) {
+                    this.$router.push('chat/' + response.data.id_dialog);
+                  }
+                  });
+            }
+          });
       }
     },
     Exit () {
@@ -146,12 +173,10 @@ export default {
         })
         .then(res => {
           console.log(res.data)
-          localStorage.setItem('jwt', res.data.access)
           this.$cookie.set('Authentication', res.data.access, {
             expires: '5m'
           })
-          this.button = 'Приветствуем ' + jwt.decode(localStorage.jwt).name
-          console.log(jwt.decode(localStorage.jwt))
+          this.button = 'Приветствуем ' + jwt.decode(this.$cookie.get('Authentication')).name
         })
         .catch(error => {
           if (error.response.status === 401) {

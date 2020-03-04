@@ -1,9 +1,9 @@
 <template>
-  <v-app>
+  <div>
     <v-app-bar
-      app
-      :value="!(AlwaysOnDisplay || ExpandOnHover)"
-      collapse-on-scroll
+      v-if="!(AlwaysOnDisplay || ExpandOnHover)"
+      :collapse-on-scroll="true"
+      absolute
       dark
       scroll-target="#scrolling-techniques-6"
     >
@@ -14,10 +14,10 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
     </v-app-bar>
+
     <v-navigation-drawer
       v-model="drawer"
       absolute
-      :app="AlwaysOnDisplay"
       :expand-on-hover="ExpandOnHover"
       :temporary="!(AlwaysOnDisplay || ExpandOnHover)"
     >
@@ -25,7 +25,6 @@
         <v-navigation-drawer
           v-model="drawer"
           dark
-          :app="ExpandOnHover"
           mini-variant
           mini-variant-width="56px"
           absolute
@@ -34,11 +33,6 @@
             <v-list-item>
               <v-list-item-action>
                 <v-icon>mdi-chat</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-action>
-                <v-icon>mdi-settings</v-icon>
               </v-list-item-action>
             </v-list-item>
             <v-divider />
@@ -104,16 +98,14 @@
       class="overflow-y-auto"
       max-height="100vh"
     >
-      <v-content>
-        <router-view />
-      </v-content>
+      <router-view :style="ComputeMarginOfContent" />
     </v-sheet>
-  </v-app>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: 'Skeleton',
   data: () => ({
     login: '',
     button: 'Войти',
@@ -127,12 +119,24 @@ export default {
     AlwaysOnDisplay: false,
     ExpandOnHover: false,
     group: []
-  })
+  }),
+  computed: {
+    ComputeMarginOfContent () {
+      if (this.ExpandOnHover) {
+        return 'margin-top: 0px;margin-left: 58px;'
+      }
+      if (this.AlwaysOnDisplay) {
+        return 'margin-top: 0px;margin-left: 256px;'
+      }
+      return 'margin-top: 64px'
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 #app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #2c3e50;
   height: 100vh;
 }

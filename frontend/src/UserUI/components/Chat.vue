@@ -1,112 +1,107 @@
 <template>
-  <v-app>
-    <div class="Chat">
-      <v-card>
-        <v-dialog
-          v-model="dialog"
-          width="500"
+  <v-container fluid>
+    <v-dialog
+      v-model="dialog"
+      width="100%"
+    >
+      <v-card dark>
+        <v-card-title
+          class="blue lighten-1"
+          primary-title
         >
-          <v-card dark>
-            <v-card-title
-              class="blue lighten-1"
-              primary-title
-            >
-              Ошибка
-            </v-card-title>
+          Ошибка
+        </v-card-title>
 
-            <div
-              class="grey lighten-4"
-              style="color:red;"
-            >
-              <h2 style="font-weight:400;text-align: center;color:red;">
-                Вы не вошли!!!
-              </h2>
-            </div>
-            <v-divider class="grey lighten-2" />
-            <v-card-actions class="grey lighten-4">
-              <v-spacer />
-              <v-btn
-                color="primary"
-                text
-                @click="GoAuth()"
-              >
-                Войти
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-toolbar
-          color="blue lighten-1"
-          dark
+        <div
+          class="grey lighten-4"
+          style="color:red;"
         >
-          <v-toolbar-title style="font-weight:1;">
-            Сообщения
-          </v-toolbar-title>
+          <h2 style="font-weight:400;text-align: center;color:red;">
+            Вы не вошли!!!
+          </h2>
+        </div>
+        <v-divider class="grey lighten-2" />
+        <v-card-actions class="grey lighten-4">
           <v-spacer />
-          <v-btn icon>
-            <v-icon />
+          <v-btn
+            color="primary"
+            text
+            @click="GoAuth()"
+          >
+            Войти
           </v-btn>
-        </v-toolbar>
-        <v-list two-line>
-          <v-card
-            v-for="message in messages"
-            :key="message.id"
-            color="blue lighten-1"
-            dark
-            class="mx-auto"
-            style="margin-top:20px;margin-bottom:20px"
-            max-width="344"
-          >
-            <v-card-title>
-              <span class="title font-weight-light">
-                {{ message.text }}
-              </span>
-            </v-card-title>
-            <div style="text-align: right; margin-right:10px;margin-top:-25px;">
-              <span class="font-weight-light">
-                От: {{ message.author }}
-              </span>
-            </div>
-          </v-card>
-          <v-flex
-            xs12
-            style="margin-top:-5px;margin-left:30px;margin-right:30px;margin-bottom:-10px"
-          >
-            <v-row>
-              <v-text-field
-                v-model="message_text"
-                clearable
-                style="margin:auto;"
-                label="Сообщение"
-                color="blue lighten-1"
-                @keyup.enter="send(message_text)"
-              />
-              <v-btn
-                class="ma-2"
-                outlined
-                color="primary"
-                @click="send(message_text)"
-              >
-                Отправить
-              </v-btn>
-            </v-row>
-          </v-flex>
-        </v-list>
+        </v-card-actions>
       </v-card>
-    </div>
-    <v-btn class="blue lighten-1" dark @click="goBack()">Назад</v-btn>
-  </v-app>
+    </v-dialog>
+    <v-list
+      two-line
+      max-height="65vh"
+      style="overflow:auto"
+    >
+      <v-card
+        v-for="message in messages"
+        :key="message.id"
+        color="blue lighten-1"
+        dark
+        class="mx-auto"
+        style="margin-top:20px;margin-bottom:20px"
+        max-width="344"
+      >
+        <v-card-title>
+          <span class="title font-weight-light">
+            {{ message.text }}
+          </span>
+        </v-card-title>
+        <div style="text-align: right; margin-right:10px;margin-top:-25px;">
+          <span class="font-weight-light">
+            От: {{ message.author }}
+          </span>
+        </div>
+      </v-card>
+    </v-list>
+    <v-flex
+      xs12
+      style="margin-top:-5px;margin-left:30px;margin-right:30px;margin-bottom:-10px"
+    >
+      <v-row>
+        <v-text-field
+          v-model="message_text"
+          clearable
+          style="margin:auto;"
+          label="Сообщение"
+          color="blue lighten-1"
+          @keyup.enter="send(message_text)"
+        />
+        <v-btn
+          class="ma-2"
+          outlined
+          color="primary"
+          @click="send(message_text)"
+        >
+          Отправить
+        </v-btn>
+      </v-row>
+    </v-flex>
+
+    <v-btn
+      width="99%"
+      class="blue lighten-1"
+      dark
+      @click="goBack()"
+    >
+      Назад
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
-import jwt from 'jsonwebtoken'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
-  'ws://' + window.location.host + '/ws/chat/' + '1' + '/',
+  'ws://' + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
   {
     connectManually: true
   }
@@ -121,20 +116,24 @@ export default {
     data: '',
     messages: [],
     dialog: false,
-    id: 0
+    id: 0,
+    drawer: false,
+    windowHeight: window.innerHeight - 160
   }),
   created () {
-    this.id = window.location.search.slice(1, 99)
-    console.log(window.location.host)
+    this.id = this.$route.params.id
     this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
     this.get()
   },
+  beforeDestroy () {
+    this.$disconnect()
+  },
   methods: {
-    goBack() {
+    goBack () {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
     GoAuth () {
-      window.location.href = '/'
+      window.location.reload()
     },
     get () {
       this.$options.sockets.onmessage = data => {
@@ -147,7 +146,7 @@ export default {
       }
     },
     send (messagetext) {
-      if (localStorage.jwt) {
+      if (this.$cookie.get('Authentication')) {
         if (messagetext) {
           console.log('messagetext: ', messagetext)
           this.$socket.send(
@@ -165,8 +164,22 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.Chat {
+<style lang="scss" scoped>
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  background-color:rgba(0,0,0,0.7);
+}
+.container {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
