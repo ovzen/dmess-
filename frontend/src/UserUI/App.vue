@@ -112,6 +112,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueCookie from 'vue-cookie'
+import api from './api'
+Vue.use(VueCookie)
 export default {
   name: 'App',
   data: () => ({
@@ -127,7 +131,23 @@ export default {
     AlwaysOnDisplay: false,
     ExpandOnHover: false,
     group: []
-  })
+  }),
+  watch: {
+    // при изменениях маршрута запрашиваем данные снова
+    $route: 'updateToken'
+  },
+  methods: {
+    updateToken () {
+      if (localStorage.getItem('UpdateKey') && !this.$cookie.get('Authentication')) {
+        api.axios.post('/api/token/refresh/', { refresh: localStorage.getItem('UpdateKey') }).then(res => {
+          this.$cookie.set('Authentication', res.data.access, {
+            expires: '5m'
+          })
+        }
+        )
+      }
+    }
+  }
 }
 </script>
 
