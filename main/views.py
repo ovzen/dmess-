@@ -17,8 +17,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
-
 class UserView(CreateAPIView):
+    """
+       Registration of new user
+    """
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
@@ -52,6 +54,7 @@ class DialogView(APIView):
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -76,4 +79,7 @@ def get_base_context():
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
+    """
+        This text is the description for this API
+    """
     serializer_class = MyTokenObtainPairSerializer
