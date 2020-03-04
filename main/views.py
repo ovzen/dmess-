@@ -18,14 +18,10 @@ from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
 
-class UserView(CreateAPIView, ListAPIView):
+class UserView(CreateAPIView):
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
-    queryset = model.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
 
 class DialogView(APIView):
