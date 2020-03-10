@@ -28,55 +28,6 @@
       <v-container>
         <v-row>
           <v-text-field
-            v-model="login"
-            label="Login"
-            clearable
-            required
-          />
-          <v-col
-            cols="12"
-            md="1"
-          />
-          <v-text-field
-            v-model="password"
-            clearable
-            label="Password"
-            required
-          />
-        </v-row>
-        <div class="text-center">
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="auth(login, password)"
-            v-text="button"
-          >
-            Войти
-          </v-btn>
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="Register(login, password)"
-          >
-            Регистрация
-          </v-btn>
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="Exit()"
-          >
-            Выйти
-          </v-btn>
-        </div>
-      </v-container>
-    </v-form>
-    <v-form>
-      <v-container>
-        <v-row>
-          <v-text-field
             v-model="ChatId"
             clearable
             label="Chat id"
