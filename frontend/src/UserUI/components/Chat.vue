@@ -82,7 +82,13 @@
         </v-btn>
       </v-row>
     </v-flex>
-
+    <v-btn
+      width="99%"
+      class="blue lighten-1 ma-2"
+      dark
+    >
+      Сохранить в базу знаний
+      </v-btn>
     <v-btn
       width="99%"
       class="blue lighten-1"
