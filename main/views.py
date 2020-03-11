@@ -17,6 +17,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
+
 class UserView(CreateAPIView):
     """
        Registration of new user
@@ -28,14 +29,21 @@ class UserView(CreateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+
     def get(self, request):
         id = request.query_params.get('id')
+        alldialogs = request.query_params.get('alldialogs')
         if id:
             dialogs = Dialog.objects.filter(id=id)
         else:
             dialogs = Dialog.objects.all()
-        serializer = DialogSerializer(dialogs, many=True)
-        return Response({"dialogs": serializer.data})
+        if alldialogs:
+            all_dialogs = Dialog.objects.filter(users=User.objects.filter(id=request.user))
+        else:
+            all_dialogs = []
+        dialog_serializer = DialogSerializer(dialogs, many=True)
+        all_dialogs_serializer = DialogSerializer(all_dialogs, many=True)
+        return Response({"dialogs": dialog_serializer.data, "all_dialogs": all_dialogs_serializer.data})
 
     def post(self, request):
         # TODO make a chat name from the recipient's name

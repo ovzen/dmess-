@@ -87,6 +87,12 @@
               </v-list-item-icon>
               <v-list-item-text>Другой диалог</v-list-item-text>
             </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-chat</v-icon>
+              </v-list-item-icon>
+              <v-list-item-text>ТЕСТ {{all_dialogs.length}}</v-list-item-text>
+            </v-list-item>
           </v-list-item-group>
         </v-list>
         <div style="position: absolute; top: 80%;">
@@ -136,7 +142,9 @@ export default {
     drawer: false,
     AlwaysOnDisplay: false,
     ExpandOnHover: false,
-    group: []
+    group: [],
+    alldialogs: true,
+    all_dialogs: []
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
@@ -152,6 +160,17 @@ export default {
         }
         )
       }
+    },
+    getDialogs: function () {
+      api.axios.get("/api/dialog/", {
+        params: {
+          alldialogs: this.alldialogs
+        }
+      })
+        .then(res => {
+          this.all_dialogs = res.data['all_dialogs'];
+          console.log(this.all_dialogs)
+        })
     }
   }
 }
