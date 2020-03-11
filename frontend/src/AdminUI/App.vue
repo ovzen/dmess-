@@ -1,15 +1,32 @@
 <template>
   <v-app>
-    <p>AdminUI</p>
-    <v-content>
-      <router-view />
-    </v-content>
+    <v-app-bar
+      app
+      color="white"
+      scroll-target="#scrolling-techniques-7"
+      elevate-on-scroll
+    >
+      <v-toolbar-title style="min-width:100px">AdminUI</v-toolbar-title>
+      <v-tabs>
+        <v-tab to="/UserActivity/">Активность пользователей</v-tab>
+        <v-tab to="/DialogActivity/">Активность в чатах</v-tab>
+      </v-tabs>
+    </v-app-bar>
+    <v-sheet
+      id="scrolling-techniques-7"
+      class="overflow-y-auto"
+      max-height="100vh"
+    >
+      <v-content>
+        <router-view />
+      </v-content>
+    </v-sheet>
   </v-app>
 </template>
 
 <script>
 export default {
-  name: 'Example',
+  name: 'AdminUI',
   data: () => ({
   })
 }
