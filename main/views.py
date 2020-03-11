@@ -39,7 +39,7 @@ class DialogView(APIView):
         else:
             dialogs = Dialog.objects.all()
         if alldialogs:
-            all_dialogs = Dialog.objects.filter(users=User.objects.filter(id=request.user))
+            all_dialogs = Dialog.objects.filter(users=request.user)
         else:
             all_dialogs = []
         dialog_serializer = DialogSerializer(dialogs, many=True)
