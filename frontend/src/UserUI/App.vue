@@ -33,7 +33,13 @@
           <v-list>
             <v-list-item>
               <v-list-item-action>
-                <v-icon>mdi-chat</v-icon>
+                <v-btn
+                  icon
+                  small
+                  @click="$router.go(-1)"
+                >
+                  <v-icon>mdi-arrow-left-circle</v-icon>
+                </v-btn>
               </v-list-item-action>
             </v-list-item>
             <v-list-item>

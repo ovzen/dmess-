@@ -47,12 +47,12 @@
         style="margin-top:20px;margin-bottom:20px"
         max-width="344"
       >
-        <v-card-title>
-          <span class="title font-weight-light">
+        <v-card-text
+          class="headline"
+          v-bind:class="isOwnMessage(message.author) ? 'text-right' : 'text-left'">
             {{ message.text }}
-          </span>
-        </v-card-title>
-        <div style="text-align: right; margin-right:10px;margin-top:-25px;">
+        </v-card-text>
+        <div style="text-align: right; margin-right:10px; margin-top:-25px;">
           <span class="font-weight-light">
             От: {{ message.author }}
           </span>
@@ -98,6 +98,7 @@
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
+import jwt from 'jsonwebtoken'
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -159,6 +160,9 @@ export default {
       } else {
         this.dialog = true
       }
+    },
+    isOwnMessage (author) {
+      return author === jwt.decode(this.$cookie.get('Authentication')).name
     }
   }
 }
