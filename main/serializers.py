@@ -6,11 +6,9 @@ UserModel = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
-
         user = UserModel.objects.create(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
@@ -54,9 +52,27 @@ class StatusSerializer(serializers.Serializer):
         return instance
 
 
-class DialogSerializer(serializers.ModelSerializer):
+# class DialogSerializer(serializers.ModelSerializer):
+#     users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
+#
+#     class Meta:
+#         model = Dialog
+#         fields = ('id', 'name', 'users')
+class DialogSerializer(serializers.Serializer):
+    create_date = serializers.DateTimeField()
+    last_change = serializers.DateTimeField()
+    name = serializers.CharField(max_length=200)
     users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
+    last_message = serializers.CharField(max_length=200)
 
-    class Meta:
-        model = Dialog
-        fields = ('id', 'name', 'users')
+    def create(self, validated_data):
+        return Dialog.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.create_date = validated_data.get('create_date', instance.create_date)
+        instance.last_change = validated_data.get('last_change', instance.last_change)
+        instance.name = validated_data.get('name', instance.name)
+        instance.users = validated_data.get('users', instance.users)
+        instance.last_message = validated_data.get('last_message', instance.last_message)
+        instance.save()
+        return instance

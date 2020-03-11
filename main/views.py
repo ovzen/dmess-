@@ -5,7 +5,8 @@ from django.shortcuts import render
 # Create your views here.
 
 from rest_framework import serializers, permissions
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView, RetrieveAPIView, \
+    get_object_or_404
 from rest_framework.mixins import ListModelMixin
 
 from rest_framework.views import APIView
@@ -28,6 +29,7 @@ class UserView(CreateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+
     def get(self, request):
         id = request.query_params.get('id')
         if id:
@@ -51,6 +53,17 @@ class DialogView(APIView):
             "success": "dialog '{}' created successfully".format(dialog_saved.name),
             "id_dialog": dialog_saved.id
         })
+
+    def put(self, request, pk):
+        saved_dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
+        data = request.data.get('dialog')
+        serializer = DialogSerializer(instance=saved_dialog, data=data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            dialog_saved = serializer.save()
+        return Response({
+            "success": "Dialog '{}' updated successfully".format(dialog_saved.title)
+        })
+
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
