@@ -29,6 +29,7 @@ class UserView(CreateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+    serializer_class = DialogSerializer
 
     def get(self, request):
         id = request.query_params.get('id')
@@ -49,7 +50,7 @@ class DialogView(APIView):
         # TODO make a chat name from the recipient's name
         user = get_user_model()
         dialog = {
-            'name': 'Untitled3',
+            'name': request.data['name'],
             'users': [request.user.id]
         }
         serializer = DialogSerializer(data=dialog)

@@ -91,7 +91,7 @@
               <v-list-item-icon>
                 <v-icon>mdi-chat</v-icon>
               </v-list-item-icon>
-              <v-list-item-text>ТЕСТ {{all_dialogs.length}}</v-list-item-text>
+              <v-list-item-text>ТЕСТ {{ all_dialogs.length }}</v-list-item-text>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -146,6 +146,9 @@ export default {
     alldialogs: true,
     all_dialogs: []
   }),
+  сreated () {
+    this.getDialogs()
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: 'updateToken'
@@ -162,13 +165,13 @@ export default {
       }
     },
     getDialogs: function () {
-      api.axios.get("/api/dialog/", {
+      api.axios.get('/api/dialog/', {
         params: {
           alldialogs: this.alldialogs
         }
       })
         .then(res => {
-          this.all_dialogs = res.data['all_dialogs'];
+          this.all_dialogs = res.data['all_dialogs']
           console.log(this.all_dialogs)
         })
     }
