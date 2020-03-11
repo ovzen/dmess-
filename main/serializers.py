@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from main.models import Status, Dialog
+from main.models import Status, Dialog, Invite
 
 UserModel = get_user_model()
 
@@ -60,3 +60,17 @@ class DialogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dialog
         fields = ('id', 'name', 'users')
+
+
+class InviteSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=16)
+    is_active = serializers.BooleanField()
+
+    def create(self, validated_data):
+        return Invite.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.code = validated_data.get('code', instance.code)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.save()
+        return instance

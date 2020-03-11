@@ -14,8 +14,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer
+from main.models import Dialog, Invite
+from main.serializers import UserSerializer, DialogSerializer, InviteSerializer
 
 
 class UserView(CreateAPIView):
