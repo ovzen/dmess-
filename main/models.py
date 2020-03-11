@@ -56,4 +56,4 @@ class Message(models.Model):
 
 class Invite(models.Model):
     code = models.CharField(max_length=16)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
