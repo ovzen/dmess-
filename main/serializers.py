@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+
 from main.models import Status, Dialog, Friend
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 UserModel = get_user_model()
 
@@ -80,3 +83,15 @@ class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friend
         fields = ('user', 'friend', 'friend_id')
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Add custom claims
+        token['name'] = user.username
+        # ...
+        return token
+

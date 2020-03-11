@@ -1,31 +1,22 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
-from django.shortcuts import render
 
-# Create your views here.
-
-from rest_framework import serializers, permissions
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView, DestroyAPIView
-from rest_framework.mixins import ListModelMixin
-
-from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main.models import Dialog, Friend
-from main.serializers import UserSerializer, DialogSerializer, FriendSerializer
+from main.serializers import UserSerializer, DialogSerializer, FriendSerializer, MyTokenObtainPairSerializer
 
 
-class UserView(CreateAPIView, ListAPIView):
+class UserView(CreateAPIView):
+    """
+       Registration of new user
+    """
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
-    queryset = model.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
 
 class FriendView(CreateAPIView, ListAPIView):
@@ -40,6 +31,7 @@ class FriendView(CreateAPIView, ListAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+
     def get(self, request):
         id = request.query_params.get('id')
         if id:
@@ -51,7 +43,6 @@ class DialogView(APIView):
 
     def post(self, request):
         # TODO make a chat name from the recipient's name
-        user = get_user_model()
         dialog = {
             'name': 'Untitled3',
             'users': [request.user.id]
@@ -63,16 +54,6 @@ class DialogView(APIView):
             "success": "dialog '{}' created successfully".format(dialog_saved.name),
             "id_dialog": dialog_saved.id
         })
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['name'] = user.username
-        # ...
-        return token
 
 
 def get_base_context():
