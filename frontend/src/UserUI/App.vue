@@ -73,6 +73,7 @@
               v-for="dialog in all_dialogs"
               :key="dialog.id"
               class="grow"
+              @click="openDialog(dialog.id)"
             >
               <v-list-item-icon>
                 <v-icon>mdi-chat</v-icon>
@@ -160,6 +161,17 @@ export default {
           this.all_dialogs = res.data['all_dialogs']
           console.log(this.all_dialogs)
         })
+    },
+    openDialog (dialogId) {
+      api.axios
+          .get("/api/dialog/", {
+            params: {
+              id: dialogId
+            }
+          })
+          .then(response => {
+              this.$router.push('../chat/' + dialogId);
+          });
     }
   }
 }
