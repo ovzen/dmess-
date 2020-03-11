@@ -17,6 +17,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
+
 class UserView(CreateAPIView):
     """
        Registration of new user
@@ -28,6 +29,7 @@ class UserView(CreateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+
     def get(self, request):
         id = request.query_params.get('id')
         if id:
@@ -51,6 +53,13 @@ class DialogView(APIView):
             "success": "dialog '{}' created successfully".format(dialog_saved.name),
             "id_dialog": dialog_saved.id
         })
+
+
+class InviteListView(APIView):
+    def get(self, request):
+        invites = Invite.objects.all()
+        serializer = InviteSerializer(invites, many=True)
+        return Response({"invites": serializer.data})
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
