@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.shortcuts import render
@@ -70,6 +73,19 @@ class InviteListView(APIView):
         invites = Invite.objects.all()
         serializer = InviteSerializer(invites, many=True)
         return Response({"invites": serializer.data})
+
+
+class InviteCreateView(APIView):
+    def get(self, request):
+        code = ''.join(random.choice(string.ascii_letters) for _ in range(16))
+        invites = Invite.objects.filter(code=code)
+        while len(invites) > 0:
+            code = ''.join(random.choice(string.ascii_letters) for _ in range(16))
+            invites = Invite.objects.filter(code=code)
+        invite = Invite(code=code)
+        invite.save()
+        serializer = InviteSerializer(invite)
+        return Response({"invite": serializer.data})
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
