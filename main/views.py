@@ -30,7 +30,7 @@ class UserView(CreateAPIView):
 class DialogView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request):
+    def get(self, request, pk=None):
         id = request.query_params.get('id')
         if id:
             dialogs = Dialog.objects.filter(id=id)
@@ -39,7 +39,7 @@ class DialogView(APIView):
         serializer = DialogSerializer(dialogs, many=True)
         return Response({"dialogs": serializer.data})
 
-    def post(self, request):
+    def post(self, request, pk=None):
         # TODO make a chat name from the recipient's name
         user = get_user_model()
         dialog = {
@@ -63,6 +63,13 @@ class DialogView(APIView):
         return Response({
             "success": "Dialog '{}' updated successfully".format(dialog_saved.title)
         })
+
+    def delete(self, request, pk):
+        dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
+        dialog.delete()
+        return Response({
+            "message": "Article with id `{}` has been deleted.".format(pk)
+        }, status=204)
 
 
 
