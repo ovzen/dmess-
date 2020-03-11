@@ -34,7 +34,11 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
+
+                  # Invites
+                  path('api/admin/invite/check', views.InviteCheckView.as_view()),
                   path('api/admin/invite/list', views.InviteListView.as_view()),
+
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path('admin/',
             login_required(TemplateView.as_view(template_name="admin.html")),

@@ -55,6 +55,16 @@ class DialogView(APIView):
         })
 
 
+class InviteCheckView(APIView):
+    def get(self, request, code):
+        invite_query = Invite.objects.filter(code=code)
+        if invite_query.count() > 0:
+            invite = invite_query.first()
+            if invite.is_active:
+                return Response({"status": True})
+        return Response({"status": False})
+
+
 class InviteListView(APIView):
     def get(self, request):
         invites = Invite.objects.all()
