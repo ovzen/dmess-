@@ -21,6 +21,12 @@ module.exports = {
       title: 'Admin',
       chunks: [ 'chunk-vendors', 'chunk-common', 'admin' ]
     },
+    'knowledgebase': {
+      entry: './src/knowledgebase/main.js',
+      template: 'public/index.html',
+      title: 'База знаний',
+      chunks: [ 'chunk-vendors', 'chunk-common', 'knowledgebase' ]
+    },
     'auth': {
       entry: './src/Login/main.js',
       template: 'public/index.html',
