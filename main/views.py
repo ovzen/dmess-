@@ -1,21 +1,13 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
-from django.shortcuts import render
-
-# Create your views here.
-
-from rest_framework import serializers, permissions
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView
-from rest_framework.mixins import ListModelMixin
-
-from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer
+
 
 
 class UserView(CreateAPIView):
@@ -45,7 +37,6 @@ class DialogView(APIView):
 
     def post(self, request):
         # TODO make a chat name from the recipient's name
-        user = get_user_model()
         dialog = {
             'name': request.data['name'],
             'users': [request.user.id]
@@ -57,17 +48,6 @@ class DialogView(APIView):
             "success": "dialog '{}' created successfully".format(dialog_saved.name),
             "id_dialog": dialog_saved.id
         })
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['name'] = user.username
-        # ...
-        return token
 
 
 def get_base_context():
@@ -85,7 +65,4 @@ def get_base_context():
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
-    """
-        This text is the description for this API
-    """
     serializer_class = MyTokenObtainPairSerializer
