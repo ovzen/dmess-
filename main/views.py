@@ -9,6 +9,7 @@ from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer
 
 
+
 class UserView(CreateAPIView):
     """
        Registration of new user
@@ -20,20 +21,24 @@ class UserView(CreateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+    serializer_class = DialogSerializer
 
     def get(self, request):
         id = request.query_params.get('id')
+        for_user = request.query_params.get('for_user')
         if id:
             dialogs = Dialog.objects.filter(id=id)
+        elif for_user:
+            dialogs = Dialog.objects.filter(users=request.user)
         else:
             dialogs = Dialog.objects.all()
-        serializer = DialogSerializer(dialogs, many=True)
-        return Response({"dialogs": serializer.data})
+        dialog_serializer = DialogSerializer(dialogs, many=True)
+        return Response({"dialogs": dialog_serializer.data})
 
     def post(self, request):
         # TODO make a chat name from the recipient's name
         dialog = {
-            'name': 'Untitled3',
+            'name': request.data['name'],
             'users': [request.user.id]
         }
         serializer = DialogSerializer(data=dialog)

@@ -69,23 +69,16 @@
           <v-list-item-group
             v-model="group"
           >
-            <v-list-item class="grow">
+            <v-list-item
+              v-for="dialog in dialogs_for_user"
+              :key="dialog.id"
+              class="grow"
+              @click="openDialog(dialog.id)"
+            >
               <v-list-item-icon>
                 <v-icon>mdi-chat</v-icon>
               </v-list-item-icon>
-              <v-list-item-text>Другой диалог</v-list-item-text>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-chat</v-icon>
-              </v-list-item-icon>
-              <v-list-item-text>Другой диалог</v-list-item-text>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-chat</v-icon>
-              </v-list-item-icon>
-              <v-list-item-text>Другой диалог</v-list-item-text>
+              <v-list-item-content>{{ dialog.name }}</v-list-item-content>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -136,11 +129,17 @@ export default {
     drawer: false,
     AlwaysOnDisplay: false,
     ExpandOnHover: false,
-    group: []
+    group: [],
+    for_user: true,
+    dialogs_for_user: []
+
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: 'updateToken'
+  },
+  mounted () {
+    this.getDialogs()
   },
   methods: {
     updateToken () {
@@ -152,6 +151,20 @@ export default {
         }
         )
       }
+    },
+    getDialogs () {
+      api.axios.get('/api/dialog/', {
+        params: {
+          for_user: this.for_user
+        }
+      })
+        .then(res => {
+          this.dialogs_for_user = res.data['dialogs']
+          console.log(this.dialogs_for_user)
+        })
+    },
+    openDialog (dialogId) {
+      this.$router.push({ name: 'Chat', params: { id: dialogId } })
     }
   }
 }
