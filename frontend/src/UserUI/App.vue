@@ -164,7 +164,7 @@ export default {
         })
     },
     openDialog (dialogId) {
-      this.$router.push('../chat/' + dialogId)
+      this.$router.push({ name: 'Chat', params: { id: dialogId } })
     }
   }
 }
