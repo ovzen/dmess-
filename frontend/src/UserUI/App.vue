@@ -163,15 +163,7 @@ export default {
         })
     },
     openDialog (dialogId) {
-      api.axios
-          .get("/api/dialog/", {
-            params: {
-              id: dialogId
-            }
-          })
-          .then(response => {
-              this.$router.push('../chat/' + dialogId);
-          });
+        this.$router.push('../chat/' + dialogId);
     }
   }
 }
