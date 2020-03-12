@@ -1,0 +1,43 @@
+<template>
+  <v-app>
+   <v-layout row>
+   <v-flex xs12 sm6 offset-sm3>
+   <h1 class="text--secondary mb-3">Список пользователей</h1>
+
+   <v-card>
+
+    <v-layout row>
+    <v-flex xs4>
+    <v-card-media
+
+    ></v-card-media>
+
+    </v-flex>
+    <v-flex xs8>
+    <v-card-text></v-card-text>
+    <v-card-actions>
+     <v-spacer></v-spacer>
+     <v-btn class="info">Открыть</v-btn>
+    </v-card-actions>
+    </v-flex>
+    </v-layout>
+   </v-card>
+   </v-flex>
+   </v-layout>
+  </v-app>
+</template>
+
+<script>
+export default {
+  name: 'Example',
+  data: () => ({
+  })
+}
+</script>
+
+<style lang="scss">
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  color: #2c3e50;
+}
+</style>
