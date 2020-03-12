@@ -70,7 +70,7 @@
             v-model="group"
           >
             <v-list-item
-              v-for="dialog in all_dialogs"
+              v-for="dialog in dialogs_for_user"
               :key="dialog.id"
               class="grow"
               @click="openDialog(dialog.id)"
@@ -130,8 +130,9 @@ export default {
     AlwaysOnDisplay: false,
     ExpandOnHover: false,
     group: [],
-    alldialogs: true,
-    all_dialogs: []
+    for_user: true,
+    dialogs_for_user: []
+
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
@@ -154,16 +155,16 @@ export default {
     getDialogs () {
       api.axios.get('/api/dialog/', {
         params: {
-          alldialogs: this.alldialogs
+          for_user: this.for_user
         }
       })
         .then(res => {
-          this.all_dialogs = res.data['all_dialogs']
-          console.log(this.all_dialogs)
+          this.dialogs_for_user = res.data['dialogs']
+          console.log(this.dialogs_for_user)
         })
     },
     openDialog (dialogId) {
-        this.$router.push('../chat/' + dialogId);
+      this.$router.push('../chat/' + dialogId)
     }
   }
 }

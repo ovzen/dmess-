@@ -33,18 +33,15 @@ class DialogView(APIView):
 
     def get(self, request):
         id = request.query_params.get('id')
-        alldialogs = request.query_params.get('alldialogs')
+        for_user = request.query_params.get('for_user')
         if id:
             dialogs = Dialog.objects.filter(id=id)
+        elif for_user:
+            dialogs = Dialog.objects.filter(users=request.user)
         else:
             dialogs = Dialog.objects.all()
-        if alldialogs:
-            all_dialogs = Dialog.objects.filter(users=request.user)
-        else:
-            all_dialogs = []
         dialog_serializer = DialogSerializer(dialogs, many=True)
-        all_dialogs_serializer = DialogSerializer(all_dialogs, many=True)
-        return Response({"dialogs": dialog_serializer.data, "all_dialogs": all_dialogs_serializer.data})
+        return Response({"dialogs": dialog_serializer.data})
 
     def post(self, request):
         # TODO make a chat name from the recipient's name
