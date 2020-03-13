@@ -28,16 +28,24 @@ schema_view = get_swagger_view(title='API')
 
 urlpatterns = [
     url(r'^docs/', schema_view),
+
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
+
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
+
     path("frontend/src/knowledgebase/",
          TemplateView.as_view(template_name="knowledgebase.html"),
          name="knowledgebase",
          ),
+    path("frontend/src/allUsers/",
+         TemplateView.as_view(template_name="allUser.html"),
+         name="allUser",
+         ),
+
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path('admin/',
             login_required(TemplateView.as_view(template_name="admin.html")),
