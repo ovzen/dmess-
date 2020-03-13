@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Chat from './components/Chat'
 import Main from './components/Main'
 import Profile from './components/Profile'
-
+import allUser from './components/allUser'
 Vue.use(Router)
 
 export default new Router({
@@ -24,6 +24,11 @@ export default new Router({
       path: '/profile',
       name: 'Профиль',
       component: Profile
+    },
+    {
+    path: '/all_User',
+    name: 'Список пользователей',
+    component: allUser
     }
   ]
 })
