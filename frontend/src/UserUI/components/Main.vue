@@ -116,10 +116,10 @@ export default {
     data: ''
   }),
   methods: {
-    FindChat(idChat) {
+    FindChat (idChat) {
       if (idChat) {
         api.axios
-          .get("/api/dialog/", {
+          .get('/api/dialog/', {
             params: {
               id: idChat
             }
@@ -132,18 +132,18 @@ export default {
               response.data.dialogs.length
             ) {
               // console.log("response dialogs:", response.data.dialogs);
-              this.$router.push('chat/' + idChat);
+              this.$router.push('chat/' + idChat)
             } else {
               api.axios
-                .post("/api/dialog/")
+                .post('/api/dialog/')
                 .then(response => {
                   // console.log('post response:', response)
                   if (response && response.data && response.data.id_dialog) {
-                    this.$router.push('chat/' + response.data.id_dialog);
+                    this.$router.push('chat/' + response.data.id_dialog)
                   }
-                  });
+                })
             }
-          });
+          })
       }
     },
     Exit () {

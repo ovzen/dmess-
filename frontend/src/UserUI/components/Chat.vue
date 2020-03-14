@@ -50,7 +50,7 @@
         <v-card-text
           class="headline"
           v-bind:class="isOwnMessage(message.author) ? 'text-right' : 'text-left'">
-            {{ message.text }}
+          {{ message.text }}
         </v-card-text>
         <div style="text-align: right; margin-right:10px; margin-top:-25px;">
           <span class="font-weight-light">
@@ -88,7 +88,7 @@
       dark
     >
       Сохранить в базу знаний
-      </v-btn>
+    </v-btn>
     <v-btn
       width="99%"
       class="blue lighten-1"
