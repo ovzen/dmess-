@@ -73,7 +73,7 @@
               <v-list-item-icon>
                 <v-icon>mdi-chat</v-icon>
               </v-list-item-icon>
-              <v-list-item-text>Другой диалог</v-list-item-text>
+              <v-list-item-text  @click="allusers()">Пользователи</v-list-item-text>
             </v-list-item>
             <v-list-item>
               <v-list-item-icon>
@@ -146,6 +146,9 @@ export default {
         }
         )
       }
+    },
+   allusers()
+   {this.$router.push({ name: 'allUser'})
     }
   }
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import VueCookie from 'vue-cookie'
+import api from '../api'
 
 axios.interceptors.request.use(
   function (config) {

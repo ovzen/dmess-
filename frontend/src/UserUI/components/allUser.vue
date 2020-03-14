@@ -36,7 +36,7 @@
 <script>
 import Vue from 'vue'
 import VueCookie from 'vue-cookie'
-import api from './api'
+import api from '../api'
 Vue.use(VueCookie)
 export default {
   name: 'App',

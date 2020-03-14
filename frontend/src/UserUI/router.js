@@ -26,9 +26,9 @@ export default new Router({
       component: Profile
     },
     {
-    path: '/all_User',
-    name: 'Список пользователей',
-    component: allUser
+      path: '/all_User',
+      name: 'allUser',
+      component: allUser
     }
   ]
 })
