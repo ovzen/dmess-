@@ -9,33 +9,29 @@
         <h1 class="text--secondary mb-3">
           Список пользователей
         </h1>
-
-        <v-card>
-          <v-list-item
-            v-for="user in allUsers"
-            :key="user.id"
+        <v-list-item
+            v-for="user in Users"
+            :key="user"
             class="grow"
-            @click=""
           >
-            <v-layout rodtnw>
-              <v-flex
-                xs4
-              >
-                <v-card-media>
-                </v-card-media>
-              </v-flex>
-              <v-flex xs8>
-                <v-card-text></v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn class="info">
-                    Открыть
-                  </v-btn>
-                </v-card-actions>
-              </v-flex>
-            </v-layout>
-          </v-list-item>
-        </v-card>
+          <v-card>
+              <v-layout rodtnw>
+                <v-flex
+                  xs4
+                >
+                Пользователь: {{ user.username }}
+                </v-flex>
+                <v-flex xs8>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn class="info">
+                      Открыть
+                    </v-btn>
+                  </v-card-actions>
+                </v-flex>
+              </v-layout>
+          </v-card>
+        </v-list-item>
       </v-flex>
     </v-layout>
   </v-app>
@@ -49,7 +45,7 @@ Vue.use(VueCookie)
 export default {
   name: 'App',
   data: () => ({
-    allUsers: [],
+    Users: [],
     userslist: true,
     usersDialogId: ''
   }),
@@ -60,12 +56,12 @@ export default {
     getUsers (dialogid) {
       api.axios.get('/api/dialog/', {
         params: {
-          usersDialogId: this.usersDialogId
+          userslist: this.userslist
         }
       })
         .then(res => {
-          this.allUsers = res.data['allUsers']
-          console.log(this.allUsers)
+          this.Users = res.data['users']
+          console.log(this.Users)
         })
     }
   }
