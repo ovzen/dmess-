@@ -9,21 +9,25 @@
         <h1 class="text--secondary mb-3">
           Список пользователей
         </h1>
-        <v-list-item
-            v-for="user in Users"
-            :key="user"
-            class="grow"
-          >
-          <v-card>
-              <v-layout rodtnw>
+          <v-card
+          v-for="user in Users"
+          :key="user"
+          class="elevation-10 mb-5">
+              <v-layout row>
                 <v-flex
                   xs4
                 >
-                Пользователь: {{ user.username }}
+                 <v-card-media
+                                #avatar
+                  height="175px"
+                 ></v-card-media>
                 </v-flex>
                 <v-flex xs8>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
+                  <v-card-text>
+                     <h2 class="text--primary">Пользователь: {{ user.username }}</h2>
+                  </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
                     <v-btn class="info">
                       Открыть
                     </v-btn>
@@ -31,7 +35,6 @@
                 </v-flex>
               </v-layout>
           </v-card>
-        </v-list-item>
       </v-flex>
     </v-layout>
   </v-app>
