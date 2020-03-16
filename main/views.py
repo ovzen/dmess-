@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -6,8 +7,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer
-
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserRegSerializer
 
 
 class UserView(CreateAPIView):
@@ -66,3 +66,17 @@ def get_base_context():
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class ActivityFeedView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        registrations = User.objects.all()
+        user_reg_serializer = UserRegSerializer(registrations, many=True)
+        dialogs = Dialog.objects.all()
+        dialog_serializer = DialogSerializer(dialogs, many=True)
+        return Response({
+            'registrations': user_reg_serializer.data,
+            'dialogs': dialog_serializer.data,
+        })
