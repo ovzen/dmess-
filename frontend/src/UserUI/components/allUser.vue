@@ -9,21 +9,23 @@
         <h1 class="text--secondary mb-3">
           Список пользователей
         </h1>
+
         <v-card
           v-for="user in Users"
           :key="user"
           class="elevation-10 mb-5"
         >
-          <v-layout row>
+          <v-layout>
             <v-flex
               xs4
             >
               <v-card-media
-                #avatar
-                height="175px"
+
               ></v-card-media>
             </v-flex>
-            <v-flex xs8>
+            <v-flex
+              xs8
+            >
               <v-card-text>
                 <h2 class="text--primary">
                   Пользователь: {{ user.username }}
