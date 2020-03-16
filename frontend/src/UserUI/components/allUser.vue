@@ -19,7 +19,7 @@
             <v-flex
               xs4
             >
-              <v-card-media></v-card-media>
+              <v-card-media />
             </v-flex>
             <v-flex
               xs8
@@ -30,7 +30,7 @@
                 </h2>
               </v-card-text>
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn
                   class="info"
                   @click="profilePush(user.id)"
