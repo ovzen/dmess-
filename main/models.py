@@ -4,22 +4,19 @@ from django.db import models
 from django.utils import timezone
 
 
-class UserSetting(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
-    avatar = models.ImageField(upload_to='avatars',
-                               null=True,
-                               blank=True,
-                               width_field="width_field",
-                               height_field="height_field")
+    avatar = models.ImageField(
+        upload_to='avatars',
+        null=True,
+        blank=True,
+        width_field="width_field",
+        height_field="height_field"
+    )
     width_field = models.IntegerField(default=0)
     height_field = models.IntegerField(default=0)
-
-    @property
-    def avatar_url(self):
-        if self.avatar and hasattr(self.avatar, 'url'):
-            return self.avatar.url
-        else:
-            return '/static/user.png'
+    bio = models.CharField(max_length=70, default="Hey there! I'm using dmess")
+    is_online = models.BooleanField(default=False)
 
 
 class Friend(models.Model):

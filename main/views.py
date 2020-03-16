@@ -1,22 +1,31 @@
 from django.contrib.auth import get_user_model
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer
-
+from main.models import Dialog, UserProfile
+from main.permissions import IsOwnerOrReadOnly
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
 
 
 class UserView(CreateAPIView):
     """
-       Registration of new user
+    Registration of new user
     """
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
+
+
+class UserProfileView(RetrieveUpdateAPIView):
+    """
+    Retrieve and update user profile settings
+    """
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
 
 
 class DialogView(APIView):
