@@ -5,6 +5,11 @@ from django.utils import timezone
 
 
 class UserProfile(models.Model):
+    """
+    Реализует хранение дополнительных данных о пользователе, таких как
+    аватар, статус и т.п.
+    """
+
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
     avatar = models.ImageField(
         upload_to='avatars',
