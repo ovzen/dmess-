@@ -19,9 +19,7 @@
             <v-flex
               xs4
             >
-              <v-card-media
-
-              ></v-card-media>
+              <v-card-media></v-card-media>
             </v-flex>
             <v-flex
               xs8
@@ -33,7 +31,10 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="info">
+                <v-btn
+                  class="info"
+                  @click="profilePush(user.id)"
+                >
                   Профиль
                 </v-btn>
               </v-card-actions>
@@ -71,6 +72,10 @@ export default {
           this.Users = res.data['users']
           console.log(this.Users)
         })
+    },
+    profilePush (userid) {
+      //  this.$router.push({ name: 'Profile', params: 'userid' })
+      console.log(userid)
     }
   }
 }
