@@ -34,17 +34,18 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
+    path('api/users/<int:pk>', views.UserProfileView.as_view()),
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
-    re_path('admin/',
-            login_required(TemplateView.as_view(template_name="admin.html")),
-            name="adminUI"),
-    re_path('',
-            login_required(TemplateView.as_view(template_name="index.html")),
-            name="index",
-            ),
-    # path('api/status/', views.StatusView.as_view()),
-    # path('api/status/<int:pk>', views.StatusView.as_view()),
-    # path('mypage/', views.my_page, name='mypage'),
+    re_path(
+        'admin/',
+        login_required(TemplateView.as_view(template_name="admin.html")),
+        name="adminUI"
+    ),
+    re_path(
+        '',
+        login_required(TemplateView.as_view(template_name="index.html")),
+        name="index",
+    ),
     path('admin_tools/', include('admin_tools.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

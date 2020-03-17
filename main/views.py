@@ -1,22 +1,32 @@
 from django.contrib.auth import get_user_model
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer
-
+from main.models import Dialog, UserProfile
+from main.permissions import IsOwnerOrReadOnly
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
 
 
 class UserView(CreateAPIView):
     """
-       Registration of new user
+    Registration of new user
     """
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
+
+
+class UserProfileView(RetrieveUpdateAPIView):
+    """
+    View для просмотра и обновления данных о пользователе
+    Обновление данных доступно только для владельцев профиля
+    """
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
 
 
 class DialogView(APIView):
@@ -48,20 +58,6 @@ class DialogView(APIView):
             "success": "dialog '{}' created successfully".format(dialog_saved.name),
             "id_dialog": dialog_saved.id
         })
-
-
-def get_base_context():
-    context = {
-        'menu': [
-            {'link_name': 'index', 'text': 'Главная'},
-            {'link_name': 'dialogs', 'text': 'Диалоги'},
-            {'link_name': 'about', 'text': 'Информация'},
-            {'link_name': 'admin:index', 'text': 'Админ-панель'},
-        ],
-        'index_link_name': 'index',
-        'title': 'untitled',
-    }
-    return context
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
