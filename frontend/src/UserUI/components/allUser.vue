@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     getUsers (dialogid) {
-      api.axios.get('/api/dialog/', {
+      api.axios.get('/api/users/', {
         params: {
           userslist: this.userslist
         }
