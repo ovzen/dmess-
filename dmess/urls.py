@@ -34,7 +34,9 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
+    path('api/dialog/<int:pk>', views.DialogView.as_view()),
     path('api/users/<int:pk>', views.UserProfileView.as_view()),
+
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path(
         'admin/',
