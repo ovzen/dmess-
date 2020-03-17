@@ -64,6 +64,13 @@ class DialogView(APIView):
             "success": "Dialog '{}' updated successfully".format(dialog_saved.title)
         })
 
+    def delete(self, request, pk):
+        dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
+        dialog.delete()
+        return Response({
+            "message": "Dialog with id `{}` has been deleted.".format(pk)
+        }, status=204)
+
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
