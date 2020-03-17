@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from main.models import Status, Dialog
 
 UserModel = get_user_model()
@@ -51,13 +53,6 @@ class StatusSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-
-# class DialogSerializer(serializers.ModelSerializer):
-#     users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
-#
-#     class Meta:
-#         model = Dialog
-#         fields = ('id', 'name', 'users')
 class DialogSerializer(serializers.Serializer):
     create_date = serializers.DateTimeField()
     last_change = serializers.DateTimeField()
@@ -76,3 +71,14 @@ class DialogSerializer(serializers.Serializer):
         instance.last_message = validated_data.get('last_message', instance.last_message)
         instance.save()
         return instance
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Add custom claims
+        token['name'] = user.username
+        # ...
+        return token

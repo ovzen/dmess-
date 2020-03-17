@@ -1,22 +1,15 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
-from django.shortcuts import render
 
-# Create your views here.
-
-from rest_framework import serializers, permissions
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView, RetrieveAPIView, \
-    get_object_or_404
-from rest_framework.mixins import ListModelMixin
-
-from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView, get_object_or_404
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer
+
+
 
 class UserView(CreateAPIView):
     """
@@ -29,21 +22,23 @@ class UserView(CreateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
-
     def get(self, request, pk=None):
+
         id = request.query_params.get('id')
+        for_user = request.query_params.get('for_user')
         if id:
             dialogs = Dialog.objects.filter(id=id)
+        elif for_user:
+            dialogs = Dialog.objects.filter(users=request.user)
         else:
             dialogs = Dialog.objects.all()
-        serializer = DialogSerializer(dialogs, many=True)
-        return Response({"dialogs": serializer.data})
+        dialog_serializer = DialogSerializer(dialogs, many=True)
+        return Response({"dialogs": dialog_serializer.data})
 
     def post(self, request, pk=None):
         # TODO make a chat name from the recipient's name
-        user = get_user_model()
         dialog = {
-            'name': 'Untitled3',
+            'name': request.data['name'],
             'users': [request.user.id]
         }
         serializer = DialogSerializer(data=dialog)
@@ -73,17 +68,6 @@ class DialogView(APIView):
 
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['name'] = user.username
-        # ...
-        return token
-
-
 def get_base_context():
     context = {
         'menu': [
@@ -99,7 +83,4 @@ def get_base_context():
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
-    """
-        This text is the description for this API
-    """
     serializer_class = MyTokenObtainPairSerializer
