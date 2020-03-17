@@ -4,7 +4,7 @@ import Chat from './components/Chat'
 import Main from './components/Main'
 import Profile from './components/Profile'
 import allUser from './components/allUser'
-import Страница from './components/knowledgebase'
+import knowledgebase from './components/knowledgebase'
 Vue.use(Router)
 
 export default new Router({
