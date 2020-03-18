@@ -136,12 +136,15 @@ export default {
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['updateToken', 'getDialogs']
+    $route: ['updateToken', 'getDialogs', 'disconnect']
   },
   mounted () {
     this.getDialogs()
   },
   methods: {
+    disconnect () {
+      this.$disconnect()
+    },
     updateToken () {
       if (localStorage.getItem('UpdateKey') && !this.$cookie.get('Authentication')) {
         api.axios.post('/api/token/refresh/', { refresh: localStorage.getItem('UpdateKey') }).then(res => {
