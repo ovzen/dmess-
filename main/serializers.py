@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from main.models import Dialog, UserProfile
+from main.models import Dialog, UserProfile, Message
 
 UserModel = get_user_model()
 
@@ -39,8 +39,8 @@ class UserRegSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username", "date_joined")
-        
-    
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
@@ -49,14 +49,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DialogSerializer(serializers.Serializer):
-    create_date = serializers.DateTimeField()
-    last_change = serializers.DateTimeField()
+    id = serializers.IntegerField(read_only=True)
+    create_date = serializers.DateTimeField(read_only=True)
+    last_change = serializers.DateTimeField(read_only=True)
     name = serializers.CharField(max_length=200)
     users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
-    last_message = serializers.CharField(max_length=200)
+    last_message = serializers.CharField(max_length=200,read_only=True)
 
     def create(self, validated_data):
-        return Dialog.objects.create(**validated_data)
+        Dia = Dialog.objects.create(name=validated_data['name'])
+        Dia.users.set(validated_data['users'])
+        return Dia
 
     def update(self, instance, validated_data):
         instance.create_date = validated_data.get('create_date', instance.create_date)
@@ -66,6 +69,21 @@ class DialogSerializer(serializers.Serializer):
         instance.last_message = validated_data.get('last_message', instance.last_message)
         instance.save()
         return instance
+    class Meta:
+        model = Dialog
+        fields = ('id', 'name', 'users', 'create_date', 'last_change', 'last_message')
+
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    author_id = serializers.CharField(source='author.user.id')
+    author = serializers.CharField(source='author.user.username')
+    is_online = serializers.ImageField(source='author.is_online')
+    avatar = serializers.ImageField(source='author.avatar')
+    class Meta:
+        model = Message
+        fields = ('id', 'text', 'create_date', 'author_id', 'author', 'is_online', 'avatar')
+        read_only_fields = ('create_date', )
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

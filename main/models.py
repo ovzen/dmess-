@@ -51,6 +51,6 @@ class Dialog(models.Model):
 
 class Message(models.Model):
     text = models.TextField(max_length=2000)
-    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    author = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(default=timezone.now)

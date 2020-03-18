@@ -1,13 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog, UserProfile
+from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, UserRegSerializer
+from main.serializers import MessageSerializer
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
 
 
 class UserView(CreateAPIView):
@@ -17,6 +20,19 @@ class UserView(CreateAPIView):
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
+
+
+class MessageView(ListAPIView):
+    """
+    Send all messages from chat
+    """
+    permission_classes = (AllowAny,)
+    model = Message
+    serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        return Message.objects.all().filter(dialog_id=self.request.query_params.get('chat_id'))
+
 
 
 class UserProfileView(RetrieveUpdateAPIView):
@@ -31,14 +47,18 @@ class UserProfileView(RetrieveUpdateAPIView):
 
 class DialogView(APIView):
     permission_classes = (AllowAny,)
+    serializer_class = DialogSerializer
     def get(self, request, pk=None):
 
         id = request.query_params.get('id')
         for_user = request.query_params.get('for_user')
+        name = request.query_params.get('name')
         if id:
             dialogs = Dialog.objects.filter(id=id)
         elif for_user:
             dialogs = Dialog.objects.filter(users=request.user)
+        elif name:
+            dialogs = Dialog.objects.filter(name=name)
         else:
             dialogs = Dialog.objects.all()
         dialog_serializer = DialogSerializer(dialogs, many=True)
@@ -77,6 +97,10 @@ class DialogView(APIView):
 
 
 
+def get_base_context():
+    return None
+
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -86,7 +110,7 @@ class ActivityFeedView(APIView):
 
     def get(self, request):
         registrations = User.objects.all()
-        user_reg_serializer = UserRegSerializer(registrations, many=True)
+        user_reg_serializer = UserSerializer(registrations, many=True)
         dialogs = Dialog.objects.all()
         dialog_serializer = DialogSerializer(dialogs, many=True)
         return Response({

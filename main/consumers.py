@@ -2,6 +2,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 
+from main.models import Message, Dialog
+
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -27,9 +29,16 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        author = self.scope["user"].username
+        author = self.scope["user"]
         if author == "":
             author = 'AnonymousUser'
+
+        message_obj = Message(author_id=author.id, text=message, dialog_id=self.chat_number)
+        message_obj.save()
+        Dialog.objects.filter(id=self.chat_number).update(
+            last_message=message,
+            last_change=message_obj.create_date
+        )
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
@@ -37,7 +46,7 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'author': author
+                'author': author.username
             }
         )
 
