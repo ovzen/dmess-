@@ -10,6 +10,7 @@
       <v-app-bar-nav-icon @click="drawer = true" />
       <v-toolbar-title>Навигация</v-toolbar-title>
       <v-spacer />
+      Hello, {{ username }}
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -114,6 +115,7 @@
 import Vue from 'vue'
 import VueCookie from 'vue-cookie'
 import api from './api'
+import jwt from 'jsonwebtoken'
 Vue.use(VueCookie)
 export default {
   name: 'App',
@@ -131,8 +133,8 @@ export default {
     ExpandOnHover: false,
     group: [],
     for_user: true,
-    dialogs_for_user: []
-
+    dialogs_for_user: [],
+    username: 'Test'
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
@@ -140,6 +142,8 @@ export default {
   },
   mounted () {
     this.getDialogs()
+//    this.username = 'Qwerty'
+    this.username = jwt.decode(this.$cookie.get('Authentication')).name
   },
   methods: {
     disconnect () {
