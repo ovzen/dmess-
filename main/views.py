@@ -2,23 +2,18 @@ import random
 import string
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
-from django.shortcuts import render
-
-# Create your views here.
-
-from rest_framework import serializers, permissions
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, GenericAPIView
-from rest_framework.mixins import ListModelMixin
-
-from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from main.models import Dialog, Invite
 from main.serializers import UserSerializer, DialogSerializer, InviteSerializer
+
+
+# Create your views here.
 
 
 class UserView(CreateAPIView):
@@ -59,7 +54,10 @@ class DialogView(APIView):
 
 
 class InviteCheckView(APIView):
-    def get(self, request, code):
+    def get(self, request):
+        code = request.GET.get('code', None)
+        if not code:
+            return Response({"error": 'code not specified'})
         invite_query = Invite.objects.filter(code=code)
         if invite_query.count() > 0:
             invite = invite_query.first()
