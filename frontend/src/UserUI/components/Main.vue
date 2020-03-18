@@ -28,16 +28,16 @@
       <v-container>
         <v-row>
           <v-text-field
-            v-model="ChatId"
+            v-model="ChatName"
             clearable
-            label="Chat id"
+            label="Chat name"
             required
           />
           <v-btn
             class="ma-2"
             outlined
             color="primary"
-            @click="FindChat(ChatId)"
+            @click="FindChat(ChatName)"
           >
             Перейти в чат
           </v-btn>
@@ -60,41 +60,38 @@ export default {
   name: 'Main',
   data: () => ({
     login: '',
-    ChatId: null,
+    ChatName: null,
     button: 'Войти',
     password: '',
     message_text: '',
     data: ''
   }),
   methods: {
-    FindChat(idChat) {
-      if (idChat) {
+    FindChat (ChatName) {
+      if (ChatName) {
         api.axios
-          .get("/api/dialog/", {
+          .get('/api/dialog/', {
             params: {
-              id: idChat
+              name: ChatName
             }
           })
           .then(response => {
-            if (
-              response &&
-              response.data &&
-              response.data.dialogs &&
-              response.data.dialogs.length
-            ) {
-              // console.log("response dialogs:", response.data.dialogs);
-              this.$router.push('chat/' + idChat);
+            if (response.data.dialogs.length > 0) {
+              console.log(response.data.dialogs[0].id)
+              this.$router.push('chat/' + response.data.dialogs[0].id)
             } else {
               api.axios
-                .post("/api/dialog/")
+                .post('/api/dialog/', {
+                  name: ChatName
+                })
                 .then(response => {
                   // console.log('post response:', response)
                   if (response && response.data && response.data.id_dialog) {
-                    this.$router.push('chat/' + response.data.id_dialog);
+                    this.$router.push('chat/' + response.data.id_dialog)
                   }
-                  });
+                })
             }
-          });
+          })
       }
     },
     Exit () {

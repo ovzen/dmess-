@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from main.models import Dialog, UserProfile
+from main.models import Dialog, UserProfile, Message
 
 UserModel = get_user_model()
 
@@ -45,6 +45,17 @@ class DialogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dialog
         fields = ('id', 'name', 'users')
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    author_id = serializers.CharField(source='author.user.id')
+    author = serializers.CharField(source='author.user.username')
+    is_online = serializers.ImageField(source='author.is_online')
+    avatar = serializers.ImageField(source='author.avatar')
+    class Meta:
+        model = Message
+        fields = ('id', 'text', 'create_date', 'author_id', 'author', 'is_online', 'avatar')
+        read_only_fields = ('create_date', )
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

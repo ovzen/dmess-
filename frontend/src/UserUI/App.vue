@@ -136,7 +136,7 @@ export default {
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: 'updateToken'
+    $route: ['updateToken', 'getDialogs']
   },
   mounted () {
     this.getDialogs()
