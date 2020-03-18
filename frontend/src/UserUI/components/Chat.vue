@@ -127,7 +127,7 @@ export default {
   },
   mounted () {
     api.axios.get('/api/messages/', { params: { chat_id: this.id } }).then(res => {
-      Array.prototype.push.apply(this.messages, res.data)
+      this.messages = this.messages.concat(res.data)
     })
   },
   beforeDestroy () {
