@@ -26,26 +26,29 @@ from main import views
 
 schema_view = get_swagger_view(title='API')
 
-urlpatterns = [
+urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     url(r'^docs/', schema_view),
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),
+    path('api/messages/', views.MessageView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
     path('api/friends', views.FriendView.as_view()),
+    path('api/users/<int:pk>', views.UserProfileView.as_view()),
+    path('api/activity_feed/', views.ActivityFeedView.as_view()),
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
-    re_path('admin/',
-            login_required(TemplateView.as_view(template_name="admin.html")),
-            name="adminUI"),
-    re_path('',
-            login_required(TemplateView.as_view(template_name="index.html")),
-            name="index",
-            ),
-    # path('api/status/', views.StatusView.as_view()),
-    # path('api/status/<int:pk>', views.StatusView.as_view()),
-    # path('mypage/', views.my_page, name='mypage'),
+    re_path(
+        'admin/',
+        login_required(TemplateView.as_view(template_name="admin.html")),
+        name="adminUI"
+    ),
+    re_path(
+        '',
+        login_required(TemplateView.as_view(template_name="index.html")),
+        name="index",
+    ),
     path('admin_tools/', include('admin_tools.urls')),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

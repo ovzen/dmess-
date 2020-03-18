@@ -46,7 +46,8 @@ def get_user(scope):
     Return the user model instance associated with the given scope.
     If no user is retrieved, return an instance of `AnonymousUser`.
     """
-    cookie = str(dict(scope['headers'])[b'cookie'])[2:-1].split(' Authentication=')
+    print(str(dict(scope['headers'])[b'cookie'])[2:-1].split('Authentication='))
+    cookie = str(dict(scope['headers'])[b'cookie'])[2:-1].split('Authentication=')
     user = AnonymousUser
     if len(cookie) > 1:
         token = cookie[1].split(';')[0]

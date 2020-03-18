@@ -1,19 +1,17 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from rest_framework import serializers
-
-from main.models import Status, Dialog, Friend
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from main.models import Dialog, UserProfile, Message, Friend
 
 UserModel = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
-
         user = UserModel.objects.create(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
@@ -23,6 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
+        profile = UserProfile(user=user)
+        profile.save()
+
         return user
 
     class Meta:
@@ -31,38 +32,60 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("id", "username", "password", "first_name", "last_name", "email")
 
 
-class StatusSerializer(serializers.Serializer):
-    """
-    Сериализатор преобразует статусы (объекты моделей) в список Python,
-    который мы может вернуть в API-запросе
-    """
-    status = serializers.CharField(max_length=200)
-    user_id = serializers.IntegerField()
+class UserRegSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=150)
+    date_joined = serializers.DateTimeField()
+
+    class Meta:
+        model = User
+        fields = ("username", "date_joined")
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
+
+class DialogSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    create_date = serializers.DateTimeField(read_only=True)
+    last_change = serializers.DateTimeField(read_only=True)
+    name = serializers.CharField(max_length=200)
+    users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
+    last_message = serializers.CharField(max_length=200,read_only=True)
 
     def create(self, validated_data):
-        """
-        Метод сообщит сериализатору, что делать, когда вызывается метод save сериализатора
-        """
-        return Status.objects.create(**validated_data)
+        Dia = Dialog.objects.create(name=validated_data['name'])
+        Dia.users.set(validated_data['users'])
+        return Dia
 
     def update(self, instance, validated_data):
-        """
-        Метод обновляет статус
-        В том случае если мы что-то передаем в экземпляр статуса, который мы хотим обновить,
-        мы переназначаем это значение, в противном случае мы сохраняем старое значение атрибута.
-        """
-        instance.status = validated_data.get('status', instance.status)
-        instance.user_id = validated_data.get('user_id', instance.user_id)
+        instance.create_date = validated_data.get('create_date', instance.create_date)
+        instance.last_change = validated_data.get('last_change', instance.last_change)
+        instance.name = validated_data.get('name', instance.name)
+        instance.users = validated_data.get('users', instance.users)
+        instance.last_message = validated_data.get('last_message', instance.last_message)
         instance.save()
         return instance
 
-
-class DialogSerializer(serializers.ModelSerializer):
-    users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
-
     class Meta:
         model = Dialog
-        fields = ('id', 'name', 'users')
+        fields = ('id', 'name', 'users', 'create_date', 'last_change', 'last_message')
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    author_id = serializers.CharField(source='author.user.id')
+    author = serializers.CharField(source='author.user.username')
+    is_online = serializers.ImageField(source='author.is_online')
+    avatar = serializers.ImageField(source='author.avatar')
+
+    class Meta:
+        model = Message
+        fields = ('id', 'text', 'create_date', 'author_id', 'author', 'is_online', 'avatar')
+        read_only_fields = ('create_date', )
 
 
 class FriendSerializer(serializers.ModelSerializer):
@@ -94,4 +117,3 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['name'] = user.username
         # ...
         return token
-

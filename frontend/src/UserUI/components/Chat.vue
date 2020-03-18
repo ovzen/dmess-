@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
@@ -123,6 +124,11 @@ export default {
     this.id = this.$route.params.id
     this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
     this.get()
+  },
+  mounted () {
+    api.axios.get('/api/messages/', { params: { chat_id: this.id } }).then(res => {
+      this.messages = this.messages.concat(res.data)
+    })
   },
   beforeDestroy () {
     this.$disconnect()
