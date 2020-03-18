@@ -38,11 +38,6 @@ urlpatterns = [
     path('api/dialog/', views.DialogView.as_view()),
     path('api/users/', views.GetUsersView.as_view()),
 
-    path("frontend/src/allUsers/",
-         TemplateView.as_view(template_name="allUser.html"),
-         name="allUser",
-         ),
-
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path('admin/',
             login_required(TemplateView.as_view(template_name="admin.html")),

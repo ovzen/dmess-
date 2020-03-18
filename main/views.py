@@ -62,7 +62,6 @@ class GetUsersView(APIView):
        API for Users
     """
     permission_classes = (AllowAny,)
-    serializer_class = DialogSerializer
 
     def get(self, request):
         userslist = request.query_params.get('userslist')
