@@ -1,29 +1,38 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-
-from main.models import Dialog
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserRegSerializer
+from main.models import Dialog, UserProfile
+from main.permissions import IsOwnerOrReadOnly
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, UserRegSerializer
 
 
 class UserView(CreateAPIView):
     """
-       Registration of new user
+    Registration of new user
     """
     permission_classes = (AllowAny,)
     model = get_user_model()
     serializer_class = UserSerializer
 
 
+class UserProfileView(RetrieveUpdateAPIView):
+    """
+    View для просмотра и обновления данных о пользователе
+    Обновление данных доступно только для владельцев профиля
+    """
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+
+
 class DialogView(APIView):
     permission_classes = (AllowAny,)
-    serializer_class = DialogSerializer
+    def get(self, request, pk=None):
 
-    def get(self, request):
         id = request.query_params.get('id')
         for_user = request.query_params.get('for_user')
         if id:
@@ -35,7 +44,7 @@ class DialogView(APIView):
         dialog_serializer = DialogSerializer(dialogs, many=True)
         return Response({"dialogs": dialog_serializer.data})
 
-    def post(self, request):
+    def post(self, request, pk=None):
         # TODO make a chat name from the recipient's name
         dialog = {
             'name': request.data['name'],
@@ -49,19 +58,23 @@ class DialogView(APIView):
             "id_dialog": dialog_saved.id
         })
 
+    def put(self, request, pk):
+        saved_dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
+        data = request.data.get('dialog')
+        serializer = DialogSerializer(instance=saved_dialog, data=data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            dialog_saved = serializer.save()
+        return Response({
+            "success": "Dialog '{}' updated successfully".format(dialog_saved.title)
+        })
 
-def get_base_context():
-    context = {
-        'menu': [
-            {'link_name': 'index', 'text': 'Главная'},
-            {'link_name': 'dialogs', 'text': 'Диалоги'},
-            {'link_name': 'about', 'text': 'Информация'},
-            {'link_name': 'admin:index', 'text': 'Админ-панель'},
-        ],
-        'index_link_name': 'index',
-        'title': 'untitled',
-    }
-    return context
+    def delete(self, request, pk):
+        dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
+        dialog.delete()
+        return Response({
+            "message": "Dialog with id `{}` has been deleted.".format(pk)
+        }, status=204)
+
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
