@@ -36,6 +36,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('api/messages/', views.MessageView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
     path('api/users/<int:pk>', views.UserProfileView.as_view()),
+    path('api/activity_feed/', views.ActivityFeedView.as_view()),
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path(
         'admin/',

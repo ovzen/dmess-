@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -31,6 +32,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("id", "username", "password", "first_name", "last_name", "email")
 
 
+class UserRegSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=150)
+    date_joined = serializers.DateTimeField()
+
+    class Meta:
+        model = User
+        fields = ("username", "date_joined")
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
@@ -38,13 +48,31 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = '__all__'
 
-
-class DialogSerializer(serializers.ModelSerializer):
+class DialogSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    create_date = serializers.DateTimeField(read_only=True)
+    last_change = serializers.DateTimeField(read_only=True)
+    name = serializers.CharField(max_length=200)
     users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
+    last_message = serializers.CharField(max_length=200,read_only=True)
 
+    def create(self, validated_data):
+        Dia = Dialog.objects.create(name=validated_data['name'])
+        Dia.users.set(validated_data['users'])
+        return Dia
+
+    def update(self, instance, validated_data):
+        instance.create_date = validated_data.get('create_date', instance.create_date)
+        instance.last_change = validated_data.get('last_change', instance.last_change)
+        instance.name = validated_data.get('name', instance.name)
+        instance.users = validated_data.get('users', instance.users)
+        instance.last_message = validated_data.get('last_message', instance.last_message)
+        instance.save()
+        return instance
     class Meta:
         model = Dialog
-        fields = ('id', 'name', 'users')
+        fields = ('id', 'name', 'users', 'create_date', 'last_change', 'last_message')
+
 
 
 class MessageSerializer(serializers.ModelSerializer):
