@@ -90,9 +90,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class FriendSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    print(user.data)
     friend = UserSerializer(read_only=True)
-    friend_id = serializers.IntegerField()
+    friend_id = serializers.IntegerField(write_only=True)
 
     def create(self, validated_data):
         friend = Friend.objects.create(

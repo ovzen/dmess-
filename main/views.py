@@ -44,14 +44,31 @@ class UserProfileView(RetrieveUpdateAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
 
 
-class FriendView(CreateAPIView, ListAPIView):
+class FriendView(APIView):
     permission_classes = (AllowAny,)
-    model = Friend
     serializer_class = FriendSerializer
-    queryset = model.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    def get(self, request):
+        friends = Friend.objects.all()
+        serializer = FriendSerializer(friends, many=True)
+        return Response({"friends": serializer.data})
+
+    def post(self, request):
+        friend = request.data.get('friend')
+        serializer = FriendSerializer(data=friend)
+        if serializer.is_valid(raise_exception=True):
+            friend_saved = serializer.save()
+        return Response({
+            "success": "Friend {} created successfully".format(friend_saved.friend_id),
+            "friend_id": friend_saved.friend_id
+        })
+
+    def delete(self, request, pk):
+        friend = get_object_or_404(Friend.objects.all(), pk=pk)
+        friend.delete()
+        return Response({
+            "message": "Friend with id `{}` has been deleted.".format(pk)
+        }, status=204)
 
 
 class DialogView(APIView):
