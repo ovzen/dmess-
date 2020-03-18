@@ -62,12 +62,8 @@ export default {
     this.getUsers()
   },
   methods: {
-    getUsers (dialogid) {
-      api.axios.get('/api/users/', {
-        params: {
-          userslist: this.userslist
-        }
-      })
+    getUsers () {
+      api.axios.get('/api/users/')
         .then(res => {
           this.Users = res.data['users']
           console.log(this.Users)

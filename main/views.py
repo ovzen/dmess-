@@ -64,10 +64,7 @@ class GetUsersView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request):
-        userslist = request.query_params.get('userslist')
-        allUsers = []
-        if userslist:
-            allUsers = User.objects.all()
+        allUsers = User.objects.all()
         userserializer = UserSerializer(allUsers, many=True)
         return Response({"users": userserializer.data})
 
