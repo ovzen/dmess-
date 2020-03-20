@@ -11,10 +11,10 @@
       </v-toolbar-title>
       <v-tabs>
         <v-tab to="/UserActivity/">
-          Активность пользователей
+          Зарегистрировавшиеся пользователи
         </v-tab>
         <v-tab to="/DialogActivity/">
-          Активность в чатах
+          Созданные диалоги
         </v-tab>
       </v-tabs>
       <v-spacer />
