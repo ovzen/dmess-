@@ -48,13 +48,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = '__all__'
 
+
 class DialogSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     create_date = serializers.DateTimeField(read_only=True)
     last_change = serializers.DateTimeField(read_only=True)
     name = serializers.CharField(max_length=200)
     users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
-    last_message = serializers.CharField(max_length=200,read_only=True)
+    last_message = serializers.CharField(max_length=200, read_only=True)
 
     def create(self, validated_data):
         Dia = Dialog.objects.create(name=validated_data['name'])
@@ -69,10 +70,10 @@ class DialogSerializer(serializers.Serializer):
         instance.last_message = validated_data.get('last_message', instance.last_message)
         instance.save()
         return instance
+
     class Meta:
         model = Dialog
         fields = ('id', 'name', 'users', 'create_date', 'last_change', 'last_message')
-
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -80,10 +81,11 @@ class MessageSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author.user.username')
     is_online = serializers.ImageField(source='author.is_online')
     avatar = serializers.ImageField(source='author.avatar')
+
     class Meta:
         model = Message
         fields = ('id', 'text', 'create_date', 'author_id', 'author', 'is_online', 'avatar')
-        read_only_fields = ('create_date', )
+        read_only_fields = ('create_date',)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
