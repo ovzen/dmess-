@@ -11,14 +11,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Invite',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('code', models.CharField(max_length=16)),
-                ('is_active', models.BooleanField(default=True)),
-            ],
-        ),
         migrations.AddField(
             model_name='dialog',
             name='admin_only',
