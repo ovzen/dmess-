@@ -36,9 +36,6 @@ urlpatterns = [
     path('api/dialog/', views.DialogView.as_view()),
 
                   # Invites
-                  path('api/admin/invite/check/', views.InviteCheckView.as_view()),
-                  path('api/admin/invite/list/', views.InviteListView.as_view()),
-                  path('api/admin/invite/generate/', views.InviteCreateView.as_view()),
                   path('api/admin/', include('admin.urls')),
 
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),

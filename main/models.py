@@ -53,7 +53,3 @@ class Message(models.Model):
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(default=timezone.now)
 
-
-class Invite(models.Model):
-    code = models.CharField(max_length=16)
-    is_active = models.BooleanField(default=True)

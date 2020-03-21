@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from main.models import Dialog, Invite
-from main.serializers import UserSerializer, DialogSerializer, InviteSerializer
+from main.models import Dialog
+from main.serializers import UserSerializer, DialogSerializer
 
 
 # Create your views here.
@@ -51,39 +51,6 @@ class DialogView(APIView):
             "success": "dialog '{}' created successfully".format(dialog_saved.name),
             "id_dialog": dialog_saved.id
         })
-
-
-class InviteCheckView(APIView):
-    def get(self, request):
-        code = request.GET.get('code', None)
-        if not code:
-            return Response({"error": 'code not specified'})
-        invite_query = Invite.objects.filter(code=code)
-        if invite_query.count() > 0:
-            invite = invite_query.first()
-            if invite.is_active:
-                return Response({"status": True})
-        return Response({"status": False})
-
-
-class InviteListView(APIView):
-    def get(self, request):
-        invites = Invite.objects.all()
-        serializer = InviteSerializer(invites, many=True)
-        return Response({"invites": serializer.data})
-
-
-class InviteCreateView(APIView):
-    def get(self, request):
-        code = ''.join(random.choice(string.ascii_letters) for _ in range(16))
-        invites = Invite.objects.filter(code=code)
-        while len(invites) > 0:
-            code = ''.join(random.choice(string.ascii_letters) for _ in range(16))
-            invites = Invite.objects.filter(code=code)
-        invite = Invite(code=code)
-        invite.save()
-        serializer = InviteSerializer(invite)
-        return Response({"invite": serializer.data})
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
