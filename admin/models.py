@@ -13,6 +13,7 @@ class Invite(models.Model):
     for_user = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, blank=True, null=True)
 
     def use(self, user):
-        self.is_active = False
-        self.used_at = datetime.datetime.now()
-        self.for_user = user
+        if self.is_active:
+            self.is_active = False
+            self.used_at = datetime.datetime.now()
+            self.for_user = user

@@ -11,18 +11,19 @@ UserModel = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    invite_code = serializers.UUIDField(required=False)
+    invite_code = serializers.UUIDField(required=False, allow_null=True)
 
     def create(self, validated_data):
-        if len(Invite.objects.filter(code=self.validated_data['invite_code'])) == 1:
-            invite = Invite.objects.get(code=self.validated_data['invite_code'])
-            if invite.is_active:
+        code = self.validated_data['invite_code']
+        if code is not None:
+            if len(Invite.objects.filter(code=code)) == 1:
+                invite = Invite.objects.get(code=code)
                 user = UserModel.objects.create(
                     username=validated_data['username'],
                     first_name=validated_data['first_name'],
                     last_name=validated_data['last_name'],
                     email=validated_data['email'],
-                    is_staff=True,
+                    is_staff=invite.is_active,
                 )
                 user.set_password(validated_data['password'])
                 user.save()
