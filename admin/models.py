@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 from django.db import models
@@ -10,3 +11,8 @@ class Invite(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     used_at = models.DateTimeField(default=None, blank=True, null=True)
     for_user = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, blank=True, null=True)
+
+    def use(self, user):
+        self.is_active = False
+        self.used_at = datetime.datetime.now()
+        self.for_user = user.id
