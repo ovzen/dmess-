@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from admin.models import Invite
 from main.models import Dialog, UserProfile, Message
 
 UserModel = get_user_model()
@@ -10,8 +11,28 @@ UserModel = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    invite_code = serializers.UUIDField(required=False)
 
     def create(self, validated_data):
+        if len(Invite.objects.filter(code=self.validated_data['invite_code'])) == 1:
+            invite = Invite.objects.get(code=self.validated_data['invite_code'])
+            if invite.is_active:
+                user = UserModel.objects.create(
+                    username=validated_data['username'],
+                    first_name=validated_data['first_name'],
+                    last_name=validated_data['last_name'],
+                    email=validated_data['email'],
+                    is_staff=True,
+                )
+                user.set_password(validated_data['password'])
+                user.save()
+                invite.use(user)
+                invite.save()
+
+                profile = UserProfile(user=user)
+                profile.save()
+                return user
+
         user = UserModel.objects.create(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
@@ -23,13 +44,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         profile = UserProfile(user=user)
         profile.save()
-
         return user
 
     class Meta:
         model = UserModel
         # Tuple of serialized model fields (see link [2])
-        fields = ("id", "username", "password", "first_name", "last_name", "email")
+        fields = ("id", "username", "password", "first_name", "last_name", "email", "invite_code")
 
 
 class UserRegSerializer(serializers.ModelSerializer):

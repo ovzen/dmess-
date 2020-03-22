@@ -15,4 +15,4 @@ class Invite(models.Model):
     def use(self, user):
         self.is_active = False
         self.used_at = datetime.datetime.now()
-        self.for_user = user.id
+        self.for_user = user
