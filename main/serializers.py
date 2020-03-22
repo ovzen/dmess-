@@ -14,27 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
     invite_code = serializers.UUIDField(required=False, allow_null=True)
 
     def create(self, validated_data):
-        code = self.validated_data['invite_code']
-        if code:
-            invite = Invite.objects.filter(code=code)
-            if invite.exists():
-                invite = invite[0]
-                user = UserModel.objects.create(
-                    username=validated_data['username'],
-                    first_name=validated_data['first_name'],
-                    last_name=validated_data['last_name'],
-                    email=validated_data['email'],
-                    is_staff=invite.is_active,
-                )
-                user.set_password(validated_data['password'])
-                user.save()
-                invite.use(user)
-                invite.save()
-
-                profile = UserProfile(user=user)
-                profile.save()
-                return user
-
         user = UserModel.objects.create(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
@@ -43,6 +22,16 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+
+        code = self.validated_data['invite_code']
+        if code:
+            invite = Invite.objects.filter(code=code)
+            if invite.exists():
+                invite = invite[0]
+                user.is_staff = invite.is_active
+                user.save()
+                invite.use(user)
+                invite.save()
 
         profile = UserProfile(user=user)
         profile.save()
