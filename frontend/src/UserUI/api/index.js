@@ -1,6 +1,5 @@
 import axios from 'axios'
 import VueCookie from 'vue-cookie'
-
 axios.interceptors.request.use(
   function (config) {
     if (VueCookie.get('Authentication')) {
