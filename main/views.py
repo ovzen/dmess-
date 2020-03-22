@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404
+from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.generics import ListAPIView
 
 from django.contrib.auth import get_user_model

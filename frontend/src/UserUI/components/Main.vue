@@ -24,6 +24,18 @@
         Комнатка модератора
       </v-btn>
     </a>
+    <a
+      href="/AllUsers/"
+      style="text-decoration: none;"
+    >
+      <v-btn
+        class="ma-2"
+        outlined
+        color="indigo"
+      >
+        Список Пользователей
+      </v-btn>
+    </a>
     <v-form>
       <v-container>
         <v-row>
