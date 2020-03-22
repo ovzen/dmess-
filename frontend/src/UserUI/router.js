@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Chat from './components/Chat'
 import Main from './components/Main'
 import Profile from './components/Profile'
-import allUser from './components/allUser'
+import AllUsers from './components/AllUsers'
 import KnowledgeBase from './components/KnowledgeBase'
 Vue.use(Router)
 
@@ -27,9 +27,9 @@ export default new Router({
       component: Profile
     },
     {
-      path: '/all_User',
-      name: 'allUser',
-      component: allUser
+      path: '/AllUsers',
+      name: 'AllUsers',
+      component: AllUsers
     },
     {
       path: '/KnowledgeBase',

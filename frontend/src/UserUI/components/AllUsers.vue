@@ -63,9 +63,9 @@ export default {
   },
   methods: {
     getUsers () {
-      api.axios.get('/api/users/')
+      api.axios.get('/api/register/')
         .then(res => {
-          this.Users = res.data['users']
+          this.Users = res.data
           console.log(this.Users)
         })
     },

@@ -18,12 +18,14 @@ from main.models import Dialog
 from main.serializers import UserSerializer, DialogSerializer
 
 
-class UserView(CreateAPIView):
+class UserView(ListCreateAPIView):
     """
        Registration of new user
+       + get method for getting list of all users
     """
     permission_classes = (AllowAny,)
     model = get_user_model()
+    queryset = get_user_model().objects
     serializer_class = UserSerializer
 
 
@@ -55,19 +57,6 @@ class DialogView(APIView):
             "success": "dialog '{}' created successfully".format(dialog_saved.name),
             "id_dialog": dialog_saved.id
         })
-
-
-class GetUsersView(APIView):
-    """
-       API for Users
-    """
-    permission_classes = (AllowAny,)
-
-    def get(self, request):
-        allUsers = User.objects.all()
-        userserializer = UserSerializer(allUsers, many=True)
-        return Response({"users": userserializer.data})
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
