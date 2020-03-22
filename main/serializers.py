@@ -15,9 +15,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         code = self.validated_data['invite_code']
-        if code is not None:
-            if len(Invite.objects.filter(code=code)) == 1:
-                invite = Invite.objects.get(code=code)
+        if code:
+            invite = Invite.objects.filter(code=code)
+            if invite.exists():
+                invite = invite[0]
                 user = UserModel.objects.create(
                     username=validated_data['username'],
                     first_name=validated_data['first_name'],
