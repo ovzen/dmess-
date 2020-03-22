@@ -2,9 +2,9 @@ from django.contrib.auth.models import User
 
 from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.generics import ListAPIView
-
 from django.contrib.auth import get_user_model
 from rest_framework.generics import CreateAPIView
+from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -47,31 +47,9 @@ class UserProfileView(RetrieveUpdateAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
 
 
-class FriendView(APIView):
-    permission_classes = (AllowAny,)
+class FriendViewSet(viewsets.ModelViewSet):
     serializer_class = FriendSerializer
-
-    def get(self, request):
-        friends = Friend.objects.all()
-        serializer = FriendSerializer(friends, many=True)
-        return Response({"friends": serializer.data})
-
-    def post(self, request):
-        friend = request.data.get('friend')
-        serializer = FriendSerializer(data=friend)
-        if serializer.is_valid(raise_exception=True):
-            friend_saved = serializer.save()
-        return Response({
-            "success": "Friend {} created successfully".format(friend_saved.friend_id),
-            "friend_id": friend_saved.friend_id
-        })
-
-    def delete(self, request, pk):
-        friend = get_object_or_404(Friend.objects.all(), pk=pk)
-        friend.delete()
-        return Response({
-            "message": "Friend with id `{}` has been deleted.".format(pk)
-        }, status=204)
+    queryset = Friend.objects.all()
 
 
 class DialogView(APIView):
