@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from admin.models import Invite
 from main.models import Dialog, UserProfile, Message
 
 UserModel = get_user_model()
@@ -10,6 +11,7 @@ UserModel = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    invite_code = serializers.UUIDField(required=False, allow_null=True)
 
     def create(self, validated_data):
         user = UserModel.objects.create(
@@ -21,15 +23,24 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
+        code = self.validated_data['invite_code']
+        if code:
+            invite = Invite.objects.filter(code=code)
+            if invite.exists():
+                invite = invite[0]
+                user.is_staff = invite.is_active
+                user.save()
+                invite.use(user)
+                invite.save()
+
         profile = UserProfile(user=user)
         profile.save()
-
         return user
 
     class Meta:
         model = UserModel
         # Tuple of serialized model fields (see link [2])
-        fields = ("id", "username", "password", "first_name", "last_name", "email")
+        fields = ("id", "username", "password", "first_name", "last_name", "email", "invite_code")
 
 
 class UserRegSerializer(serializers.ModelSerializer):
