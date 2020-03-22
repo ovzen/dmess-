@@ -20,6 +20,7 @@ from main.serializers import StatusSerializer
 from .models import Dialog
 from .serializers import DialogSerializer
 
+
 class CreateUserView(CreateAPIView):
     # Класс регистрации пользователей
     # model используется только для информации
@@ -44,7 +45,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-
 def get_base_context():
     context = {
         'menu': [
@@ -58,7 +58,6 @@ def get_base_context():
         'title': 'untitled',
     }
     return context
-
 
 
 def index_chat(request, chat_number):

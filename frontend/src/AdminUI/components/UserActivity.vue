@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card>
       <v-card-title>
-        UserActivity / Просмотр активности пользователей
+        UserActivity / Зарегистрировавшиеся пользователи
         <v-spacer />
         <v-text-field
           v-model="search"
@@ -16,7 +16,7 @@
         :headers="headers"
         :items="Users"
         :search="search"
-        :sort-by="['Username', 'LastActivity']"
+        :sort-by="['Username', 'Datetime']"
         :sort-desc="[false, true]"
         multi-sort
         class="elevation-1"

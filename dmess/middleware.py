@@ -40,6 +40,7 @@ class AuthMiddleware:
 
         return self.get_response(request)
 
+
 @database_sync_to_async
 def get_user(scope):
     """

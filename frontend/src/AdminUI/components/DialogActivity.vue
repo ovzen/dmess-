@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card>
       <v-card-title>
-        DialogActivity / Просмотр активности диалогов
+        DialogActivity / Созданные диалоги
         <v-spacer />
         <v-text-field
           v-model="search"
@@ -16,7 +16,7 @@
         :headers="headers"
         :items="Dialogs"
         :search="search"
-        :sort-by="['Dialog Name', 'url', 'Date Time']"
+        :sort-by="['Dialog Name', 'URL', 'Datetime']"
         :sort-desc="[false, true]"
         multi-sort
         class="elevation-1"

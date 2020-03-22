@@ -29,14 +29,6 @@ class Friend(models.Model):
     friend = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='friend')
 
 
-class Status(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    status = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.status
-
-
 class Dialog(models.Model):
     create_date = models.DateTimeField(default=timezone.now, blank=True)
     last_change = models.DateTimeField(default=timezone.now, blank=True)

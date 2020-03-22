@@ -1,7 +1,10 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
+
+from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.generics import ListAPIView
+
+from django.contrib.auth import get_user_model
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -74,8 +77,8 @@ class FriendView(APIView):
 class DialogView(APIView):
     permission_classes = (AllowAny,)
     serializer_class = DialogSerializer
-    def get(self, request, pk=None):
 
+    def get(self, request, pk=None):
         id = request.query_params.get('id')
         for_user = request.query_params.get('for_user')
         name = request.query_params.get('name')
@@ -120,10 +123,6 @@ class DialogView(APIView):
         return Response({
             "message": "Dialog with id `{}` has been deleted.".format(pk)
         }, status=204)
-
-
-def get_base_context():
-    return None
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

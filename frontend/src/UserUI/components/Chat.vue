@@ -44,7 +44,7 @@
         color="blue lighten-1"
         dark
         style="margin-top:20px; margin-bottom:20px;"
-        v-bind:style="isOwnMessage(message.author) ? 'margin: 20px 20px 20px auto' : 'margin: 20px auto 20px 20px'"
+        :style="isOwnMessage(message.author) ? 'margin: 20px 20px 20px auto' : 'margin: 20px auto 20px 20px'"
         max-width="344"
       >
         <v-card-text class="headline text-left">
@@ -120,20 +120,27 @@ export default {
     drawer: false,
     windowHeight: window.innerHeight - 160
   }),
-  created () {
-    this.id = this.$route.params.id
-    this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
-    this.get()
+  watch: {
+    // при изменениях маршрута запрашиваем данные снова
+    $route: ['Update']
   },
   mounted () {
-    api.axios.get('/api/messages/', { params: { chat_id: this.id } }).then(res => {
-      this.messages = this.messages.concat(res.data)
-    })
+    this.Update()
+    this.get()
   },
   beforeDestroy () {
     this.$disconnect()
   },
   methods: {
+    Update () {
+      this.$disconnect()
+      this.messages = []
+      this.id = this.$route.params.id
+      api.axios.get('/api/messages/', { params: { chat_id: this.id } }).then(res => {
+        this.messages = this.messages.concat(res.data)
+      })
+      this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
+    },
     goBack () {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
