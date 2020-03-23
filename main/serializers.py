@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from admin.models import Invite
-from main.models import Dialog, UserProfile, Message
+from main.models import Dialog, UserProfile, Message, Contact
 
 UserModel = get_user_model()
 
@@ -101,6 +101,12 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ('id', 'text', 'create_date', 'author_id', 'author', 'is_online', 'avatar')
         read_only_fields = ('create_date',)
+
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = '__all__'
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

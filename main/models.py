@@ -24,9 +24,9 @@ class UserProfile(models.Model):
     is_online = models.BooleanField(default=False)
 
 
-class Friend(models.Model):
+class Contact(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='user')
-    friend = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='friend')
+    contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='contact')
 
 
 class Dialog(models.Model):

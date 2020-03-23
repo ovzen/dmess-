@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from main.models import UserProfile, Dialog, Message, Friend
+from main.models import UserProfile, Dialog, Message, Contact
 
 
 class UserProfileInline(admin.StackedInline):
@@ -18,5 +18,5 @@ admin.site.unregister(User)
 admin.site.register(Dialog)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(UserProfile)
-admin.site.register(Friend)
+admin.site.register(Contact)
 admin.site.register(Message)

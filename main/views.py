@@ -1,15 +1,15 @@
 from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.generics import ListAPIView
-
 from django.contrib.auth import get_user_model
+from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from main.models import Dialog, UserProfile
+from main.models import Dialog, UserProfile, Contact
 from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
-from main.serializers import MessageSerializer
+from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
 
 
@@ -47,6 +47,11 @@ class UserProfileView(RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+
+
+class ContactViewSet(viewsets.ModelViewSet):
+    serializer_class = ContactSerializer
+    queryset = Contact.objects.all()
 
 
 class DialogView(APIView):
