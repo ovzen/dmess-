@@ -172,6 +172,9 @@ export default {
     },
     openDialog (dialogId) {
       this.$router.push({ name: 'Chat', params: { id: dialogId } })
+    },
+    allusers () {
+      this.$router.push({ name: 'allUser' })
     }
   }
 }

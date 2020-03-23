@@ -28,8 +28,10 @@ schema_view = get_swagger_view(title='API')
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     url(r'^docs/', schema_view),
+
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
+
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),

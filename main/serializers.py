@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
-        code = self.validated_data['invite_code']
+        code = self.validated_data.get('invite_code')
         if code:
             invite_object = Invite.objects.filter(code=code)
             if invite_object.exists():
