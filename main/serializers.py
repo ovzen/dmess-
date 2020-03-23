@@ -104,22 +104,9 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    contact = UserSerializer(read_only=True)
-    contact_id = serializers.IntegerField(write_only=True)
-
-    def create(self, validated_data):
-        contact = Contact.objects.create(
-            user=self._context['request']._user,
-            friend=UserModel.objects.get(id=validated_data['contact_id'])
-        )
-        contact.save()
-
-        return contact
-
     class Meta:
         model = Contact
-        fields = ('user', 'contact', 'contact_id')
+        fields = '__all__'
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
