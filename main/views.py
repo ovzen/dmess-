@@ -1,10 +1,7 @@
-from django.contrib.auth.models import User
-
 from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.generics import ListAPIView
 
 from django.contrib.auth import get_user_model
-from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,15 +13,17 @@ from main.serializers import MessageSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
 
 
+User = get_user_model()
+
 
 class UserView(ListCreateAPIView):
     """
-       Registration of new user
-       + get method for getting list of all users
+    Registration of new user
+    + get method for getting list of all users
     """
     permission_classes = (AllowAny,)
-    model = get_user_model()
-    queryset = get_user_model().objects
+    model = User
+    queryset = User.objects
     serializer_class = UserSerializer
 
 
