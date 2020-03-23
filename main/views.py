@@ -6,10 +6,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from main.models import Dialog, UserProfile, Friend
+from main.models import Dialog, UserProfile, Contact
 from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
-from main.serializers import MessageSerializer, FriendSerializer
+from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
 
 
@@ -49,9 +49,9 @@ class UserProfileView(RetrieveUpdateAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
 
 
-class FriendViewSet(viewsets.ModelViewSet):
-    serializer_class = FriendSerializer
-    queryset = Friend.objects.all()
+class ContactViewSet(viewsets.ModelViewSet):
+    serializer_class = ContactSerializer
+    queryset = Contact.objects.all()
 
 
 class DialogView(APIView):

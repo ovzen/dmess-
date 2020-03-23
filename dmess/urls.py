@@ -37,7 +37,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('api/register/', views.UserView.as_view()),
     path('api/messages/', views.MessageView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
-    path('api/friends', views.FriendViewSet.as_view({'get': 'list'})),
+    path('api/contacts/', views.ContactViewSet.as_view({'get': 'list'})),
     path('api/users/<int:pk>', views.UserProfileView.as_view()),
     path('api/activity_feed/', views.ActivityFeedView.as_view()),
     path('api/admin/', include('admin.urls')),

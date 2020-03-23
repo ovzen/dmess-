@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from admin.models import Invite
-from main.models import Dialog, UserProfile, Message, Friend
+from main.models import Dialog, UserProfile, Message, Contact
 
 UserModel = get_user_model()
 
@@ -103,23 +103,23 @@ class MessageSerializer(serializers.ModelSerializer):
         read_only_fields = ('create_date',)
 
 
-class FriendSerializer(serializers.ModelSerializer):
+class ContactSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    friend = UserSerializer(read_only=True)
-    friend_id = serializers.IntegerField(write_only=True)
+    contact = UserSerializer(read_only=True)
+    contact_id = serializers.IntegerField(write_only=True)
 
     def create(self, validated_data):
-        friend = Friend.objects.create(
+        contact = Contact.objects.create(
             user=self._context['request']._user,
-            friend=UserModel.objects.get(id=validated_data['friend_id'])
+            friend=UserModel.objects.get(id=validated_data['contact_id'])
         )
-        friend.save()
+        contact.save()
 
-        return friend
+        return contact
 
     class Meta:
-        model = Friend
-        fields = ('user', 'friend', 'friend_id')
+        model = Contact
+        fields = ('user', 'contact', 'contact_id')
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
