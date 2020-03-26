@@ -1,73 +1,162 @@
 <template>
-  <v-container fluid>
-    <v-form>
-      <v-container>
-        <v-text-field
-          v-model="login"
-          label="Login"
-          clearable
-          required
-          name="username"
-          :rules="loginRules"
-        />
-        <v-form ref="passwords">
-          <v-text-field
-            v-model="password"
-            clearable
-            label="Password"
-            required
-            name="password"
-            :rules="passwordRules"
-          />
-          <v-text-field
-            v-model="repeatpassword"
-            clearable
-            label="Repeat password"
-            required
-            name="Repeat_password"
-            :rules="repeatpasswordRules"
-          />
-        </v-form>
-        <v-text-field
-          v-model="name"
-          clearable
-          label="Name"
-          name="first_name"
-        />
-        <v-text-field
-          v-model="secondname"
-          clearable
-          label="Second name"
-          name="last_name"
-        />
-        <v-text-field
-          v-model="email"
-          clearable
-          label="E-mail"
-          :rules="emailRules"
-          name="email"
-        />
-        <div class="text-center">
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="GoToLogin()"
-            v-text="button"
+  <v-container
+    class="fill-height"
+    fluid
+  >
+    <v-row
+      align="center"
+      justify="center"
+    >
+      <v-col
+        cols="12"
+        sm="8"
+        md="4"
+      >
+        <v-card
+          class="elevation-12"
+        >
+          <v-toolbar-title
+            class="text-center pt-7 text--secondary"
           >
-            Войти
-          </v-btn>
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="Register(login, password, repeatpassword, name, secondname, email)"
-          >
-            Регистрация
-          </v-btn>
-        </div>
-      </v-container>
-    </v-form>
+            {{ RegTitle }}
+          </v-toolbar-title>
+
+          <v-window v-model="step">
+            <v-window-item :value="1">
+              <v-card-text>
+                <v-text-field
+                  v-model="email"
+                  clearable
+                  label="E-mail"
+                  hint="Email specified during registration"
+                  :rules="emailRules"
+                  name="email"
+                  outlined
+                />
+
+                <v-text-field
+                  v-model="login"
+                  label="Username"
+                  hint="Your personal username"
+                  clearable
+                  required
+                  name="username"
+                  :rules="loginRules"
+                  outlined
+                />
+              </v-card-text>
+            </v-window-item>
+
+            <v-window-item :value="2">
+              <v-card-text>
+                <v-text-field
+                  v-model="name"
+                  clearable
+                  label="First Name"
+                  hint="Your first name"
+                  name="first_name"
+                  outlined
+                />
+
+                <v-text-field
+                  v-model="secondname"
+                  clearable
+                  label="Last Name"
+                  hint="Your last name"
+                  name="last_name"
+                  outlined
+                />
+              </v-card-text>
+            </v-window-item>
+
+            <v-window-item :value="3">
+              <v-card-text>
+                <v-text-field
+                  v-model="password"
+                  :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="vanish ? 'text' : 'password'"
+                  clearable
+                  label="Password"
+                  hint="Password must contain letters and numbers"
+                  required
+                  outlined
+                  name="password"
+                  :rules="passwordRules"
+                  @click:append="vanish = !vanish"
+                />
+
+                <v-text-field
+                  v-model="repeatpassword"
+                  :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="vanish ? 'text' : 'password'"
+                  clearable
+                  label="Repeat Password"
+                  hint="Repeat your password"
+                  required
+                  outlined
+                  name="Repeat_password"
+                  :rules="repeatpasswordRules"
+                  @click:append="vanish = !vanish"
+                />
+              </v-card-text>
+            </v-window-item>
+          </v-window>
+
+          <v-card-actions>
+            <v-btn
+              fab
+              mr="3"
+              color="indigo"
+              :disabled="step === 1"
+              @click="step--"
+            >
+              <v-card-center class="headline font-weight-thin">
+                &larr;
+              </v-card-center>
+            </v-btn>
+            <v-spacer />
+
+            <v-btn
+              class="ma-2"
+              :disabled="step <= 2"
+              tile
+              outlined
+              color="indigo"
+              @click="Register(login, password, repeatpassword, name, secondname, email)"
+            >
+              SIGN UP
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              ml="3"
+              fab
+              :disabled="step === 3"
+              color="indigo"
+              @click="step++"
+            >
+              <v-card-center class="center headline">
+                →
+              </v-card-center>
+            </v-btn>
+          </v-card-actions>
+
+          <v-card-actions>
+            <v-spacer />
+            <v-card-center class="text--secondary caption mb-7">
+              DON`T HAVE ACCOUNT? <a>
+                <u
+                  class="text--secondary"
+                  @click="GoToLogin()"
+                >
+                  SIGN UP!
+                </u>
+              </a>
+            </v-card-center>
+            <v-spacer />
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -89,26 +178,35 @@ export default {
     button: 'Войти',
     message_text: '',
     next: '',
+    vanish: false,
+    step: 1,
     loginRules: [
-      v => !!v || 'Login is required',
+      v => !!v || 'Введите логин',
       v => (v || '').length >= 2 ||
               `Minimal length of username is 2 symbols`
     ],
     emailRules: [
-      v => /.+@.+\..+/.test(v) || v.length <= 0 || 'E-mail must be valid'
+      v => /.+@.+\..+/.test(v) || v.length <= 0 || 'Электронная почта должна быть действительной'
     ]
   }),
   computed: {
+    RegTitle () {
+      switch (this.step) {
+        case 1: return 'Sign Up'
+        case 2: return 'Sign Up'
+        default: return 'Sign Up'
+      }
+    },
     repeatpasswordRules () {
       const rules = []
-      rules.push(v => !!v || 'Repeat password is required')
+      rules.push(v => !!v || 'Повторите пароль')
       rules.push(v => (!!v && v) === this.password ||
-              'Values do not match')
+              'Пароли не совпадают')
       return rules
     },
     passwordRules () {
       const rules = []
-      rules.push(v => !!v || 'Password is required')
+      rules.push(v => !!v || 'Введите пароль')
       return rules
     }
   },
