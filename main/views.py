@@ -1,3 +1,4 @@
+from rest_framework.decorators import action
 from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import get_user_model
@@ -54,55 +55,24 @@ class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
 
 
-class DialogView(APIView):
+class DialogViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     serializer_class = DialogSerializer
+    queryset = Dialog.objects.all()
 
-    def get(self, request, pk=None):
-        id = request.query_params.get('id')
-        for_user = request.query_params.get('for_user')
-        name = request.query_params.get('name')
+    def get_queryset(self):
+        id = self.request.query_params.get('id')
+        for_user = self.request.query_params.get('for_user')
+        name = self.request.query_params.get('name')
         if id:
             dialogs = Dialog.objects.filter(id=id)
         elif for_user:
-            dialogs = Dialog.objects.filter(users=request.user)
+            dialogs = Dialog.objects.filter(users=self.request.user)
         elif name:
             dialogs = Dialog.objects.filter(name=name)
         else:
             dialogs = Dialog.objects.all()
-        dialog_serializer = DialogSerializer(dialogs, many=True)
-        return Response({"dialogs": dialog_serializer.data})
-
-    def post(self, request, pk=None):
-        # TODO make a chat name from the recipient's name
-        dialog = {
-            'name': request.data['name'],
-            'users': [request.user.id]
-        }
-        serializer = DialogSerializer(data=dialog)
-        if serializer.is_valid(raise_exception=True):
-            dialog_saved = serializer.save()
-        return Response({
-            "success": "dialog '{}' created successfully".format(dialog_saved.name),
-            "id_dialog": dialog_saved.id
-        })
-
-    def put(self, request, pk):
-        saved_dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
-        data = request.data.get('dialog')
-        serializer = DialogSerializer(instance=saved_dialog, data=data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            dialog_saved = serializer.save()
-        return Response({
-            "success": "Dialog '{}' updated successfully".format(dialog_saved.title)
-        })
-
-    def delete(self, request, pk):
-        dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
-        dialog.delete()
-        return Response({
-            "message": "Dialog with id `{}` has been deleted.".format(pk)
-        }, status=204)
+        return dialogs
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
