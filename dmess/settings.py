@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'main',
     'admin.apps.AdminConfig',
     'channels',
+    'django_filters'
 ]
 
 REST_FRAMEWORK = {

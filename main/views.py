@@ -12,6 +12,7 @@ from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
+from django_filters import rest_framework as filters
 
 
 User = get_user_model()
@@ -59,20 +60,12 @@ class DialogViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     serializer_class = DialogSerializer
     queryset = Dialog.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('users',)
 
     def get_queryset(self):
-        id = self.request.query_params.get('id')
-        for_user = self.request.query_params.get('for_user')
-        name = self.request.query_params.get('name')
-        if id:
-            dialogs = Dialog.objects.filter(id=id)
-        elif for_user:
-            dialogs = Dialog.objects.filter(users=self.request.user)
-        elif name:
-            dialogs = Dialog.objects.filter(name=name)
-        else:
-            dialogs = Dialog.objects.all()
-        return dialogs
+        user = self.request.user
+        return Dialog.objects.filter(users=user)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

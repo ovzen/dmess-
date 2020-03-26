@@ -64,23 +64,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DialogSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    create_date = serializers.DateTimeField(read_only=True)
-    last_change = serializers.DateTimeField(read_only=True)
-    name = serializers.CharField(max_length=200)
-    users = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all(), many=True)
-
-    def create(self, validated_data):
-        Dia = Dialog.objects.create(name=validated_data['name'])
-        Dia.users.set(validated_data['users'])
-        return Dia
-
-    class Meta:
-        model = Dialog
-        fields = ('id', 'name', 'users', 'create_date', 'last_change', 'last_message')
-
-
 class MessageSerializer(serializers.ModelSerializer):
     author_id = serializers.CharField(source='author.user.id')
     author = serializers.CharField(source='author.user.username')
@@ -91,6 +74,19 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ('id', 'text', 'create_date', 'author_id', 'author', 'is_online', 'avatar')
         read_only_fields = ('create_date',)
+
+
+class DialogSerializer(serializers.ModelSerializer):
+    last_message = MessageSerializer()
+
+    def create(self, validated_data):
+        Dia = Dialog.objects.create(name=validated_data['name'])
+        Dia.users.set(validated_data['users'])
+        return Dia
+
+    class Meta:
+        model = Dialog
+        fields = '__all__'
 
 
 class ContactSerializer(serializers.ModelSerializer):
