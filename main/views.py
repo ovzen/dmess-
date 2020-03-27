@@ -3,7 +3,7 @@ from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, Li
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -57,7 +57,10 @@ class ContactViewSet(viewsets.ModelViewSet):
 
 
 class DialogViewSet(viewsets.ModelViewSet):
-    permission_classes = (AllowAny,)
+    """
+    ViewSet для работы с диалогами
+    """
+    permission_classes = (IsAuthenticated,)
     serializer_class = DialogSerializer
     queryset = Dialog.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
