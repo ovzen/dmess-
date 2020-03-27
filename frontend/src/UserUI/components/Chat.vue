@@ -158,7 +158,7 @@ export default {
         this.messages.push({
           id: this.messages.length,
           text: JSON.parse(data.data).message,
-          author: JSON.parse(data.data).author
+          author: JSON.parse(data.data).user
         })
         console.log(JSON.parse(data.data))
       }

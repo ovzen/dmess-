@@ -65,15 +65,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    author_id = serializers.CharField(source='author.user.id')
-    author = serializers.CharField(source='author.user.username')
-    is_online = serializers.ImageField(source='author.is_online')
-    avatar = serializers.ImageField(source='author.avatar')
-
     class Meta:
         model = Message
-        fields = ('id', 'text', 'create_date', 'author_id', 'author', 'is_online', 'avatar')
-        read_only_fields = ('create_date',)
+        fields = '__all__'
 
 
 class DialogSerializer(serializers.ModelSerializer):

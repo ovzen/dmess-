@@ -33,12 +33,8 @@ class ChatConsumer(WebsocketConsumer):
         if author == "":
             author = 'AnonymousUser'
 
-        message_obj = Message(author_id=author.id, text=message, dialog_id=self.chat_number)
+        message_obj = Message(user=author, text=message, dialog_id=self.chat_number)
         message_obj.save()
-        Dialog.objects.filter(id=self.chat_number).update(
-            last_message=message,
-            last_change=message_obj.create_date
-        )
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(

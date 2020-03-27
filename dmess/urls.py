@@ -28,6 +28,7 @@ from main import views
 router = SimpleRouter()
 router.register(r'api/contacts', views.ContactViewSet)
 router.register(r'api/dialog', views.DialogViewSet)
+router.register(r'api/messages', views.MessageViewSet)
 
 schema_view = get_swagger_view(title='API')
 
@@ -40,7 +41,6 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),
-    path('api/messages/', views.MessageView.as_view()),
     path('api/users/<int:pk>', views.UserProfileView.as_view()),
     path('api/activity_feed/', views.ActivityFeedView.as_view()),
     path('api/admin/', include('admin.urls')),

@@ -29,18 +29,6 @@ class UserView(ListCreateAPIView):
     serializer_class = UserSerializer
 
 
-class MessageView(ListAPIView):
-    """
-    Send all messages from chat
-    """
-    permission_classes = (AllowAny,)
-    model = Message
-    serializer_class = MessageSerializer
-
-    def get_queryset(self):
-        return Message.objects.all().filter(dialog_id=self.request.query_params.get('chat_id'))
-
-
 class UserProfileView(RetrieveUpdateAPIView):
     """
     View для просмотра и обновления данных о пользователе
@@ -69,6 +57,17 @@ class DialogViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return Dialog.objects.filter(users=user)
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    """
+    Send all messages from chat
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessageSerializer
+    queryset = Message.objects
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('dialog', 'user')
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
