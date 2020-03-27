@@ -64,7 +64,7 @@ class DialogViewSet(viewsets.ModelViewSet):
     serializer_class = DialogSerializer
     queryset = Dialog.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('users',)
+    filterset_fields = ('users', 'name', 'id')
 
     def get_queryset(self):
         user = self.request.user

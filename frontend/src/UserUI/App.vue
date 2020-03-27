@@ -134,8 +134,16 @@ export default {
     group: [],
     for_user: true,
     dialogs_for_user: [],
-    username: 'Test'
+    username: 'Test',
+    user_id: undefined
   }),
+  beforeCreate() {
+    if (this.$cookie.get('Authentication')) {
+      this.user_id = this.$cookie.get('Authentication').user_id;
+    } else {
+      console.warn('The current user was not found');
+    }
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['updateToken', 'getDialogs', 'disconnect']
@@ -162,11 +170,11 @@ export default {
     getDialogs () {
       api.axios.get('/api/dialog/', {
         params: {
-          for_user: this.for_user
+          users: this.user_id
         }
       })
         .then(res => {
-          this.dialogs_for_user = res.data['dialogs']
+          this.dialogs_for_user = res.data
           console.log(this.dialogs_for_user)
         })
     },
