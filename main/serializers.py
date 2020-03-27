@@ -77,12 +77,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class DialogSerializer(serializers.ModelSerializer):
-    last_message = MessageSerializer()
-
-    def create(self, validated_data):
-        Dia = Dialog.objects.create(name=validated_data['name'])
-        Dia.users.set(validated_data['users'])
-        return Dia
+    last_message = MessageSerializer(read_only=True)
 
     class Meta:
         model = Dialog
