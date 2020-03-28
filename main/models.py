@@ -30,15 +30,21 @@ class Contact(models.Model):
 
 
 class Dialog(models.Model):
-    create_date = models.DateTimeField(default=timezone.now, blank=True)
-    last_change = models.DateTimeField(default=timezone.now, blank=True)
-    name = models.CharField(max_length=200)
+    create_date = models.DateTimeField(auto_now_add=True)
     users = models.ManyToManyField(User)
-    last_message = models.CharField(max_length=200, blank=True)
     admin_only = models.BooleanField(default=False)
+    name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
+
+    # def get_title_from_names(self):
+    #     return ', '.join(
+    #         map(lambda user: user.first_name, self.users.all())
+    #     )
+
+    def last_message(self):
+        return self.message_set.order_by('-create_date').first()
 
 
 class Message(models.Model):

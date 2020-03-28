@@ -76,8 +76,16 @@ export default {
     button: 'Войти',
     password: '',
     message_text: '',
-    data: ''
+    data: '',
+    user_id: undefined
   }),
+  created () {
+    if (this.$cookie.get('Authentication')) {
+      this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
+    } else {
+      console.warn('The current user was not found')
+    }
+  },
   methods: {
     FindChat (ChatName) {
       if (ChatName) {
@@ -88,18 +96,18 @@ export default {
             }
           })
           .then(response => {
-            if (response.data.dialogs.length > 0) {
-              console.log(response.data.dialogs[0].id)
-              this.$router.push('chat/' + response.data.dialogs[0].id)
+            if (response.data.length > 0) {
+              this.$router.push('chat/' + response.data[0].id)
             } else {
               api.axios
                 .post('/api/dialog/', {
-                  name: ChatName
+                  name: ChatName,
+                  users: [this.user_id]
                 })
                 .then(response => {
-                  // console.log('post response:', response)
-                  if (response && response.data && response.data.id_dialog) {
-                    this.$router.push('chat/' + response.data.id_dialog)
+                  console.log('post response:', response)
+                  if (response && response.data && response.data.id) {
+                    this.$router.push('chat/' + response.data.id)
                   }
                 })
             }

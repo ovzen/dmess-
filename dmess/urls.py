@@ -26,7 +26,10 @@ from dmess import settings
 from main import views
 
 router = SimpleRouter()
+
 router.register(r'api/contacts', views.ContactViewSet, basename='contact')
+router.register(r'api/dialog', views.DialogViewSet)
+
 
 schema_view = get_swagger_view(title='API')
 
@@ -40,7 +43,6 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.UserView.as_view()),
     path('api/messages/', views.MessageView.as_view()),
-    path('api/dialog/', views.DialogView.as_view()),
     path('api/users/<int:pk>', views.UserProfileView.as_view()),
     path('api/activity_feed/', views.ActivityFeedView.as_view()),
     path('api/admin/', include('admin.urls')),
