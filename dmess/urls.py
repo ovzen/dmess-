@@ -26,7 +26,7 @@ from dmess import settings
 from main import views
 
 router = SimpleRouter()
-router.register(r'api/contacts', views.ContactViewSet)
+router.register(r'api/contacts', views.ContactViewSet, basename='contact')
 
 schema_view = get_swagger_view(title='API')
 
