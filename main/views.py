@@ -53,7 +53,10 @@ class UserProfileView(RetrieveUpdateAPIView):
 
 class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
-    queryset = Contact.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Contact.objects.filter(user=user)
 
 
 class DialogViewSet(viewsets.ModelViewSet):

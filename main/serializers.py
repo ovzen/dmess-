@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from admin.models import Invite
@@ -89,6 +90,13 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = '__all__'
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Contact.objects.all(),
+                fields=['user', 'contact'],
+                message='You have already added this contact.'
+            )
+        ]
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
