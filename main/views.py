@@ -121,3 +121,6 @@ class ActivityFeedView(APIView):
             'registrations': user_reg_serializer.data,
             'dialogs': dialog_serializer.data,
         })
+
+def get_base_context():
+    pass

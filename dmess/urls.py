@@ -41,6 +41,7 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     path('api/register/', views.UserView.as_view()),
     path('api/messages/', views.MessageView.as_view()),
     path('api/dialog/', views.DialogView.as_view()),
+    path('api/dialog/<int:pk>', views.DialogView.as_view()),
     path('api/users/<int:pk>', views.UserProfileView.as_view()),
     path('api/activity_feed/', views.ActivityFeedView.as_view()),
     path('api/admin/', include('admin.urls')),
