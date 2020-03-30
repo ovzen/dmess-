@@ -14,6 +14,7 @@
           </v-list-item-title>
           <v-list-item-subtitle>User ID: {{ id }}</v-list-item-subtitle>
           <v-list-item-subtitle>Статус пользователя: {{ status }}</v-list-item-subtitle>
+          <v-list-item-subtitle>e-mail: {{ email }}</v-list-item-subtitle>
           <!-- <v-list-item-subtitle>Дата регистрации: {{ createdDate }}</v-list-item-subtitle> -->
         </v-list-item-content>
 
@@ -39,19 +40,20 @@ export default {
     avatar: '',
     status: '',
     createdDate: '',
-    message: ''
+    message: '',
+    email: ''
 
   }),
 
   methods: {
     get_data () {
       api.axios
-        .get('/api/users/2')
+        .get('/api/users/' + this.id)
         .then(res => {
-          this.id = res.data['user'].id
           this.username = res.data['user'].username
           this.avatar = res.data['avatar']
           this.status = res.data.bio
+          this.email = res.data['user'].email
         })
         .catch(error => {
           if (error.response.status === 401) {
@@ -62,6 +64,7 @@ export default {
   },
 
   created () {
+    this.id = this.$route.params.id
     this.get_data()
   }
 
