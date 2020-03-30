@@ -10,7 +10,14 @@
       <v-app-bar-nav-icon @click="drawer = true" />
       <v-toolbar-title>Навигация</v-toolbar-title>
       <v-spacer />
-      Hello, {{ username }}
+      <v-btn
+        class="ma-2"
+        outlined
+        color="#90CAF9"
+        @click="goProfilePage()"
+      >
+        {{ username }}
+      </v-btn>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -150,7 +157,6 @@ export default {
   },
   mounted () {
     this.getDialogs()
-//    this.username = 'Qwerty'
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
   },
   methods: {
@@ -183,6 +189,9 @@ export default {
     },
     allusers () {
       this.$router.push({ name: 'allUser' })
+    },
+    goProfilePage () {
+      this.$router.push('/profile/' + this.user_id)
     }
   }
 }
