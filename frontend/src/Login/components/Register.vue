@@ -3,25 +3,35 @@
     class="fill-height"
     fluid
   >
-    <v-row
-      class="center"
-      justify="center"
+    <v-flex
+      justify-center
+      d-flex
     >
       <v-col
         cols="12"
         sm="8"
-        md="4"
+        md="8"
       >
         <v-card
           class="elevation-12"
         >
+        <v-layout>
+          <v-img src="/static/reg.JPG" />
+          <v-row
+            justify="center"
+          >
           <v-toolbar-title
             class="text-center pt-7 text--secondary"
           >
             {{ RegTitle }}
           </v-toolbar-title>
-
           <v-window v-model="step">
+           <v-row
+                justify="center"
+              >
+                <v-col
+                  md="7"
+                >
             <v-window-item :value="1">
               <v-card-text>
                 <v-text-field
@@ -100,8 +110,9 @@
                 />
               </v-card-text>
             </v-window-item>
+          </v-col>
+          </v-row>
           </v-window>
-
           <v-card-actions>
             <v-btn
               fab
@@ -154,9 +165,11 @@
             </v-card-center>
             <v-spacer />
           </v-card-actions>
+        </v-row>
+        </v-layout>
         </v-card>
       </v-col>
-    </v-row>
+    </v-flex>
   </v-container>
 </template>
 
