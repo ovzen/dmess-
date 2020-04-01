@@ -1,8 +1,9 @@
+from rest_framework.decorators import action
 from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -11,6 +12,7 @@ from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
+from django_filters import rest_framework as filters
 
 
 User = get_user_model()
@@ -51,58 +53,25 @@ class UserProfileView(RetrieveUpdateAPIView):
 
 class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
-    queryset = Contact.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Contact.objects.filter(user=user)
 
 
-class DialogView(APIView):
-    permission_classes = (AllowAny,)
+class DialogViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для работы с диалогами
+    """
+    permission_classes = (IsAuthenticated,)
     serializer_class = DialogSerializer
+    queryset = Dialog.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('users', 'name', 'id')
 
-    def get(self, request, pk=None):
-        id = request.query_params.get('id')
-        for_user = request.query_params.get('for_user')
-        name = request.query_params.get('name')
-        if id:
-            dialogs = Dialog.objects.filter(id=id)
-        elif for_user:
-            dialogs = Dialog.objects.filter(users=request.user)
-        elif name:
-            dialogs = Dialog.objects.filter(name=name)
-        else:
-            dialogs = Dialog.objects.all()
-        dialog_serializer = DialogSerializer(dialogs, many=True)
-        return Response({"dialogs": dialog_serializer.data})
-
-    def post(self, request, pk=None):
-        # TODO make a chat name from the recipient's name
-        dialog = {
-            'name': request.data['name'],
-            'users': [request.user.id]
-        }
-        serializer = DialogSerializer(data=dialog)
-        if serializer.is_valid(raise_exception=True):
-            dialog_saved = serializer.save()
-        return Response({
-            "success": "dialog '{}' created successfully".format(dialog_saved.name),
-            "id_dialog": dialog_saved.id
-        })
-
-    def put(self, request, pk):
-        saved_dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
-        data = request.data.get('dialog')
-        serializer = DialogSerializer(instance=saved_dialog, data=data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            dialog_saved = serializer.save()
-        return Response({
-            "success": "Dialog '{}' updated successfully".format(dialog_saved.title)
-        })
-
-    def delete(self, request, pk):
-        dialog = get_object_or_404(Dialog.objects.all(), pk=pk)
-        dialog.delete()
-        return Response({
-            "message": "Dialog with id `{}` has been deleted.".format(pk)
-        }, status=204)
+    def get_queryset(self):
+        user = self.request.user
+        return Dialog.objects.filter(users=user)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
