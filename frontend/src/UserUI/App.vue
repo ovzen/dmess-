@@ -10,7 +10,14 @@
       <v-app-bar-nav-icon @click="drawer = true" />
       <v-toolbar-title>Навигация</v-toolbar-title>
       <v-spacer />
-      Hello, {{ username }}
+      <v-btn
+        class="ma-2"
+        outlined
+        color="#90CAF9"
+        @click="goProfilePage()"
+      >
+        {{ username }}
+      </v-btn>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -134,15 +141,22 @@ export default {
     group: [],
     for_user: true,
     dialogs_for_user: [],
-    username: 'Test'
+    username: 'Test',
+    user_id: undefined
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['updateToken', 'getDialogs', 'disconnect']
   },
+  created () {
+    if (this.$cookie.get('Authentication')) {
+      this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
+    } else {
+      console.warn('The current user was not found')
+    }
+  },
   mounted () {
     this.getDialogs()
-//    this.username = 'Qwerty'
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
   },
   methods: {
@@ -162,16 +176,22 @@ export default {
     getDialogs () {
       api.axios.get('/api/dialog/', {
         params: {
-          for_user: this.for_user
+          users: this.user_id
         }
       })
         .then(res => {
-          this.dialogs_for_user = res.data['dialogs']
+          this.dialogs_for_user = res.data
           console.log(this.dialogs_for_user)
         })
     },
     openDialog (dialogId) {
       this.$router.push({ name: 'Chat', params: { id: dialogId } })
+    },
+    allusers () {
+      this.$router.push({ name: 'allUser' })
+    },
+    goProfilePage () {
+      this.$router.push('/profile/' + this.user_id)
     }
   }
 }
