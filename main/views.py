@@ -7,11 +7,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from main.models import Dialog, UserProfile, Contact
+from main.models import Dialog, UserProfile, Contact, WikiPage
 from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, WikiPageSerializer
 from django_filters import rest_framework as filters
 
 
@@ -90,3 +90,11 @@ class ActivityFeedView(APIView):
             'registrations': user_reg_serializer.data,
             'dialogs': dialog_serializer.data,
         })
+
+
+class WikiPageView(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = WikiPageSerializer
+    queryset = WikiPage.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('users', 'name', 'id')
