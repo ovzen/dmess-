@@ -1,14 +1,14 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-flex justify-center d-flex>
-      <v-col md="9">
+      <v-col md="6" justify-center>
         <v-card class="elevation-12">
           <v-layout>
             <v-img src="/static/reg.JPG" />
-            <v-row justify="center" class="d-flex">
-              
-                <v-toolbar-title class="text-center pt-7 text--secondary">{{ RegTitle }}</v-toolbar-title>
-              
+
+            <v-container>
+              <v-toolbar-title class="text-center pt-7 text--secondary">{{ RegTitle }}</v-toolbar-title>
+              <div>
                 <v-window v-model="step">
                   <v-window-item :value="1">
                     <v-card-text>
@@ -89,55 +89,45 @@
                     </v-card-text>
                   </v-window-item>
                 </v-window>
-              
-            </v-row>
-            <v-row justify="center" class="d-flex">
-              <v-col>
-                <v-card-actions>
-                  <v-btn
-                    class="mx-5 my-2"
-                    fab
-                    mr="3"
-                    color="indigo"
-                    :disabled="step === 1"
-                    @click="step--"
-                  >
-                    <v-card-center class="headline font-weight-thin">&larr;</v-card-center>
-                  </v-btn>
-                  <v-spacer />
+              </div>
+              <v-card-actions>
+                <v-btn
+                  class="mx-5 my-2"
+                  fab
+                  mr="3"
+                  color="indigo"
+                  :disabled="step === 1"
+                  @click="step--"
+                >
+                  <v-card-center class="headline font-weight-thin">&larr;</v-card-center>
+                </v-btn>
+                <v-spacer />
 
-                  <v-btn
-                    class="mx-5 my-2"
-                    :disabled="step <= 2"
-                    tile
-                    outlined
-                    color="indigo"
-                    @click="Register(login, password, repeatpassword, name, secondname, email)"
-                  >SIGN UP</v-btn>
-                  <v-spacer />
-                  <v-btn
-                    class="mx-5 my-2"
-                    fab
-                    :disabled="step === 3"
-                    color="indigo"
-                    @click="step++"
-                  >
-                    <v-card-center class="center headline">→</v-card-center>
-                  </v-btn>
-                </v-card-actions>
+                <v-btn
+                  class="mx-5 my-2"
+                  :disabled="step <= 2"
+                  tile
+                  outlined
+                  color="indigo"
+                  @click="Register(login, password, repeatpassword, name, secondname, email)"
+                >SIGN UP</v-btn>
+                <v-spacer />
+                <v-btn class="mx-5 my-2" fab :disabled="step === 3" color="indigo" @click="step++">
+                  <v-card-center class="center headline">→</v-card-center>
+                </v-btn>
+              </v-card-actions>
 
-                <v-card-actions>
-                  <v-spacer />
-                  <v-card-center class="text--secondary caption mb-7">
-                    ALREADY HAVE AN ACCOUNT?
-                    <a>
-                      <u class="text--secondary" @click="GoToLogin()">SIGN IN!</u>
-                    </a>
-                  </v-card-center>
-                  <v-spacer />
-                </v-card-actions>
-              </v-col>
-            </v-row>
+              <v-card-actions>
+                <v-spacer />
+                <v-card-center class="text--secondary caption mb-7">
+                  ALREADY HAVE AN ACCOUNT?
+                  <a>
+                    <u class="text--secondary" @click="GoToLogin()">SIGN IN!</u>
+                  </a>
+                </v-card-center>
+                <v-spacer />
+              </v-card-actions>
+            </v-container>
           </v-layout>
         </v-card>
       </v-col>
