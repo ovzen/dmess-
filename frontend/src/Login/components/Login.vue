@@ -64,7 +64,7 @@
                       class="ma-5"
                       tile
                       outlined
-                      color="indigo"
+                      color="purple darken-4"
                       @click="auth(login, password)"
                     >
                       SIGN IN
