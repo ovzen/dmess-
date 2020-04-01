@@ -138,7 +138,7 @@
                     <v-btn
                       class="mr-9"
                       fab
-                      mr="3"
+                      small
                       color="purple darken-4"
                       :disabled="step === 1"
                       @click="step--"
@@ -151,7 +151,7 @@
                     </v-btn>
 
                     <v-btn
-                      class="mx-9"
+                      class="mx-12"
                       :disabled="step <= 2"
                       tile
                       outlined
@@ -161,8 +161,9 @@
                       SIGN UP
                     </v-btn>
                     <v-btn
-                      class="ml-9"
+                      class="ml-12"
                       fab
+                      small
                       :disabled="step === 3"
                       color="purple darken-4"
                       @click="step++"
