@@ -1,46 +1,97 @@
 <template>
-  <v-container fluid>
-    <v-form>
-      <v-container>
-        <v-row>
-          <v-text-field
-            v-model="login"
-            label="Login"
-            clearable
-            required
-          />
-          <v-col
-            cols="12"
-            md="1"
-          />
-          <v-text-field
-            v-model="password"
-            clearable
-            label="Password"
-            required
-          />
-        </v-row>
-        <div class="text-center">
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="auth(login, password)"
-            v-text="button"
-          >
-            Войти
-          </v-btn>
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="GoToRegister()"
-          >
-            Регистрация
-          </v-btn>
-        </div>
-      </v-container>
-    </v-form>
+  <v-container
+    class="fill-height"
+    fluid
+  >
+    <v-flex
+      justify-center
+      d-flex
+    >
+      <v-col
+        md="9"
+      >
+        <v-card
+          class="elevation-12"
+        >
+          <v-layout>
+            <v-img src="/static/log.JPG" />
+            <v-row
+              justify="center"
+            >
+              <v-toolbar-title class="text-center pt-12 text--secondary">
+                Sign in
+              </v-toolbar-title>
+
+              <v-card-text>
+                <v-row
+                  justify="center"
+                >
+                  <v-col
+                    md="7"
+                  >
+                    <v-text-field
+                      v-model="login"
+                      label="Login"
+                      hint="Email specified during registration"
+                      clearable
+                      required
+                      outlined
+                    />
+
+                    <v-text-field
+                      v-model="password"
+                      :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="vanish ? 'text' : 'password'"
+                      clearable
+                      label="Password"
+                      hint="Your password"
+                      required
+                      outlined
+                      @click:append="vanish = !vanish"
+                    />
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-row
+                justify="center"
+              >
+                <v-col
+                  md="7"
+                >
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      class="ma-5"
+                      tile
+                      outlined
+                      color="purple darken-4"
+                      @click="auth(login, password)"
+                    >
+                      SIGN IN
+                    </v-btn>
+                    <v-spacer />
+                  </v-card-actions>
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-card-center class="text--secondary caption mb-9">
+                      DON`T HAVE AN ACCOUNT? <a>
+                        <u
+                          class="text--secondary"
+                          @click="GoToRegister()"
+                        >
+                          SIGN UP
+                        </u>
+                      </a>
+                    </v-card-center>
+                    <v-spacer />
+                  </v-card-actions>
+                </v-col>
+              </v-row>
+            </v-row>
+          </v-layout>
+        </v-card>
+      </v-col>
+    </v-flex>
   </v-container>
 </template>
 
@@ -58,8 +109,10 @@ export default {
     button: 'Войти',
     password: '',
     message_text: '',
-    next: ''
+    next: '',
+    vanish: false
   }),
+
   created () {
     if (this.$route.query.next) {
       this.next = 'http://' + window.location.host + this.$route.query.next
@@ -92,6 +145,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style lang="scss">
