@@ -51,7 +51,6 @@ class DialogViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = DialogSerializer
     queryset = Dialog.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('users', 'name', 'id')
 
     def get_queryset(self):
@@ -66,7 +65,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = MessageSerializer
     queryset = Message.objects
-    filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('dialog', 'user')
 
 

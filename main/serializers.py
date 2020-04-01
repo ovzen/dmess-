@@ -65,6 +65,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    user_detail = UserSerializer(source='user', read_only=True)
+
     class Meta:
         model = Message
         fields = '__all__'
