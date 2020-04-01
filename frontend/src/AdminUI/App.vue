@@ -10,6 +10,9 @@
         AdminUI
       </v-toolbar-title>
       <v-tabs>
+        <v-tab to="/ServerMessage/">
+          Сообщение всем пользователям
+        </v-tab>
         <v-tab to="/UserActivity/">
           Зарегистрировавшиеся пользователи
         </v-tab>
@@ -18,7 +21,12 @@
         </v-tab>
       </v-tabs>
       <v-spacer />
-      <v-btn href="/" replace>UserUI</v-btn>
+      <v-btn
+        href="/"
+        replace
+      >
+        UserUI
+      </v-btn>
     </v-app-bar>
     <v-sheet
       id="scrolling-techniques-7"
