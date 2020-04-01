@@ -9,6 +9,8 @@
     >
       <v-col
         md="9"
+        lg="9"
+        xl="9"
       >
         <v-card
           class="elevation-12"
@@ -28,6 +30,8 @@
                 >
                   <v-col
                     md="7"
+                    lg="7"
+                    xl="7"
                   >
                     <v-text-field
                       v-model="login"
@@ -57,6 +61,8 @@
               >
                 <v-col
                   md="7"
+                  lg="7"
+                  xl="7"
                 >
                   <v-card-actions>
                     <v-spacer />
