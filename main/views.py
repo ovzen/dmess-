@@ -1,6 +1,4 @@
-from rest_framework.decorators import action
-from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, ListCreateAPIView
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, ListCreateAPIView
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -12,7 +10,8 @@ from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
-from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 
 User = get_user_model()
@@ -25,7 +24,7 @@ class UserView(ListCreateAPIView):
     """
     permission_classes = (AllowAny,)
     model = User
-    queryset = User.objects
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
@@ -64,7 +63,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = MessageSerializer
-    queryset = Message.objects
+    queryset = Message.objects.all()
+    # filter_backends = [DjangoFilterBackend, SearchFilter]
+    # search_fields = ['text', 'user']
     filterset_fields = ('dialog', 'user')
 
 
