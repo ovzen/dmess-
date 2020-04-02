@@ -194,7 +194,7 @@ export default {
       this.$router.push({ name: 'allUser' })
     },
     goProfilePage () {
-      this.$router.push('/profile/' + this.user_id)
+      this.$router.push({ name: 'Profile', params: { id: this.user_id } });
     }
   }
 }
