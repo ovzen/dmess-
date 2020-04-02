@@ -8,7 +8,7 @@
       scroll-target="#scrolling-techniques-6"
     >
       <v-app-bar-nav-icon @click="drawer = true" />
-      <v-toolbar-title>Навигация</v-toolbar-title>
+      <v-toolbar-title v-if="chatPage"> {{ chatName }}</v-toolbar-title>
       <v-spacer />
       <v-btn
         class="ma-2"
@@ -129,6 +129,9 @@ export default {
   data: () => ({
     login: '',
     button: 'Войти',
+    chatId: undefined,
+    chatPage: false,
+    chatName: 'chatName',
     password: '',
     message_text: '',
     data: '',
@@ -158,6 +161,9 @@ export default {
   mounted () {
     this.getDialogs()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
+    this.chatId = this.$route.params.id
+    this.isChatPage()
+    this.getChatName()
   },
   methods: {
     disconnect () {
@@ -192,6 +198,23 @@ export default {
     },
     goProfilePage () {
       this.$router.push('/profile/' + this.user_id)
+    },
+    isChatPage () {
+      if (this.$route.name === 'Chat') {
+        this.chatPage = true
+      }
+    },
+    getChatName () {
+      api.axios
+        .get('/api/dialog/', {
+          params: {
+            id: this.chatId
+          }
+        })
+        .then(response => {
+          // this.chatName = 'Тут должно быть имя чата'
+          this.chatName = response.data
+        })
     }
   }
 }
