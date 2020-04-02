@@ -104,7 +104,7 @@
               <v-card-actions>
                 <v-row justify="space-around">
                   <v-btn fab small color="purple darken-4" :disabled="step === 1" @click="step--">
-                    <v-card-center class="headline font-weight-thin white--text">&larr;</v-card-center>
+                    <v-card-text class="text-center headline white--text">←</v-card-text>
                   </v-btn>
 
                   <v-btn
@@ -115,20 +115,18 @@
                     @click="Register(login, password, repeatpassword, name, secondname, email)"
                   >SIGN UP</v-btn>
                   <v-btn fab small :disabled="step === 3" color="purple darken-4" @click="step++">
-                    <v-card-center class="center headline white--text">→</v-card-center>
+                    <v-card-text class="text-center headline white--text">→</v-card-text>
                   </v-btn>
                 </v-row>
               </v-card-actions>
 
-              <v-card-actions>
-                <v-spacer />
-                <v-card-center class="text--secondary caption mb-10">
+              <v-card-actions class="text-center">
+                <v-card-text class="text--secondary caption mb-10">
                   ALREADY HAVE AN ACCOUNT?
                   <a>
                     <u class="text--secondary" @click="GoToLogin()">SIGN IN!</u>
                   </a>
-                </v-card-center>
-                <v-spacer />
+                </v-card-text>
               </v-card-actions>
             </v-container>
           </v-layout>

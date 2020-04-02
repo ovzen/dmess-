@@ -77,9 +77,8 @@
                     </v-btn>
                     <v-spacer />
                   </v-card-actions>
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-card-center class="text--secondary caption mb-9">
+                  <v-card-actions class="text-center">
+                    <v-card-text class="text--secondary caption mb-9">
                       DON`T HAVE AN ACCOUNT? <a>
                         <u
                           class="text--secondary"
@@ -88,8 +87,7 @@
                           SIGN UP
                         </u>
                       </a>
-                    </v-card-center>
-                    <v-spacer />
+                    </v-card-text>
                   </v-card-actions>
                 </v-col>
               </v-row>
