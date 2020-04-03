@@ -92,9 +92,12 @@ class ActivityFeedView(APIView):
         })
 
 
-class WikiPageView(viewsets.ModelViewSet):
+class WikiPageViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для работы с вики-страницей
+    """
     permission_classes = (IsAuthenticated,)
     serializer_class = WikiPageSerializer
     queryset = WikiPage.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('users', 'name', 'id')
+    filterset_fields = ('title', 'dialog', 'message')

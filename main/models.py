@@ -60,9 +60,8 @@ class WikiPage(models.Model):
     title = models.CharField(max_length=200)
     image = models.ImageField(
         upload_to='wiki',
-        null=True,
-        blank=True,
-        width_field="width_field",
-        height_field="height_field"
+        height_field=None,
+        width_field=None,
+        max_length=100
     )
     text = models.TextField(max_length=2000)
