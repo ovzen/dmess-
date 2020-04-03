@@ -1,73 +1,205 @@
 <template>
-  <v-container fluid>
-    <v-form>
-      <v-container>
-        <v-text-field
-          v-model="login"
-          label="Login"
-          clearable
-          required
-          name="username"
-          :rules="loginRules"
-        />
-        <v-form ref="passwords">
-          <v-text-field
-            v-model="password"
-            clearable
-            label="Password"
-            required
-            name="password"
-            :rules="passwordRules"
-          />
-          <v-text-field
-            v-model="repeatpassword"
-            clearable
-            label="Repeat password"
-            required
-            name="Repeat_password"
-            :rules="repeatpasswordRules"
-          />
-        </v-form>
-        <v-text-field
-          v-model="name"
-          clearable
-          label="Name"
-          name="first_name"
-        />
-        <v-text-field
-          v-model="secondname"
-          clearable
-          label="Second name"
-          name="last_name"
-        />
-        <v-text-field
-          v-model="email"
-          clearable
-          label="E-mail"
-          :rules="emailRules"
-          name="email"
-        />
-        <div class="text-center">
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="GoToLogin()"
-            v-text="button"
-          >
-            Войти
-          </v-btn>
-          <v-btn
-            class="ma-2"
-            outlined
-            color="primary"
-            @click="Register(login, password, repeatpassword, name, secondname, email)"
-          >
-            Регистрация
-          </v-btn>
-        </div>
-      </v-container>
-    </v-form>
+  <v-container
+    class="fill-height"
+    fluid
+  >
+    <v-flex
+      justify-center
+      d-flex
+    >
+      <v-col
+        md="9"
+        justify-center
+      >
+        <v-card
+          class="elevation-12"
+        >
+          <v-layout>
+            <v-img src="/static/reg.JPG" />
+            <v-container>
+              <v-toolbar-title
+                class="text-center pt-7 text--secondary"
+              >
+                {{ RegTitle }}
+              </v-toolbar-title>
+              <div>
+                <v-window v-model="step">
+                  <v-window-item :value="1">
+                    <v-card-text>
+                      <v-row
+                        justify="center"
+                      >
+                        <v-col
+                          md="7"
+                        >
+                          <v-text-field
+                            v-model="email"
+                            clearable
+                            label="E-mail"
+                            hint="Email specified during registration"
+                            :rules="emailRules"
+                            name="email"
+                            outlined
+                          />
+
+                          <v-text-field
+                            v-model="login"
+                            label="Username"
+                            hint="Your personal username"
+                            clearable
+                            required
+                            name="username"
+                            :rules="loginRules"
+                            outlined
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-window-item>
+
+                  <v-window-item :value="2">
+                    <v-card-text>
+                      <v-row
+                        justify="center"
+                      >
+                        <v-col
+                          md="7"
+                        >
+                          <v-text-field
+                            v-model="name"
+                            clearable
+                            label="First Name"
+                            hint="Your first name"
+                            name="first_name"
+                            outlined
+                          />
+
+                          <v-text-field
+                            v-model="secondname"
+                            clearable
+                            label="Last Name"
+                            hint="Your last name"
+                            name="last_name"
+                            outlined
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-window-item>
+
+                  <v-window-item :value="3">
+                    <v-card-text>
+                      <v-row
+                        justify="center"
+                      >
+                        <v-col
+                          md="7"
+                        >
+                          <v-text-field
+                            v-model="password"
+                            :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="vanish ? 'text' : 'password'"
+                            clearable
+                            label="Password"
+                            hint="Password must contain letters and numbers"
+                            required
+                            outlined
+                            name="password"
+                            :rules="passwordRules"
+                            @click:append="vanish = !vanish"
+                          />
+
+                          <v-text-field
+                            v-model="repeatpassword"
+                            :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="vanish ? 'text' : 'password'"
+                            clearable
+                            label="Repeat Password"
+                            hint="Repeat your password"
+                            required
+                            outlined
+                            name="Repeat_password"
+                            :rules="repeatpasswordRules"
+                            @click:append="vanish = !vanish"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-window-item>
+                </v-window>
+              </div>
+              <v-card-actions>
+                <v-row
+                  justify="center"
+                >
+                  <v-col
+                    md="7"
+                  >
+                    <v-btn
+                      class="mr-9"
+                      fab
+                      small
+                      color="purple darken-4"
+                      :disabled="step === 1"
+                      @click="step--"
+                    >
+                      <v-card-center
+                        class="headline font-weight-thin white--text"
+                      >
+                        &larr;
+                      </v-card-center>
+                    </v-btn>
+
+                    <v-btn
+                      class="mx-12"
+                      :disabled="step <= 2"
+                      tile
+                      outlined
+                      color="purple darken-4"
+                      @click="Register(login, password, repeatpassword, name, secondname, email)"
+                    >
+                      SIGN UP
+                    </v-btn>
+                    <v-btn
+                      class="ml-12"
+                      fab
+                      small
+                      :disabled="step === 3"
+                      color="purple darken-4"
+                      @click="step++"
+                    >
+                      <v-card-center
+                        class="center headline white--text"
+                      >
+                        →
+                      </v-card-center>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-actions>
+
+              <v-card-actions>
+                <v-spacer />
+                <v-card-center
+                  class="text--secondary caption mb-10"
+                >
+                  ALREADY HAVE AN ACCOUNT?
+                  <a>
+                    <u
+                      class="text--secondary"
+                      @click="GoToLogin()"
+                    >
+                      SIGN IN!
+                    </u>
+                  </a>
+                </v-card-center>
+                <v-spacer />
+              </v-card-actions>
+            </v-container>
+          </v-layout>
+        </v-card>
+      </v-col>
+    </v-flex>
   </v-container>
 </template>
 
@@ -89,6 +221,8 @@ export default {
     button: 'Войти',
     message_text: '',
     next: '',
+    vanish: false,
+    step: 1,
     loginRules: [
       v => !!v || 'Login is required',
       v => (v || '').length >= 2 ||
@@ -99,16 +233,23 @@ export default {
     ]
   }),
   computed: {
+    RegTitle () {
+      switch (this.step) {
+        case 1: return 'Sign Up'
+        case 2: return 'Sign Up'
+        default: return 'Sign Up'
+      }
+    },
     repeatpasswordRules () {
       const rules = []
-      rules.push(v => !!v || 'Repeat password is required')
+      rules.push(v => !!v || ' Repeat password is required')
       rules.push(v => (!!v && v) === this.password ||
               'Values do not match')
       return rules
     },
     passwordRules () {
       const rules = []
-      rules.push(v => !!v || 'Password is required')
+      rules.push(v => !!v || ' Password is required')
       return rules
     }
   },

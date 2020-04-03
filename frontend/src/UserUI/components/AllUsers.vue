@@ -70,7 +70,7 @@ export default {
         })
     },
     profilePush (userid) {
-      //  this.$router.push({ name: 'Profile', params: 'userid' })
+      this.$router.push({ name: 'Profile', params: { id: userid } });
       console.log(userid)
     }
   }
