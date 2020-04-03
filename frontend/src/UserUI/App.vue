@@ -8,7 +8,9 @@
       scroll-target="#scrolling-techniques-6"
     >
       <v-app-bar-nav-icon @click="drawer = true" />
-      <v-toolbar-title v-if="chatPage"> {{ chatName }}</v-toolbar-title>
+      <v-toolbar-title v-if="Route.params.id">
+        {{ chatName }}
+      </v-toolbar-title>
       <v-spacer />
       <v-btn
         class="ma-2"
@@ -131,7 +133,7 @@ export default {
     button: 'Войти',
     chatId: undefined,
     chatPage: false,
-    chatName: 'chatName',
+    chatName: '',
     password: '',
     message_text: '',
     data: '',
@@ -147,9 +149,14 @@ export default {
     username: 'Test',
     user_id: undefined
   }),
+  computed: {
+    Route () {
+      return this.$route
+    }
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['updateToken', 'getDialogs', 'disconnect']
+    $route: ['updateToken', 'getDialogs', 'disconnect', 'chatpage']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -162,8 +169,9 @@ export default {
     this.getDialogs()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     this.chatId = this.$route.params.id
-    this.isChatPage()
-    this.getChatName()
+    if (this.Route.params.id) {
+      this.chatpage()
+    }
   },
   methods: {
     disconnect () {
@@ -199,22 +207,19 @@ export default {
     goProfilePage () {
       this.$router.push('/profile/' + this.user_id)
     },
-    isChatPage () {
-      if (this.$route.name === 'Chat') {
-        this.chatPage = true
-      }
-    },
-    getChatName () {
-      api.axios
-        .get('/api/dialog/', {
-          params: {
-            id: this.chatId
-          }
-        })
-        .then(response => {
+    chatpage () {
+      if (this.Route.params.id) {
+        api.axios
+          .get('/api/dialog/', {
+            params: {
+              id: this.chatId
+            }
+          })
+          .then(response => {
           // this.chatName = 'Тут должно быть имя чата'
-          this.chatName = response.data
-        })
+            this.chatName = response.data[0].name
+          })
+      }
     }
   }
 }
