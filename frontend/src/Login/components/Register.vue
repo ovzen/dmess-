@@ -1,10 +1,12 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-flex justify-center d-flex>
-      <v-col md="7" lg="7" xl="7" justify-center>
+      <v-col md="7" lg="8" xl="5" justify-center>
         <v-card class="elevation-12">
           <v-layout>
-            <v-img src="/static/reg.JPG" />
+            <v-img
+              src="/static/reg.JPG"
+            />
             <v-container>
               <v-toolbar-title class="text-center pt-7 text--secondary">{{ RegTitle }}</v-toolbar-title>
               <div>
@@ -12,7 +14,7 @@
                   <v-window-item :value="1">
                     <v-card-text>
                       <v-row justify="center">
-                        <v-col md="9" lg="9" xl="9">
+                        <v-col md="9" lg="10" xl="9">
                           <v-text-field
                             v-model="email"
                             clearable
@@ -41,7 +43,7 @@
                   <v-window-item :value="2">
                     <v-card-text>
                       <v-row justify="center">
-                        <v-col md="9" lg="9" xl="9">
+                        <v-col md="7" lg="10" xl="9">
                           <v-text-field
                             v-model="name"
                             clearable
@@ -67,7 +69,7 @@
                   <v-window-item :value="3">
                     <v-card-text>
                       <v-row justify="center">
-                        <v-col md="9" lg="9" xl="9">
+                        <v-col md="9" lg="10" xl="9">
                           <v-text-field
                             v-model="password"
                             :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
