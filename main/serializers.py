@@ -101,12 +101,6 @@ class ContactSerializer(serializers.ModelSerializer):
 
 
 class WikiPageSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(max_length=200)
-    text = serializers.CharField(max_length=2000)
-    image = serializers.ImageField(max_length=100, allow_empty_file=False, use_url=True)
-    dialog = DialogSerializer(read_only=True)
-    message = MessageSerializer(read_only=True)
-
     class Meta:
         model = WikiPage
         fields = '__all__'
