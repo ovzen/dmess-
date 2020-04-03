@@ -115,6 +115,7 @@
     >
       <v-content>
         <router-view />
+        <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
       </v-content>
     </v-sheet>
   </v-app>
@@ -125,9 +126,11 @@ import Vue from 'vue'
 import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
+import SystemInfo from './components/SystemInfo'
 Vue.use(VueCookie)
 export default {
   name: 'App',
+  components: { SystemInfo },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -205,7 +208,7 @@ export default {
       this.$router.push({ name: 'allUser' })
     },
     goProfilePage () {
-      this.$router.push('/profile/' + this.user_id)
+      this.$router.push({ name: 'Profile', params: { id: this.user_id } })
     },
     chatpage () {
       if (this.Route.params.id) {
@@ -216,7 +219,6 @@ export default {
             }
           })
           .then(response => {
-          // this.chatName = 'Тут должно быть имя чата'
             this.chatName = response.data[0].name
           })
       }
