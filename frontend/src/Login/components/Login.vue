@@ -8,86 +8,79 @@
       d-flex
     >
       <v-col
-        md="9"
+        md="7"
+        lg="8"
+        xl="5"
+        justify-center
       >
-        <v-card
-          class="elevation-12"
-        >
+        <v-card class="elevation-12">
           <v-layout>
-            <v-img src="/static/log.JPG" />
-            <v-row
-              justify="center"
-            >
-              <v-toolbar-title class="text-center pt-12 text--secondary">
+            <v-img
+              src="/static/log.JPG"
+            />
+            <v-container>
+              <v-toolbar-title class="text-center pt-7 text--secondary">
                 Sign in
               </v-toolbar-title>
-
-              <v-card-text>
-                <v-row
-                  justify="center"
-                >
-                  <v-col
-                    md="7"
-                  >
-                    <v-text-field
-                      v-model="login"
-                      label="Login"
-                      hint="Email specified during registration"
-                      clearable
-                      required
-                      outlined
-                    />
-
-                    <v-text-field
-                      v-model="password"
-                      :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
-                      :type="vanish ? 'text' : 'password'"
-                      clearable
-                      label="Password"
-                      hint="Your password"
-                      required
-                      outlined
-                      @click:append="vanish = !vanish"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-row
-                justify="center"
-              >
-                <v-col
-                  md="7"
-                >
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-btn
-                      class="ma-5"
-                      tile
-                      outlined
-                      color="purple darken-4"
-                      @click="auth(login, password)"
+              <div>
+                <v-card-text>
+                  <v-row justify="center">
+                    <v-col
+                      md="9"
+                      lg="10"
+                      xl="9"
                     >
-                      SIGN IN
-                    </v-btn>
-                    <v-spacer />
-                  </v-card-actions>
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-card-center class="text--secondary caption mb-9">
-                      DON`T HAVE AN ACCOUNT? <a>
-                        <u
-                          class="text--secondary"
-                          @click="GoToRegister()"
-                        >
-                          SIGN UP
-                        </u>
-                      </a>
-                    </v-card-center>
-                    <v-spacer />
-                  </v-card-actions>
-                </v-col>
-              </v-row>
-            </v-row>
+                      <v-text-field
+                        v-model="login"
+                        label="Login"
+                        hint="Email specified during registration"
+                        clearable
+                        required
+                        outlined
+                      />
+
+                      <v-text-field
+                        v-model="password"
+                        :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="vanish ? 'text' : 'password'"
+                        clearable
+                        label="Password"
+                        hint="Your password"
+                        required
+                        outlined
+                        @click:append="vanish = !vanish"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </div>
+              <v-card-actions>
+                <v-row justify="space-around">
+                  <v-btn
+                    tile
+                    outlined
+                    color="purple darken-4"
+                    @click="auth(login, password)"
+                  >
+                    SIGN IN
+                  </v-btn>
+                </v-row>
+              </v-card-actions>
+
+              <v-card-actions class="text-center">
+                <v-card-text class="text--secondary caption mb-10">
+                  DON`T HAVE AN ACCOUNT?
+                  <a>
+                    <u
+                      class="text--secondary"
+                      @click="GoToRegister()"
+                    >
+                      SIGN UP!
+                    </u>
+                  </a>
+                </v-card-text>
+              </v-card-actions>
+            </v-container>
           </v-layout>
         </v-card>
       </v-col>
