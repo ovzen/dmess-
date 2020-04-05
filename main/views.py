@@ -64,8 +64,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = MessageSerializer
     queryset = Message.objects.all()
-    # filter_backends = [DjangoFilterBackend, SearchFilter]
-    # search_fields = ['text', 'user']
+    search_fields = ('text',)
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ('dialog', 'user')
 
 
