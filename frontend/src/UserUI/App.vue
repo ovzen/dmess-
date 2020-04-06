@@ -134,7 +134,6 @@ export default {
   data: () => ({
     login: '',
     button: 'Войти',
-    chatId: undefined,
     chatPage: false,
     chatName: '',
     password: '',
@@ -171,7 +170,6 @@ export default {
   mounted () {
     this.getDialogs()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
-    this.chatId = this.$route.params.id
     if (this.Route.params.id) {
       this.chatpage()
     }
@@ -215,7 +213,7 @@ export default {
         api.axios
           .get('/api/dialog/', {
             params: {
-              id: this.chatId
+              id: this.$route.params.id
             }
           })
           .then(response => {
