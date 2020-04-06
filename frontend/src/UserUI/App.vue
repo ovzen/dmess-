@@ -27,7 +27,6 @@
       v-model="drawer"
       absolute
       app
-      temporary
     >
       <v-list
         two-line
@@ -114,7 +113,7 @@ export default {
     messages: [],
     dialog: false,
     id: 0,
-    drawer: false,
+    drawer: true,
     alwaysOnDisplay: false,
     expandOnHover: false,
     group: [],
