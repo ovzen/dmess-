@@ -137,20 +137,20 @@ export default {
     username: 'Test',
     user_id: undefined
   }),
-  beforeCreate() {
-    if (this.$cookie.get('Authentication')) {
-      this.user_id = this.$cookie.get('Authentication').user_id;
-    } else {
-      console.warn('The current user was not found');
-    }
-  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['updateToken', 'getDialogs', 'disconnect']
   },
+  beforeCreate () {
+    if (this.$cookie.get('Authentication')) {
+      this.user_id = this.$cookie.get('Authentication').user_id
+    } else {
+      console.warn('The current user was not found')
+    }
+  },
   mounted () {
     this.getDialogs()
-//    this.username = 'Qwerty'
+    //    this.username = 'Qwerty'
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
   },
   methods: {
@@ -174,7 +174,7 @@ export default {
         }
       })
         .then(res => {
-          this.dialogs_for_user = res.data
+          this.dialogs_for_user = res.data.results
           console.log(this.dialogs_for_user)
         })
     },

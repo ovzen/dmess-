@@ -143,7 +143,7 @@ export default {
       this.messages = []
       this.id = this.$route.params.id
       api.axios.get('/api/messages/', { params: { chat_id: this.id } }).then(res => {
-        this.messages = this.messages.concat(res.data)
+        this.messages = this.messages.concat(res.data.results)
       })
       this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
     },
