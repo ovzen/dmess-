@@ -196,6 +196,7 @@
           class="d-inline-block me-6"
           max-width="285"
           outlined
+          elevation="12"
         >
           <v-list-item three-line>
             <v-list-item-avatar
@@ -227,6 +228,7 @@
           class="d-inline-block mx-9"
           max-width="285"
           outlined
+          elevation="12"
         >
           <v-list-item three-line>
             <v-list-item-avatar
@@ -258,6 +260,7 @@
           class="d-inline-block mx-9"
           max-width="285"
           outlined
+          elevation="12"
         >
           <v-list-item three-line>
             <v-list-item-avatar
