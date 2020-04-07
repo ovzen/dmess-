@@ -151,6 +151,7 @@ export default {
   },
   mounted () {
     this.getDialogs()
+    this.getUserData()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
       this.getChatName()
@@ -204,6 +205,14 @@ export default {
       } else {
         this.chatName = undefined
       }
+    },
+    getUserData () {
+      api.axios
+        .get('/api/users/' + this.user_id)
+        .then(res => {
+          this.avatar = res.data['avatar']
+          this.isOnline = res.data.is_online
+        })
     }
   }
 }
