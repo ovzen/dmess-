@@ -101,7 +101,3 @@ class WikiPageViewSet(viewsets.ModelViewSet):
     queryset = WikiPage.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('title', 'dialog', 'message')
-
-
-def get_base_context():
-    pass

@@ -8,7 +8,9 @@
       scroll-target="#scrolling-techniques-6"
     >
       <v-app-bar-nav-icon @click="drawer = true" />
-      <v-toolbar-title>Навигация</v-toolbar-title>
+      <v-toolbar-title v-if="Route.params.id">
+        {{ chatName }}
+      </v-toolbar-title>
       <v-spacer />
       <v-btn
         class="ma-2"
@@ -107,6 +109,7 @@ export default {
   data: () => ({
     login: '',
     button: 'Войти',
+    chatName: '',
     password: '',
     message_text: '',
     data: '',
@@ -130,9 +133,14 @@ export default {
       'mdi-settings'
     ]
   }),
+  computed: {
+    Route () {
+      return this.$route
+    }
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['updateToken', 'getDialogs', 'disconnect']
+    $route: ['updateToken', 'getDialogs', 'disconnect', 'getChatName']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -144,7 +152,9 @@ export default {
   mounted () {
     this.getDialogs()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
-    this.getUserData()
+    if (this.Route.params.id) {
+      this.getChatName()
+    }
   },
   methods: {
     disconnect () {
@@ -180,13 +190,20 @@ export default {
     goProfilePage () {
       this.$router.push({ name: 'Profile', params: { id: this.user_id } })
     },
-    getUserData () {
-      api.axios
-        .get('/api/users/' + this.user_id)
-        .then(res => {
-          this.avatar = res.data['avatar']
-          this.isOnline = res.data.is_online
-        })
+    getChatName () {
+      if (this.$route.name === 'Chat') {
+        api.axios
+          .get('/api/dialog/', {
+            params: {
+              id: this.$route.params.id
+            }
+          })
+          .then(response => {
+            this.chatName = response.data[0].name
+          })
+      } else {
+        this.chatName = undefined
+      }
     }
   }
 }
