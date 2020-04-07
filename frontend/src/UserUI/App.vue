@@ -6,6 +6,7 @@
       collapse-on-scroll
       dark
       scroll-target="#scrolling-techniques-6"
+      clipped-left="true"
     >
       <v-app-bar-nav-icon @click="drawer = true" />
       <v-toolbar-title v-if="Route.params.id">
@@ -27,7 +28,7 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      absolute
+      width="20%"
       app
     >
       <v-list
