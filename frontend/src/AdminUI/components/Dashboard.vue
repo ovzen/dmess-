@@ -152,7 +152,7 @@
 
       <v-card
         class="d-inline-block mx-5"
-        max-width="500"
+        width="500"
         outlined
         elevation="12"
       >
