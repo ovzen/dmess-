@@ -134,7 +134,6 @@ export default {
   data: () => ({
     login: '',
     button: 'Войти',
-    chatPage: false,
     chatName: '',
     password: '',
     message_text: '',
@@ -158,7 +157,7 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['updateToken', 'getDialogs', 'disconnect', 'chatpage']
+    $route: ['updateToken', 'getDialogs', 'disconnect', 'getChatName']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -171,7 +170,7 @@ export default {
     this.getDialogs()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
-      this.chatpage()
+      this.getChatName()
     }
   },
   methods: {
@@ -208,8 +207,8 @@ export default {
     goProfilePage () {
       this.$router.push({ name: 'Profile', params: { id: this.user_id } })
     },
-    chatpage () {
-      if (this.Route.params.id) {
+    getChatName () {
+      if (this.$route.name === 'Chat') {
         api.axios
           .get('/api/dialog/', {
             params: {
@@ -219,6 +218,8 @@ export default {
           .then(response => {
             this.chatName = response.data[0].name
           })
+      } else {
+        this.chatName = undefined
       }
     }
   }
