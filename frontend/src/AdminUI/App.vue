@@ -5,7 +5,7 @@
       app
     >
       <v-list dense>
-        <v-list-item to="/ServerMessage/">
+        <v-list-item to="/Dashboard/">
           <v-list-item-action>
             <v-icon>mdi-heart</v-icon>
           </v-list-item-action>
