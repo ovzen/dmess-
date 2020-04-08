@@ -8,13 +8,14 @@ README
 Предоставить пользователю сервис для обмена мгновенными сообщениями
 
 **Технологический стек:**
-- python 3.6
-- django 3.0+
-- sqlite 3.22+
-- djangorestframework
-- channels
-- redis
-- vue
+
+* python 3.6
+* django 3.0+
+* sqlite 3.22+
+* djangorestframework
+* channels
+* redis
+* vue
 
 **Инструкция по настройке проекта:**
 

@@ -1,10 +1,10 @@
-Swagger setup
-=============
+Установка и настройка swagger
+=============================
 
 Установка swagger
 -----------------
 
-1. Установить swagger:
+1. Установить swagger (необязательно, если requirements.txt установлены):
 
 pip install django-rest-swagger
 
