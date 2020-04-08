@@ -64,4 +64,5 @@ class WikiPage(models.Model):
         width_field=None,
         max_length=100
     )
-    text = models.TextField(max_length=2000)
+    text_markdown = models.TextField(max_length=2000)
+    text_html = models.TextField(max_length=2000, default='Данный текст ещё не сконвертирован')

@@ -101,3 +101,11 @@ class WikiPageViewSet(viewsets.ModelViewSet):
     queryset = WikiPage.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('title', 'dialog', 'message')
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        # TODO: add celery call
+
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        # TODO: add celery call
