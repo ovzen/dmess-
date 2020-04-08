@@ -79,11 +79,11 @@ export default {
     data: '',
     user_id: undefined
   }),
-  beforeCreate() {
+  created () {
     if (this.$cookie.get('Authentication')) {
-      this.user_id = this.$cookie.get('Authentication').user_id;
+      this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
     } else {
-      console.warn('The current user was not found');
+      console.warn('The current user was not found')
     }
   },
   methods: {
@@ -97,13 +97,12 @@ export default {
           })
           .then(response => {
             if (response.data.length > 0) {
-              console.log(response.data[0].id)
               this.$router.push('chat/' + response.data[0].id)
             } else {
               api.axios
                 .post('/api/dialog/', {
                   name: ChatName,
-                  users: [jwt.decode(this.$cookie.get('Authentication')).user_id]
+                  users: [this.user_id]
                 })
                 .then(response => {
                   console.log('post response:', response)

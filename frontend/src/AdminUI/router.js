@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import UserActivity from './components/UserActivity'
 import DialogActivity from './components/DialogActivity'
+import ServerMessage from './components/ServerMessage'
 
 Vue.use(Router)
 
@@ -19,6 +20,11 @@ export default new Router({
       path: '/DialogActivity/',
       name: 'DialogActivity',
       component: DialogActivity
+    },
+    {
+      path: '/ServerMessage/',
+      name: 'ServerMessage',
+      component: ServerMessage
     }
   ]
 })

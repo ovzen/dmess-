@@ -2,7 +2,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 
-from main.models import Message, Dialog
+from main.models import Message, Dialog, UserProfile
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -55,4 +55,56 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'message': message,
             'author': author
+        }))
+
+
+class System(WebsocketConsumer):
+    def connect(self):
+        User = UserProfile.objects.get(user=self.scope['user'])
+        User.is_online = True
+        User.save()
+        async_to_sync(self.channel_layer.group_add)(
+            'system',
+            self.channel_name
+        )
+
+        # Join dialog group
+
+        self.accept()
+
+    def disconnect(self, close_code):
+        # Leave dialog group
+        User = UserProfile.objects.get(user=self.scope['user'])
+        print('exit')
+        User.is_online = False
+        User.save()
+
+    # Receive message from WebSocket
+    def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+        type = text_data_json['type']
+        author = self.scope["user"]
+        if author == "":
+            author = 'AnonymousUser'
+        # Send message to room group
+        async_to_sync(self.channel_layer.group_send)(
+            'system',
+            {
+                'type': 'chat_message',
+                'message_type': type,
+                'message': message,
+            }
+        )
+
+    # Receive message from dialog group
+    def chat_message(self, event):
+        message = event['message']
+        message_type = event['message_type']
+        print('send')
+
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'message': message,
+            'message_type': message_type
         }))
