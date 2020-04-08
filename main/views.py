@@ -5,11 +5,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from main.models import Dialog, UserProfile, Contact
+from main.models import Dialog, UserProfile, Contact, WikiPage
 from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, WikiPageSerializer
+from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
@@ -40,7 +41,10 @@ class UserProfileView(RetrieveUpdateAPIView):
 
 class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
-    queryset = Contact.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Contact.objects.filter(user=user)
 
 
 class DialogViewSet(viewsets.ModelViewSet):
@@ -85,3 +89,14 @@ class ActivityFeedView(APIView):
             'registrations': user_reg_serializer.data,
             'dialogs': dialog_serializer.data,
         })
+
+
+class WikiPageViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для работы с вики-страницей
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = WikiPageSerializer
+    queryset = WikiPage.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('title', 'dialog', 'message')

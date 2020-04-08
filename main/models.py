@@ -51,3 +51,16 @@ class Message(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
+
+
+class WikiPage(models.Model):
+    dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
+    message = models.OneToOneField(to=Message, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    image = models.ImageField(
+        upload_to='wiki',
+        height_field=None,
+        width_field=None,
+        max_length=100
+    )
+    text = models.TextField(max_length=2000)

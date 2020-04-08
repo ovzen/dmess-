@@ -22,8 +22,8 @@ export default new Router({
       component: Chat
     },
     {
-      path: '/profile',
-      name: 'Профиль',
+      path: '/profile/:id',
+      name: 'Profile',
       component: Profile
     },
     {
