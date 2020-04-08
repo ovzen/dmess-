@@ -62,14 +62,14 @@ class WikiPage(models.Model):
         upload_to='wiki',
         height_field=None,
         width_field=None,
-        max_length=100
+        max_length=100,
+        blank=True,
     )
     text_markdown = models.TextField(max_length=2000)
-    text_html = models.TextField(max_length=2000, blank=True, default=None)
+    text_html = models.TextField(max_length=2000, blank=True)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         if not self.text_html:
-            markdown_convert.delay(self)
+            markdown_convert.delay([self.id, self.text_markdown])
         super().save(force_insert, force_update, using, update_fields)
-
