@@ -136,14 +136,6 @@ export default {
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['updateToken', 'getDialogs', 'disconnect']
-  computed: {
-    Route () {
-      return this.$route
-    }
-  },
-  watch: {
-    // при изменениях маршрута запрашиваем данные снова
     $route: ['updateToken', 'getDialogs', 'disconnect', 'getChatName']
   },
   created () {
