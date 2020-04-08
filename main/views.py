@@ -105,7 +105,9 @@ class WikiPageViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
         # TODO: add celery call
+        # markdown_convert.delay()
 
     def update(self, request, *args, **kwargs):
         super().update(request, *args, **kwargs)
         # TODO: add celery call
+        # markdown_convert.delay()

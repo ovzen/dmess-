@@ -12,5 +12,10 @@ sphinx
 feedparser==5.2.1
 django-rest-swagger==2.2.0
 
+# Code style
 pylint==2.4.4
 pylint-django==2.0.14
+
+# Background tasks
+celery==4.4.1
+redis==3.4.1
