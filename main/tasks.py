@@ -1,16 +1,9 @@
-from datetime import datetime
-
-from django.core.mail import send_mail
-
+import markdown
 from dmess.celery import app
 
 
 @app.task
-def sendmail():
-    send_mail(
-        'Subject here',
-        'Here is the message. Send datetime: {}'.format(datetime.now()),
-        'noreply@asmirnov.me',
-        ['noreply@asmirnov.me'],
-        fail_silently=False,
-    )
+def markdown_convert(wiki_object):
+    print(wiki_object)
+    # wiki_object.text_html = markdown.markdown(wiki_object.text_markdown)
+    # wiki_object.save()

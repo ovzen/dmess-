@@ -19,3 +19,6 @@ pylint-django==2.0.14
 # Background tasks
 celery==4.4.1
 redis==3.4.1
+
+# Markdown handling
+Markdown==3.2.1
