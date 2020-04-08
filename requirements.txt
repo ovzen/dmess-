@@ -11,3 +11,6 @@ Pillow==7.0.0
 sphinx
 feedparser==5.2.1
 django-rest-swagger==2.2.0
+
+pylint==2.4.4
+pylint-django==2.0.14
