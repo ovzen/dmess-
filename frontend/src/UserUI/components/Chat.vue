@@ -52,7 +52,8 @@
         </v-card-text>
         <div style="text-align: right; margin-right:10px; margin-top:-25px;">
           <span class="font-weight-light">
-            От: {{ message.author }}
+            От: {{ message.author }} <br>
+            {{ formatDate(message.create_date) }}
           </span>
         </div>
       </v-card>
@@ -104,6 +105,8 @@ import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
+import moment from 'moment'
+
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -180,7 +183,17 @@ export default {
     },
     isOwnMessage (author) {
       return author === jwt.decode(this.$cookie.get('Authentication')).name
-    }
+    },
+    formatDate(date){
+      if (date) {
+        moment.locale('ru')
+        if (moment(date).isBefore(moment(),'day')) {
+          return moment(String(date)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(date)).calendar()
+        }
+      }
+    },
   }
 }
 </script>
