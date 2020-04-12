@@ -6,9 +6,8 @@
       collapse-on-scroll
       dark
       scroll-target="#scrolling-techniques-6"
-      clipped-left="true"
     >
-      <v-app-bar-nav-icon @click="drawer = true" />
+      <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
         {{ chatName }}
       </v-toolbar-title>
@@ -28,27 +27,30 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      width="20%"
+      :width="$vuetify.breakpoint.width * 0.25"
       app
+      permanent
     >
-      <v-list
-        two-line
-        color="#6202EE"
-        dark
-      >
-        <v-list-item>
+      <v-card tile>
+        <v-list
+          color="#6202EE"
+          dark
+          height=80
+          class="pt-1"
+        >
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="title">{{ username }}</v-list-item-title>
+              <v-list-item-subtitle v-if="isOnline">online</v-list-item-subtitle>
+              <v-list-item-subtitle v-else>offline</v-list-item-subtitle>
+            </v-list-item-content>
 
-          <v-list-item-content>
-            <v-list-item-title class="title">{{ username }}</v-list-item-title>
-            <v-list-item-subtitle v-if="isOnline">online</v-list-item-subtitle>
-            <v-list-item-subtitle v-else>offline</v-list-item-subtitle>
-          </v-list-item-content>
-
-          <v-list-item-avatar>
-            <v-img :src="avatar"></v-img>
-          </v-list-item-avatar>
-        </v-list-item>
-      </v-list>
+            <v-list-item-avatar>
+              <v-img :src="avatar"></v-img>
+            </v-list-item-avatar>
+          </v-list-item>
+        </v-list>
+      </v-card>
 
       <v-divider></v-divider>
       <v-list>
