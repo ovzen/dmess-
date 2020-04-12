@@ -11,6 +11,9 @@ Welcome to Dmess's documentation!
    :caption: Содержание:
 
    modules/docs
+   prepare.rst
+   run.rst
+
 
 Указатели
 =========

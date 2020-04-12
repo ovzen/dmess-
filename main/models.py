@@ -1,8 +1,9 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
 from django.utils import timezone
-from main.tasks import markdown_convert
+
 
 class UserProfile(models.Model):
     """
@@ -67,9 +68,3 @@ class WikiPage(models.Model):
     )
     text_markdown = models.TextField(max_length=2000)
     text_html = models.TextField(max_length=2000, blank=True)
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        if not self.text_html:
-            markdown_convert.delay([self.id, self.text_markdown])
-        super().save(force_insert, force_update, using, update_fields)
