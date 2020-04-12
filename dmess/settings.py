@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'admin_tools.theming',
     'admin_tools.menu',
     'admin_tools.dashboard',
+    'main',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,7 +46,6 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'rest_framework_swagger',
-    'main',
     'admin.apps.AdminConfig',
     'channels',
     'django_filters'
