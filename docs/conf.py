@@ -14,6 +14,7 @@
 import os
 import sys
 import django
+import sphinx_glpi_theme
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dmess.settings'
 sys.path.append(os.path.abspath('../'))
 django.setup()
@@ -37,7 +38,8 @@ author = 'MSHP group s101-04'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    "sphinx_rtd_theme",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -60,7 +62,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

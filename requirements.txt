@@ -8,7 +8,10 @@ channels==2.4
 channels-redis==2.4.1
 pytz==2019.3
 Pillow==7.0.0
+
 sphinx
+sphinx-rtd-theme==0.4.3
+
 feedparser==5.2.1
 django-rest-swagger==2.2.0
 
