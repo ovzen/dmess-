@@ -161,7 +161,8 @@ export default {
         this.messages.push({
           id: this.messages.length,
           text: JSON.parse(data.data).message,
-          author: JSON.parse(data.data).author
+          author: JSON.parse(data.data).author,
+          create_date: JSON.parse(data.data).create_date
         })
         console.log(JSON.parse(data.data))
       }
@@ -172,7 +173,8 @@ export default {
           console.log('messagetext: ', messagetext)
           this.$socket.send(
             JSON.stringify({
-              message: messagetext
+              message: messagetext,
+              date: new Date()
             })
           )
           this.message_text = undefined
@@ -184,16 +186,16 @@ export default {
     isOwnMessage (author) {
       return author === jwt.decode(this.$cookie.get('Authentication')).name
     },
-    formatDate(date){
+    formatDate (date) {
       if (date) {
         moment.locale('ru')
-        if (moment(date).isBefore(moment(),'day')) {
+        if (moment(date).isBefore(moment(), 'day')) {
           return moment(String(date)).format('DD.MM.YYYY')
         } else {
           return moment(String(date)).calendar()
         }
       }
-    },
+    }
   }
 }
 </script>
