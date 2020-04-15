@@ -26,6 +26,14 @@
             <v-icon>mdi-heart</v-icon>
           </v-list-item-action>
           <v-list-item-content>
+            <v-list-item-title>DialogActivity</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/Invites/">
+          <v-list-item-action>
+            <v-icon>mdi-heart</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
             <v-list-item-title>Invites</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -92,11 +100,30 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import api from './api'
+import VueCookie from 'vue-cookie'
+Vue.use(VueCookie)
 export default {
   name: 'AdminUI',
   data: () => ({
     drawer: false
-  })
+  }),
+  mounted () {
+    setInterval(this.updateToken, 1000)
+  },
+  methods: {
+    updateToken () {
+      if (localStorage.getItem('UpdateKey') && !this.$cookie.get('Authentication')) {
+        api.axios.post('/api/token/refresh/', { refresh: localStorage.getItem('UpdateKey') }).then(res => {
+          this.$cookie.set('Authentication', res.data.access, {
+            expires: '5m'
+          })
+        }
+        )
+      }
+    }
+  }
 }
 </script>
 
