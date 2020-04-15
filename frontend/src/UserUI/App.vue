@@ -6,9 +6,8 @@
       collapse-on-scroll
       dark
       scroll-target="#scrolling-techniques-6"
-      clipped-left="true"
     >
-      <v-app-bar-nav-icon @click="drawer = true" />
+      <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
         {{ chatName }}
       </v-toolbar-title>
@@ -28,34 +27,87 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      width="20%"
+      :width="$vuetify.breakpoint.width * 0.25"
       app
+      permanent
     >
-      <v-list
-        two-line
-        color="#6202EE"
-        dark
-      >
-        <v-list-item>
+      <v-card tile>
+        <v-list
+          color="#6202EE"
+          dark
+          height="80"
+          class="pt-1"
+        >
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="title">
+                {{ username }}
+              </v-list-item-title>
+              <v-list-item-subtitle
+                v-if="isOnline"
+              >
+                online
+              </v-list-item-subtitle>
+              <v-list-item-subtitle
+                v-else
+              >
+                offline
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
 
-          <v-list-item-content>
-            <v-list-item-title class="title">{{ username }}</v-list-item-title>
-            <v-list-item-subtitle v-if="isOnline">online</v-list-item-subtitle>
-            <v-list-item-subtitle v-else>offline</v-list-item-subtitle>
-          </v-list-item-content>
-
-          <v-list-item-avatar>
-            <v-img :src="avatar"></v-img>
-          </v-list-item-avatar>
-        </v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-      <v-list>
-        Тут будет наполнение сайдбара
-      </v-list>
-
-      <v-divider></v-divider>
+      <v-divider />
+      <v-subheader>
+        <a>
+          <u>
+            ALL CHATS
+          </u>
+        </a>
+      </v-subheader>
+      <v-divider />
+      <v-list-item to="/ChatUser">
+        <v-list-item-avatar>
+          <v-avatar
+            size="36px"
+            color="deep-purple"
+          >
+            <span
+              class="white--text"
+            >
+              NU
+            </span>
+            <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+          </v-avatar>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            Name User
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <span
+              class="grey--text text--lighten-1"
+            >
+              Text Message
+            </span>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-action-text>
+            18:00
+          </v-list-item-action-text>
+          <v-avatar
+            color="deep-purple"
+            class="subheading white--text"
+            size="24"
+            v-text="1"
+          />
+        </v-list-item-action>
+      </v-list-item>
+      <v-divider />
       <v-footer
         absolute
         padless
