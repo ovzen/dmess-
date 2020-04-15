@@ -13,5 +13,7 @@ def markdown_convert(**kwargs):
     :param kwargs: словарь с параметрами. Должен содержать ключ id (primary key в модели WikiPage)
     """
     wiki_object = WikiPage.objects.get(id=kwargs['id'])
-    wiki_object.text_html = markdown.markdown(wiki_object.text_markdown)
-    wiki_object.save()
+    text_html = markdown.markdown(wiki_object.text_markdown)
+    if wiki_object.text_html != text_html:
+        wiki_object.text_html = text_html
+        wiki_object.save()

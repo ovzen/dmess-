@@ -11,5 +11,4 @@ from main.tasks import markdown_convert
 def wiki_post_save_callback(**kwargs):
     """Отсылка markdown-кода на преобразование в html-код в момент сохранения модели"""
     instance = kwargs['instance']
-    if not instance.text_html:
-        markdown_convert.delay(id=instance.id, md_text=instance.text_markdown)
+    markdown_convert.delay(id=instance.id, md_text=instance.text_markdown)
