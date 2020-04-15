@@ -143,7 +143,7 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['updateToken', 'getDialogs', 'disconnect', 'getChatName']
+    $route: ['getDialogs', 'disconnect', 'getChatName']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -153,6 +153,7 @@ export default {
     }
   },
   mounted () {
+    setInterval(this.updateToken, 1000)
     this.getDialogs()
     this.getUserData()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
