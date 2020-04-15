@@ -40,9 +40,24 @@
         >
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="title">{{ firstName }} {{ lastName }} </v-list-item-title>
-              <v-list-item-subtitle v-if="isOnline">online</v-list-item-subtitle>
-              <v-list-item-subtitle v-else>offline</v-list-item-subtitle>
+              <v-list-item-title
+                v-if="(firstName || lastName)"
+                class="title"
+              >
+                {{ firstName }} {{ lastName }}
+              </v-list-item-title>
+              <v-list-item-title
+                v-else
+                class="title"
+              >
+                {{ username }}
+              </v-list-item-title>
+              <v-list-item-subtitle v-if="isOnline">
+                online
+              </v-list-item-subtitle>
+              <v-list-item-subtitle v-else>
+                offline
+              </v-list-item-subtitle>
             </v-list-item-content>
 
             <v-list-item-avatar>
