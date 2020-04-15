@@ -7,7 +7,6 @@
       dark
       scroll-target="#scrolling-techniques-6"
     >
-      <v-app-bar-nav-icon @click="drawer = true" />
       <v-toolbar-title v-if="this.$route.params">
         {{ chatName }}
       </v-toolbar-title>
@@ -27,32 +26,45 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      width="20%"
+      :width="$vuetify.breakpoint.width * 0.25"
       app
+      permanent
     >
-      <v-list
-        two-line
-        color="#6202EE"
-        dark
-      >
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="title">
-              {{ username }}
-            </v-list-item-title>
-            <v-list-item-subtitle v-if="isOnline">
-              online
-            </v-list-item-subtitle>
-            <v-list-item-subtitle v-else>
-              offline
-            </v-list-item-subtitle>
-          </v-list-item-content>
+      <v-card tile>
+        <v-list
+          color="#6202EE"
+          dark
+          height=80
+          class="pt-1"
+        >
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title
+                v-if="(firstName || lastName)"
+                class="title"
+              >
+                {{ firstName }} {{ lastName }}
+              </v-list-item-title>
+              <v-list-item-title
+                v-else
+                class="title"
+              >
+                {{ username }}
+              </v-list-item-title>
+              <v-list-item-subtitle v-if="isOnline">
+                online
+              </v-list-item-subtitle>
+              <v-list-item-subtitle v-else>
+                offline
+              </v-list-item-subtitle>
+            </v-list-item-content>
 
-          <v-list-item-avatar>
-            <v-img />
-          </v-list-item-avatar>
-        </v-list-item>
-      </v-list>
+            <v-list-item-avatar>
+              <v-img :src="avatar"></v-img>
+            </v-list-item-avatar>
+          </v-list-item>
+        </v-list>
+      </v-card>
 
       <v-divider />
       <v-list>
@@ -128,6 +140,8 @@ export default {
     for_user: true,
     dialogs_for_user: [],
     username: 'Test',
+    firstName: undefined,
+    lastName: undefined,
     user_id: undefined,
     avatar: '',
     isOnline: false,
@@ -219,6 +233,8 @@ export default {
         .then(res => {
           this.avatar = res.data['avatar']
           this.isOnline = res.data.is_online
+          this.firstName = res.data['user'].first_name
+          this.lastName = res.data['user'].last_name
         })
     }
   }

@@ -29,6 +29,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        create_date = text_data_json['date']
         author = self.scope["user"]
         if author == "":
             author = 'AnonymousUser'
@@ -42,7 +43,8 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'author': author.username
+                'author': author.username,
+                'create_date': create_date
             }
         )
 
@@ -50,11 +52,13 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         message = event['message']
         author = event['author']
+        create_date = event['create_date']
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message,
-            'author': author
+            'author': author,
+            'create_date': create_date
         }))
 
 

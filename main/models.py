@@ -61,6 +61,8 @@ class WikiPage(models.Model):
         upload_to='wiki',
         height_field=None,
         width_field=None,
-        max_length=100
+        max_length=100,
+        blank=True,
     )
-    text = models.TextField(max_length=2000)
+    text_markdown = models.TextField(max_length=2000)
+    text_html = models.TextField(max_length=2000, blank=True)

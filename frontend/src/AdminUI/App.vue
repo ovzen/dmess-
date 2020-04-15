@@ -1,42 +1,93 @@
 <template>
   <v-app>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+    >
+      <v-list dense>
+        <v-list-item to="/Dashboard/">
+          <v-list-item-action>
+            <v-icon>mdi-heart</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/UserActivity/">
+          <v-list-item-action>
+            <v-icon>mdi-heart</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Users</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/DialogActivity/">
+          <v-list-item-action>
+            <v-icon>mdi-heart</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Invites</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
     <v-app-bar
       app
-      color="white"
+      color="indigo"
+      dark
       scroll-target="#scrolling-techniques-7"
       elevate-on-scroll
     >
-      <v-toolbar-title style="min-width:100px">
-        AdminUI
+      <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+      />
+      <v-toolbar-title>
+        Dmess Admin
       </v-toolbar-title>
-      <v-tabs>
-        <v-tab to="/ServerMessage/">
-          Сообщение всем пользователям
-        </v-tab>
-        <v-tab to="/UserActivity/">
-          Зарегистрировавшиеся пользователи
-        </v-tab>
-        <v-tab to="/DialogActivity/">
-          Созданные диалоги
-        </v-tab>
-      </v-tabs>
       <v-spacer />
-      <v-btn
-        href="/"
-        replace
+      <v-menu
+        left
+        bottom
       >
-        UserUI
-      </v-btn>
+        <template
+          v-slot:activator="{ on }"
+        >
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <v-tab href="/">
+              <v-list-item-content>
+                <v-list-item-title>Home</v-list-item-title>
+              </v-list-item-content>
+            </v-tab>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-sheet
       id="scrolling-techniques-7"
       class="overflow-y-auto"
-      max-height="100vh"
     >
       <v-content>
         <router-view />
       </v-content>
     </v-sheet>
+    <v-footer
+      color="indigo"
+      app
+    >
+      <span class="white--text">
+        &copy; 2020
+      </span>
+    </v-footer>
   </v-app>
 </template>
 
@@ -44,6 +95,7 @@
 export default {
   name: 'AdminUI',
   data: () => ({
+    drawer: false
   })
 }
 </script>

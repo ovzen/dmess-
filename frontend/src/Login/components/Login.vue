@@ -1,35 +1,16 @@
 <template>
-  <v-container
-    class="fill-height"
-    fluid
-  >
-    <v-flex
-      justify-center
-      d-flex
-    >
-      <v-col
-        md="7"
-        lg="8"
-        xl="5"
-        justify-center
-      >
+  <v-container class="fill-height" fluid>
+    <v-flex justify-center d-flex>
+      <v-col md="7" lg="8" xl="5" justify-center>
         <v-card class="elevation-12">
           <v-layout>
-            <v-img
-              src="/static/log.JPG"
-            />
+            <v-img src="/static/log.JPG" />
             <v-container>
-              <v-toolbar-title class="text-center pt-7 text--secondary">
-                Sign in
-              </v-toolbar-title>
+              <v-toolbar-title class="text-center pt-7 text--secondary">Sign in</v-toolbar-title>
               <div>
                 <v-card-text>
                   <v-row justify="center">
-                    <v-col
-                      md="9"
-                      lg="10"
-                      xl="9"
-                    >
+                    <v-col md="9" lg="10" xl="9">
                       <v-text-field
                         v-model="login"
                         label="Login"
@@ -37,6 +18,7 @@
                         clearable
                         required
                         outlined
+                        :error-messages="error_text"
                       />
 
                       <v-text-field
@@ -61,9 +43,7 @@
                     outlined
                     color="purple darken-4"
                     @click="auth(login, password)"
-                  >
-                    SIGN IN
-                  </v-btn>
+                  >SIGN IN</v-btn>
                 </v-row>
               </v-card-actions>
 
@@ -71,12 +51,7 @@
                 <v-card-text class="text--secondary caption mb-10">
                   DON`T HAVE AN ACCOUNT?
                   <a>
-                    <u
-                      class="text--secondary"
-                      @click="GoToRegister()"
-                    >
-                      SIGN UP!
-                    </u>
+                    <u class="text--secondary" @click="GoToRegister()">SIGN UP!</u>
                   </a>
                 </v-card-text>
               </v-card-actions>
@@ -89,61 +64,71 @@
 </template>
 
 <script>
-import api from '../api'
-import jwt from 'jsonwebtoken'
-import Vue from 'vue'
-import VueCookie from 'vue-cookie'
-Vue.use(VueCookie)
+import api from "../api";
+import jwt from "jsonwebtoken";
+import Vue from "vue";
+import VueCookie from "vue-cookie";
+Vue.use(VueCookie);
 export default {
-  name: 'Login',
+  name: "Login",
   data: () => ({
-    login: '',
+    login: "",
     ChatId: null,
-    button: 'Войти',
-    password: '',
-    message_text: '',
-    next: '',
-    vanish: false
+    button: "Войти",
+    password: "",
+    message_text: "",
+    next: "",
+    vanish: false,
+    error_text: ""
   }),
 
-  created () {
+  created() {
     if (this.$route.query.next) {
-      this.next = 'http://' + window.location.host + this.$route.query.next
+      this.next = "http://" + window.location.host + this.$route.query.next;
     } else {
-      this.next = 'http://' + window.location.host
-      this.login = this.$root.$children[0].login
+      this.next = "http://" + window.location.host;
+      this.login = this.$root.$children[0].login;
     }
   },
   methods: {
-    GoToRegister () {
-      this.$root.$children[0].login = this.login
-      this.$router.push('/register/')
+    GoToRegister() {
+      this.$root.$children[0].login = this.login;
+      this.$router.push("/register/");
     },
-    auth (username, password) {
+    auth(username, password) {
       api.axios
-        .post('/api/token/', {
+        .post("/api/token/", {
           username: username,
           password: password
         })
-        .then(res => {
-          console.log(res.data)
-          this.$cookie.set('Authentication', res.data.access, {
-            expires: '5m'
-          })
-          localStorage.setItem('UpdateKey', res.data.refresh)
-          this.button = 'Приветствуем ' + jwt.decode(this.$cookie.get('Authentication')).name
-          console.log(jwt.decode(this.$cookie.get('Authentication')))
-          window.location.href = this.next
+        .catch(err => {
+          if (err != 0) {
+            this.error_text = "Invalid Login or Password";
+            console.log(err);
+          } else if (err == 0) {
+            this.error_text = "";
+          }
         })
+        .then(res => {
+          console.log(res.data);
+          this.$cookie.set("Authentication", res.data.access, {
+            expires: "5m"
+          });
+          localStorage.setItem("UpdateKey", res.data.refresh);
+          this.button =
+            "Приветствуем " +
+            jwt.decode(this.$cookie.get("Authentication")).name;
+          console.log(jwt.decode(this.$cookie.get("Authentication")));
+          window.location.href = this.next;
+        });
     }
   }
-}
-
+};
 </script>
 
 <style lang="scss">
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   color: #2c3e50;
 }
 </style>

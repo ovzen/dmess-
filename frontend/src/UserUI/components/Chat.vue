@@ -52,7 +52,8 @@
         </v-card-text>
         <div style="text-align: right; margin-right:10px; margin-top:-25px;">
           <span class="font-weight-light">
-            От: {{ message.user_detail.username }}
+            От: {{ message.user_detail.username }}<br>
+            {{ formatDate(message.create_date) }}
           </span>
         </div>
       </v-card>
@@ -104,6 +105,8 @@ import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
+import moment from 'moment'
+
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -158,7 +161,8 @@ export default {
         this.messages.push({
           id: this.messages.length,
           text: JSON.parse(data.data).message,
-          user_detail: {username: JSON.parse(data.data).author}
+          user_detail: { username: JSON.parse(data.data).author },
+          create_date: JSON.parse(data.data).create_date
         })
         console.log(JSON.parse(data.data))
       }
@@ -169,7 +173,8 @@ export default {
           console.log('messagetext: ', messagetext)
           this.$socket.send(
             JSON.stringify({
-              message: messagetext
+              message: messagetext,
+              date: new Date()
             })
           )
           this.message_text = undefined
@@ -180,6 +185,16 @@ export default {
     },
     isOwnMessage (author) {
       return author === jwt.decode(this.$cookie.get('Authentication')).name
+    },
+    formatDate (date) {
+      if (date) {
+        moment.locale('ru')
+        if (moment(date).isBefore(moment(), 'day')) {
+          return moment(String(date)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(date)).calendar()
+        }
+      }
     }
   }
 }
