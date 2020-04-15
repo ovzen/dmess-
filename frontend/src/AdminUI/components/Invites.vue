@@ -13,7 +13,7 @@
         />
         <v-btn
           style="margin-left:20px"
-          color="primary"
+          color="success"
           small
           @click="Create()"
         >
@@ -37,10 +37,19 @@
           />
         </template>
         <template v-slot:item.for_user="{ item }">
-          {{ 'Не использовано' || item.for_user }}
+          {{ item.for_user || 'Не использовано' }}
         </template>
         <template v-slot:item.used_at="{ item }">
-          {{ 'Не использовано' || item.used_at }}
+          {{ item.used_at || 'Не использовано' }}
+        </template>
+        <template v-slot:item.reg_btn="{ item }">
+          <v-btn
+            color="primary"
+            small
+            @click="CopyLink(item)"
+          >
+            Получить ссылку
+          </v-btn>
         </template>
       </v-data-table>
     </v-card>
@@ -62,7 +71,8 @@ export default {
       { text: 'Дата создания / Created at', value: 'created_at' },
       { text: 'Активно / Is active', value: 'is_active' },
       { text: 'Кем использовано / For user', value: 'for_user' },
-      { text: 'Время использования / Used at', value: 'used_at' }
+      { text: 'Время использования / Used at', value: 'used_at' },
+      { text: 'Получить ссылку / Copy Link for registration', value: 'reg_btn', align: 'center' }
     ],
     Invites: [
     ]
@@ -91,6 +101,9 @@ export default {
       }).then(
         item.is_active = !item.is_active
       )
+    },
+    CopyLink (item) {
+      navigator.clipboard.writeText(window.location.host + '/auth/register/' + item.code + '/')
     }
   }
 }

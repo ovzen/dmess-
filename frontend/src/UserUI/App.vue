@@ -93,8 +93,8 @@
     >
       <v-content>
         <router-view />
-        <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
       </v-content>
+      <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
     </v-sheet>
   </v-app>
 </template>
