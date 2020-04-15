@@ -19,9 +19,27 @@ class InviteViewSet(viewsets.ModelViewSet):
     queryset = Invite.objects.all()
 
 
-class StatisticsView(APIView):
+class RegisterStatView(APIView):
     def get(self, request):
-        sign_ups_count = User.objects.filter(date_joined__startswith=datetime.now().date()).count()
-        messages_count = Message.objects.filter(create_date__startswith=datetime.now().date()).count()
+        date = request.GET.get('date', None)
+        if date is not None:
+            registers_count = User.objects.filter(date_joined__startswith=date).count()
+        else:
+            registers_count = User.objects.filter(date_joined__startswith=datetime.now().date()).count()
+        return Response({"registers_count": registers_count})
+
+
+class MessageStatView(APIView):
+    def get(self, request):
+        date = request.GET.get('date', None)
+        if date is not None:
+            messages_count = Message.objects.filter(create_date__startswith=date).count()
+        else:
+            messages_count = Message.objects.filter(create_date__startswith=datetime.now().date()).count()
+        return Response({"messages_count": messages_count})
+
+
+class UserStatView(APIView):
+    def get(self, request):
         online_count = UserProfile.objects.filter(is_online=True).count()
-        return Response({"sign_ups_count": sign_ups_count, "messages_count": messages_count, "online_count": online_count})
+        return Response({"online_count": online_count})
