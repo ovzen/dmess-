@@ -29,7 +29,7 @@ router = SimpleRouter()
 
 router.register(r'api/contacts', views.ContactViewSet, basename='contact')
 router.register(r'api/dialog', views.DialogViewSet)
-router.register(r'api/wiki', views.WikiPageViewSet)
+router.register(r'api/wiki', views.WikiPageViewSet, basename='wiki')
 
 
 schema_view = get_swagger_view(title='API')
