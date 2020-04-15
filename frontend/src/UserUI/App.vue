@@ -6,10 +6,9 @@
       collapse-on-scroll
       dark
       scroll-target="#scrolling-techniques-6"
-      clipped-left="true"
     >
       <v-app-bar-nav-icon @click="drawer = true" />
-      <v-toolbar-title v-if="Route.params.id">
+      <v-toolbar-title v-if="this.$route.params">
         {{ chatName }}
       </v-toolbar-title>
       <v-spacer />
@@ -37,25 +36,30 @@
         dark
       >
         <v-list-item>
-
           <v-list-item-content>
-            <v-list-item-title class="title">{{ username }}</v-list-item-title>
-            <v-list-item-subtitle v-if="isOnline">online</v-list-item-subtitle>
-            <v-list-item-subtitle v-else>offline</v-list-item-subtitle>
+            <v-list-item-title class="title">
+              {{ username }}
+            </v-list-item-title>
+            <v-list-item-subtitle v-if="isOnline">
+              online
+            </v-list-item-subtitle>
+            <v-list-item-subtitle v-else>
+              offline
+            </v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-avatar>
-            <v-img :src="avatar"></v-img>
+            <v-img />
           </v-list-item-avatar>
         </v-list-item>
       </v-list>
 
-      <v-divider></v-divider>
+      <v-divider />
       <v-list>
         Тут будет наполнение сайдбара
       </v-list>
 
-      <v-divider></v-divider>
+      <v-divider />
       <v-footer
         absolute
         padless
