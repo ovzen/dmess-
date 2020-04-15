@@ -40,7 +40,7 @@
         >
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="title">{{ username }}</v-list-item-title>
+              <v-list-item-title class="title">{{ firstName }} {{ lastName }} </v-list-item-title>
               <v-list-item-subtitle v-if="isOnline">online</v-list-item-subtitle>
               <v-list-item-subtitle v-else>offline</v-list-item-subtitle>
             </v-list-item-content>
@@ -126,6 +126,8 @@ export default {
     for_user: true,
     dialogs_for_user: [],
     username: 'Test',
+    firstName: undefined,
+    lastName: undefined,
     user_id: undefined,
     avatar: '',
     isOnline: false,
@@ -215,6 +217,8 @@ export default {
         .then(res => {
           this.avatar = res.data['avatar']
           this.isOnline = res.data.is_online
+          this.firstName = res.data['user'].first_name
+          this.lastName = res.data['user'].last_name
         })
     }
   }
