@@ -7,13 +7,6 @@ from main.models import WikiPage
 from main.tasks import markdown_convert
 
 
-@receiver(pre_save, sender=WikiPage)
-def wiki_pre_save_callback(**kwargs):
-    """Принудительное зануление поля text_html для того, чтобы работало преобразование markdown->html"""
-    instance = kwargs['instance']
-    instance.text_html = ''
-
-
 @receiver(post_save, sender=WikiPage)
 def wiki_post_save_callback(**kwargs):
     """Отсылка markdown-кода на преобразование в html-код в момент сохранения модели"""
