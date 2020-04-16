@@ -24,9 +24,11 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'messenger.savink.in',
+]
 
 
 # Application definition
@@ -115,12 +117,24 @@ WSGI_APPLICATION = 'dmess.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'dmess_db',
+            'USER': 'dmess_user',
+            'PASSWORD': 'e6eoMjBRUcPg9752',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+    }
 
 
 # Password validation
