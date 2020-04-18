@@ -14,6 +14,9 @@ Welcome to Dmess's documentation!
    readme
    vue_page
    swagger
+   prepare.rst
+   run.rst
+
 
 Указатели
 =========

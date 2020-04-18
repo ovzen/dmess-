@@ -13,3 +13,16 @@ View-функции
 .. automodule:: main.models
     :members:
 
+*******
+Сигналы
+*******
+.. automodule:: main.signals
+    :members:
+    :undoc-members:
+
+************
+Celery tasks
+************
+.. automodule:: main.tasks
+    :members:
+    :undoc-members:

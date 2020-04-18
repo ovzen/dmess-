@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "id", "username", "password",
             "first_name", "last_name", "email",
-            "invite_code", "is_staff"
+            "invite_code"
         )
 
 
@@ -104,6 +104,8 @@ class WikiPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = WikiPage
         fields = '__all__'
+        read_only_fields = ['image']
+
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

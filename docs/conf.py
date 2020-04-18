@@ -14,7 +14,6 @@
 import os
 import sys
 import django
-import sphinx_glpi_theme
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dmess.settings'
 sys.path.append(os.path.abspath('../'))
 django.setup()

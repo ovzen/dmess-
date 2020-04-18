@@ -198,3 +198,19 @@ SWAGGER_SETTINGS = {
 }
 
 LOGIN_URL='/auth/'
+
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'noreply@asmirnov.me'
+EMAIL_HOST_PASSWORD = 'helloworld'
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+FIXTURE_DIRS = [
+    'main/fixtures',
+]

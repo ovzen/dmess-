@@ -143,8 +143,8 @@
     >
       <v-content>
         <router-view />
-        <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
       </v-content>
+      <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
     </v-sheet>
   </v-app>
 </template>
@@ -176,6 +176,8 @@ export default {
     for_user: true,
     dialogs_for_user: [],
     username: 'Test',
+    firstName: undefined,
+    lastName: undefined,
     user_id: undefined,
     avatar: '',
     isOnline: false,
@@ -193,7 +195,7 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['updateToken', 'getDialogs', 'disconnect', 'getChatName']
+    $route: ['getDialogs', 'disconnect', 'getChatName']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -203,6 +205,7 @@ export default {
     }
   },
   mounted () {
+    setInterval(this.updateToken, 1000)
     this.getDialogs()
     this.getUserData()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
@@ -265,6 +268,8 @@ export default {
         .then(res => {
           this.avatar = res.data['avatar']
           this.isOnline = res.data.is_online
+          this.firstName = res.data['user'].first_name
+          this.lastName = res.data['user'].last_name
         })
     }
   }
