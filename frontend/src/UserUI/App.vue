@@ -7,8 +7,7 @@
       dark
       scroll-target="#scrolling-techniques-6"
     >
-      <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
-      <v-toolbar-title v-if="Route.params.id">
+      <v-toolbar-title v-if="this.$route.params">
         {{ chatName }}
       </v-toolbar-title>
       <v-spacer />
@@ -67,12 +66,12 @@
         </v-list>
       </v-card>
 
-      <v-divider></v-divider>
+      <v-divider />
       <v-list>
         Тут будет наполнение сайдбара
       </v-list>
 
-      <v-divider></v-divider>
+      <v-divider />
       <v-footer
         absolute
         padless
@@ -153,11 +152,6 @@ export default {
       'mdi-settings'
     ]
   }),
-  computed: {
-    Route () {
-      return this.$route
-    }
-  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['getDialogs', 'disconnect', 'getChatName']
@@ -165,6 +159,13 @@ export default {
   created () {
     if (this.$cookie.get('Authentication')) {
       this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
+    } else {
+      console.warn('The current user was not found')
+    }
+  },
+  beforeCreate () {
+    if (this.$cookie.get('Authentication')) {
+      this.user_id = this.$cookie.get('Authentication').user_id
     } else {
       console.warn('The current user was not found')
     }
@@ -199,7 +200,7 @@ export default {
         }
       })
         .then(res => {
-          this.dialogs_for_user = res.data
+          this.dialogs_for_user = res.data.results
           console.log(this.dialogs_for_user)
         })
     },

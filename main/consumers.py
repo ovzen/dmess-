@@ -34,7 +34,7 @@ class ChatConsumer(WebsocketConsumer):
         if author == "":
             author = 'AnonymousUser'
 
-        message_obj = Message(author_id=author.id, text=message, dialog_id=self.chat_number, create_date=create_date)
+        message_obj = Message(user=author, text=message, dialog_id=self.chat_number)
         message_obj.save()
 
         # Send message to room group
