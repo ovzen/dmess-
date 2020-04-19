@@ -4,6 +4,7 @@ import UserActivity from './components/UserActivity'
 import DialogActivity from './components/DialogActivity'
 import ServerMessage from './components/ServerMessage'
 import Dashboard from './components/Dashboard.vue'
+import Invites from './components/Invites'
 Vue.use(Router)
 
 export default new Router({
@@ -30,6 +31,11 @@ export default new Router({
       path: '/Dashboard/',
       name: 'Dashboard',
       component: Dashboard
+    },
+    {
+      path: '/Invites/',
+      name: 'Invites',
+      component: Invites
     }
   ]
 })

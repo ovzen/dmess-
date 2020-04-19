@@ -1,6 +1,5 @@
 import axios from 'axios'
 import VueCookie from 'vue-cookie'
-
 axios.interceptors.request.use(
   function (config) {
     if (VueCookie.get('Authentication')) {
@@ -10,3 +9,16 @@ axios.interceptors.request.use(
   }, function (error) {
     return Promise.reject(error)
   })
+
+export default {
+  urls: {
+    news: '/news',
+    chat: '/chat',
+    store: '/store',
+    users: '/users',
+    login: '/auth/login',
+    logout: '/auth/logout',
+    uploads: '/uploads'
+  },
+  axios: axios
+}

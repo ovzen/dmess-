@@ -19,6 +19,11 @@ export default new Router({
       path: '/register/',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/register/:registercode/',
+      name: 'Register',
+      component: Register
     }
   ]
 })
