@@ -11,7 +11,6 @@ from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, \
     WikiPageSerializer
-from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
@@ -99,5 +98,4 @@ class WikiPageViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = WikiPageSerializer
     queryset = WikiPage.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('title', 'dialog', 'message')
