@@ -26,7 +26,7 @@ class RegisterStatView(APIView):
             registers_count = User.objects.filter(date_joined__startswith=date).count()
         else:
             registers_count = User.objects.filter(date_joined__startswith=datetime.now().date()).count()
-        return Response({"registers_count": registers_count})
+        return Response({"count": registers_count})
 
 
 class MessageStatView(APIView):
@@ -36,10 +36,10 @@ class MessageStatView(APIView):
             messages_count = Message.objects.filter(create_date__startswith=date).count()
         else:
             messages_count = Message.objects.filter(create_date__startswith=datetime.now().date()).count()
-        return Response({"messages_count": messages_count})
+        return Response({"count": messages_count})
 
 
 class UserStatView(APIView):
     def get(self, request):
         online_count = UserProfile.objects.filter(is_online=True).count()
-        return Response({"online_count": online_count})
+        return Response({"count": online_count})
