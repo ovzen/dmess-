@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog, UserProfile, Contact, WikiPage
 from main.models import Message
@@ -13,9 +12,22 @@ from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPair
     WikiPageSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.decorators import action
 
 
 User = get_user_model()
+
+
+# noinspection PyUnresolvedReferences
+class CountModelMixin:
+    """
+    Add count action to ModelViewSet
+    """
+    @action(detail=False)
+    def count(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        content = {'count': queryset.count()}
+        return Response(content)
 
 
 class UserView(ListCreateAPIView):
@@ -47,7 +59,7 @@ class ContactViewSet(viewsets.ModelViewSet):
         return Contact.objects.filter(user=user)
 
 
-class DialogViewSet(viewsets.ModelViewSet):
+class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с диалогами
     """
@@ -61,7 +73,7 @@ class DialogViewSet(viewsets.ModelViewSet):
         return Dialog.objects.filter(users=user)
 
 
-class MessageViewSet(viewsets.ModelViewSet):
+class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     Send all messages from chat
     """
@@ -77,21 +89,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class ActivityFeedView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request):
-        registrations = User.objects.all()
-        user_reg_serializer = UserSerializer(registrations, many=True)
-        dialogs = Dialog.objects.all()
-        dialog_serializer = DialogSerializer(dialogs, many=True)
-        return Response({
-            'registrations': user_reg_serializer.data,
-            'dialogs': dialog_serializer.data,
-        })
-
-
-class WikiPageViewSet(viewsets.ModelViewSet):
+class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с вики-страницей
     """

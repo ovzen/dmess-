@@ -8,7 +8,7 @@ from admin.models import Invite
 from admin.serializers import InviteSerializer
 from datetime import datetime
 
-from main.models import Message, UserProfile
+from main.models import UserProfile
 
 User = get_user_model()
 
@@ -27,16 +27,6 @@ class RegisterStatView(APIView):
         else:
             registers_count = User.objects.filter(date_joined__startswith=datetime.now().date()).count()
         return Response({"count": registers_count})
-
-
-class MessageStatView(APIView):
-    def get(self, request):
-        date = request.GET.get('date', None)
-        if date is not None:
-            messages_count = Message.objects.filter(create_date__startswith=date).count()
-        else:
-            messages_count = Message.objects.filter(create_date__startswith=datetime.now().date()).count()
-        return Response({"count": messages_count})
 
 
 class UserStatView(APIView):
