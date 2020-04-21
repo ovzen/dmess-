@@ -1,21 +1,33 @@
-from rest_framework.decorators import action
-from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404, ListCreateAPIView
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, ListCreateAPIView
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog, UserProfile, Contact, WikiPage
 from main.models import Message
 from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, WikiPageSerializer
-from django_filters import rest_framework as filters
+from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, \
+    WikiPageSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from rest_framework.decorators import action
 
 
 User = get_user_model()
+
+
+# noinspection PyUnresolvedReferences
+class CountModelMixin:
+    """
+    Add count action to ModelViewSet
+    """
+    @action(detail=False)
+    def count(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        content = {'count': queryset.count()}
+        return Response(content)
 
 
 class UserView(ListCreateAPIView):
@@ -25,20 +37,8 @@ class UserView(ListCreateAPIView):
     """
     permission_classes = (AllowAny,)
     model = User
-    queryset = User.objects
+    queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-class MessageView(ListAPIView):
-    """
-    Send all messages from chat
-    """
-    permission_classes = (AllowAny,)
-    model = Message
-    serializer_class = MessageSerializer
-
-    def get_queryset(self):
-        return Message.objects.all().filter(dialog_id=self.request.query_params.get('chat_id'))
 
 
 class UserProfileView(RetrieveUpdateAPIView):
@@ -59,14 +59,13 @@ class ContactViewSet(viewsets.ModelViewSet):
         return Contact.objects.filter(user=user)
 
 
-class DialogViewSet(viewsets.ModelViewSet):
+class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с диалогами
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = DialogSerializer
     queryset = Dialog.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('users', 'name', 'id')
 
     def get_queryset(self):
@@ -74,30 +73,27 @@ class DialogViewSet(viewsets.ModelViewSet):
         return Dialog.objects.filter(users=user)
 
 
+class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
+    """
+    Send all messages from chat
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessageSerializer
+    queryset = Message.objects.all()
+    search_fields = ('text',)
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ('dialog', 'user')
+
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class ActivityFeedView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request):
-        registrations = User.objects.all()
-        user_reg_serializer = UserSerializer(registrations, many=True)
-        dialogs = Dialog.objects.all()
-        dialog_serializer = DialogSerializer(dialogs, many=True)
-        return Response({
-            'registrations': user_reg_serializer.data,
-            'dialogs': dialog_serializer.data,
-        })
-
-
-class WikiPageViewSet(viewsets.ModelViewSet):
+class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с вики-страницей
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = WikiPageSerializer
     queryset = WikiPage.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('title', 'dialog', 'message')

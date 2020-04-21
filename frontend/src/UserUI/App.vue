@@ -204,6 +204,13 @@ export default {
       console.warn('The current user was not found')
     }
   },
+  beforeCreate () {
+    if (this.$cookie.get('Authentication')) {
+      this.user_id = this.$cookie.get('Authentication').user_id
+    } else {
+      console.warn('The current user was not found')
+    }
+  },
   mounted () {
     setInterval(this.updateToken, 1000)
     this.getDialogs()

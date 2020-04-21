@@ -83,7 +83,7 @@ export default {
   methods: {
     update () {
       api.axios.get('/api/admin/invites/').then(res => {
-        this.Invites = res.data
+        this.Invites = res.data.results
         this.loading = false
       })
     },
