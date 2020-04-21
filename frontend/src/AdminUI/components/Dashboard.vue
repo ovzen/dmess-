@@ -213,7 +213,7 @@
             <v-list-item-title
               class="display-2 indigo--text text-right mb-1"
             >
-              75
+              {{ gitlabOpenIssues }}
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
               Opened issues on gitlab
@@ -288,6 +288,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Dashboard',
   data: () => ({
@@ -324,9 +325,11 @@ export default {
         LastActivity: '2020-03-10 13:53:19.368414'
       }
     ],
-    ws: new WebSocket('ws://' + window.location.host + '/ws/chat/system/')
+    ws: new WebSocket('ws://' + window.location.host + '/ws/chat/system/'),
+    gitlabOpenIssues: undefined
   }),
   created () {
+    this.getGitlabOpenIssues()
     window.addEventListener('resize', this.updateWidthOfElements)
     this.ContainerWidth = document.getElementById('Container').offsetWidth
   },
@@ -334,6 +337,17 @@ export default {
     window.removeEventListener('resize', this.updateWidthOfElements)
   },
   methods: {
+    getGitlabOpenIssues () {
+      let config = {
+        headers: {
+          Authorization: 'Bearer ' + 'NgXcHgR-7W1Uq6mYrJMU'
+        }
+      }
+      axios.get('https://gitlab.informatics.ru/api/v4/projects/1932/issues_statistics', config)
+        .then(res => {
+          console.log(res)
+        })
+    },
     SendMessage (Message, type) {
       this.ws.send(JSON.stringify({ message: Message, type: type }))
     },
