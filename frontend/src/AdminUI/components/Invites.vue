@@ -36,6 +36,7 @@
         <template v-slot:item.is_active="{ item }">
           <v-checkbox
             v-model="item.is_active"
+            color="basic"
             @click.stop="Edit(item)"
           />
         </template>
@@ -52,7 +53,8 @@
           >
             <template v-slot:activator="{ on }">
               <v-btn
-                color="primary"
+                color="basic"
+                dark
                 small
                 retain-focus-on-click
                 v-on:click="on.click"
@@ -119,6 +121,7 @@ export default {
       }).then(res => {
         console.log(res)
         if (res.status === 201) {
+          this.loading = true
           this.update()
         }
       }
@@ -129,6 +132,7 @@ export default {
         alert('Ошибка')
       }).then(res => {
         if (res.status === 200) {
+          this.loading = true
           this.update()
         }
       }
@@ -142,6 +146,7 @@ export default {
         alert('Ошибка')
       }).then(res => {
         if (res.status === 204) {
+          this.loading = true
           this.update()
         }
       }
