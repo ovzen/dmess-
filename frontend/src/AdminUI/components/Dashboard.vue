@@ -338,12 +338,11 @@ export default {
   },
   methods: {
     getGitlabOpenIssues () {
-      let config = {
-        headers: {
-          Authorization: 'Bearer ' + 'NgXcHgR-7W1Uq6mYrJMU'
-        }
-      }
-      axios.get('https://gitlab.informatics.ru/api/v4/projects/1932/issues_statistics', config)
+      const instance = axios.create({
+        timeout: 1000,
+        headers: { 'Authorization': 'Bearer NgXcHgR-7W1Uq6mYrJMU' }
+      })
+      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/issues_statistics')
         .then(res => {
           console.log(res)
         })
