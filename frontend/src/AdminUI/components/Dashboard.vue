@@ -206,14 +206,14 @@
               color="white"
               x-large
             >
-              mdi-account-plus-outline
+              mdi-cards-outline
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="display-2 indigo--text text-right mb-1"
             >
-              {{ gitlabOpenIssues }}
+              {{ gitlabMetrics.openedIssues }}
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
               Opened issues on gitlab
@@ -237,17 +237,17 @@
               color="white"
               x-large
             >
-              mdi-account-plus-outline
+              mdi-call-merge
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="display-2 indigo--text text-right mb-1"
             >
-              75
+              {{ gitlabMetrics.openedMergeRequests }}
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
-              Opened issues on gitlab
+              Opened merge requests on gitlab
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -268,17 +268,17 @@
               color="white"
               x-large
             >
-              mdi-account-plus-outline
+              mdi-call-split
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="display-2 indigo--text text-right mb-1"
             >
-              75
+              {{ this.gitlabMetrics.currentBranches }}
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
-              Opened issues on gitlab
+              Current branches on gitlab
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -326,10 +326,15 @@ export default {
       }
     ],
     ws: new WebSocket('ws://' + window.location.host + '/ws/chat/system/'),
-    gitlabOpenIssues: undefined
+    gitlabMetrics: {
+      openedIssues: undefined,
+      openedMergeRequests: undefined,
+      currentBranches: undefined
+    }
+
   }),
   created () {
-    this.getGitlabOpenIssues()
+    this.getGitlabMetrics()
     window.addEventListener('resize', this.updateWidthOfElements)
     this.ContainerWidth = document.getElementById('Container').offsetWidth
   },
@@ -337,14 +342,22 @@ export default {
     window.removeEventListener('resize', this.updateWidthOfElements)
   },
   methods: {
-    getGitlabOpenIssues () {
+    getGitlabMetrics () {
       const instance = axios.create({
-        timeout: 1000,
+        timeout: 2000,
         headers: { 'Authorization': 'Bearer NgXcHgR-7W1Uq6mYrJMU' }
       })
       instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/issues_statistics')
         .then(res => {
-          console.log(res)
+          this.gitlabMetrics.openedIssues = res.data.statistics.counts.opened
+        })
+      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/merge_requests?state=opened')
+        .then(res => {
+          this.gitlabMetrics.openedMergeRequests = res.data.length
+        })
+      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/repository/branches')
+        .then(res => {
+          this.gitlabMetrics.currentBranches = res.data.length
         })
     },
     SendMessage (Message, type) {
