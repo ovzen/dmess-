@@ -2,6 +2,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 
+from django.core.serializers.json import DjangoJSONEncoder
+
 from main.models import Message, Dialog, UserProfile
 
 
@@ -43,7 +45,7 @@ class ChatConsumer(WebsocketConsumer):
                 'type': 'chat_message',
                 'message': message,
                 'author': author.username,
-                'create_date': message_obj.create_date
+                'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder)
             }
         )
 
