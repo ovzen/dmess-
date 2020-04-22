@@ -2,6 +2,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 
+from django.core.serializers.json import DjangoJSONEncoder
+
 from main.models import Message, Dialog, UserProfile
 
 
@@ -29,12 +31,11 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        create_date = text_data_json['date']
         author = self.scope["user"]
         if author == "":
             author = 'AnonymousUser'
 
-        message_obj = Message(author_id=author.id, text=message, dialog_id=self.chat_number, create_date=create_date)
+        message_obj = Message(user=author, text=message, dialog_id=self.chat_number)
         message_obj.save()
 
         # Send message to room group
@@ -44,7 +45,7 @@ class ChatConsumer(WebsocketConsumer):
                 'type': 'chat_message',
                 'message': message,
                 'author': author.username,
-                'create_date': create_date
+                'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder)
             }
         )
 

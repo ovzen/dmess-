@@ -1,0 +1,104 @@
+[
+  {
+    "model": "main.message",
+    "pk": 1,
+    "fields": {
+      "text": "Hello",
+      "author": 1,
+      "dialog": 1,
+      "create_date": "2020-04-11T18:44:48.783Z"
+    }
+  },
+  {
+    "model": "main.message",
+    "pk": 2,
+    "fields": {
+      "text": "test",
+      "author": 2,
+      "dialog": 2,
+      "create_date": "2020-04-15T13:27:51.656Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$180000$AMzyiX7AhSQs$ONkLgFSOrzq4qPmCjd5uE7R+QRIDUb0VKkiSRYEXTvs=",
+      "last_login": "2020-04-15T13:44:11.089Z",
+      "is_superuser": true,
+      "username": "vasya",
+      "first_name": "",
+      "last_name": "",
+      "email": "1@abc.net",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2020-04-11T18:39:35.742Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$180000$cvS8hX6tbIux$GUlQC/TfSG2e9NpBvm2VjkQ4BxAUFTt4pkInuXWWwMQ=",
+      "last_login": "2020-04-15T13:28:11.773Z",
+      "is_superuser": false,
+      "username": "admin",
+      "first_name": "Admin",
+      "last_name": "Adminovich",
+      "email": "2@abc.net",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2020-04-15T13:24:11.488Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "main.dialog",
+    "pk": 1,
+    "fields": {
+      "create_date": "2020-04-11T18:44:42.738Z",
+      "admin_only": false,
+      "name": "Test",
+      "users": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "main.dialog",
+    "pk": 2,
+    "fields": {
+      "create_date": "2020-04-15T13:27:47.180Z",
+      "admin_only": false,
+      "name": "Test",
+      "users": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "main.userprofile",
+    "pk": 1,
+    "fields": {
+      "avatar": "",
+      "width_field": 0,
+      "height_field": 0,
+      "bio": "",
+      "is_online": false
+    }
+  },
+  {
+    "model": "main.userprofile",
+    "pk": 2,
+    "fields": {
+      "avatar": "",
+      "width_field": 0,
+      "height_field": 0,
+      "bio": "Hey there! I'm using dmess",
+      "is_online": false
+    }
+  }
+]

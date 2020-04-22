@@ -30,9 +30,13 @@
         multi-sort
         class="elevation-1"
       >
+        <template v-slot:item.created_at="{ item }">
+          {{ DecodeTime(item.created_at) }}
+        </template>
         <template v-slot:item.is_active="{ item }">
           <v-checkbox
             v-model="item.is_active"
+            color="basic"
             @click.stop="Edit(item)"
           />
         </template>
@@ -40,15 +44,38 @@
           {{ item.for_user || 'Не использовано' }}
         </template>
         <template v-slot:item.used_at="{ item }">
-          {{ item.used_at || 'Не использовано' }}
+          {{ DecodeTime(item.used_at) || 'Не использовано' }}
         </template>
         <template v-slot:item.reg_btn="{ item }">
-          <v-btn
-            color="primary"
-            small
-            @click="CopyLink(item)"
+          <v-tooltip
+            bottom
+            :open-on-hover="false"
           >
-            Получить ссылку
+            <template v-slot:activator="{ on }">
+              <v-btn
+                color="basic"
+                dark
+                small
+                retain-focus-on-click
+                v-on:click="on.click"
+                @blur="on.blur"
+                @click="CopyLink(item)"
+              >
+                Получить ссылку
+              </v-btn>
+            </template>
+            <span>Скопировано в буфер обмена / Copied!</span>
+          </v-tooltip>
+        </template>
+        <template v-slot:item.del_btn="{ item }">
+          <v-btn
+            color="error"
+            small
+            @click="deleteItem(item)"
+          >
+            <v-icon>
+              mdi-delete
+            </v-icon>
           </v-btn>
         </template>
       </v-data-table>
@@ -72,7 +99,8 @@ export default {
       { text: 'Активно / Is active', value: 'is_active' },
       { text: 'Кем использовано / For user', value: 'for_user' },
       { text: 'Время использования / Used at', value: 'used_at' },
-      { text: 'Получить ссылку / Copy Link for registration', value: 'reg_btn', align: 'center' }
+      { text: 'Получить ссылку / Copy Link for registration', value: 'reg_btn', align: 'center', sortable: false },
+      { text: 'Удалить / Delete', value: 'del_btn', align: 'center', sortable: false }
     ],
     Invites: [
     ]
@@ -83,27 +111,54 @@ export default {
   methods: {
     update () {
       api.axios.get('/api/admin/invites/').then(res => {
-        this.Invites = res.data
+        this.Invites = res.data.results
         this.loading = false
       })
     },
     Create () {
       api.axios.post('/api/admin/invites/').catch(res => {
         alert('Ошибка')
-      }).then(
-        this.loading = true,
-        setTimeout(this.update(), 1000)
+      }).then(res => {
+        console.log(res)
+        if (res.status === 201) {
+          this.loading = true
+          this.update()
+        }
+      }
       )
     },
     Edit (item) {
       api.axios.put('/api/admin/invites/' + item.code + '/', { is_active: !item.is_active }).catch(res => {
         alert('Ошибка')
-      }).then(
-        item.is_active = !item.is_active
+      }).then(res => {
+        if (res.status === 200) {
+          this.loading = true
+          this.update()
+        }
+      }
       )
     },
     CopyLink (item) {
       navigator.clipboard.writeText(window.location.host + '/auth/register/' + item.code + '/')
+    },
+    deleteItem (item) {
+      api.axios.delete('/api/admin/invites/' + item.code + '/').catch(res => {
+        alert('Ошибка')
+      }).then(res => {
+        if (res.status === 204) {
+          this.loading = true
+          this.update()
+        }
+      }
+      )
+    },
+    DecodeTime (item) {
+      if (item) {
+        let data = item.split(/\s*T\s*/)
+        let date = data[0].replace(/-/g, '.')
+        let time = item.split(/\s*T\s*/)[1].split(/\s*:\s*/)
+        return time[0] + ':' + time[1] + ' ' + date
+      }
     }
   }
 }
