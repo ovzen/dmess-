@@ -7,7 +7,7 @@
       <v-list dense>
         <v-list-item to="/Dashboard/">
           <v-list-item-action>
-            <v-icon>mdi-heart</v-icon>
+            <v-icon>mdi-desktop-mac-dashboard</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Dashboard</v-list-item-title>
@@ -15,7 +15,7 @@
         </v-list-item>
         <v-list-item to="/UserActivity/">
           <v-list-item-action>
-            <v-icon>mdi-heart</v-icon>
+            <v-icon>mdi-account</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Users</v-list-item-title>
@@ -23,7 +23,7 @@
         </v-list-item>
         <v-list-item to="/DialogActivity/">
           <v-list-item-action>
-            <v-icon>mdi-heart</v-icon>
+            <v-icon>mdi-android-messages</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>DialogActivity</v-list-item-title>
@@ -31,7 +31,7 @@
         </v-list-item>
         <v-list-item to="/Invites/">
           <v-list-item-action>
-            <v-icon>mdi-heart</v-icon>
+            <v-icon>mdi-account-multiple-plus</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Invites</v-list-item-title>
@@ -42,7 +42,7 @@
 
     <v-app-bar
       app
-      color="indigo"
+      color="basic"
       dark
       scroll-target="#scrolling-techniques-7"
       elevate-on-scroll
@@ -89,7 +89,7 @@
       </v-content>
     </v-sheet>
     <v-footer
-      color="indigo"
+      color="basic"
       app
     >
       <span class="white--text">
@@ -107,7 +107,7 @@ Vue.use(VueCookie)
 export default {
   name: 'AdminUI',
   data: () => ({
-    drawer: false
+    drawer: true
   }),
   mounted () {
     setInterval(this.updateToken, 1000)
@@ -130,6 +130,5 @@ export default {
 <style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  color: #2c3e50;
 }
 </style>
