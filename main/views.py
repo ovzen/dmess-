@@ -10,6 +10,7 @@ from main.permissions import IsOwnerOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, \
     WikiPageSerializer
+from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
@@ -39,6 +40,8 @@ class UserView(ListCreateAPIView):
     model = User
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    ordering_fields = '__all__'
 
 
 class UserProfileView(RetrieveUpdateAPIView):
