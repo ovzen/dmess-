@@ -53,7 +53,7 @@
         <div style="text-align: right; margin-right:10px; margin-top:-25px;">
           <span class="font-weight-light">
             От: {{ message.user_detail.username }}<br>
-            {{ formatDate(message.create_date) }}
+            {{ decodeTime(message.create_date) }}
           </span>
         </div>
       </v-card>
@@ -162,7 +162,7 @@ export default {
           id: this.messages.length,
           text: JSON.parse(data.data).message,
           user_detail: { username: JSON.parse(data.data).author },
-          create_date: JSON.parse(data.data).create_date
+          create_date: JSON.parse(data.data).create_date.replace(/^"/, '')
         })
         console.log(JSON.parse(data.data))
       }
@@ -173,8 +173,7 @@ export default {
           console.log('messagetext: ', messagetext)
           this.$socket.send(
             JSON.stringify({
-              message: messagetext,
-              date: new Date()
+              message: messagetext
             })
           )
           this.message_text = undefined
@@ -193,6 +192,20 @@ export default {
           return moment(String(date)).format('DD.MM.YYYY')
         } else {
           return moment(String(date)).calendar()
+        }
+      }
+    },
+    decodeTime (item) {
+      if (item) {
+        let data = item.split(/\s*T\s*/)
+        let date = data[0].replace(/-/g, '.')
+        let time = item.split(/\s*T\s*/)[1].split(/\s*:\s*/)
+        let datetime = time[0] + ':' + time[1] + ' ' + date
+        moment.locale('ru')
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).calendar()
         }
       }
     }
