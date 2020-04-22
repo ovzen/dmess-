@@ -173,8 +173,7 @@ export default {
           console.log('messagetext: ', messagetext)
           this.$socket.send(
             JSON.stringify({
-              message: messagetext,
-              date: new Date()
+              message: messagetext
             })
           )
           this.message_text = undefined
