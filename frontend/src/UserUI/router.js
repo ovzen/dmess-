@@ -5,6 +5,7 @@ import Main from './components/Main'
 import Profile from './components/Profile'
 import AllUsers from './components/AllUsers'
 import KnowledgeBase from './components/KnowledgeBase'
+import ChatUser from './components/ChatUser'
 Vue.use(Router)
 
 export default new Router({
@@ -35,6 +36,11 @@ export default new Router({
       path: '/KnowledgeBase',
       name: 'KnowledgeBase',
       component: KnowledgeBase
+    },
+    {
+      path: '/ChatUser',
+      name: 'ChatUser',
+      component: ChatUser
     }
   ]
 })

@@ -1,7 +1,6 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 
 
 class UserProfile(models.Model):
@@ -38,20 +37,15 @@ class Dialog(models.Model):
     def __str__(self):
         return self.name
 
-    # def get_title_from_names(self):
-    #     return ', '.join(
-    #         map(lambda user: user.first_name, self.users.all())
-    #     )
-
     def last_message(self):
         return self.message_set.order_by('-create_date').first()
 
 
 class Message(models.Model):
     text = models.TextField(max_length=2000)
-    author = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
-    create_date = models.DateTimeField(default=timezone.now)
+    create_date = models.DateTimeField(auto_now_add=True)
 
 
 class WikiPage(models.Model):

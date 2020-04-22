@@ -44,7 +44,7 @@
         color="blue lighten-1"
         dark
         style="margin-top:20px; margin-bottom:20px;"
-        :style="isOwnMessage(message.author) ? 'margin: 20px 20px 20px auto' : 'margin: 20px auto 20px 20px'"
+        :style="isOwnMessage(message.user_detail.username) ? 'margin: 20px 20px 20px auto' : 'margin: 20px auto 20px 20px'"
         max-width="344"
       >
         <v-card-text class="headline text-left">
@@ -52,8 +52,8 @@
         </v-card-text>
         <div style="text-align: right; margin-right:10px; margin-top:-25px;">
           <span class="font-weight-light">
-            От: {{ message.author }} <br>
-            {{ formatDate(message.create_date) }}
+            От: {{ message.user_detail.username }}<br>
+            {{ decodeTime(message.create_date) }}
           </span>
         </div>
       </v-card>
@@ -145,8 +145,8 @@ export default {
       this.$disconnect()
       this.messages = []
       this.id = this.$route.params.id
-      api.axios.get('/api/messages/', { params: { chat_id: this.id } }).then(res => {
-        this.messages = this.messages.concat(res.data)
+      api.axios.get('/api/messages/', { params: { dialog: this.id } }).then(res => {
+        this.messages = this.messages.concat(res.data.results)
       })
       this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
     },
@@ -161,8 +161,8 @@ export default {
         this.messages.push({
           id: this.messages.length,
           text: JSON.parse(data.data).message,
-          author: JSON.parse(data.data).author,
-          create_date: JSON.parse(data.data).create_date
+          user_detail: { username: JSON.parse(data.data).author },
+          create_date: JSON.parse(data.data).create_date.replace(/^"/, '')
         })
         console.log(JSON.parse(data.data))
       }
@@ -173,8 +173,7 @@ export default {
           console.log('messagetext: ', messagetext)
           this.$socket.send(
             JSON.stringify({
-              message: messagetext,
-              date: new Date()
+              message: messagetext
             })
           )
           this.message_text = undefined
@@ -193,6 +192,20 @@ export default {
           return moment(String(date)).format('DD.MM.YYYY')
         } else {
           return moment(String(date)).calendar()
+        }
+      }
+    },
+    decodeTime (item) {
+      if (item) {
+        let data = item.split(/\s*T\s*/)
+        let date = data[0].replace(/-/g, '.')
+        let time = item.split(/\s*T\s*/)[1].split(/\s*:\s*/)
+        let datetime = time[0] + ':' + time[1] + ' ' + date
+        moment.locale('ru')
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).calendar()
         }
       }
     }

@@ -66,9 +66,7 @@
 
     curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
     sudo apt-get install -y nodejs
-    curl -sL https://deb.nodesource.com/setup_9.x -o nodesource_setup.sh
-    sudo bash nodesource_setup.sh
-    sudo apt install nodejs
+    curl -L https://npmjs.org/install.sh | sudo sh
 
 9. Устанавливаем необходимые пакеты в проекте.
 Фронтенд состоит из двух частей, клиентской и админской, каждая в своей папке. Поэтому команды дублируются.
@@ -76,6 +74,4 @@
 .. code-block:: bash
 
     cd frontend   # Здесь лежит клиентский фронтенд
-    npm install
-    cd Admin      # Здесь лежит админский фронтенд
     npm install
