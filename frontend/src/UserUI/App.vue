@@ -4,25 +4,61 @@
       app
       :value="!(alwaysOnDisplay || expandOnHover)"
       collapse-on-scroll
-      dark
       scroll-target="#scrolling-techniques-6"
+      height="80"
+      color="#FFFFFF"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
-        {{ chatName }}
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                class="title"
+              >
+                 {{ chatName }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                72 members or online/offline
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+          </v-list-item>
+       
       </v-toolbar-title>
       <v-spacer />
-      <v-btn
-        class="ma-2"
-        outlined
-        color="#90CAF9"
-        @click="goProfilePage()"
-      >
-        {{ username }}
-      </v-btn>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
+
+      <v-menu offset-y min-width="128">
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list color="#FAFAFA">
+          <v-list-item>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="goProfilePage()">
+            <v-list-item-title>My frofile</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>Button 3</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>Button 4</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
     </v-app-bar>
 
     <v-navigation-drawer
@@ -40,7 +76,16 @@
         >
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="title">
+              <v-list-item-title
+                v-if="(firstName || lastName)"
+                class="title"
+              >
+                {{ firstName }} {{ lastName }}
+              </v-list-item-title>
+              <v-list-item-title
+                v-else
+                class="title"
+              >
                 {{ username }}
               </v-list-item-title>
               <v-list-item-subtitle
@@ -54,6 +99,10 @@
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
+            <v-list-item-avatar>
+              <v-img :src="avatar"></v-img>
+            </v-list-item-avatar>
+
           </v-list-item>
         </v-list>
       </v-card>
@@ -263,7 +312,7 @@ export default {
             }
           })
           .then(response => {
-            this.chatName = response.data[0].name
+            this.chatName = response.data.results[0].name
           })
       } else {
         this.chatName = undefined
