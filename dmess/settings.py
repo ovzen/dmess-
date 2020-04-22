@@ -28,6 +28,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'messenger.savink.in',
+    'd-messenger.ml'
 ]
 
 
