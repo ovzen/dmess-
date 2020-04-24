@@ -85,7 +85,7 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     queryset = Message.objects.all()
     search_fields = ('text',)
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ('dialog', 'user')
+    filterset_fields = '__all__'
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

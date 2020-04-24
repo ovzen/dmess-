@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'admin.apps.AdminConfig',
     'channels',
-    'django_filters'
+    'django_filters',
+    'rest_registration'
 ]
 
 REST_FRAMEWORK = {
@@ -200,7 +201,7 @@ SWAGGER_SETTINGS = {
     "is_superuser": False,  # Set to True to enforce admin only access
 }
 
-LOGIN_URL='/auth/'
+LOGIN_URL = '/auth/'
 
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
@@ -217,3 +218,9 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 FIXTURE_DIRS = [
     'main/fixtures',
 ]
+
+REST_REGISTRATION = {
+    'REGISTER_VERIFICATION_ENABLED': False,
+    'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
+    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
+}

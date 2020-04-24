@@ -36,6 +36,7 @@ router.register(r'api/wiki', views.WikiPageViewSet, basename='wiki')
 schema_view = get_swagger_view(title='API')
 
 urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
+    path('api/accounts/', include('rest_registration.api.urls')),
     url(r'^docs/', schema_view),
 
     path('django_admin/', admin.site.urls),
@@ -58,5 +59,4 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
         name="index",
     ),
     path('admin_tools/', include('admin_tools.urls')),
-
 ]
