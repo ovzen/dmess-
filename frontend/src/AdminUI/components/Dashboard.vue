@@ -24,7 +24,7 @@
               DAILY SIGN UPS
             </div>
             <v-list-item-title
-              class="headline indigo--text mb-1"
+              class="headline basic--text mb-1"
             >
               + 45
             </v-list-item-title>
@@ -36,7 +36,7 @@
           <v-list-item-avatar
             tile
             size="80"
-            color="indigo"
+            color="basic"
           >
             <v-icon
               color="white"
@@ -61,7 +61,7 @@
             </div>
 
             <v-list-item-title
-              class="headline indigo--text mb-1"
+              class="headline basic--text mb-1"
             >
               + 2542
             </v-list-item-title>
@@ -73,7 +73,7 @@
           <v-list-item-avatar
             tile
             size="80"
-            color="indigo"
+            color="basic"
             elevation="12"
           >
             <v-icon
@@ -98,7 +98,7 @@
               ONLINE RIGHT NOW
             </div>
             <v-list-item-title
-              class="headline indigo--text mb-1"
+              class="headline basic--text mb-1"
             >
               215
             </v-list-item-title>
@@ -110,7 +110,7 @@
           <v-list-item-avatar
             tile
             size="80"
-            color="indigo"
+            color="basic"
           >
             <v-icon
               color="white"
@@ -179,7 +179,8 @@
           />
           <v-btn
             small
-            color="primary"
+            dark
+            color="basic"
             @click="SendMessage(Message,type)"
           >
             отправить
@@ -200,7 +201,7 @@
           <v-list-item-avatar
             tile
             size="80"
-            color="indigo"
+            color="basic"
           >
             <v-icon
               color="white"
@@ -211,7 +212,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
-              class="display-2 indigo--text text-right mb-1"
+              class="display-2 basic--text text-right mb-1"
             >
               {{ gitlabMetrics.openedIssues }}
             </v-list-item-title>
@@ -231,7 +232,7 @@
           <v-list-item-avatar
             tile
             size="80"
-            color="indigo"
+            color="basic"
           >
             <v-icon
               color="white"
@@ -242,7 +243,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
-              class="display-2 indigo--text text-right mb-1"
+              class="display-2 basic--text text-right mb-1"
             >
               {{ gitlabMetrics.openedMergeRequests }}
             </v-list-item-title>
@@ -262,7 +263,7 @@
           <v-list-item-avatar
             tile
             size="80"
-            color="indigo"
+            color="basic"
           >
             <v-icon
               color="white"
@@ -273,7 +274,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
-              class="display-2 indigo--text text-right mb-1"
+              class="display-2 basic--text text-right mb-1"
             >
               {{ this.gitlabMetrics.currentBranches }}
             </v-list-item-title>
@@ -375,7 +376,6 @@ export default {
 <style lang="scss" scoped>
 .container {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  color: #2c3e50;
 }
 .v-card {
   margin-top:25px;

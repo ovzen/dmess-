@@ -4,24 +4,61 @@
       app
       :value="!(alwaysOnDisplay || expandOnHover)"
       collapse-on-scroll
-      dark
       scroll-target="#scrolling-techniques-6"
+      height="80"
+      color="#FFFFFF"
     >
-      <v-toolbar-title v-if="this.$route.params">
-        {{ chatName }}
+      <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
+      <v-toolbar-title v-if="Route.params.id">
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                class="title"
+              >
+                 {{ chatName }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                72 members or online/offline
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+          </v-list-item>
+       
       </v-toolbar-title>
       <v-spacer />
-      <v-btn
-        class="ma-2"
-        outlined
-        color="#90CAF9"
-        @click="goProfilePage()"
-      >
-        {{ username }}
-      </v-btn>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
+
+      <v-menu offset-y min-width="128">
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list color="#FAFAFA">
+          <v-list-item>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="goProfilePage()">
+            <v-list-item-title>My frofile</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>Button 3</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>Button 4</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
     </v-app-bar>
 
     <v-navigation-drawer
@@ -34,7 +71,7 @@
         <v-list
           color="#6202EE"
           dark
-          height=80
+          height="80"
           class="pt-1"
         >
           <v-list-item>
@@ -51,26 +88,74 @@
               >
                 {{ username }}
               </v-list-item-title>
-              <v-list-item-subtitle v-if="isOnline">
+              <v-list-item-subtitle
+                v-if="isOnline"
+              >
                 online
               </v-list-item-subtitle>
-              <v-list-item-subtitle v-else>
+              <v-list-item-subtitle
+                v-else
+              >
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
-
             <v-list-item-avatar>
               <v-img :src="avatar"></v-img>
             </v-list-item-avatar>
+
           </v-list-item>
         </v-list>
       </v-card>
 
       <v-divider />
-      <v-list>
-        Тут будет наполнение сайдбара
-      </v-list>
-
+      <v-subheader>
+        <a>
+          <u>
+            ALL CHATS
+          </u>
+        </a>
+      </v-subheader>
+      <v-divider />
+      <v-list-item to="/ChatUser">
+        <v-list-item-avatar>
+          <v-avatar
+            size="36px"
+            color="deep-purple"
+          >
+            <span
+              class="white--text"
+            >
+              NU
+            </span>
+            <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+          </v-avatar>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            Name User
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <span
+              class="grey--text text--lighten-1"
+            >
+              Text Message
+            </span>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-action-text>
+            18:00
+          </v-list-item-action-text>
+          <v-avatar
+            color="deep-purple"
+            class="subheading white--text"
+            size="24"
+            v-text="1"
+          />
+        </v-list-item-action>
+      </v-list-item>
       <v-divider />
       <v-footer
         absolute
@@ -152,6 +237,11 @@ export default {
       'mdi-settings'
     ]
   }),
+  computed: {
+    Route () {
+      return this.$route
+    }
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['getDialogs', 'disconnect', 'getChatName']
@@ -200,7 +290,7 @@ export default {
         }
       })
         .then(res => {
-          this.dialogs_for_user = res.data.results
+          this.dialogs_for_user = res.data
           console.log(this.dialogs_for_user)
         })
     },
@@ -222,7 +312,7 @@ export default {
             }
           })
           .then(response => {
-            this.chatName = response.data[0].name
+            this.chatName = response.data.results[0].name
           })
       } else {
         this.chatName = undefined
