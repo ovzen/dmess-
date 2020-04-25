@@ -9,56 +9,81 @@
       color="#FFFFFF"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
-      <v-toolbar-title v-if="Route.params.id">
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title
-                class="title"
-              >
-                 {{ chatName }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                72 members or online/offline
-              </v-list-item-subtitle>
-            </v-list-item-content>
+      <v-toolbar-title
+        v-if="Route.params.id"
+      >
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img
+              src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"
+            />
+          </v-list-item-avatar>
 
-          </v-list-item>
-       
+          <v-list-item-content>
+            <v-list-item-title
+              class="title"
+            >
+              {{ chatName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              72 members or online/offline
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-toolbar-title>
+
       <v-spacer />
+
       <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
+        <v-icon>
+          mdi-magnify
+        </v-icon>
       </v-btn>
 
-      <v-menu offset-y min-width="128">
-        <template v-slot:activator="{ on }">
+      <v-menu
+        offset-y
+        min-width="128"
+      >
+        <template
+          v-slot:activator="{ on }"
+        >
           <v-btn
             icon
             v-on="on"
           >
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-icon>
+              mdi-dots-vertical
+            </v-icon>
           </v-btn>
         </template>
 
-        <v-list color="#FAFAFA">
+        <v-list
+          color="#FAFAFA"
+        >
           <v-list-item>
-            <v-list-item-title>Logout</v-list-item-title>
+            <v-list-item-title>
+              Logout
+            </v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goProfilePage()">
-            <v-list-item-title>My frofile</v-list-item-title>
+          <v-list-item
+            @click="goProfilePage()"
+          >
+            <v-list-item-title>
+              My frofile
+            </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>Button 3</v-list-item-title>
+            <v-list-item-title>
+              Button 3
+            </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>Button 4</v-list-item-title>
+            <v-list-item-title>
+              Button 4
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
-
     </v-app-bar>
 
     <v-navigation-drawer
@@ -100,7 +125,7 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-avatar>
-              <v-img :src="avatar"></v-img>
+              <v-img :src="avatar" />
             </v-list-item-avatar>
 
           </v-list-item>
@@ -108,13 +133,20 @@
       </v-card>
 
       <v-divider />
-      <v-subheader>
-        <a>
-          <u>
-            ALL CHATS
-          </u>
-        </a>
-      </v-subheader>
+      <v-col>
+        <v-text-field
+          v-model="search"
+          clearable
+          solo
+          background-color="grey lighten-2"
+          dense
+          flat
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          label="Search for dialogs"
+          style="border-radius:50px; max-width:450px;"
+        />
+      </v-col>
       <v-divider />
       <v-list-item to="/ChatUser">
         <v-list-item-avatar>
