@@ -21,16 +21,18 @@
                  {{ chatName }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                72 members or online/offline
+                online/offline
               </v-list-item-subtitle>
             </v-list-item-content>
 
           </v-list-item>
-       
       </v-toolbar-title>
       <v-spacer />
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon class="material-icons">collections_bookmark</v-icon>
       </v-btn>
 
       <v-menu offset-y min-width="128">
@@ -48,7 +50,7 @@
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goProfilePage()">
-            <v-list-item-title>My frofile</v-list-item-title>
+            <v-list-item-title>My profile</v-list-item-title>
           </v-list-item>
           <v-list-item>
             <v-list-item-title>Button 3</v-list-item-title>
@@ -99,8 +101,19 @@
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-avatar>
+            <v-list-item-avatar
+              v-if="avatar"
+            >
               <v-img :src="avatar"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-avatar
+              v-else
+              color="#FFFFFF"
+              class="justify-center"
+            >
+              <span class="indigo--text">
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
             </v-list-item-avatar>
 
           </v-list-item>
