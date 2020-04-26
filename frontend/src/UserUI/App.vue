@@ -10,30 +10,31 @@
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title
-                class="title"
-              >
-                 {{ chatName }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                72 members or online/offline
-              </v-list-item-subtitle>
-            </v-list-item-content>
-
-          </v-list-item>
-       
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg" />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title
+              class="title"
+            >
+              {{ chatName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              72 members or online/offline
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-toolbar-title>
       <v-spacer />
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-menu offset-y min-width="128">
+      <v-menu
+        offset-y
+        min-width="128"
+      >
         <template v-slot:activator="{ on }">
           <v-btn
             icon
@@ -58,11 +59,11 @@
           </v-list-item>
         </v-list>
       </v-menu>
-
     </v-app-bar>
 
     <v-navigation-drawer
       v-model="drawer"
+      class="navigation-bar"
       :width="$vuetify.breakpoint.width * 0.25"
       app
       permanent
@@ -100,23 +101,26 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-avatar>
-              <v-img :src="avatar"></v-img>
+              <v-img :src="avatar" />
             </v-list-item-avatar>
-
           </v-list-item>
         </v-list>
       </v-card>
 
       <v-divider />
-      <v-subheader>
-        <a>
-          <u>
-            ALL CHATS
-          </u>
-        </a>
-      </v-subheader>
-      <v-divider />
-      <v-list-item to="/ChatUser">
+      <v-text-field
+        rounded
+        single-line
+        clearable
+        filled
+        dense
+        prepend-inner-icon="mdi-magnify"
+        label="Search for dialogs"
+      />
+      <v-list-item
+        to="/ChatUser"
+        :ripple="{ class:'deep-purple--text' }"
+      >
         <v-list-item-avatar>
           <v-avatar
             size="36px"
@@ -145,15 +149,20 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
-          <v-list-item-action-text>
+          <v-list-item-action-text class="font-weight-medium">
             18:00
           </v-list-item-action-text>
           <v-avatar
             color="deep-purple"
             class="subheading white--text"
-            size="24"
-            v-text="1"
-          />
+            size="18"
+          >
+            <span
+              class="center caption font-weight-light"
+            >
+              1
+            </span>
+          </v-avatar>
         </v-list-item-action>
       </v-list-item>
       <v-divider />
@@ -333,6 +342,10 @@ export default {
 </script>
 
 <style lang="scss">
+.navigation-bar {
+  font-family: 'Roboto', sans-serif;
+}
+
 #app {
   color: #2c3e50;
   height: 100vh;
