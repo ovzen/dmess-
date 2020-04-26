@@ -165,6 +165,56 @@
           </v-avatar>
         </v-list-item-action>
       </v-list-item>
+      <v-list-item
+        v-for="dialog in dialogs_for_user"
+        :key="dialog"
+        :ripple="{ class:'deep-purple--text' }"
+        @click="openDialog(dialog.id)"
+      >
+        <v-list-item-avatar>
+          <v-avatar
+            size="36px"
+            color="deep-purple"
+          >
+            <span
+              class="white--text"
+            >
+              NU
+            </span>
+            <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+          </v-avatar>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ dialog.name }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <span
+              class="grey--text text--lighten-1"
+            >
+              {{ dialog.last_message.text }}
+            </span>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-action-text class="font-weight-medium">
+            {{ decodeTime(dialog.last_message.create_date) }}
+          </v-list-item-action-text>
+          <v-avatar
+            color="deep-purple"
+            class="subheading white--text"
+            size="18"
+          >
+            <!-- <span
+              class="center caption font-weight-light"
+            >
+              1
+            </span> -->
+          </v-avatar>
+        </v-list-item-action>
+      </v-list-item>
       <v-divider />
       <v-footer
         absolute
@@ -213,6 +263,8 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
+import moment from 'moment'
+
 Vue.use(VueCookie)
 export default {
   name: 'App',
@@ -263,6 +315,7 @@ export default {
     }
   },
   beforeCreate () {
+    this.dialogs_for_user = null
     if (this.$cookie.get('Authentication')) {
       this.user_id = this.$cookie.get('Authentication').user_id
     } else {
@@ -299,9 +352,34 @@ export default {
         }
       })
         .then(res => {
-          this.dialogs_for_user = res.data
+          this.dialogs_for_user = res.data.results
+          this.dialogs_there = true
           console.log(this.dialogs_for_user)
         })
+    },
+    formatDate (date) {
+      if (date) {
+        moment.locale('ru')
+        if (moment(date).isBefore(moment(), 'day')) {
+          return moment(String(date)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(date)).calendar()
+        }
+      }
+    },
+    decodeTime (item) {
+      if (item) {
+        let data = item.split(/\s*T\s*/)
+        let date = data[0].replace(/-/g, '.')
+        let time = item.split(/\s*T\s*/)[1].split(/\s*:\s*/)
+        let datetime = time[0] + ':' + time[1] + ' ' + date
+        moment.locale('ru')
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).calendar()
+        }
+      }
     },
     openDialog (dialogId) {
       this.$router.push({ name: 'Chat', params: { id: dialogId } })
