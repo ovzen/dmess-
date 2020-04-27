@@ -7,25 +7,29 @@
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg" />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title
-              class="title"
-            >
-              {{ chatName }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              72 members or online/offline
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                class="title"
+              >
+                 {{ chatName }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                online/offline
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+          </v-list-item>
       </v-toolbar-title>
       <v-spacer />
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon class="material-icons">collections_bookmark</v-icon>
       </v-btn>
 
       <v-menu
@@ -46,7 +50,7 @@
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goProfilePage()">
-            <v-list-item-title>My frofile</v-list-item-title>
+            <v-list-item-title>My profile</v-list-item-title>
           </v-list-item>
           <v-list-item>
             <v-list-item-title>Button 3</v-list-item-title>
@@ -97,9 +101,21 @@
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-avatar>
-              <v-img :src="avatar" />
+            <v-list-item-avatar
+              v-if="avatar"
+            >
+              <v-img :src="avatar"></v-img>
             </v-list-item-avatar>
+            <v-list-item-avatar
+              v-else
+              color="#FFFFFF"
+              class="justify-center"
+            >
+              <span class="indigo--text">
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
+            </v-list-item-avatar>
+
           </v-list-item>
         </v-list>
       </v-card>
