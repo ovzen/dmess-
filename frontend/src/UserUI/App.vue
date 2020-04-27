@@ -131,90 +131,44 @@
           </v-list-item>
         </v-list>
       </v-card>
-
       <v-divider />
-      <v-col>
-        <v-text-field
-          v-model="search"
-          clearable
-          solo
-          background-color="grey lighten-2"
-          dense
-          flat
-          hide-details
-          prepend-inner-icon="mdi-magnify"
-          label="Search for dialogs"
-          style="border-radius:50px; max-width:450px;"
-        />
-      </v-col>
-      <v-divider />
-      <v-list-item to="/ChatUser">
-        <v-list-item-avatar>
-          <v-avatar
-            size="36px"
-            color="deep-purple"
-          >
-            <span
-              class="white--text"
-            >
-              NU
-            </span>
-            <!--<v-img
-              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-            />-->
-          </v-avatar>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            Name User
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            <span
-              class="grey--text text--lighten-1"
-            >
-              Text Message
-            </span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-list-item-action-text>
-            18:00
-          </v-list-item-action-text>
-          <v-avatar
-            color="deep-purple"
-            class="subheading white--text"
-            size="24"
-            v-text="1"
-          />
-        </v-list-item-action>
-      </v-list-item>
-      <v-divider />
-      <v-footer
-        absolute
-        padless
+      <div
+        id="dynamic-component-demo"
       >
-        <v-btn
-          fab
-          color="#6202EE"
-          dark
-          top
-          right
+        <component
+          :is="currentTab.component"
+        />
+        <v-footer
           absolute
+          padless
         >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <v-card-actions>
           <v-btn
-            v-for="icon in iconsFooter"
-            :key="icon"
-            icon
+            fab
+            color="#6202EE"
+            dark
+            top
+            right
+            absolute
           >
-            <v-icon size="24px">
-              {{ icon }}
-            </v-icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
-        </v-card-actions>
-      </v-footer>
+          <v-card-actions>
+            <v-btn
+              v-for="tab in tabs"
+              :key="tab.name"
+              icon
+              :class="['tab-button', { active: currentTab.name === tab.name }]"
+              @:click="currentTab = tab"
+            >
+              <v-icon
+                size="24px"
+              >
+                {{ tab.name }}
+              </v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-footer>
+      </div>
     </v-navigation-drawer>
 
     <v-sheet
@@ -236,10 +190,33 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
+import chats from './components/chats'
+import profiles from './components/profiles'
 Vue.use(VueCookie)
+var tabs = [
+  {
+    name: 'mdi-account-circle',
+    component: {
+      template: '<chats />'
+    }
+  },
+  {
+    name: 'mdi-message-text',
+    component: {
+      template: '<div>Posts component</div>'
+    }
+  },
+  {
+    name: 'mdi-settings',
+    component: {
+      template: '<div>Archive component</div>'
+    }
+  }
+]
+
 export default {
-  name: 'App',
-  components: { SystemInfo },
+  el: '#dynamic-component-demo',
+  components: { SystemInfo, chats, profiles },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -262,6 +239,8 @@ export default {
     user_id: undefined,
     avatar: '',
     isOnline: false,
+    currentTab: tabs[0],
+    tabs: tabs,
     iconsFooter: [
       'mdi-account-circle',
       'mdi-message-text',
@@ -272,6 +251,9 @@ export default {
   computed: {
     Route () {
       return this.$route
+    },
+    currentTabComponent: function () {
+      return 'tab-' + this.currentTab.toLowerCase()
     }
   },
   watch: {
