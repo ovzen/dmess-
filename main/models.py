@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.db import models
+from picklefield.fields import PickledObjectField
 
 
 class UserProfile(models.Model):
@@ -33,6 +34,7 @@ class Dialog(models.Model):
     users = models.ManyToManyField(User)
     admin_only = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
+    user_dictionary = PickledObjectField(default=None)
 
     def __str__(self):
         return self.name

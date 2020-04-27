@@ -75,6 +75,8 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
         user = self.request.user
         return Dialog.objects.filter(users=user)
 
+    def create(self, request, *args, **kwargs):
+        pass
 
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """

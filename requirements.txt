@@ -34,3 +34,4 @@ Markdown==3.2.1
 # Other
 pytz==2019.3
 feedparser==5.2.1
+django-picklefield
