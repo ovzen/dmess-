@@ -127,7 +127,6 @@
             <v-list-item-avatar>
               <v-img :src="avatar" />
             </v-list-item-avatar>
-
           </v-list-item>
         </v-list>
       </v-card>
@@ -135,9 +134,7 @@
       <div
         id="dynamic-component-demo"
       >
-        <component
-          :is="currentTab.component"
-        />
+        <chats v-if="currentTab.name == 'mdi-message-text'" />
         <v-footer
           absolute
           padless
@@ -158,7 +155,7 @@
               :key="tab.name"
               icon
               :class="['tab-button', { active: currentTab.name === tab.name }]"
-              @:click="currentTab = tab"
+              @click="currentTab = tab"
             >
               <v-icon
                 size="24px"
@@ -251,9 +248,6 @@ export default {
   computed: {
     Route () {
       return this.$route
-    },
-    currentTabComponent: function () {
-      return 'tab-' + this.currentTab.toLowerCase()
     }
   },
   watch: {
