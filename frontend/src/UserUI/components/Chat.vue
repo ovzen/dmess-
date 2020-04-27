@@ -162,7 +162,7 @@ export default {
           id: this.messages.length,
           text: JSON.parse(data.data).message,
           user_detail: { username: JSON.parse(data.data).author },
-          create_date: JSON.parse(data.data).create_date.replace(/^"/, '')
+          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
         console.log(JSON.parse(data.data))
       }
@@ -195,12 +195,8 @@ export default {
         }
       }
     },
-    decodeTime (item) {
-      if (item) {
-        let data = item.split(/\s*T\s*/)
-        let date = data[0].replace(/-/g, '.')
-        let time = item.split(/\s*T\s*/)[1].split(/\s*:\s*/)
-        let datetime = time[0] + ':' + time[1] + ' ' + date
+    decodeTime (datetime) {
+      if (datetime) {
         moment.locale('ru')
         if (moment(datetime).isBefore(moment(), 'day')) {
           return moment(String(datetime)).format('DD.MM.YYYY')

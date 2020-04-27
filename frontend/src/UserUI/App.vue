@@ -2,33 +2,34 @@
   <v-app>
     <v-app-bar
       app
-      :value="!(alwaysOnDisplay || expandOnHover)"
-      collapse-on-scroll
-      scroll-target="#scrolling-techniques-6"
       height="80"
-      color="#FFFFFF"
+      color="background_white"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg" />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title
-              class="title"
-            >
-              {{ chatName }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              72 members or online/offline
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                class="title"
+              >
+                 {{ chatName }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                online/offline
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+          </v-list-item>
       </v-toolbar-title>
       <v-spacer />
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon class="material-icons">collections_bookmark</v-icon>
       </v-btn>
 
       <v-menu
@@ -44,12 +45,12 @@
           </v-btn>
         </template>
 
-        <v-list color="#FAFAFA">
+        <v-list color="background_white">
           <v-list-item>
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goProfilePage()">
-            <v-list-item-title>My frofile</v-list-item-title>
+            <v-list-item-title>My profile</v-list-item-title>
           </v-list-item>
           <v-list-item>
             <v-list-item-title>Button 3</v-list-item-title>
@@ -63,14 +64,14 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      class="navigation-bar"
-      :width="$vuetify.breakpoint.width * 0.25"
+      :width="($vuetify.breakpoint.width * 0.20 > 600 ? 600 : $vuetify.breakpoint.width * 0.20)"
       app
+      color="background_white"
       permanent
     >
       <v-card tile>
         <v-list
-          color="#6202EE"
+          color="basic"
           dark
           height="80"
           class="pt-1"
@@ -100,9 +101,21 @@
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-avatar>
-              <v-img :src="avatar" />
+            <v-list-item-avatar
+              v-if="avatar"
+            >
+              <v-img :src="avatar"></v-img>
             </v-list-item-avatar>
+            <v-list-item-avatar
+              v-else
+              color="#FFFFFF"
+              class="justify-center"
+            >
+              <span class="indigo--text">
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
+            </v-list-item-avatar>
+
           </v-list-item>
         </v-list>
       </v-card>
@@ -124,7 +137,7 @@
         <v-list-item-avatar>
           <v-avatar
             size="36px"
-            color="deep-purple"
+            color="basic"
           >
             <span
               class="white--text"
@@ -137,15 +150,11 @@
           </v-avatar>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>
+          <v-list-item-title style="color: #1F1E21">
             Name User
           </v-list-item-title>
-          <v-list-item-subtitle>
-            <span
-              class="grey--text text--lighten-1"
-            >
-              Text Message
-            </span>
+          <v-list-item-subtitle class="black_second--text">
+            Text Message
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -153,7 +162,7 @@
             18:00
           </v-list-item-action-text>
           <v-avatar
-            color="deep-purple"
+            color="basic"
             class="subheading white--text"
             size="18"
           >
@@ -219,10 +228,11 @@
       <v-footer
         absolute
         padless
+        style="height:54px"
       >
         <v-btn
           fab
-          color="#6202EE"
+          color="basic"
           dark
           top
           right
@@ -244,16 +254,12 @@
       </v-footer>
     </v-navigation-drawer>
 
-    <v-sheet
-      id="scrolling-techniques-6"
-      class="overflow-y-auto"
-      max-height="100vh"
-    >
-      <v-content>
+    <v-content class="background_main">
+      <v-container fluid>
         <router-view />
-      </v-content>
-      <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
-    </v-sheet>
+      </v-container>
+    </v-content>
+    <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
   </v-app>
 </template>
 
