@@ -15,7 +15,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
 
-
 User = get_user_model()
 
 
@@ -24,6 +23,7 @@ class CountModelMixin:
     """
     Add count action to ModelViewSet
     """
+
     @action(detail=False)
     def count(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -75,8 +75,7 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
         user = self.request.user
         return Dialog.objects.filter(users=user)
 
-    def create(self, request, *args, **kwargs):
-        pass
+
 
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """

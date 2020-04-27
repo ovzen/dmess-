@@ -7,7 +7,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from admin.models import Invite
 from main.models import Dialog, UserProfile, Message, Contact, WikiPage
 
-
 UserModel = get_user_model()
 
 
@@ -78,6 +77,20 @@ class DialogSerializer(serializers.ModelSerializer):
     last_message = MessageSerializer(read_only=True)
     users_detail = UserSerializer(source='users', many=True, read_only=True)
 
+    def create(self, validated_data):
+        dictionary = {}
+        users = validated_data['users']
+        for user in users:
+            dictionary[str(user.username)] = 0
+
+        dialog = Dialog.objects.create()
+        dialog.user_dictionary.add(dictionary)
+        dialog.users.add(validated_data['users'])
+        dialog.admin_only.add(validated_data['admin_only'])
+        dialog.name.add(validated_data['name'])
+        dialog.save()
+        return dialog
+
     class Meta:
         model = Dialog
         fields = '__all__'
@@ -101,7 +114,6 @@ class WikiPageSerializer(serializers.ModelSerializer):
         model = WikiPage
         fields = '__all__'
         read_only_fields = ['image']
-
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
