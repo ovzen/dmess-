@@ -29,7 +29,7 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon class="material-icons">collections_bookmark</v-icon>
+        <v-icon class="material-icons">mdi-book-multiple</v-icon>
       </v-btn>
 
       <v-menu
@@ -112,7 +112,7 @@
               class="justify-center"
             >
               <span class="indigo--text">
-                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+                {{ firstName[0] }}{{ lastName[0] }}
               </span>
             </v-list-item-avatar>
 
