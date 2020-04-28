@@ -1,36 +1,15 @@
 <template>
-  <v-container>
-    <div
-      class="text-left"
-    >
-      <v-card
-        shaped
-        max-width="460px"
-        class="float-right d-flex"
-      >
-        <v-card-text class="font-weight-black">
-          Text Message
-          <v-list-item-action-text
-            class="pl-5"
-          >
-            18:00
-          </v-list-item-action-text>
-        </v-card-text>
-      </v-card>
-    </div>
-    <v-container
-      class="d-flex"
-    >
+  <div>
+    <v-container>
       <div
         class="text-left"
       >
         <v-card
-          shaped
           max-width="460px"
-          class="d-flex"
-          color="pink lighten-5"
+          class="float-right d-flex"
+          style="border-radius: 20px;"
         >
-          <v-card-text class="font-weight-black">
+          <v-card-text class="text message_color--text">
             Text Message
             <v-list-item-action-text
               class="pl-5"
@@ -40,26 +19,58 @@
           </v-card-text>
         </v-card>
       </div>
-    </v-container>
-    <v-form>
-      <v-row>
-        <v-col
-          cols="12"
+      <v-container
+        class="d-flex"
+      >
+        <div
+          class="text-left"
         >
-          <v-text-field
-            v-model="message"
-            :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
-            :prepend-icon="icon"
-            solo
-            label="Message"
-            type="text"
-            @click:append-outer="sendMessage"
-            @click:prepend="changeIcon"
-          />
-        </v-col>
-      </v-row>
-    </v-form>
-  </v-container>
+          <v-card
+            style="border-radius: 20px;"
+            max-width="460px"
+            class="d-flex"
+            color="background_pink"
+          >
+            <v-card-text class="text message_color--text">
+              Text Message
+              <v-list-item-action-text
+                class="pl-5"
+              >
+                18:00
+              </v-list-item-action-text>
+            </v-card-text>
+          </v-card>
+        </div>
+      </v-container>
+    </v-container>
+    <v-footer
+      color="background_white"
+      absolute
+      padless
+      style="height:54px"
+    >
+      <v-form style="width:100%;">
+        <v-row>
+          <v-col
+            style="padding-bottom: 0px; padding-top: 0px; padding-left:20px; padding-right:20px"
+            cols="12"
+          >
+            <v-text-field
+              v-model="message"
+              dense
+              single-line
+              :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
+              :prepend-icon="icon"
+              label="Message"
+              type="text"
+              @click:append-outer="sendMessage"
+              @click:prepend="changeIcon"
+            />
+          </v-col>
+        </v-row>
+      </v-form>
+    </v-footer>
+  </div>
 </template>
 
 <script>
@@ -123,6 +134,13 @@ export default {
 .rounded-card{
     border-radius:50px;
 }
+.text{
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
 .container {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -143,8 +161,6 @@ export default {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  min-height: 10px;
-  max-width: 100%;
   position: relative;
 }
 </style>
