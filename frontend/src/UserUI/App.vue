@@ -25,7 +25,7 @@
           </v-list-item>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon>
+      <v-btn icon disabled>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon>
@@ -50,7 +50,7 @@
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goProfilePage()">
-            <v-list-item-title>My profile</v-list-item-title>
+            <v-list-item-title>Button 2</v-list-item-title>
           </v-list-item>
           <v-list-item>
             <v-list-item-title>Button 3</v-list-item-title>
