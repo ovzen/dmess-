@@ -38,7 +38,7 @@
         </v-list-item-title>
         <v-list-item-subtitle>
           <span
-            class="grey--text text--lighten-1"
+            style="color:#757575; font-size:115%;"
           >
             Text Message
           </span>

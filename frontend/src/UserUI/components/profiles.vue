@@ -38,7 +38,7 @@
         </v-list-item-title>
         <v-list-item-subtitle>
           <span
-            class="basic--text text--lighten-1"
+            class="basic--text text--lighten"
           >
             online
           </span>
