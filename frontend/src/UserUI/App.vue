@@ -2,11 +2,8 @@
   <v-app>
     <v-app-bar
       app
-      :value="!(alwaysOnDisplay || expandOnHover)"
-      collapse-on-scroll
-      scroll-target="#scrolling-techniques-6"
       height="80"
-      color="#FFFFFF"
+      color="background_white"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title
@@ -38,6 +35,9 @@
         <v-icon>
           mdi-magnify
         </v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon class="material-icons">mdi-book-multiple</v-icon>
       </v-btn>
 
       <v-menu
@@ -88,13 +88,14 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      :width="$vuetify.breakpoint.width * 0.25"
+      :width="($vuetify.breakpoint.width * 0.20 > 600 ? 600 : $vuetify.breakpoint.width * 0.20)"
       app
+      color="background_white"
       permanent
     >
       <v-card tile>
         <v-list
-          color="#6202EE"
+          color="basic"
           dark
           height="80"
           class="pt-1"
@@ -171,16 +172,12 @@
       </div>
     </v-navigation-drawer>
 
-    <v-sheet
-      id="scrolling-techniques-6"
-      class="overflow-y-auto"
-      max-height="100vh"
-    >
-      <v-content>
+    <v-content class="background_main">
+      <v-container fluid>
         <router-view />
-      </v-content>
-      <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
-    </v-sheet>
+      </v-container>
+    </v-content>
+    <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
   </v-app>
 </template>
 
