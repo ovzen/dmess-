@@ -20,7 +20,7 @@ class UserProfile(models.Model):
     )
     width_field = models.IntegerField(default=0)
     height_field = models.IntegerField(default=0)
-    bio = models.CharField(max_length=70, default="Hey there! I'm using dmess")
+    bio = models. CharField(max_length=70, default="Hey there! I'm using dmess")
     is_online = models.BooleanField(default=False)
 
 
