@@ -15,7 +15,6 @@
               src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"
             />
           </v-list-item-avatar>
-
           <v-list-item-content>
             <v-list-item-title
               class="title"
@@ -23,42 +22,38 @@
               {{ chatName }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              72 members or online/offline
+              online/offline
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-toolbar-title>
-
       <v-spacer />
-
       <v-btn icon>
-        <v-icon>
-          mdi-magnify
-        </v-icon>
+        <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon class="material-icons">mdi-book-multiple</v-icon>
+        <v-icon
+          class="material-icons"
+        >
+          mdi-book-multiple
+        </v-icon>
       </v-btn>
 
       <v-menu
         offset-y
         min-width="128"
       >
-        <template
-          v-slot:activator="{ on }"
-        >
+        <template v-slot:activator="{ on }">
           <v-btn
             icon
             v-on="on"
           >
-            <v-icon>
-              mdi-dots-vertical
-            </v-icon>
+            <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
 
         <v-list
-          color="#FAFAFA"
+          color="background_white"
         >
           <v-list-item>
             <v-list-item-title>
@@ -69,7 +64,7 @@
             @click="goProfilePage()"
           >
             <v-list-item-title>
-              My frofile
+              My profile
             </v-list-item-title>
           </v-list-item>
           <v-list-item>
@@ -125,8 +120,21 @@
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-avatar>
-              <v-img :src="avatar" />
+            <v-list-item-avatar
+              v-if="avatar"
+            >
+              <v-img
+                :src="avatar"
+              />
+            </v-list-item-avatar>
+            <v-list-item-avatar
+              v-else
+              color="#FFFFFF"
+              class="justify-center"
+            >
+              <span class="indigo--text">
+                {{ firstName[0] }}{{ lastName[0] }}
+              </span>
             </v-list-item-avatar>
           </v-list-item>
         </v-list>
@@ -172,12 +180,16 @@
       </div>
     </v-navigation-drawer>
 
-    <v-content class="background_main">
+    <v-content
+      class="background_main"
+    >
       <v-container fluid>
         <router-view />
       </v-container>
     </v-content>
-    <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
+    <SystemInfo
+      style="position: fixed; bottom: 0px; text-align: right;"
+    />
   </v-app>
 </template>
 
