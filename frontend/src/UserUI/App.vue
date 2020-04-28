@@ -136,6 +136,7 @@
       >
         <chats v-if="currentTab.name == 'mdi-message-text'" />
         <profiles v-if="currentTab.name == 'mdi-account-circle'" />
+        <settings v-if="currentTab.name == 'mdi-settings'" />
         <v-divider />
         <v-footer
           absolute
@@ -191,6 +192,7 @@ import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
 import chats from './components/chats'
 import profiles from './components/profiles'
+import settings from './components/settings'
 Vue.use(VueCookie)
 var tabs = [
   {
@@ -214,14 +216,14 @@ var tabs = [
   {
     name: 'mdi-settings',
     component: {
-      template: '<div>settings</div>'
+      template: '<settings />'
     }
   }
 ]
 
 export default {
   el: '#dynamic-component',
-  components: { SystemInfo, profiles, chats },
+  components: { SystemInfo, profiles, chats, settings },
   data: () => ({
     login: '',
     button: 'Войти',
