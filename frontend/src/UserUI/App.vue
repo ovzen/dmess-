@@ -112,7 +112,7 @@
               class="justify-center"
             >
               <span class="indigo--text">
-                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+                {{ firstName[0] }}{{ lastName[0] }}
               </span>
             </v-list-item-avatar>
 
