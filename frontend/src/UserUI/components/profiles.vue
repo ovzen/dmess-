@@ -11,7 +11,7 @@
         flat
         hide-details
         prepend-inner-icon="mdi-magnify"
-        label="Search for dialogs"
+        label="Search for users"
         style="border-radius:50px; max-width:450px;"
       />
     </v-col>
@@ -20,7 +20,7 @@
       <v-list-item-avatar>
         <v-avatar
           size="36px"
-          color="deep-purple"
+          color="basic"
         >
           <span
             class="white--text"
@@ -38,23 +38,12 @@
         </v-list-item-title>
         <v-list-item-subtitle>
           <span
-            class="grey--text text--lighten-1"
+            class="basic--text text--lighten-1"
           >
-            Text Message
+            online
           </span>
         </v-list-item-subtitle>
       </v-list-item-content>
-      <v-list-item-action>
-        <v-list-item-action-text>
-          18:00
-        </v-list-item-action-text>
-        <v-avatar
-          color="deep-purple"
-          class="subheading white--text"
-          size="24"
-          v-text="1"
-        />
-      </v-list-item-action>
     </v-list-item>
   </div>
 </template>
