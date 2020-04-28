@@ -34,7 +34,7 @@ class Dialog(models.Model):
     users = models.ManyToManyField(User)
     admin_only = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
-    user_dictionary = PickledObjectField(default=None)
+    user_dictionary = PickledObjectField(default=None, null=True)
 
     def __str__(self):
         return self.name

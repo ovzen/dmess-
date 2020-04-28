@@ -83,12 +83,14 @@ class DialogSerializer(serializers.ModelSerializer):
         for user in users:
             dictionary[str(user.username)] = 0
 
-        dialog = Dialog.objects.create()
-        dialog.user_dictionary.add(dictionary)
+        dialog = Dialog.objects.create(
+            name=validated_data['name'],
+            admin_only=validated_data['admin_only'],
+        )
         dialog.users.add(validated_data['users'])
-        dialog.admin_only.add(validated_data['admin_only'])
-        dialog.name.add(validated_data['name'])
+        dialog.user_dictionary.add(dictionary)
         dialog.save()
+
         return dialog
 
     class Meta:
