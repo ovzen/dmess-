@@ -20,7 +20,7 @@
       <v-list-item-avatar>
         <v-avatar
           size="36px"
-          color="deep-purple"
+          color="basic"
         >
           <span
             class="white--text"
@@ -49,7 +49,7 @@
           18:00
         </v-list-item-action-text>
         <v-avatar
-          color="deep-purple"
+          color="basic"
           class="subheading white--text"
           size="24"
           v-text="1"

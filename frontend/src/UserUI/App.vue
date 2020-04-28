@@ -132,16 +132,18 @@
       </v-card>
       <v-divider />
       <div
-        id="dynamic-component-demo"
+        id="dynamic-component"
       >
         <chats v-if="currentTab.name == 'mdi-message-text'" />
+        <profiles v-if="currentTab.name == 'mdi-account-circle'" />
+        <v-divider />
         <v-footer
           absolute
           padless
         >
           <v-btn
             fab
-            color="#6202EE"
+            color="basic"
             dark
             top
             right
@@ -194,26 +196,32 @@ var tabs = [
   {
     name: 'mdi-account-circle',
     component: {
-      template: '<chats />'
+      template: '<profiles />'
     }
   },
   {
     name: 'mdi-message-text',
     component: {
-      template: '<div>Posts component</div>'
+      template: '<chats />'
+    }
+  },
+  {
+    name: 'mdi-room-service',
+    component: {
+      template: ''
     }
   },
   {
     name: 'mdi-settings',
     component: {
-      template: '<div>Archive component</div>'
+      template: '<div>settings</div>'
     }
   }
 ]
 
 export default {
-  el: '#dynamic-component-demo',
-  components: { SystemInfo, chats, profiles },
+  el: '#dynamic-component',
+  components: { SystemInfo, profiles, chats },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -344,5 +352,8 @@ export default {
 #app {
   color: #2c3e50;
   height: 100vh;
+  .active {
+  color: #6202EE
+}
 }
 </style>
