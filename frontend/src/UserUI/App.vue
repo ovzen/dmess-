@@ -112,7 +112,7 @@
               class="justify-center"
             >
               <span class="indigo--text">
-                {{ firstName[0] }}{{ lastName[0] }}
+                {{ firstName }}{{ lastName }}
               </span>
             </v-list-item-avatar>
 
