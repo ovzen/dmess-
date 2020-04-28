@@ -151,7 +151,7 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title style="color: #1F1E21">
-            Name User
+            Name User_
           </v-list-item-title>
           <v-list-item-subtitle class="black_second--text">
             Text Message
