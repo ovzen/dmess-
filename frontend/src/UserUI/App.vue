@@ -7,22 +7,22 @@
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title
-                class="title"
-              >
-                 {{ chatName }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                online/offline
-              </v-list-item-subtitle>
-            </v-list-item-content>
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title
+              class="title"
+            >
+              {{ chatName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              online/offline
+            </v-list-item-subtitle>
+          </v-list-item-content>
 
-          </v-list-item>
+        </v-list-item>
       </v-toolbar-title>
       <v-spacer />
       <v-btn icon disabled>
@@ -109,10 +109,19 @@
             <v-list-item-avatar
               v-else
               color="#FFFFFF"
-              class="justify-center"
+              class="justify-center indigo--text"
             >
-              <span class="indigo--text">
-                {{ firstName }}{{ lastName }}
+              <span v-if="(firstName && lastName)">
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
+              <span v-else-if="(firstName)">
+                {{ firstName[0].toUpperCase() }}
+              </span>
+              <span v-else-if="(lastName)">
+                {{ lastName[0].toUpperCase() }}
+              </span>
+              <span v-else>
+                {{ username[0].toUpperCase() }}
               </span>
             </v-list-item-avatar>
 
