@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
+    <v-app-bar v-if="Route.name != 'Main'"
       app
       height="80"
       color="background_white"
@@ -64,7 +64,7 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      :width="($vuetify.breakpoint.width * 0.20 > 600 ? 600 : $vuetify.breakpoint.width * 0.20)"
+      :width="($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225)"
       app
       color="background_white"
       permanent
@@ -181,7 +181,7 @@
       <v-footer
         absolute
         padless
-        style="height:54px"
+        style="height:54px; background :#ffffff;"
       >
         <v-btn
           fab
