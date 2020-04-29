@@ -36,10 +36,11 @@
                         required
                         outlined
                         :error-messages="error_text"
-                        @keyup.enter="auth(login, password)"
+                        @keyup.enter="FocusOn('password')""
                       />
 
                       <v-text-field
+                      ref="password"
                         v-model="password"
                         :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="vanish ? 'text' : 'password'"
@@ -148,7 +149,12 @@ export default {
           console.log(jwt.decode(this.$cookie.get('Authentication')))
           window.location.href = this.next
         })
-    }
+    },
+    FocusOn(value){
+          this.$nextTick(() =>{
+            this.$refs[value].focus()
+          })
+      }
   }
 }
 </script>
