@@ -363,22 +363,8 @@ export default {
           console.log(this.dialogs_for_user)
         })
     },
-    formatDate (date) {
-      if (date) {
-        moment.locale('ru')
-        if (moment(date).isBefore(moment(), 'day')) {
-          return moment(String(date)).format('DD.MM.YYYY')
-        } else {
-          return moment(String(date)).calendar()
-        }
-      }
-    },
-    decodeTime (item) {
-      if (item) {
-        let data = item.split(/\s*T\s*/)
-        let date = data[0].replace(/-/g, '.')
-        let time = item.split(/\s*T\s*/)[1].split(/\s*:\s*/)
-        let datetime = time[0] + ':' + time[1] + ' ' + date
+    decodeTime (datetime) {
+      if (datetime) {
         moment.locale('ru')
         if (moment(datetime).isBefore(moment(), 'day')) {
           return moment(String(datetime)).format('DD.MM.YYYY')
