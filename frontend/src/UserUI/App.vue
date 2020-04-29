@@ -6,14 +6,10 @@
       color="background_white"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
-      <v-toolbar-title
-        v-if="Route.params.id"
-      >
+      <v-toolbar-title v-if="Route.params.id">
         <v-list-item>
           <v-list-item-avatar>
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"
-            />
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg" />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -32,9 +28,7 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon
-          class="material-icons"
-        >
+        <v-icon class="material-icons">
           mdi-book-multiple
         </v-icon>
       </v-btn>
@@ -123,9 +117,7 @@
             <v-list-item-avatar
               v-if="avatar"
             >
-              <v-img
-                :src="avatar"
-              />
+              <v-img :src="avatar" />
             </v-list-item-avatar>
             <v-list-item-avatar
               v-else
@@ -156,15 +148,123 @@
           </v-list-item>
         </v-list>
       </v-card>
+
       <v-divider />
-      <div
-        id="dynamic-component"
+      <v-text-field
+        rounded
+        single-line
+        clearable
+        filled
+        dense
+        prepend-inner-icon="mdi-magnify"
+        label="Search for dialogs"
+      />
+      <v-list-item
+        to="/ChatUser"
+        :ripple="{ class:'deep-purple--text' }"
       >
-        <chats v-if="currentTab.name == 'mdi-message-text'" />
-        <profiles v-if="currentTab.name == 'mdi-account-circle'" />
-        <settings v-if="currentTab.name == 'mdi-settings'" />
-        <v-divider />
-        <v-footer
+        <v-list-item-avatar>
+          <v-avatar
+            size="36px"
+            color="basic"
+          >
+            <span
+              class="white--text"
+            >
+              NU
+            </span>
+            <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+          </v-avatar>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title style="color: #1F1E21">
+            Name User_
+          </v-list-item-title>
+          <v-list-item-subtitle class="black_second--text">
+            Text Message
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-action-text class="font-weight-medium">
+            18:00
+          </v-list-item-action-text>
+          <v-avatar
+            color="basic"
+            class="subheading white--text"
+            size="18"
+          >
+            <span
+              class="center caption font-weight-light"
+            >
+              1
+            </span>
+          </v-avatar>
+        </v-list-item-action>
+      </v-list-item>
+      <v-list-item
+        v-for="dialog in dialogs_for_user"
+        :key="dialog"
+        :ripple="{ class:'deep-purple--text' }"
+        @click="openDialog(dialog.id)"
+      >
+        <v-list-item-avatar>
+          <v-avatar
+            size="36px"
+            color="deep-purple"
+          >
+            <span
+              class="white--text"
+            >
+              NU
+            </span>
+            <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+          </v-avatar>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ dialog.name }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <span
+              class="grey--text text--lighten-1"
+            >
+              {{ dialog.last_message.text }}
+            </span>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-action-text class="font-weight-medium">
+            {{ decodeTime(dialog.last_message.create_date) }}
+          </v-list-item-action-text>
+          <v-avatar
+            color="deep-purple"
+            class="subheading white--text"
+            size="18"
+          >
+            <!-- <span
+              class="center caption font-weight-light"
+            >
+              1
+            </span> -->
+          </v-avatar>
+        </v-list-item-action>
+      </v-list-item>
+      <v-divider />
+      <v-footer
+        absolute
+        padless
+        style="height:54px"
+      >
+        <v-btn
+          fab
+          color="basic"
+          dark
+          top
+          right
           absolute
           padless
         >
@@ -216,9 +316,8 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
-import chats from './components/chats'
-import profiles from './components/profiles'
-import settings from './components/settings'
+import moment from 'moment'
+
 Vue.use(VueCookie)
 var tabs = [
   {
@@ -288,6 +387,7 @@ export default {
     }
   },
   beforeCreate () {
+    this.dialogs_for_user = null
     if (this.$cookie.get('Authentication')) {
       this.user_id = this.$cookie.get('Authentication').user_id
     } else {
@@ -324,9 +424,20 @@ export default {
         }
       })
         .then(res => {
-          this.dialogs_for_user = res.data
+          this.dialogs_for_user = res.data.results
+          this.dialogs_there = true
           console.log(this.dialogs_for_user)
         })
+    },
+    decodeTime (datetime) {
+      if (datetime) {
+        moment.locale('ru')
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).calendar()
+        }
+      }
     },
     openDialog (dialogId) {
       this.$router.push({ name: 'Chat', params: { id: dialogId } })
@@ -367,6 +478,10 @@ export default {
 </script>
 
 <style lang="scss">
+.navigation-bar {
+  font-family: 'Roboto', sans-serif;
+}
+
 #app {
   color: #2c3e50;
   height: 100vh;
