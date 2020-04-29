@@ -26,10 +26,10 @@
             <v-list-item-title
               class="headline basic--text mb-1"
             >
-              + 45
+              {{ dashboardStats.todayRegistrations }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              last updated 3 minutes ago
+              last updated {{ minutes_went }}
             </v-list-item-subtitle>
           </v-list-item-content>
 
@@ -63,10 +63,10 @@
             <v-list-item-title
               class="headline basic--text mb-1"
             >
-              + 2542
+              {{ dashboardStats.todayMessages }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              last updated 3 minutes ago
+              last updated {{ minutes_went }}
             </v-list-item-subtitle>
           </v-list-item-content>
 
@@ -100,10 +100,10 @@
             <v-list-item-title
               class="headline basic--text mb-1"
             >
-              215
+              {{ dashboardStats.currentlyOnline }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              last updated 3 minutes ago
+              last updated {{ minutes_went }}
             </v-list-item-subtitle>
           </v-list-item-content>
 
@@ -207,14 +207,14 @@
               color="white"
               x-large
             >
-              mdi-account-plus-outline
+              mdi-cards-outline
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="display-2 basic--text text-right mb-1"
             >
-              75
+              {{ gitlabMetrics.openedIssues }}
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
               Opened issues on gitlab
@@ -238,17 +238,17 @@
               color="white"
               x-large
             >
-              mdi-account-plus-outline
+              mdi-call-merge
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="display-2 basic--text text-right mb-1"
             >
-              75
+              {{ gitlabMetrics.openedMergeRequests }}
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
-              Opened issues on gitlab
+              Opened merge requests on gitlab
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -269,17 +269,17 @@
               color="white"
               x-large
             >
-              mdi-account-plus-outline
+              mdi-call-split
             </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="display-2 basic--text text-right mb-1"
             >
-              75
+              {{ this.gitlabMetrics.currentBranches }}
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
-              Opened issues on gitlab
+              Current branches on gitlab
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -289,6 +289,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import moment from 'moment'
 export default {
   name: 'Dashboard',
   data: () => ({
@@ -325,9 +327,23 @@ export default {
         LastActivity: '2020-03-10 13:53:19.368414'
       }
     ],
-    ws: new WebSocket('ws://' + window.location.host + '/ws/chat/system/')
+    ws: new WebSocket('ws://' + window.location.host + '/ws/chat/system/'),
+    dashboardStats: {
+      currentlyOnline: undefined,
+      todayRegistration: undefined,
+      todayMessages: undefined
+    },
+    gitlabMetrics: {
+      openedIssues: undefined,
+      openedMergeRequests: undefined,
+      currentBranches: undefined
+    },
+    initial_time: moment(),
+    minutes_went: moment().fromNow(),
   }),
   created () {
+    this.getGitlabMetrics()
+    this.getDashboardStatistics()
     window.addEventListener('resize', this.updateWidthOfElements)
     this.ContainerWidth = document.getElementById('Container').offsetWidth
   },
@@ -335,6 +351,44 @@ export default {
     window.removeEventListener('resize', this.updateWidthOfElements)
   },
   methods: {
+    startInterval: function () {
+      setInterval(() => {
+          this.minutes_went = this.initial_time.fromNow()
+        }, 60000);
+      },
+    getGitlabMetrics () {
+      const instance = axios.create({
+        timeout: 2000,
+        headers: { 'Authorization': 'Bearer q_CTeYuyhchyiXxiRVBS' }
+      })
+      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/issues_statistics')
+        .then(res => {
+          this.gitlabMetrics.openedIssues = res.data.statistics.counts.opened
+        })
+      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/merge_requests?state=opened')
+        .then(res => {
+          this.gitlabMetrics.openedMergeRequests = res.data.length
+        })
+      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/repository/branches')
+        .then(res => {
+          this.gitlabMetrics.currentBranches = res.data.length
+        })
+      this.startInterval()
+    },
+    getDashboardStatistics () {
+      axios.get('/api/admin/users/stat/')
+        .then(res => {
+          this.dashboardStats.currentlyOnline = res.data.count
+        })
+      axios.get('/api/admin/register/stat/')
+        .then(res => {
+          this.dashboardStats.todayRegistrations = res.data.count
+        })
+      axios.get('/api/messages/count/')
+      .then(res => {
+        this.dashboardStats.todayMessages = res.data.count
+        })
+    },
     SendMessage (Message, type) {
       this.ws.send(JSON.stringify({ message: Message, type: type }))
     },
