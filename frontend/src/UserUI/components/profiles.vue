@@ -3,7 +3,6 @@
     <v-divider />
     <v-col>
       <v-text-field
-        v-model="search"
         clearable
         solo
         background-color="grey lighten-2"
@@ -50,7 +49,7 @@
 
 <script>
 export default {
-  name: 'Example',
+  name: 'Profiles',
   data: () => ({
   })
 }
