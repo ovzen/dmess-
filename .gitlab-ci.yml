@@ -24,4 +24,4 @@ production:
 
   script:
     - echo "Deploying to production server"
-    - ssh dmess@d-messenger.ml "uname -a"
+    - ssh dmess:$DMESS_USER_PASS@d-messenger.ml "uname -a"
