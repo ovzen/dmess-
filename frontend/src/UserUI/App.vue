@@ -1,35 +1,35 @@
 <template>
   <v-app>
-    <v-app-bar
+    <v-app-bar v-if="Route.name != 'Main'"
       app
       height="80"
       color="background_white"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title v-if="Route.params.id">
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title
-                class="title"
-              >
-                 {{ chatName }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                online/offline
-              </v-list-item-subtitle>
-            </v-list-item-content>
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title
+              class="title"
+            >
+              {{ chatName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              online/offline
+            </v-list-item-subtitle>
+          </v-list-item-content>
 
-          </v-list-item>
+        </v-list-item>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon>
+      <v-btn icon disabled>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon class="material-icons">mdi-book-multiple</v-icon>
+        <v-icon>mdi-book-multiple</v-icon>
       </v-btn>
 
       <v-menu
@@ -50,7 +50,7 @@
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goProfilePage()">
-            <v-list-item-title>My profile</v-list-item-title>
+            <v-list-item-title>Button 2</v-list-item-title>
           </v-list-item>
           <v-list-item>
             <v-list-item-title>Button 3</v-list-item-title>
@@ -64,7 +64,7 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      :width="($vuetify.breakpoint.width * 0.20 > 600 ? 600 : $vuetify.breakpoint.width * 0.20)"
+      :width="($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225)"
       app
       color="background_white"
       permanent
@@ -109,10 +109,19 @@
             <v-list-item-avatar
               v-else
               color="#FFFFFF"
-              class="justify-center"
+              class="justify-center indigo--text"
             >
-              <span class="indigo--text">
-                {{ firstName[0] }}{{ lastName[0] }}
+              <span v-if="(firstName && lastName)">
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
+              <span v-else-if="(firstName)">
+                {{ firstName[0].toUpperCase() }}
+              </span>
+              <span v-else-if="(lastName)">
+                {{ lastName[0].toUpperCase() }}
+              </span>
+              <span v-else>
+                {{ username[0].toUpperCase() }}
               </span>
             </v-list-item-avatar>
 
@@ -172,7 +181,7 @@
       <v-footer
         absolute
         padless
-        style="height:54px"
+        style="height:54px; background :#ffffff;"
       >
         <v-btn
           fab
