@@ -36,6 +36,7 @@
                         required
                         outlined
                         :error-messages="error_text"
+                        @keyup.enter="auth(login, password)"
                       />
 
                       <v-text-field
@@ -48,6 +49,7 @@
                         required
                         outlined
                         @click:append="vanish = !vanish"
+                        @keyup.enter="auth(login, password)"
                       />
                     </v-col>
                   </v-row>
@@ -86,6 +88,7 @@
     </v-flex>
   </v-container>
 </template>
+
 
 <script>
 import api from '../api'

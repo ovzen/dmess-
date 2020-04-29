@@ -1,0 +1,13 @@
+<script>
+var enter = document.getElementById("sign_in")
+
+input.addEventListener("keyup", function(event))
+{
+  if(event.KeyCode === 20)
+  {
+    event.preventDefault();
+    document.getElementById("sign_in").click();
+
+  }
+}
+</script>
