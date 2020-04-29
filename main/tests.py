@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
-from main.models import Contact, Dialog, Message
 
 
 class WikiTestCase(APITestCase):
@@ -36,10 +35,8 @@ class ContactTestCase(APITestCase):
 
     def setUp(self):
         user = User.objects.get(id=1)
-        user1 = User.objects.get(id=2)
         self.client = APIClient()
         self.client.force_authenticate(user=user)
-        Contact.objects.create(user=user, contact=user1)
 
     def test_get_contacts_list(self):
         url = reverse('contact-list')
