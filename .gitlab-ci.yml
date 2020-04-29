@@ -10,12 +10,8 @@ production:
     - apt-get install -qq git
     - 'which ssh-agent || ( apt-get install -qq openssh-client )'
     - eval $(ssh-agent -s)
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    - echo "$SSH_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
-    - chmod 600 ~/.ssh/id_rsa
-    - chmod 644 ~/.ssh/id_rsa.pub
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
   environment:
@@ -25,8 +21,10 @@ production:
   script:
     - echo "Deploying to production server"
     - ssh dmess@d-messenger.ml "uname -a"
-    - ssh dmess@d-messenger.ml "cd dmess && git checkout master && git pull"
+    - ssh dmess@d-messenger.ml "cd dmess && git checkout master && git stash && git pull"
     - ssh dmess@d-messenger.ml "cd dmess && source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate"
-    - ssh dmess@d-messenger.ml "cd dmess/frontend && npm install && npm build && cp -R dist/* ~/dmess/templates"
+    - ssh dmess@d-messenger.ml "cd dmess/frontend && npm install && npm run build && cd .. && cp -R frontend/dist/* templates/"
     - ssh dmess@d-messenger.ml "cd dmess && source venv/bin/activate && python manage.py collectstatic"
-    - ssh dmess@d-messenger.ml "celery-restart && daphne-restart && nginx-restart"
+    - ssh dmess@d-messenger.ml "sudo /bin/systemctl restart dmess_daphne"
+    - ssh dmess@d-messenger.ml "sudo /bin/systemctl restart dmess_celery"
+    - ssh dmess@d-messenger.ml "sudo /bin/systemctl restart nginx"
