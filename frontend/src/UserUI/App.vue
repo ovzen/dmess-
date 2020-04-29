@@ -132,8 +132,25 @@
               color="#FFFFFF"
               class="justify-center"
             >
-              <span class="indigo--text">
-                {{ firstName[0] }}{{ lastName[0] }}
+              <span
+                v-if="(firstName && lastName)"
+              >
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
+              <span
+                v-else-if="(firstName)"
+              >
+                {{ firstName[0].toUpperCase() }}
+              </span>
+              <span
+                v-else-if="(lastName)"
+              >
+                {{ lastName[0].toUpperCase() }}
+              </span>
+              <span
+                v-else
+              >
+                {{ username[0].toUpperCase() }}
               </span>
             </v-list-item-avatar>
           </v-list-item>
