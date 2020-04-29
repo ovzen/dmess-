@@ -61,7 +61,14 @@
     <router-link to="/chat/1">
       Перейти к chat
     </router-link>
-    <h1 class="main_smile text_second--text">¯\_(^ ‿ ^)\</h1>
+    <div class="main">
+      <h1 class="main_smile">
+        ¯\_(^ ‿ ^)\
+      </h1>
+      <span class="main_smile_text">
+        select a dialog to start messaging
+      </span>
+    </div>
   </v-container>
 </template>
 
@@ -160,14 +167,36 @@ export default {
 }
 </script>
 <style lang="scss">
+.main {
+  margin:auto;
+  position: fixed;
+  top:44%;
+  left:50%;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
 .main_smile {
+  margin-bottom: 32px;
+  margin-left: -36px;
   font-family: Roboto;
   font-style: normal;
   font-weight: 300;
   font-size: 96px;
   line-height: 112px;
   /* identical to box height */
-  text-align: center;
   letter-spacing: -1.5px;
+  color: #969696;
+}
+.main_smile_text {
+  margin-top: 32px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+  color: #969696;
 }
 </style>
