@@ -46,18 +46,30 @@
           </v-btn>
         </template>
 
-        <v-list color="background_white">
+        <v-list
+          color="background_white"
+        >
           <v-list-item>
-            <v-list-item-title>Logout</v-list-item-title>
+            <v-list-item-title>
+              Logout
+            </v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goProfilePage()">
-            <v-list-item-title>My profile</v-list-item-title>
+          <v-list-item
+            @click="goProfilePage()"
+          >
+            <v-list-item-title>
+              My profile
+            </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>Button 3</v-list-item-title>
+            <v-list-item-title>
+              Button 3
+            </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>Button 4</v-list-item-title>
+            <v-list-item-title>
+              Button 4
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -112,8 +124,25 @@
               color="#FFFFFF"
               class="justify-center"
             >
-              <span class="indigo--text">
-                {{ firstName[0] }}{{ lastName[0] }}
+              <span
+                v-if="(firstName && lastName)"
+              >
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
+              <span
+                v-else-if="(firstName)"
+              >
+                {{ firstName[0].toUpperCase() }}
+              </span>
+              <span
+                v-else-if="(lastName)"
+              >
+                {{ lastName[0].toUpperCase() }}
+              </span>
+              <span
+                v-else
+              >
+                {{ username[0].toUpperCase() }}
               </span>
             </v-list-item-avatar>
           </v-list-item>
@@ -237,29 +266,47 @@
           top
           right
           absolute
+          padless
         >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <v-card-actions>
           <v-btn
-            v-for="icon in iconsFooter"
-            :key="icon"
-            icon
+            fab
+            color="basic"
+            dark
+            top
+            right
+            absolute
           >
-            <v-icon size="24px">
-              {{ icon }}
-            </v-icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
-        </v-card-actions>
-      </v-footer>
+          <v-card-actions>
+            <v-btn
+              v-for="tab in tabs"
+              :key="tab.name"
+              icon
+              :class="['tab-button', { active: currentTab.name === tab.name }]"
+              @click="currentTab = tab"
+            >
+              <v-icon
+                size="24px"
+              >
+                {{ tab.name }}
+              </v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-footer>
+      </div>
     </v-navigation-drawer>
 
-    <v-content class="background_main">
+    <v-content
+      class="background_main"
+    >
       <v-container fluid>
         <router-view />
       </v-container>
     </v-content>
-    <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
+    <SystemInfo
+      style="position: fixed; bottom: 0px; text-align: right;"
+    />
   </v-app>
 </template>
 
@@ -272,9 +319,32 @@ import SystemInfo from './components/SystemInfo'
 import moment from 'moment'
 
 Vue.use(VueCookie)
+var tabs = [
+  {
+    name: 'mdi-account-circle',
+    component: {
+    }
+  },
+  {
+    name: 'mdi-message-text',
+    component: {
+    }
+  },
+  {
+    name: 'mdi-room-service',
+    component: {
+    }
+  },
+  {
+    name: 'mdi-settings',
+    component: {
+    }
+  }
+]
+
 export default {
-  name: 'App',
-  components: { SystemInfo },
+  new: '#dynamic-component',
+  components: { SystemInfo, profiles, chats, settings },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -297,12 +367,8 @@ export default {
     user_id: undefined,
     avatar: '',
     isOnline: false,
-    iconsFooter: [
-      'mdi-account-circle',
-      'mdi-message-text',
-      'mdi-room-service',
-      'mdi-settings'
-    ]
+    currentTab: tabs[0],
+    tabs: tabs
   }),
   computed: {
     Route () {
@@ -419,5 +485,8 @@ export default {
 #app {
   color: #2c3e50;
   height: 100vh;
+  .active {
+  color: #6202EE
+}
 }
 </style>
