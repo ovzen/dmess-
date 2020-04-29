@@ -8,6 +8,7 @@
         background-color="grey lighten-2"
         dense
         flat
+        color="basic"
         hide-details
         prepend-inner-icon="mdi-magnify"
         label="Search for users"

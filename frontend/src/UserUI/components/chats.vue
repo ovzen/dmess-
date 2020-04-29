@@ -5,6 +5,7 @@
       <v-text-field
         clearable
         solo
+        color="basic"
         background-color="grey lighten-2"
         dense
         flat
