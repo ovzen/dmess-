@@ -1,11 +1,12 @@
 <template>
   <v-app>
-    <v-app-bar
+    <v-app-bar v-if="Route.name != 'Main'"
       app
       height="80"
       color="background_white"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
+<<<<<<< HEAD
       <v-toolbar-title
         v-if="Route.params.id"
       >
@@ -14,6 +15,12 @@
             <v-img
               src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"
             />
+=======
+      <v-toolbar-title v-if="Route.params.id">
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+>>>>>>> 12e444609c909ca159094a4c7f292259b7b64bfa
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -25,18 +32,26 @@
               online/offline
             </v-list-item-subtitle>
           </v-list-item-content>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12e444609c909ca159094a4c7f292259b7b64bfa
         </v-list-item>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon>
+      <v-btn icon disabled>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon>
+<<<<<<< HEAD
         <v-icon
           class="material-icons"
         >
           mdi-book-multiple
         </v-icon>
+=======
+        <v-icon>mdi-book-multiple</v-icon>
+>>>>>>> 12e444609c909ca159094a4c7f292259b7b64bfa
       </v-btn>
 
       <v-menu
@@ -60,12 +75,17 @@
               Logout
             </v-list-item-title>
           </v-list-item>
+<<<<<<< HEAD
           <v-list-item
             @click="goProfilePage()"
           >
             <v-list-item-title>
               My profile
             </v-list-item-title>
+=======
+          <v-list-item @click="goProfilePage()">
+            <v-list-item-title>Button 2</v-list-item-title>
+>>>>>>> 12e444609c909ca159094a4c7f292259b7b64bfa
           </v-list-item>
           <v-list-item>
             <v-list-item-title>
@@ -83,7 +103,7 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      :width="($vuetify.breakpoint.width * 0.20 > 600 ? 600 : $vuetify.breakpoint.width * 0.20)"
+      :width="($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225)"
       app
       color="background_white"
       permanent
@@ -130,10 +150,19 @@
             <v-list-item-avatar
               v-else
               color="#FFFFFF"
-              class="justify-center"
+              class="justify-center indigo--text"
             >
-              <span class="indigo--text">
-                {{ firstName[0] }}{{ lastName[0] }}
+              <span v-if="(firstName && lastName)">
+                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+              </span>
+              <span v-else-if="(firstName)">
+                {{ firstName[0].toUpperCase() }}
+              </span>
+              <span v-else-if="(lastName)">
+                {{ lastName[0].toUpperCase() }}
+              </span>
+              <span v-else>
+                {{ username[0].toUpperCase() }}
               </span>
             </v-list-item-avatar>
           </v-list-item>
@@ -143,11 +172,61 @@
       <div
         id="dynamic-component"
       >
+<<<<<<< HEAD
         <chats v-if="currentTab.name == 'mdi-message-text'" />
         <profiles v-if="currentTab.name == 'mdi-account-circle'" />
         <settings v-if="currentTab.name == 'mdi-settings'" />
         <v-divider />
         <v-footer
+=======
+        <v-list-item-avatar>
+          <v-avatar
+            size="36px"
+            color="basic"
+          >
+            <span
+              class="white--text"
+            >
+              NU
+            </span>
+            <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+          </v-avatar>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title style="color: #1F1E21">
+            Name User
+          </v-list-item-title>
+          <v-list-item-subtitle class="black_second--text">
+            Text Message
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-action-text>
+            18:00
+          </v-list-item-action-text>
+          <v-avatar
+            color="basic"
+            class="subheading white--text"
+            size="24"
+            v-text="1"
+          />
+        </v-list-item-action>
+      </v-list-item>
+      <v-divider />
+      <v-footer
+        absolute
+        padless
+        style="height:54px; background :#ffffff;"
+      >
+        <v-btn
+          fab
+          color="basic"
+          dark
+          top
+          right
+>>>>>>> 12e444609c909ca159094a4c7f292259b7b64bfa
           absolute
           padless
         >
