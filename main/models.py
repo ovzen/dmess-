@@ -34,7 +34,6 @@ class Dialog(models.Model):
     users = models.ManyToManyField(User)
     admin_only = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
-    user_dictionary = PickledObjectField(default=None, null=True)
 
     def __str__(self):
         return self.name
@@ -42,12 +41,17 @@ class Dialog(models.Model):
     def last_message(self):
         return self.message_set.order_by('-create_date').first()
 
+    def unread_messages(self):
+        return self.message_set.filter(is_read=False).count()
+
 
 class Message(models.Model):
     text = models.TextField(max_length=2000)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
 
 
 class WikiPage(models.Model):

@@ -75,6 +75,14 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
         user = self.request.user
         return Dialog.objects.filter(users=user)
 
+    @action(detail=True, methods=['post'])
+    def read_messages(self, request, pk=None):
+        dialog = Dialog.objects.filter(id=pk)
+        unread_messages = Message.objects.filter(dialog=dialog, is_read=False)
+        for item in unread_messages:
+            item.is_read = True
+            item.save()
+        return Response({'status': 'messages were read'})
 
 
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):

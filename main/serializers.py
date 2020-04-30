@@ -76,22 +76,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class DialogSerializer(serializers.ModelSerializer):
     last_message = MessageSerializer(read_only=True)
     users_detail = UserSerializer(source='users', many=True, read_only=True)
-
-    def create(self, validated_data):
-        dictionary = {}
-        users = validated_data['users']
-        for user in users:
-            dictionary[str(user.username)] = 0
-
-        dialog = Dialog.objects.create(
-            name=validated_data['name'],
-            admin_only=validated_data['admin_only'],
-        )
-        dialog.users.add(validated_data['users'])
-        dialog.user_dictionary.add(dictionary)
-        dialog.save()
-
-        return dialog
+    unread_messages = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Dialog
