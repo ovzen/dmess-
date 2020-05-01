@@ -19,7 +19,7 @@ npm install
 npm run build
 cd ..
 cp -R frontend/dist/* templates/
-python manage.py collectstatic
+python manage.py collectstatic --noinput
 
 echo "Restarting server"
 sudo /bin/systemctl restart dmess_celery
