@@ -17,13 +17,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
 
 DEBUG = not os.path.exists('dmess_secrets.txt')
 
-# SECURITY WARNING: keep the secret key used in production secret!
 
 if not DEBUG:
     f = open('dmess_secrets.txt', 'r')
@@ -39,11 +35,10 @@ else:
 ALLOWED_HOSTS = [
     'messenger.savink.in',
     'd-messenger.ml'
-]
+] if not DEBUG else []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'admin_tools',
     'admin_tools.theming',
