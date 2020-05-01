@@ -36,9 +36,6 @@ else:
     DB_PASSWORD = 'define_me'
     EMAIL_PASSWORD = 'helloworld'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
 ALLOWED_HOSTS = [
     'messenger.savink.in',
     'd-messenger.ml'
