@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd ~/dmess/ || exit
+
 echo "Receiving updated sources"
 git checkout master
 git stash
