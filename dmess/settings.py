@@ -20,8 +20,21 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
+
+DEBUG = False
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
+
+if not DEBUG:
+    f = open('dmess_secrets.txt', 'r')
+    SECRET_KEY = f.readline().strip()
+    DB_PASSWORD = f.readline().strip()
+    EMAIL_PASSWORD = f.readline().strip()
+    f.close()
+else:
+    SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
+    DB_PASSWORD = 'define_me'
+    EMAIL_PASSWORD = 'helloworld'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -134,7 +147,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'dmess_db',
             'USER': 'dmess_user',
-            'PASSWORD': 'e6eoMjBRUcPg9752',
+            'PASSWORD': DB_PASSWORD, # 'e6eoMjBRUcPg9752',
             'HOST': 'localhost',
             'PORT': '3306',
         }
@@ -221,7 +234,7 @@ EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'noreply@asmirnov.me'
-EMAIL_HOST_PASSWORD = 'helloworld'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD # 'helloworld'
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
