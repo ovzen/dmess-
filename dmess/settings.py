@@ -21,7 +21,7 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 
-DEBUG = bool(os.environ.get('DMESS_DEBUG', True))
+DEBUG = not os.path.exists('dmess_secrets.txt')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
@@ -35,9 +35,6 @@ else:
     SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
     DB_PASSWORD = 'define_me'
     EMAIL_PASSWORD = 'helloworld'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
 ALLOWED_HOSTS = [
     'messenger.savink.in',
@@ -147,7 +144,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'dmess_db',
             'USER': 'dmess_user',
-            'PASSWORD': DB_PASSWORD, # 'e6eoMjBRUcPg9752',
+            'PASSWORD': DB_PASSWORD,
             'HOST': 'localhost',
             'PORT': '3306',
         }
