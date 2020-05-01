@@ -21,7 +21,7 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 
-DEBUG = False
+DEBUG = bool(os.environ.get('DMESS_DEBUG', True))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
