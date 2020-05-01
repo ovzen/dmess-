@@ -6,6 +6,9 @@ stages:
 production:
   stage: deploy
 
+  only:
+    - master
+
   before_script:
     - apt-get install -qq git
     - 'which ssh-agent || ( apt-get install -qq openssh-client )'
@@ -19,5 +22,4 @@ production:
     url: http://d-messenger.ml
 
   script:
-    - echo "Deploying to production server"
     - ssh dmess@d-messenger.ml "cd dmess && source update.sh"
