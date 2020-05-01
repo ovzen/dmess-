@@ -1,14 +1,8 @@
-# django
+# Django
 Django==3.0.5
 django-filter==2.2.0
 django-admin-tools==0.9.0
 django-webpack-loader== 0.7.0
-
-# database
-mysqlclient==1.4.6
-
-# webserver
-daphne==2.4.1
 
 # DRF
 djangorestframework
