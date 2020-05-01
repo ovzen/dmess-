@@ -20,4 +20,5 @@ production:
 
   script:
     - echo "Deploying to production server"
-    - ssh dmess@d-messenger.ml "./dmess/update.sh"
+    - ssh dmess@d-messenger.ml "ls -la && cd dmess && ls -la"
+    - ssh dmess@d-messenger.ml "~/dmess/update.sh"
