@@ -6,7 +6,6 @@ module.exports = {
     'vuetify'
   ],
   outputDir: './dist/',
-  publicPath: 'http://127.0.0.1:8080/',
   assetsDir: 'static',
   pages: {
     'index': {
@@ -17,13 +16,13 @@ module.exports = {
     },
     'admin': {
       entry: './src/AdminUI/main.js',
-      template: 'public/index.html',
+      template: 'public/admin.html',
       title: 'Admin',
       chunks: [ 'chunk-vendors', 'chunk-common', 'admin' ]
     },
     'auth': {
       entry: './src/Login/main.js',
-      template: 'public/index.html',
+      template: 'public/auth.html',
       title: 'Auth',
       chunks: [ 'chunk-vendors', 'chunk-common', 'Login' ]
     }
