@@ -21,10 +21,4 @@ production:
   script:
     - echo "Deploying to production server"
     - ssh dmess@d-messenger.ml "uname -a"
-    - ssh dmess@d-messenger.ml "cd dmess && git checkout master && git stash && git pull"
-    - ssh dmess@d-messenger.ml "cd dmess && source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate"
-    - ssh dmess@d-messenger.ml "cd dmess/frontend && npm install && npm run build && cd .. && cp -R frontend/dist/* templates/"
-    - ssh dmess@d-messenger.ml "cd dmess && source venv/bin/activate && python manage.py collectstatic"
-    - ssh dmess@d-messenger.ml "sudo /bin/systemctl restart dmess_daphne"
-    - ssh dmess@d-messenger.ml "sudo /bin/systemctl restart dmess_celery"
-    - ssh dmess@d-messenger.ml "sudo /bin/systemctl restart nginx"
+    - ssh dmess@d-messenger.ml "cd dmess && source update.sh"
