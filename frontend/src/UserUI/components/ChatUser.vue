@@ -8,14 +8,19 @@
           max-width="460px"
           class="float-right d-flex"
           style="border-radius: 20px;"
+          flat
         >
-          <v-card-text class="text message_color--text">
-            Text Message
-            <v-list-item-action-text
-              class="pl-5"
+          <v-card-text>
+            <span
+              class="font-weight-light message_color--text"
+            >
+              Text message
+            </span>
+            <span
+              class="float-right ml-2"
             >
               18:00
-            </v-list-item-action-text>
+            </span>
           </v-card-text>
         </v-card>
       </div>
@@ -30,89 +35,35 @@
             max-width="460px"
             class="d-flex"
             color="background_pink"
+            flat
           >
-            <v-card-text class="text message_color--text">
-              Text Message
-              <v-list-item-action-text
-                class="pl-5"
+            <v-card-text>
+              <span
+                class="font-weight-light message_color--text"
+              >
+                Text message
+              </span>
+              <span
+                class="float-right ml-2"
               >
                 18:00
-              </v-list-item-action-text>
+              </span>
             </v-card-text>
           </v-card>
         </div>
       </v-container>
     </v-container>
-    <v-footer
-      color="background_white"
-      absolute
-      padless
-      style="height:54px"
-    >
-      <v-form style="width:100%;">
-        <v-row>
-          <v-col
-            style="padding-bottom: 0px; padding-top: 0px; padding-left:20px; padding-right:20px"
-            cols="12"
-          >
-            <v-text-field
-              v-model="message"
-              dense
-              single-line
-              :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
-              :prepend-icon="icon"
-              label="Message"
-              type="text"
-              @click:append-outer="sendMessage"
-              @click:prepend="changeIcon"
-            />
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-footer>
+    <ChatInput />
   </div>
 </template>
 
 <script>
+import ChatInput from './ChatInput'
 export default {
   name: 'ChatUser',
+  components: { ChatInput },
   data: () => ({
-    password: 'Password',
-    show: false,
-    message: '',
-    marker: true,
-    iconIndex: 0,
-    icons: [
-      'mdi-paperclip'
-    ]
-  }),
-
-  computed: {
-    icon () {
-      return this.icons[this.iconIndex]
-    }
-  },
-
-  methods: {
-    toggleMarker () {
-      this.marker = !this.marker
-    },
-    sendMessage () {
-      this.resetIcon()
-      this.clearMessage()
-    },
-    clearMessage () {
-      this.message = ''
-    },
-    resetIcon () {
-      this.iconIndex = 0
-    },
-    changeIcon () {
-      this.iconIndex === this.icons.length - 1
-        ? this.iconIndex = 0
-        : this.iconIndex++
-    }
-  }
+  })
 }
 </script>
 
