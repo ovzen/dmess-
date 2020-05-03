@@ -1,15 +1,20 @@
 <template>
   <v-app>
-    <v-app-bar v-if="Route.name != 'Main'"
+    <v-app-bar
+      v-if="Route.name != 'Main'"
       app
       height="80"
       color="background_white"
     >
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
-      <v-toolbar-title v-if="Route.params.id">
+      <v-toolbar-title
+        v-if="Route.params.id"
+      >
         <v-list-item>
           <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"></v-img>
+            <v-img
+              src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"
+            />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -21,15 +26,23 @@
               online/offline
             </v-list-item-subtitle>
           </v-list-item-content>
-
         </v-list-item>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon disabled>
-        <v-icon>mdi-magnify</v-icon>
+      <v-btn
+        icon
+        disabled
+      >
+        <v-icon>
+          mdi-magnify
+        </v-icon>
       </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-book-multiple</v-icon>
+      <v-btn
+        icon
+      >
+        <v-icon>
+          mdi-book-multiple
+        </v-icon>
       </v-btn>
 
       <v-menu
@@ -41,22 +54,36 @@
             icon
             v-on="on"
           >
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-icon>
+              mdi-dots-vertical
+            </v-icon>
           </v-btn>
         </template>
 
-        <v-list color="background_white">
+        <v-list
+          color="background_white"
+        >
           <v-list-item>
-            <v-list-item-title>Logout</v-list-item-title>
+            <v-list-item-title>
+              Logout
+            </v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goProfilePage()">
-            <v-list-item-title>Button 2</v-list-item-title>
+          <v-list-item
+            @click="goProfilePage()"
+          >
+            <v-list-item-title>
+              Button 2
+            </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>Button 3</v-list-item-title>
+            <v-list-item-title>
+              Button 3
+            </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>Button 4</v-list-item-title>
+            <v-list-item-title>
+              Button 4
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -104,7 +131,9 @@
             <v-list-item-avatar
               v-if="avatar"
             >
-              <v-img :src="avatar"></v-img>
+              <v-img
+                :src="avatar"
+              />
             </v-list-item-avatar>
             <v-list-item-avatar
               v-else
@@ -124,95 +153,68 @@
                 {{ username[0].toUpperCase() }}
               </span>
             </v-list-item-avatar>
-
           </v-list-item>
         </v-list>
       </v-card>
 
       <v-divider />
-      <v-subheader>
-        <a>
-          <u>
-            ALL CHATS
-          </u>
-        </a>
-      </v-subheader>
-      <v-divider />
-      <v-list-item
-        to="/ChatUser"
-        active-class="background_pink"
+      <div
+        id="dynamic-component"
       >
-        <v-list-item-avatar>
-          <v-avatar
-            size="36px"
-            color="basic"
-          >
-            <span
-              class="white--text"
-            >
-              NU
-            </span>
-            <!--<v-img
-              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-            />-->
-          </v-avatar>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title style="color: #1F1E21">
-            Name User
-          </v-list-item-title>
-          <v-list-item-subtitle class="black_second--text">
-            Text Message
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-list-item-action-text>
-            18:00
-          </v-list-item-action-text>
-          <v-avatar
-            color="basic"
-            class="subheading white--text"
-            size="24"
-            v-text="1"
-          />
-        </v-list-item-action>
-      </v-list-item>
-      <v-divider />
-      <v-footer
-        absolute
-        padless
-        style="height:54px; background :#ffffff;"
-      >
-        <v-btn
-          fab
-          color="basic"
-          dark
-          top
-          right
+        <chats
+          v-if="currentTab.name == 'mdi-message-text'"
+        />
+        <profiles
+          v-if="currentTab.name == 'mdi-account-circle'"
+        />
+        <settings
+          v-if="currentTab.name == 'mdi-settings'"
+        />
+        <v-divider />
+        <v-footer
           absolute
+          padless
+          style="height:54px; background :#ffffff;"
         >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <v-card-actions>
           <v-btn
-            v-for="icon in iconsFooter"
-            :key="icon"
-            icon
+            fab
+            color="basic"
+            dark
+            top
+            right
+            absolute
           >
-            <v-icon size="24px">
-              {{ icon }}
-            </v-icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
-        </v-card-actions>
-      </v-footer>
+          <v-card-actions>
+            <v-btn
+              v-for="tab in tabs"
+              :key="tab.name"
+              icon
+              :class="['tab-button', { active: currentTab.name === tab.name }]"
+              @click="currentTab = tab"
+            >
+              <v-icon
+                size="24px"
+              >
+                {{ tab.name }}
+              </v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-footer>
+      </div>
     </v-navigation-drawer>
 
-    <v-content class="background_main">
+    <v-content
+      class="background_main"
+    >
       <v-container fluid>
         <router-view />
       </v-container>
     </v-content>
-    <SystemInfo style="position: fixed; bottom: 0px; text-align: right;" />
+    <SystemInfo
+      style="position: fixed; bottom: 0px; text-align: right;"
+    />
   </v-app>
 </template>
 
@@ -222,10 +224,36 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
+import chats from './components/chats'
+import profiles from './components/profiles'
+import settings from './components/settings'
 Vue.use(VueCookie)
+var tabs = [
+  {
+    name: 'mdi-account-circle',
+    component: {
+    }
+  },
+  {
+    name: 'mdi-message-text',
+    component: {
+    }
+  },
+  {
+    name: 'mdi-room-service',
+    component: {
+    }
+  },
+  {
+    name: 'mdi-settings',
+    component: {
+    }
+  }
+]
+
 export default {
-  name: 'App',
-  components: { SystemInfo },
+  new: '#dynamic-component',
+  components: { SystemInfo, profiles, chats, settings },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -248,12 +276,8 @@ export default {
     user_id: undefined,
     avatar: '',
     isOnline: false,
-    iconsFooter: [
-      'mdi-account-circle',
-      'mdi-message-text',
-      'mdi-room-service',
-      'mdi-settings'
-    ]
+    currentTab: tabs[0],
+    tabs: tabs
   }),
   computed: {
     Route () {
@@ -354,5 +378,8 @@ export default {
 #app {
   color: #2c3e50;
   height: 100vh;
+  .active {
+  color: #6202EE
+}
 }
 </style>
