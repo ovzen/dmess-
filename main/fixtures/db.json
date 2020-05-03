@@ -100,5 +100,13 @@
       "bio": "Hey there! I'm using dmess",
       "is_online": false
     }
+  },
+  {
+    "model": "main.contact",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "contact": 2
+    }
   }
 ]
