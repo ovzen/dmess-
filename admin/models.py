@@ -19,3 +19,11 @@ class Invite(models.Model):
             self.is_active = False
             self.used_at = datetime.datetime.now()
             self.for_user = user
+
+
+class GitlabMetrics(models.Model):
+    fetch_date = models.DateTimeField(auto_now_add=True)
+    opened_issues = models.IntegerField()
+    opened_merge_requests = models.IntegerField()
+    current_branches = models.IntegerField()
+    commits = models.IntegerField()

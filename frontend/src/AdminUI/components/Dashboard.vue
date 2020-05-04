@@ -357,25 +357,15 @@ export default {
         }, 60000);
       },
     getGitlabMetrics () {
-      const instance = axios.create({
-        timeout: 2000,
-        headers: { 'Authorization': 'Bearer q_CTeYuyhchyiXxiRVBS' }
-      })
-      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/issues_statistics')
+      axios.get('/api/admin/gitlabmetrics/')
         .then(res => {
-          this.gitlabMetrics.openedIssues = res.data.statistics.counts.opened
+          this.gitlabMetrics.openedIssues = res.data.issues
+          this.gitlabMetrics.openedMergeRequests = res.data.merge_requests
+          this.gitlabMetrics.currentBranches = res.data.branches
         })
-      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/merge_requests?state=opened')
-        .then(res => {
-          this.gitlabMetrics.openedMergeRequests = res.data.length
-        })
-      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/repository/branches')
-        .then(res => {
-          this.gitlabMetrics.currentBranches = res.data.length
-        })
-      this.startInterval()
     },
     getDashboardStatistics () {
+      this.startInterval()
       axios.get('/api/admin/users/stat/')
         .then(res => {
           this.dashboardStats.currentlyOnline = res.data.count
