@@ -40,9 +40,11 @@
                             :rules="emailRules"
                             name="email"
                             outlined
+                            @keyup.enter="FocusOn('login')"
                           />
 
                           <v-text-field
+                          ref="login"
                             v-model="login"
                             label="Username"
                             hint="Your personal username"
@@ -51,6 +53,7 @@
                             name="username"
                             :rules="loginRules"
                             outlined
+                            @keyup.enter="step++"
                           />
                         </v-col>
                       </v-row>
@@ -72,15 +75,18 @@
                             hint="Your first name"
                             name="first_name"
                             outlined
+                            @keyup.enter="FocusOn('secondname')"
                           />
 
                           <v-text-field
+                          ref="secondname"
                             v-model="secondname"
                             clearable
                             label="Last Name"
                             hint="Your last name"
                             name="last_name"
                             outlined
+                            @keyup.enter="step++"
                           />
                         </v-col>
                       </v-row>
@@ -107,9 +113,11 @@
                             name="password"
                             :rules="passwordRules"
                             @click:append="vanish = !vanish"
+                            @keyup.enter="FocusOn('repeatpassword')"
                           />
 
                           <v-text-field
+                          ref="repeatpassword"
                             v-model="repeatpassword"
                             :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="vanish ? 'text' : 'password'"
@@ -121,6 +129,7 @@
                             name="Repeat_password"
                             :rules="repeatpasswordRules"
                             @click:append="vanish = !vanish"
+                            @keyup.enter="Register(login, password, repeatpassword, name, secondname, email)"
                           />
                         </v-col>
                       </v-row>
@@ -299,7 +308,12 @@ export default {
             }
           })
       }
-    }
+    },
+    FocusOn(value){
+          this.$nextTick(() =>{
+            this.$refs[value].focus()
+          })
+      }
   }
 }
 </script>
