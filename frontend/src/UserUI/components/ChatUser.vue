@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-container
-      v-for="message in messages"
-      :key="message.id"
+      v-for="(message, i) in messages"
+      :key="i"
     >
       <div v-if="isOwnMessage(message.user_detail.username)"
         class="text-left"
@@ -72,7 +72,7 @@ import moment from 'moment'
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
-  'ws://' + window.location.host + '/ws/ChatUser/' + window.location.search.slice(1, 99) + '/',
+  'ws://' + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
   {
     connectManually: true
   }
@@ -105,7 +105,7 @@ export default {
         .then(response => {
           this.messages = this.messages.concat(response.data.results)
         })
-      this.$connect('ws://' + window.location.host + '/ws/ChatUser/' + this.diailogId + '/')
+      this.$connect('ws://' + window.location.host + '/ws/chat/' + this.diailogId + '/')
     },
     getMessage () {
       this.$options.sockets.onmessage = data => {
