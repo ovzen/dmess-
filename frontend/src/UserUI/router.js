@@ -18,6 +18,11 @@ export default new Router({
       component: Main
     },
     {
+      path: '/chat/:id',
+      name: 'Chat',
+      component: Chat
+    },
+    {
       path: '/profile/:id',
       name: 'Profile',
       component: Profile

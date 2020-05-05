@@ -4,7 +4,8 @@
       v-for="(message, i) in messages"
       :key="i"
     >
-      <div v-if="isOwnMessage(message.user_detail.username)"
+      <div
+        v-if="isOwnMessage(message.user_detail.username)"
         class="text-left"
       >
         <v-card
@@ -30,7 +31,8 @@
       <v-container
         class="d-flex"
       >
-        <div v-if="!isOwnMessage(message.user_detail.username)"
+        <div
+          v-if="!isOwnMessage(message.user_detail.username)"
           class="text-left"
         >
           <v-card
@@ -101,7 +103,7 @@ export default {
       this.messages = []
       this.diailogId = this.$route.params.id
       api.axios
-        .get('/api/messages/', { params: { dialog: 1 } })
+        .get('/api/messages/', { params: { dialog: this.diailogId } })
         .then(response => {
           this.messages = this.messages.concat(response.data.results)
         })

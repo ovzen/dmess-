@@ -30,8 +30,6 @@
 </template>
 
 <script>
-import VueNativeSock from 'vue-native-websocket'
-import Vue from 'vue'
 
 export default {
   name: 'ChatInput',
