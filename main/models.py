@@ -35,7 +35,7 @@ class Dialog(models.Model):
     users = models.ManyToManyField(User)
     admin_only = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
-    code = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return self.name
