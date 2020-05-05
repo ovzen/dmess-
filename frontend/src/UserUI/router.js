@@ -18,11 +18,6 @@ export default new Router({
       component: Main
     },
     {
-      path: '/chat/:id',
-      name: 'Chat',
-      component: Chat
-    },
-    {
       path: '/profile/:id',
       name: 'Profile',
       component: Profile
@@ -38,7 +33,7 @@ export default new Router({
       component: KnowledgeBase
     },
     {
-      path: '/ChatUser',
+      path: '/ChatUser/:id',
       name: 'ChatUser',
       component: ChatUser
     }

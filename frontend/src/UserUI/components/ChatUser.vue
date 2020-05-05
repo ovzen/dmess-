@@ -1,7 +1,10 @@
 <template>
   <div>
-    <v-container>
-      <div
+    <v-container
+      v-for="message in messages"
+      :key="message.id"
+    >
+      <div v-if="isOwnMessage(message.user_detail.username)"
         class="text-left"
       >
         <v-card
@@ -14,12 +17,12 @@
             <span
               class="font-weight-light message_color--text"
             >
-              Text message
+              {{ message.text }}
             </span>
             <span
               class="float-right ml-2"
             >
-              18:00
+              {{ decodeTime(message.create_date) }}
             </span>
           </v-card-text>
         </v-card>
@@ -27,7 +30,7 @@
       <v-container
         class="d-flex"
       >
-        <div
+        <div v-if="!isOwnMessage(message.user_detail.username)"
           class="text-left"
         >
           <v-card
@@ -41,12 +44,12 @@
               <span
                 class="font-weight-light message_color--text"
               >
-                Text message
+                {{ message.text }}
               </span>
               <span
                 class="float-right ml-2"
               >
-                18:00
+                {{ decodeTime(message.create_date) }}
               </span>
             </v-card-text>
           </v-card>
@@ -59,11 +62,77 @@
 
 <script>
 import ChatInput from './ChatInput'
+import api from '../api'
+import VueNativeSock from 'vue-native-websocket'
+import VueCookie from 'vue-cookie'
+import Vue from 'vue'
+import jwt from 'jsonwebtoken'
+import moment from 'moment'
+
+Vue.use(VueCookie)
+Vue.use(
+  VueNativeSock,
+  'ws://' + window.location.host + '/ws/ChatUser/' + window.location.search.slice(1, 99) + '/',
+  {
+    connectManually: true
+  }
+)
 export default {
   name: 'ChatUser',
   components: { ChatInput },
   data: () => ({
-  })
+    messages: [],
+    diailogId: 0
+  }),
+  watch: {
+    // при изменениях маршрута запрашиваем данные снова
+    $route: ['updateDialog']
+  },
+  mounted () {
+    this.updateDialog()
+    this.getMessage()
+  },
+  beforeDestroy () {
+    this.$disconnect()
+  },
+  methods: {
+    updateDialog () {
+      this.$disconnect()
+      this.messages = []
+      this.diailogId = this.$route.params.id
+      api.axios
+        .get('/api/messages/', { params: { dialog: 1 } })
+        .then(response => {
+          this.messages = this.messages.concat(response.data.results)
+        })
+      this.$connect('ws://' + window.location.host + '/ws/ChatUser/' + this.diailogId + '/')
+    },
+    getMessage () {
+      this.$options.sockets.onmessage = data => {
+        this.messages.push({
+          id: this.messages.length,
+          text: JSON.parse(data.data).message,
+          user_detail: { username: JSON.parse(data.data).author },
+          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
+        })
+        console.log(JSON.parse(data.data))
+      }
+    },
+    isOwnMessage (author) {
+      return author === jwt.decode(this.$cookie.get('Authentication')).name
+    },
+    decodeTime (datetime) {
+      if (datetime) {
+        moment.locale('ru')
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).format('LT')
+          // второй вариант - return moment(String(datetime)).calendar()
+        }
+      }
+    }
+  }
 }
 </script>
 

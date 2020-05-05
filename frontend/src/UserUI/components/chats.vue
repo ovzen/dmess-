@@ -16,7 +16,10 @@
       />
     </v-col>
     <v-divider />
-    <v-list-item to="/ChatUser">
+    <!-- захардкодил id=1 до реализации диалогов в сайдбаре -->
+    <v-list-item
+      @click="openDialog(dialogId=1)"
+    >
       <v-list-item-avatar>
         <v-avatar
           size="36px"
@@ -63,7 +66,12 @@
 export default {
   name: 'Chats',
   data: () => ({
-  })
+  }),
+  methods: {
+    openDialog (dialogId) {
+      this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
+    }
+  }
 }
 </script>
 

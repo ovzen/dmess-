@@ -185,16 +185,6 @@ export default {
     isOwnMessage (author) {
       return author === jwt.decode(this.$cookie.get('Authentication')).name
     },
-    formatDate (date) {
-      if (date) {
-        moment.locale('ru')
-        if (moment(date).isBefore(moment(), 'day')) {
-          return moment(String(date)).format('DD.MM.YYYY')
-        } else {
-          return moment(String(date)).calendar()
-        }
-      }
-    },
     decodeTime (datetime) {
       if (datetime) {
         moment.locale('ru')

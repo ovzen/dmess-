@@ -19,7 +19,7 @@
               :prepend-icon="icon"
               label="Message"
               type="text"
-              @click:append-outer="sendMessage"
+              @click:append-outer="sendMessage(message)"
               @click:prepend="changeIcon"
             />
           </v-col>
@@ -30,6 +30,9 @@
 </template>
 
 <script>
+import VueNativeSock from 'vue-native-websocket'
+import Vue from 'vue'
+
 export default {
   name: 'ChatInput',
   data: () => ({
@@ -53,9 +56,17 @@ export default {
     toggleMarker () {
       this.marker = !this.marker
     },
-    sendMessage () {
+    sendMessage (message) {
       this.resetIcon()
-      this.clearMessage()
+      if (message) {
+        console.log('messagetext: ', message)
+        this.$socket.send(
+          JSON.stringify({
+            message: message
+          })
+        )
+        this.clearMessage()
+      }
     },
     clearMessage () {
       this.message = ''
