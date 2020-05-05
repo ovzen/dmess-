@@ -148,7 +148,7 @@ export default {
       api.axios.get('/api/messages/', { params: { dialog: this.id } }).then(res => {
         this.messages = this.messages.concat(res.data.results)
       })
-      this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
+      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.id + '/')
     },
     goBack () {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
