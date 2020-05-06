@@ -164,9 +164,57 @@
         <chats
           v-if="currentTab.name == 'mdi-message-text'"
         />
-        <profiles
-          v-if="currentTab.name == 'mdi-account-circle'"
-        />
+        <div>
+          <v-divider />
+          <v-col>
+            <v-text-field
+              clearable
+              solo
+              background-color="grey lighten-2"
+              dense
+              flat
+              color="basic"
+              hide-details
+              prepend-inner-icon="mdi-magnify"
+              label="Search for users"
+              style="border-radius:50px; max-width:450px;"
+            />
+          </v-col>
+          <v-divider />
+          <v-list-item
+            v-for="dialog in dialogs"
+            :key="dialog.id"
+            to="/ChatUser"
+          >
+            <v-list-item-avatar>
+              <v-avatar
+                size="36px"
+                color="basic"
+              >
+                <span
+                  class="white--text"
+                >
+                  NU
+                </span>
+                <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+              </v-avatar>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ dialog.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                <span
+                  class="basic--text text--lighten"
+                >
+                  {{ UsersStr(dialog) }}
+                </span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
         <settings
           v-if="currentTab.name == 'mdi-settings'"
         />
@@ -225,7 +273,6 @@ import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
 import chats from './components/chats'
-import profiles from './components/profiles'
 import settings from './components/settings'
 Vue.use(VueCookie)
 var tabs = [
@@ -253,7 +300,7 @@ var tabs = [
 
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, profiles, chats, settings },
+  components: { SystemInfo, chats, settings },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -275,7 +322,8 @@ export default {
     avatar: '',
     isOnline: false,
     currentTab: tabs[0],
-    tabs: tabs
+    tabs: tabs,
+    dialogs: []
   }),
   computed: {
     Route () {
@@ -293,16 +341,10 @@ export default {
       console.warn('The current user was not found')
     }
   },
-  beforeCreate () {
-    if (this.$cookie.get('Authentication')) {
-      this.user_id = this.$cookie.get('Authentication').user_id
-    } else {
-      console.warn('The current user was not found')
-    }
-  },
   mounted () {
     setInterval(this.updateToken, 1000)
-    this.getUserData()
+    this.GetDialogsList()
+    this.getUserData(this.ur)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
       this.getChatName()
@@ -322,7 +364,18 @@ export default {
         )
       }
     },
-
+    UsersStr (dialog) {
+      let str = ''
+      for (let i = 0; i < dialog.users_detail.length; i++) {
+        console.log(dialog.users_detail)
+        str = str + dialog.users_detail[i].username + ', '
+      }
+      return str.substring(0, str.length - 2)
+    },
+    GetDialogsList () {
+      api.axios
+        .get('/api/dialog/').then(res => { this.dialogs = res.data.results })
+    },
     openDialog (dialogId) {
       this.$router.push({ name: 'Chat', params: { id: dialogId } })
     },
@@ -348,9 +401,9 @@ export default {
         this.chatName = undefined
       }
     },
-    getUserData () {
+    getUserData (userid) {
       api.axios
-        .get('/api/users/' + this.user_id)
+        .get('/api/users/' + userid)
         .then(res => {
           this.avatar = res.data['avatar']
           this.isOnline = res.data.is_online
