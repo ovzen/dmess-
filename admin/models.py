@@ -22,8 +22,16 @@ class Invite(models.Model):
 
 
 class GitlabMetrics(models.Model):
+    OPENED_ISSUES = 1
+    OPENED_MERGE_REQUESTS = 2
+    CURRENT_BRANCHES = 3
+    COMMITS = 4
+    KEY_CHOICES = [
+        (OPENED_ISSUES, 'opened_issues'),
+        (OPENED_MERGE_REQUESTS, 'opened_merge_requests'),
+        (CURRENT_BRANCHES, 'current_branches'),
+        (COMMITS, 'commits'),
+    ]
     fetch_date = models.DateTimeField(auto_now_add=True)
-    opened_issues = models.IntegerField()
-    opened_merge_requests = models.IntegerField()
-    current_branches = models.IntegerField()
-    commits = models.IntegerField()
+    key = models.IntegerField(choices=KEY_CHOICES, null=True, blank=True)
+    value = models.CharField(max_length=25, blank=True)

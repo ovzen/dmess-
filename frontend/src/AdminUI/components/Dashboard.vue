@@ -354,14 +354,14 @@ export default {
     startInterval: function () {
       setInterval(() => {
           this.minutes_went = this.initial_time.fromNow()
-        }, 60000);
-      },
+      }, 60000)
+    },
     getGitlabMetrics () {
       axios.get('/api/admin/gitlabmetrics/')
         .then(res => {
-          this.gitlabMetrics.openedIssues = res.data.issues
-          this.gitlabMetrics.openedMergeRequests = res.data.merge_requests
-          this.gitlabMetrics.currentBranches = res.data.branches
+          this.gitlabMetrics.openedIssues = res.data.opened_issues
+          this.gitlabMetrics.openedMergeRequests = res.data.opened_merge_requests
+          this.gitlabMetrics.currentBranches = res.data.current_branches
         })
     },
     getDashboardStatistics () {
@@ -375,8 +375,8 @@ export default {
           this.dashboardStats.todayRegistrations = res.data.count
         })
       axios.get('/api/messages/count/')
-      .then(res => {
-        this.dashboardStats.todayMessages = res.data.count
+        .then(res => {
+          this.dashboardStats.todayMessages = res.data.count
         })
     },
     SendMessage (Message, type) {
