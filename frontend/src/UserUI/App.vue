@@ -262,14 +262,12 @@ export default {
     message_text: '',
     data: '',
     messages: [],
-    dialog: false,
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
     expandOnHover: false,
     group: [],
     for_user: true,
-    dialogs_for_user: [],
     username: 'Test',
     firstName: undefined,
     lastName: undefined,
@@ -286,7 +284,7 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['getDialogs', 'disconnect', 'getChatName']
+    $route: ['disconnect', 'getChatName']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -304,7 +302,6 @@ export default {
   },
   mounted () {
     setInterval(this.updateToken, 1000)
-    this.getDialogs()
     this.getUserData()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
@@ -325,17 +322,7 @@ export default {
         )
       }
     },
-    getDialogs () {
-      api.axios.get('/api/dialog/', {
-        params: {
-          users: this.user_id
-        }
-      })
-        .then(res => {
-          this.dialogs_for_user = res.data
-          console.log(this.dialogs_for_user)
-        })
-    },
+
     openDialog (dialogId) {
       this.$router.push({ name: 'Chat', params: { id: dialogId } })
     },
@@ -346,7 +333,7 @@ export default {
       this.$router.push({ name: 'Profile', params: { id: this.user_id } })
     },
     getChatName () {
-      if (this.$route.name === 'Chat') {
+      if (this.$route.name === 'ChatUser') {
         api.axios
           .get('/api/dialog/', {
             params: {
@@ -355,6 +342,7 @@ export default {
           })
           .then(response => {
             this.chatName = response.data.results[0].name
+            console.log(response)
           })
       } else {
         this.chatName = undefined
