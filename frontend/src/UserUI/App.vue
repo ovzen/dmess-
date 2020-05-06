@@ -161,30 +161,30 @@
       <div
         id="dynamic-component"
       >
-        <chats
-          v-if="currentTab.name == 'mdi-message-text'"
+        <profiles
+          v-if="currentTab.name == 'mdi-account-circle'"
         />
-        <div>
+        <div v-if="currentTab.name == 'mdi-message-text'">
           <v-divider />
           <v-col>
             <v-text-field
               clearable
               solo
+              color="basic"
               background-color="grey lighten-2"
               dense
               flat
-              color="basic"
               hide-details
               prepend-inner-icon="mdi-magnify"
-              label="Search for users"
+              label="Search for dialogs"
               style="border-radius:50px; max-width:450px;"
             />
           </v-col>
           <v-divider />
           <v-list-item
-            v-for="dialog in dialogs"
-            :key="dialog.id"
-            to="/ChatUser"
+            v-for="(dialog, i) in dialogs"
+            :key="i"
+            @click="openDialog(dialog.id)"
           >
             <v-list-item-avatar>
               <v-avatar
@@ -196,25 +196,22 @@
                 >
                   NU
                 </span>
-                <!--<v-img
-            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-          />-->
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                {{ dialog.name }}
+                {{ getNameOfAnotherUser(dialog.users_detail) }}
               </v-list-item-title>
               <v-list-item-subtitle v-if="dialog.last_message">
                 <span
-                  class="basic--text text--lighten"
+                  style="color:#757575; font-size:115%;"
                 >
                   {{ dialog.last_message.text }}
                 </span>
               </v-list-item-subtitle>
               <v-list-item-subtitle v-else>
                 <span
-                  class="basic--text text--lighten"
+                  style="color:#757575; font-size:115%;"
                 >
                   Тут пока ничего не написано
                 </span>
@@ -222,9 +219,11 @@
             </v-list-item-content>
             <v-list-item-action>
               <v-list-item-action-text v-if="dialog.last_message">
-                {{ new Date(dialog.last_message.create_date).toLocaleTimeString() }}
+                {{ formatTime(dialog.last_message.create_date) }}
               </v-list-item-action-text>
+              <!-- Изменить v-if на другое условие: "если есть непрочитанные сообщения" -->
               <v-avatar
+                v-if="dialog.last_message"
                 color="basic"
                 class="subheading white--text"
                 size="24"
@@ -290,8 +289,10 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
-import chats from './components/chats'
+import profiles from './components/profiles'
 import settings from './components/settings'
+import moment from 'moment'
+
 Vue.use(VueCookie)
 var tabs = [
   {
@@ -318,15 +319,13 @@ var tabs = [
 
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, chats, settings },
+  components: { SystemInfo, profiles, settings },
   data: () => ({
     login: '',
     button: 'Войти',
     chatName: '',
     password: '',
-    message_text: '',
     data: '',
-    messages: [],
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
@@ -361,7 +360,7 @@ export default {
   },
   mounted () {
     setInterval(this.updateToken, 1000)
-    this.GetDialogsList()
+    this.getDialogsList()
     this.getUserData(this.user_id)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
@@ -382,15 +381,7 @@ export default {
         )
       }
     },
-    UsersStr (dialog) {
-      let str = ''
-      for (let i = 0; i < dialog.users_detail.length; i++) {
-        console.log(dialog.users_detail)
-        str = str + dialog.users_detail[i].username + ', '
-      }
-      return str.substring(0, str.length - 2)
-    },
-    GetDialogsList () {
+    getDialogsList () {
       api.axios
         .get('/api/dialog/', {
           params: {
@@ -399,7 +390,7 @@ export default {
         }).then(res => { this.dialogs = res.data.results })
     },
     openDialog (dialogId) {
-      this.$router.push({ name: 'Chat', params: { id: dialogId } })
+      this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
     },
     allusers () {
       this.$router.push({ name: 'allUser' })
@@ -432,6 +423,43 @@ export default {
           this.firstName = res.data['user'].first_name
           this.lastName = res.data['user'].last_name
         })
+    },
+    formatTime (datetime) {
+      if (datetime) {
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).format('hh:mm')
+        }
+      }
+    },
+    isFirstAndLastName (user) {
+      if (user.first_name && user.last_name) {
+        return (user.first_name + ' ' + user.last_name)
+      } else if (user.first_name) {
+        return user.first_name
+      } else if (user.last_name) {
+        return user.last_name
+      } else {
+        return user.username
+      }
+    },
+    getAnotherUser (users) {
+      if (users[0].id === this.user_id) {
+        return users[1]
+      } else {
+        return users[0]
+      }
+    },
+    getNameOfAnotherUser (users) {
+      console.log(users)
+      if (users.length > 1) {
+        let user = this.getAnotherUser(users)
+        return this.isFirstAndLastName(user)
+      } else {
+        let onlyOwner = 'В диалоге нет других пользователей'
+        return onlyOwner
+      }
     }
   }
 }

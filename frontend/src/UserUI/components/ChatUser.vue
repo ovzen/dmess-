@@ -23,7 +23,7 @@
             <span
               class="float-right ml-2"
             >
-              {{ decodeTime(message.create_date) }}
+              {{ formatTime(message.create_date) }}
             </span>
           </v-card-text>
         </v-card>
@@ -51,7 +51,7 @@
               <span
                 class="float-right ml-2"
               >
-                {{ decodeTime(message.create_date) }}
+                {{ formatTime(message.create_date) }}
               </span>
             </v-card-text>
           </v-card>
@@ -123,14 +123,12 @@ export default {
     isOwnMessage (author) {
       return author === jwt.decode(this.$cookie.get('Authentication')).name
     },
-    decodeTime (datetime) {
+    formatTime (datetime) {
       if (datetime) {
-        moment.locale('ru')
         if (moment(datetime).isBefore(moment(), 'day')) {
           return moment(String(datetime)).format('DD.MM.YYYY')
         } else {
-          return moment(String(datetime)).format('LT')
-          // второй вариант - return moment(String(datetime)).calendar()
+          return moment(String(datetime)).format('hh:mm')
         }
       }
     }
