@@ -205,14 +205,32 @@
               <v-list-item-title>
                 {{ dialog.name }}
               </v-list-item-title>
-              <v-list-item-subtitle>
+              <v-list-item-subtitle v-if="dialog.last_message">
                 <span
                   class="basic--text text--lighten"
                 >
-                  {{ UsersStr(dialog) }}
+                  {{ dialog.last_message.text }}
+                </span>
+              </v-list-item-subtitle>
+              <v-list-item-subtitle v-else>
+                <span
+                  class="basic--text text--lighten"
+                >
+                  Тут пока ничего не написано
                 </span>
               </v-list-item-subtitle>
             </v-list-item-content>
+            <v-list-item-action>
+              <v-list-item-action-text v-if="dialog.last_message">
+                {{ new Date(dialog.last_message.create_date).toLocaleTimeString() }}
+              </v-list-item-action-text>
+              <v-avatar
+                color="basic"
+                class="subheading white--text"
+                size="24"
+                v-text="1"
+              />
+            </v-list-item-action>
           </v-list-item>
         </div>
         <settings
@@ -344,7 +362,7 @@ export default {
   mounted () {
     setInterval(this.updateToken, 1000)
     this.GetDialogsList()
-    this.getUserData(this.ur)
+    this.getUserData(this.user_id)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
       this.getChatName()
@@ -374,7 +392,11 @@ export default {
     },
     GetDialogsList () {
       api.axios
-        .get('/api/dialog/').then(res => { this.dialogs = res.data.results })
+        .get('/api/dialog/', {
+          params: {
+            users: this.user_id
+          }
+        }).then(res => { this.dialogs = res.data.results })
     },
     openDialog (dialogId) {
       this.$router.push({ name: 'Chat', params: { id: dialogId } })
@@ -401,9 +423,9 @@ export default {
         this.chatName = undefined
       }
     },
-    getUserData (userid) {
+    getUserData () {
       api.axios
-        .get('/api/users/' + userid)
+        .get('/api/users/' + this.user_id)
         .then(res => {
           this.avatar = res.data['avatar']
           this.isOnline = res.data.is_online
