@@ -1,44 +1,8 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from admin.models import Invite
-from main.models import Dialog, UserProfile, Message, Contact, WikiPage
-
-
-# class UserSerializer(serializers.ModelSerializer):
-#     password = serializers.CharField(write_only=True)
-#     invite_code = serializers.UUIDField(required=False, allow_null=True, write_only=True)
-#
-#     def create(self, validated_data):
-#         user = UserModel.objects.create(
-#             username=validated_data['username'],
-#             first_name=validated_data['first_name'],
-#             last_name=validated_data['last_name'],
-#             email=validated_data['email'],
-#         )
-#         user.set_password(validated_data['password'])
-#         user.save()
-#
-#         code = self.validated_data.get('invite_code')
-#         if code:
-#             invite_object = Invite.objects.filter(code=code)
-#             if invite_object.exists():
-#                 invite = invite_object.first()
-#                 user.is_staff = invite.is_active
-#                 user.save()
-#                 invite.use(user)
-#                 invite.save()
-#
-#         profile = UserProfile(user=user)
-#         profile.save()
-#         return user
-#
-#     class Meta:
-#         model = UserModel
-#         # Tuple of serialized model fields (see link [2])
-#         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'invite_code', 'password')
+from main.models import *
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

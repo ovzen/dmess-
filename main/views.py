@@ -31,27 +31,12 @@ class CountModelMixin:
         return Response(content)
 
 
-class UserView(ListCreateAPIView):
+class UserViewSet(viewsets.ReadOnlyModelViewSet, CountModelMixin):
     """
-    Registration of new user
-    + get method for getting list of all users
+    ViewSet для просмотра профилей пользователей.
     """
-    permission_classes = (AllowAny,)
-    model = User
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
-    ordering_fields = '__all__'
-
-
-class UserProfileView(RetrieveUpdateAPIView):
-    """
-    View для просмотра и обновления данных о пользователе
-    Обновление данных доступно только для владельцев профиля
-    """
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
 
 
 class ContactViewSet(viewsets.ModelViewSet):
