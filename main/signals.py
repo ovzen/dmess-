@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_registration.signals import user_registered
 
+from admin.models import Invite
 from main.models import WikiPage, UserProfile
 from main.tasks import markdown_convert
 
@@ -17,5 +18,22 @@ def wiki_post_save_callback(**kwargs):
 
 @receiver(user_registered)
 def user_profile_creation(user, request, **kwargs):
+    """Создание профиля пользователя после регистрации"""
     profile = UserProfile(user=user)
     profile.save()
+
+
+@receiver(user_registered)
+def user_invite_processing(user, request, **kwargs):
+    """
+    Применение модераторского инвайта к пользователю.
+    Для применения флага is_staff в моделе пользователя, нужно отправить запрос вида
+    `api/accounts/register/?invite_code=<YOUR_INVITE_CODE>`
+    """
+    invite_code = request.query_params.get('invite_code')
+    try:
+        invite = Invite.objects.get(code=invite_code)
+        invite.use(user)
+        invite.save()
+    except Invite.DoesNotExist:
+        return

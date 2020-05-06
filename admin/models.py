@@ -17,5 +17,7 @@ class Invite(models.Model):
     def use(self, user):
         if self.is_active:
             self.is_active = False
+            user.is_staff = True
+            user.save()
             self.used_at = datetime.datetime.now()
             self.for_user = user
