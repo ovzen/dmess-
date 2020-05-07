@@ -38,9 +38,7 @@ class UserStatView(APIView):
 
 class GitlabMetricsView(APIView):
     def get(self, request):
-        data = [GitlabMetrics.objects.filter(key=key[0]).order_by('-id')[0] for key in GitlabMetrics.KEY_CHOICES]
-        response = {}
-        for item in data:
-            response[item.get_key_display()] = item.value
+        data = [GitlabMetrics.objects.filter(key=key).last() for key, _ in GitlabMetrics.KEY_CHOICES]
+        response = {item.get_key_display(): item.value for item in data}
         return Response(response)
 

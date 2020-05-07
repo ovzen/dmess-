@@ -4,6 +4,7 @@ import os
 
 import markdown
 import gitlab
+from django.conf import settings
 
 from admin.models import GitlabMetrics
 from dmess.celery import app
@@ -26,8 +27,8 @@ def markdown_convert(**kwargs):
 
 @app.task()
 def gitlab_metrics_fetch():
-    gl = gitlab.Gitlab('https://gitlab.informatics.ru', private_token=os.environ['GITLAB_PRIVATE_TOKEN'])
-    project = gl.projects.get(1932)
+    gl = gitlab.Gitlab(settings.GITLAB_DOMAIN_URL, private_token=os.environ['GITLAB_PRIVATE_TOKEN'])
+    project = gl.projects.get(settings.GITLAB_PROJECT_ID)
 
     metrics = {
         GitlabMetrics.CURRENT_BRANCHES: project.branches.list(as_list=False).total,
