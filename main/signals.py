@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_registration.signals import user_registered
 
-from admin.models import Invite
+from admin.models import Invite, InviteAlreadyUsed
 from main.models import WikiPage, UserProfile, User
 from main.tasks import markdown_convert
 
@@ -39,4 +39,6 @@ def user_invite_processing(user, request, **kwargs):
         invite.use(user)
         invite.save()
     except Invite.DoesNotExist:
+        return
+    except InviteAlreadyUsed:
         return

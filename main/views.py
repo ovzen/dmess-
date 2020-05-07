@@ -1,16 +1,14 @@
-from rest_framework.generics import RetrieveUpdateAPIView, ListCreateAPIView
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from main.models import Dialog, UserProfile, Contact, WikiPage
+from main.models import Dialog, Contact, WikiPage
 from main.models import Message
 from main.permissions import IsOwnerOrReadOnly, IsAdminUserOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, \
     WikiPageSerializer
-from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action

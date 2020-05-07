@@ -64,7 +64,6 @@ class WikiPageSerializer(serializers.ModelSerializer):
         read_only_fields = ['image']
 
 
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     @classmethod

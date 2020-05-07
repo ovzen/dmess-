@@ -7,6 +7,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+class InviteAlreadyUsed(Exception):
+    pass
+
+
 class Invite(models.Model):
     code = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_active = models.BooleanField(default=True)
@@ -15,9 +19,12 @@ class Invite(models.Model):
     for_user = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, null=True)
 
     def use(self, user):
-        if self.is_active:
-            self.is_active = False
-            user.is_staff = True
-            user.save()
-            self.used_at = datetime.datetime.now()
-            self.for_user = user
+        if not self.is_active:
+            raise InviteAlreadyUsed(
+                f'Invite with code {self.code} is already used'
+            )
+        self.is_active = False
+        user.is_staff = True
+        user.save()
+        self.used_at = datetime.datetime.now()
+        self.for_user = user
