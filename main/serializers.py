@@ -76,7 +76,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class DialogSerializer(serializers.ModelSerializer):
     last_message = MessageSerializer(read_only=True)
     users_detail = UserSerializer(source='users', many=True, read_only=True)
-    unread_messages = serializers.IntegerField(read_only=True)
+    unread_messages = serializers.DictField(read_only=True)
 
     class Meta:
         model = Dialog

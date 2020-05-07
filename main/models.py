@@ -42,7 +42,8 @@ class Dialog(models.Model):
         return self.message_set.order_by('-create_date').first()
 
     def unread_messages(self):
-        return self.message_set.filter(is_read=False).count()
+        messages = self.message_set.filter(is_read=False)
+        return {user.id: messages.exclude(user=user).count() for user in self.users.get_queryset()}
 
 
 class Message(models.Model):
