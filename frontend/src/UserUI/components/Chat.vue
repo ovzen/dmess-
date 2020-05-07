@@ -149,6 +149,7 @@ export default {
         this.messages = this.messages.concat(res.data.results)
       })
       this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
+      api.axios.post('/api/dialog/' + this.id + '/read_messages/')
     },
     goBack () {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
@@ -166,6 +167,7 @@ export default {
         })
         console.log(JSON.parse(data.data))
       }
+      api.axios.post('/api/dialog/' + this.id + '/read_messages/')
     },
     send (messagetext) {
       if (this.$cookie.get('Authentication')) {
