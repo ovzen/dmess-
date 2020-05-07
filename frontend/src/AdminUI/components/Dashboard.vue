@@ -327,7 +327,7 @@ export default {
         LastActivity: '2020-03-10 13:53:19.368414'
       }
     ],
-    ws: new WebSocket('ws://' + window.location.host + '/ws/chat/system/'),
+    ws: new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/system/'),
     dashboardStats: {
       currentlyOnline: undefined,
       todayRegistration: undefined,
@@ -339,7 +339,7 @@ export default {
       currentBranches: undefined
     },
     initial_time: moment(),
-    minutes_went: moment().fromNow(),
+    minutes_went: moment().fromNow()
   }),
   created () {
     this.getGitlabMetrics()
