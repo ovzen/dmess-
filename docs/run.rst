@@ -24,7 +24,8 @@
 
 .. code-block:: bash
 
-    celery worker -A dmess --loglevel=debug --concurrency=4
+    export GITLAB_PRIVATE_TOKEN=<private_token>
+    celery worker -B -A dmess --loglevel=debug --concurrency=4
 
 5. Запустить vue-cli для клиентского фронтенда (в отдельном терминале)
 

@@ -234,6 +234,9 @@ BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 
+GITLAB_DOMAIN_URL = 'https://gitlab.informatics.ru'
+GITLAB_PROJECT_ID = 1932
+
 FIXTURE_DIRS = [
     'main/fixtures',
 ]

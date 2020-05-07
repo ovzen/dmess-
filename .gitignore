@@ -323,3 +323,4 @@ dmess_secrets.txt
 #templates/auth.html
 #templates/admin.html
 #frontend/package-lock.json
+celerybeat-schedule.db
