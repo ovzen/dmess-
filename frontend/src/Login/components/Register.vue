@@ -44,7 +44,7 @@
                           />
 
                           <v-text-field
-                          ref="login"
+                            ref="login"
                             v-model="login"
                             label="Username"
                             hint="Your personal username"
@@ -79,7 +79,7 @@
                           />
 
                           <v-text-field
-                          ref="secondname"
+                            ref="secondname"
                             v-model="secondname"
                             clearable
                             label="Last Name"
@@ -117,7 +117,7 @@
                           />
 
                           <v-text-field
-                          ref="repeatpassword"
+                            ref="repeatpassword"
                             v-model="repeatpassword"
                             :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="vanish ? 'text' : 'password'"
@@ -275,15 +275,18 @@ export default {
     },
     Register (username, password, repeatpassword, name, secondname, email) {
       let invitecode = this.$route.params.registercode
+      console.log()
       if (username && password && password === repeatpassword) {
         api.axios
-          .post('/api/register/', {
+          .post('/api/accounts/register/', {
             username: username,
             password: password,
             first_name: name,
             last_name: secondname,
-            email: email,
+            email: email },
+          { params: {
             invite_code: invitecode
+          }
           })
           .catch(error => {
             console.log(error)
@@ -303,17 +306,18 @@ export default {
                   this.$cookie.set('Authentication', res.data.access, {
                     expires: '5m'
                   })
+                  localStorage.setItem('UpdateKey', res.data.refresh)
                   window.location.href = this.next
                 })
             }
           })
       }
     },
-    FocusOn(value){
-          this.$nextTick(() =>{
-            this.$refs[value].focus()
-          })
-      }
+    FocusOn (value) {
+      this.$nextTick(() => {
+        this.$refs[value].focus()
+      })
+    }
   }
 }
 </script>

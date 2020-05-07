@@ -91,7 +91,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -246,5 +245,6 @@ REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': False,
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
     'RESET_PASSWORD_VERIFICATION_ENABLED': False,
-    'PROFILE_SERIALIZER_CLASS': 'main.serializers.UserSerializer'
+    'PROFILE_SERIALIZER_CLASS': 'main.serializers.UserSerializer',
+    'REGISTER_SERIALIZER_PASSWORD_CONFIRM': False
 }

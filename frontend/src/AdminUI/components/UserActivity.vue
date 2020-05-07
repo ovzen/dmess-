@@ -214,29 +214,31 @@ export default {
   },
   methods: {
     update () {
-      api.axios.get('/api/register/').then(res => {
+      api.axios.get('/api/users/').then(res => {
         this.Users = res.data.results
         this.loading = false
       })
     },
     Create () {
       api.axios
-        .post('/api/register/', {
+        .post('/api/accounts/register/', {
           username: this.editedItem.username,
           password: this.editedItem.password,
           first_name: this.editedItem.first_name,
           last_name: this.editedItem.last_name,
-          email: this.editedItem.email,
-          invite_code: this.editedItem.invitecode
+          email: this.editedItem.email
         })
         .catch(error => {
           console.log(error)
           if (error.response.status === 400) {
             alert('Пользователь с таким именем уже существует.')
           }
-        }).then(
-          this.loading = true,
-          setTimeout(this.update(), 1000)
+        }).then(res => {
+          if (res.status === 201) {
+            this.loading = true
+            this.update()
+          }
+        }
         )
     },
     editItem (item) {

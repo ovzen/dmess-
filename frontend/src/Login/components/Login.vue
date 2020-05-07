@@ -36,11 +36,11 @@
                         required
                         outlined
                         :error-messages="error_text"
-                        @keyup.enter="FocusOn('password')""
+                        @keyup.enter="FocusOn('password')"
                       />
 
                       <v-text-field
-                      ref="password"
+                        ref="password"
                         v-model="password"
                         :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="vanish ? 'text' : 'password'"
@@ -90,7 +90,6 @@
   </v-container>
 </template>
 
-
 <script>
 import api from '../api'
 import jwt from 'jsonwebtoken'
@@ -130,10 +129,10 @@ export default {
           password: password
         })
         .catch(err => {
-          if (err != 0) {
+          if (err !== 0) {
             this.error_text = 'Invalid Login or Password'
             console.log(err)
-          } else if (err == 0) {
+          } else if (err === 0) {
             this.error_text = ''
           }
         })
@@ -150,11 +149,11 @@ export default {
           window.location.href = this.next
         })
     },
-    FocusOn(value){
-          this.$nextTick(() =>{
-            this.$refs[value].focus()
-          })
-      }
+    FocusOn (value) {
+      this.$nextTick(() => {
+        this.$refs[value].focus()
+      })
+    }
   }
 }
 </script>
