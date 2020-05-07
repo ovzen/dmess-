@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from rest_registration.signals import user_registered
 
 from admin.models import Invite
-from main.models import WikiPage, UserProfile
+from main.models import WikiPage, UserProfile, User
 from main.tasks import markdown_convert
 
 
@@ -16,11 +16,14 @@ def wiki_post_save_callback(**kwargs):
     markdown_convert.delay(id=instance.id, md_text=instance.text_markdown)
 
 
-@receiver(user_registered)
-def user_profile_creation(user, request, **kwargs):
-    """Создание профиля пользователя после регистрации"""
-    profile = UserProfile(user=user)
-    profile.save()
+@receiver(post_save, sender=User)
+def user_profile_creation(**kwargs):
+    """Создание профиля пользователя после создания пользователя"""
+    instance = kwargs['instance']
+    created = kwargs['created']
+    if created:
+        profile = UserProfile(user=instance)
+        profile.save()
 
 
 @receiver(user_registered)

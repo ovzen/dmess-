@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from main.models import Dialog, UserProfile, Contact, WikiPage
 from main.models import Message
-from main.permissions import IsOwnerOrReadOnly
+from main.permissions import IsOwnerOrReadOnly, IsAdminUserOrReadOnly
 from main.serializers import MessageSerializer, ContactSerializer
 from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, \
     WikiPageSerializer
@@ -31,12 +31,13 @@ class CountModelMixin:
         return Response(content)
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet, CountModelMixin):
+class UserViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для просмотра профилей пользователей.
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
 class ContactViewSet(viewsets.ModelViewSet):
