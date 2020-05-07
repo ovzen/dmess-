@@ -22,6 +22,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     "gitlab-metrics-fetch-periodic-task": {
         "task": "main.tasks.gitlab_metrics_fetch",
-        "schedule": 300.0
+        "schedule": 300.0 # 5 * 60 seconds
     }
 }
