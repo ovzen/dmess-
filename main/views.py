@@ -12,7 +12,7 @@ from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPair
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
-
+from rest_framework import mixins
 
 User = get_user_model()
 
@@ -29,7 +29,12 @@ class CountModelMixin:
         return Response(content)
 
 
-class UserViewSet(viewsets.ModelViewSet, CountModelMixin):
+class UserViewSet(mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin,
+                  CountModelMixin,
+                  viewsets.GenericViewSet):
     """
     ViewSet для просмотра профилей пользователей.
     """
