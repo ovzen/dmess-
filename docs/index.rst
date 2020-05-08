@@ -16,6 +16,7 @@ Welcome to Dmess's documentation!
    swagger
    prepare.rst
    run.rst
+   tests.rst
 
 
 Указатели

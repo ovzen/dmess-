@@ -15,7 +15,7 @@
 </template>
 
 <script>
-let ws = new WebSocket('ws://' + window.location.host + '/ws/chat/system/')
+let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/system/')
 export default {
   name: 'SystemInfo',
   data: () => ({

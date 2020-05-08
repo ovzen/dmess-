@@ -69,3 +69,83 @@ class ContactTestCase(APITestCase):
         response_2 = self.client.delete(url_invalid, format='json')
         self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class DialogTestCase(APITestCase):
+    fixtures = ['db.json']
+
+    def setUp(self):
+        user = User.objects.get(id=1)
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
+
+    def test_get_dialogs_list(self):
+        url = reverse('dialog-list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_dialog(self):
+        url = reverse('dialog-list')
+        data = {
+            'name': 'test',
+            'users': [1, 2],
+            'admin_only': False
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_get_dialog(self):
+        url_valid = reverse('dialog-detail', kwargs={'pk': 1})
+        url_invalid = reverse('dialog-detail', kwargs={'pk': 42})
+        response_1 = self.client.get(url_valid, format='json')
+        response_2 = self.client.get(url_invalid, format='json')
+        self.assertEqual(response_1.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_dialog(self):
+        url_valid = reverse('dialog-detail', kwargs={'pk': 1})
+        url_invalid = reverse('dialog-detail', kwargs={'pk': 42})
+        response_1 = self.client.delete(url_valid, format='json')
+        response_2 = self.client.delete(url_invalid, format='json')
+        self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class MessageTestCase(APITestCase):
+    fixtures = ['db.json']
+
+    def setUp(self):
+        user = User.objects.get(id=1)
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
+
+    def test_get_messages_list(self):
+        url = reverse('message-list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_message(self):
+        url = reverse('message-list')
+        data = {
+            'text': 'test',
+            'user': 1,
+            'dialog': 1
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_get_message(self):
+        url_valid = reverse('message-detail', kwargs={'pk': 1})
+        url_invalid = reverse('message-detail', kwargs={'pk': 42})
+        response_1 = self.client.get(url_valid, format='json')
+        response_2 = self.client.get(url_invalid, format='json')
+        self.assertEqual(response_1.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_message(self):
+        url_valid = reverse('message-detail', kwargs={'pk': 1})
+        url_invalid = reverse('message-detail', kwargs={'pk': 42})
+        response_1 = self.client.delete(url_valid, format='json')
+        response_2 = self.client.delete(url_invalid, format='json')
+        self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
