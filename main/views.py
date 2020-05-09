@@ -15,7 +15,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
 
-
 User = get_user_model()
 
 
@@ -24,6 +23,7 @@ class CountModelMixin:
     """
     Add count action to ModelViewSet
     """
+
     @action(detail=False)
     def count(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -74,6 +74,27 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     def get_queryset(self):
         user = self.request.user
         return Dialog.objects.filter(users=user)
+
+    @action(detail=True, methods=['post'])
+    def read_messages(self, request, pk=None):
+        """
+        Отмечает все сообщения в данном диалоге прочитанными,
+        исключая отправленные самим пользователем.
+        В ответ возвращает количество прочитанных сообщений.
+        :param request:
+        :param pk:
+        :return: Response
+        """
+        dialog = self.get_object()
+        unread_messages = dialog.message_set.exclude(user=request.user).filter(is_read=False)
+        count = unread_messages.count()
+        unread_messages.update(is_read=True)
+        for message in unread_messages:
+            message.save()
+
+        return Response(
+            {'status': f'{count} messages were read'}
+        )
 
 
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):

@@ -7,7 +7,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from admin.models import Invite
 from main.models import Dialog, UserProfile, Message, Contact, WikiPage
 
-
 UserModel = get_user_model()
 
 
@@ -77,6 +76,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class DialogSerializer(serializers.ModelSerializer):
     last_message = MessageSerializer(read_only=True)
     users_detail = UserSerializer(source='users', many=True, read_only=True)
+    unread_messages = serializers.DictField(read_only=True)
 
     class Meta:
         model = Dialog
@@ -101,7 +101,6 @@ class WikiPageSerializer(serializers.ModelSerializer):
         model = WikiPage
         fields = '__all__'
         read_only_fields = ['image']
-
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
