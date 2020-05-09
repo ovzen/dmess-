@@ -313,4 +313,14 @@ sketch
 
 frontend/webpack-stats.json
 main/static_root/
+
+daphne.sock.lock
+
 # End of https://www.gitignore.io/api/vue,venv,django,python,pycharm,visualstudiocode
+
+dmess_secrets.txt
+#templates/index.html
+#templates/auth.html
+#templates/admin.html
+#frontend/package-lock.json
+celerybeat-schedule.db

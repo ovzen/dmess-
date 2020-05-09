@@ -20,9 +20,8 @@
 
         <v-list-item-avatar
           size="120"
-
         >
-          <v-img :src="avatar"></v-img>
+          <v-img :src="avatar" />
         </v-list-item-avatar>
       </v-list-item>
     </v-card>
@@ -45,6 +44,11 @@ export default {
 
   }),
 
+  created () {
+    this.id = this.$route.params.id
+    this.get_data()
+  },
+
   methods: {
     get_data () {
       api.axios
@@ -61,11 +65,6 @@ export default {
           }
         })
     }
-  },
-
-  created () {
-    this.id = this.$route.params.id
-    this.get_data()
   }
 
 }

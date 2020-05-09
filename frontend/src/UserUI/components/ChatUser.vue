@@ -1,107 +1,69 @@
 <template>
-  <v-container>
-    <div
-      class="text-left"
-    >
-      <v-card
-        shaped
-        max-width="460px"
-        class="float-right d-flex"
-      >
-        <v-card-text class="font-weight-black">
-          Text Message
-          <v-list-item-action-text
-            class="pl-5"
-          >
-            18:00
-          </v-list-item-action-text>
-        </v-card-text>
-      </v-card>
-    </div>
-    <v-container
-      class="d-flex"
-    >
+  <div>
+    <v-container>
       <div
         class="text-left"
       >
         <v-card
-          shaped
           max-width="460px"
-          class="d-flex"
-          color="pink lighten-5"
+          class="float-right d-flex"
+          style="border-radius: 20px;"
+          flat
         >
-          <v-card-text class="font-weight-black">
-            Text Message
-            <v-list-item-action-text
-              class="pl-5"
+          <v-card-text>
+            <span
+              class="font-weight-light message_color--text"
+            >
+              Text message
+            </span>
+            <span
+              class="float-right ml-2"
             >
               18:00
-            </v-list-item-action-text>
+            </span>
           </v-card-text>
         </v-card>
       </div>
-    </v-container>
-    <v-form>
-      <v-row>
-        <v-col
-          cols="12"
+      <v-container
+        class="d-flex"
+      >
+        <div
+          class="text-left"
         >
-          <v-text-field
-            v-model="message"
-            :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
-            :prepend-icon="icon"
-            solo
-            label="Message"
-            type="text"
-            @click:append-outer="sendMessage"
-            @click:prepend="changeIcon"
-          />
-        </v-col>
-      </v-row>
-    </v-form>
-  </v-container>
+          <v-card
+            style="border-radius: 20px;"
+            max-width="460px"
+            class="d-flex"
+            color="background_pink"
+            flat
+          >
+            <v-card-text>
+              <span
+                class="font-weight-light message_color--text"
+              >
+                Text message
+              </span>
+              <span
+                class="float-right ml-2"
+              >
+                18:00
+              </span>
+            </v-card-text>
+          </v-card>
+        </div>
+      </v-container>
+    </v-container>
+    <ChatInput />
+  </div>
 </template>
 
 <script>
+import ChatInput from './ChatInput'
 export default {
   name: 'ChatUser',
+  components: { ChatInput },
   data: () => ({
-    password: 'Password',
-    show: false,
-    message: '',
-    marker: true,
-    iconIndex: 0,
-    icons: [
-      'mdi-paperclip'
-    ]
-  }),
-
-  computed: {
-    icon () {
-      return this.icons[this.iconIndex]
-    }
-  },
-
-  methods: {
-    toggleMarker () {
-      this.marker = !this.marker
-    },
-    sendMessage () {
-      this.resetIcon()
-      this.clearMessage()
-    },
-    clearMessage () {
-      this.message = ''
-    },
-    resetIcon () {
-      this.iconIndex = 0
-    },
-    changeIcon () {
-      this.iconIndex === this.icons.length - 1
-        ? this.iconIndex = 0
-        : this.iconIndex++
-    }
-  }
+  })
 }
 </script>
 
@@ -123,6 +85,13 @@ export default {
 .rounded-card{
     border-radius:50px;
 }
+.text{
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
 .container {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -143,8 +112,6 @@ export default {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  min-height: 10px;
-  max-width: 100%;
   position: relative;
 }
 </style>

@@ -17,20 +17,28 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
+DEBUG = not os.path.exists('dmess_secrets.txt')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+if not DEBUG:
+    f = open('dmess_secrets.txt', 'r')
+    SECRET_KEY = f.readline().strip()
+    DB_PASSWORD = f.readline().strip()
+    EMAIL_PASSWORD = f.readline().strip()
+    f.close()
+else:
+    SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
+    DB_PASSWORD = 'define_me'
+    EMAIL_PASSWORD = 'helloworld'
+
+ALLOWED_HOSTS = [
+    'messenger.savink.in',
+    'd-messenger.ml'
+] if not DEBUG else []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'admin_tools',
     'admin_tools.theming',
@@ -118,12 +126,24 @@ WSGI_APPLICATION = 'dmess.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'dmess_db',
+            'USER': 'dmess_user',
+            'PASSWORD': DB_PASSWORD,
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+    }
 
 
 # Password validation
@@ -206,13 +226,16 @@ EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'noreply@asmirnov.me'
-EMAIL_HOST_PASSWORD = 'helloworld'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD # 'helloworld'
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+GITLAB_DOMAIN_URL = 'https://gitlab.informatics.ru'
+GITLAB_PROJECT_ID = 1932
 
 FIXTURE_DIRS = [
     'main/fixtures',

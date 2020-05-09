@@ -1,6 +1,12 @@
 """tasks.py - celery-задачи проекта"""
 
+import os
+
 import markdown
+import gitlab
+from django.conf import settings
+
+from admin.models import GitlabMetrics
 from dmess.celery import app
 from main.models import WikiPage
 
@@ -17,3 +23,19 @@ def markdown_convert(**kwargs):
     if wiki_object.text_html != text_html:
         wiki_object.text_html = text_html
         wiki_object.save()
+
+
+@app.task()
+def gitlab_metrics_fetch():
+    gl = gitlab.Gitlab(settings.GITLAB_DOMAIN_URL, private_token=os.environ['GITLAB_PRIVATE_TOKEN'])
+    project = gl.projects.get(settings.GITLAB_PROJECT_ID)
+
+    metrics = {
+        GitlabMetrics.CURRENT_BRANCHES: project.branches.list(as_list=False).total,
+        GitlabMetrics.COMMITS: project.commits.list(as_list=False).total,
+        GitlabMetrics.OPENED_ISSUES: project.issues.list(state='opened', as_list=False).total,
+        GitlabMetrics.OPENED_MERGE_REQUESTS: project.mergerequests.list(state='opened', as_list=False).total,
+    }
+    for k, v in metrics.items():
+        GitlabMetrics(key=k, value=v).save()
+    return None

@@ -28,8 +28,8 @@ from main import views
 router = SimpleRouter()
 
 router.register(r'api/contacts', views.ContactViewSet, basename='contact')
-router.register(r'api/dialog', views.DialogViewSet)
-router.register(r'api/messages', views.MessageViewSet)
+router.register(r'api/dialog', views.DialogViewSet, basename='dialog')
+router.register(r'api/messages', views.MessageViewSet, basename='message')
 router.register(r'api/wiki', views.WikiPageViewSet, basename='wiki')
 
 

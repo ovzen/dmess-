@@ -36,9 +36,11 @@
                         required
                         outlined
                         :error-messages="error_text"
+                        @keyup.enter="FocusOn('password')""
                       />
 
                       <v-text-field
+                      ref="password"
                         v-model="password"
                         :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="vanish ? 'text' : 'password'"
@@ -48,6 +50,7 @@
                         required
                         outlined
                         @click:append="vanish = !vanish"
+                        @keyup.enter="auth(login, password)"
                       />
                     </v-col>
                   </v-row>
@@ -86,6 +89,7 @@
     </v-flex>
   </v-container>
 </template>
+
 
 <script>
 import api from '../api'
@@ -145,7 +149,12 @@ export default {
           console.log(jwt.decode(this.$cookie.get('Authentication')))
           window.location.href = this.next
         })
-    }
+    },
+    FocusOn(value){
+          this.$nextTick(() =>{
+            this.$refs[value].focus()
+          })
+      }
   }
 }
 </script>

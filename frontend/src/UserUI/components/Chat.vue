@@ -110,7 +110,7 @@ import moment from 'moment'
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
-  'ws://' + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
+  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
   {
     connectManually: true
   }
@@ -148,7 +148,7 @@ export default {
       api.axios.get('/api/messages/', { params: { dialog: this.id } }).then(res => {
         this.messages = this.messages.concat(res.data.results)
       })
-      this.$connect('ws://' + window.location.host + '/ws/chat/' + this.id + '/')
+      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.id + '/')
       api.axios.post('/api/dialog/' + this.id + '/read_messages/')
     },
     goBack () {
