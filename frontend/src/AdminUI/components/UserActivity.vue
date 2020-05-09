@@ -194,6 +194,7 @@ export default {
       first_name: '',
       last_name: '',
       email: '',
+      profile: '',
       actions: 0
     },
     defaultItem: {
@@ -247,8 +248,13 @@ export default {
       this.dialog = true
     },
     deleteItem (item) {
-      const index = this.Users.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      confirm('Are you sure you want to delete this item?') &&
+      api.axios.delete('/api/users/' + item.id + '/').then(res => {
+        if (res.status === 204) {
+          this.loading = true
+          this.update()
+        }
+      })
     },
     CopyLink (item) {
       navigator.clipboard.writeText(window.location.host + '/auth/register/' + item.code + '/')
@@ -262,6 +268,20 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
+        api.axios.put('/api/users/' + this.editedIndex + '/',
+          {
+            username: this.editedItem.username,
+            password: this.editedItem.password,
+            first_name: this.editedItem.first_name,
+            last_name: this.editedItem.last_name,
+            email: this.editedItem.email,
+            profile: this.editedItem.profile
+          }).then(res => {
+          if (res.status === 200) {
+            this.loading = true
+            this.update()
+          }
+        })
       } else {
         this.Create()
       }
