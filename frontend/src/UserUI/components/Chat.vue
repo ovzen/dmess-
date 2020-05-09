@@ -166,8 +166,8 @@ export default {
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
         console.log(JSON.parse(data.data))
+        api.axios.post('/api/dialog/' + this.id + '/read_messages/')
       }
-      api.axios.post('/api/dialog/' + this.id + '/read_messages/')
     },
     send (messagetext) {
       if (this.$cookie.get('Authentication')) {

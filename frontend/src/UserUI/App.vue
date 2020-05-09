@@ -276,7 +276,7 @@ export default {
   },
   mounted () {
     setInterval(this.updateToken, 1000)
-    setInterval(this.getUnreadMessagesQty, 5000)
+    setInterval(this.getUnreadMessagesQty, 2000)
     this.getDialogs()
     this.getUserData()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
