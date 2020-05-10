@@ -109,8 +109,8 @@ export default {
         .then(response => {
           this.messages = this.messages.concat(response.data.results)
         })
-      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.id + '/')
-      api.axios.post('/api/dialog/' + this.id + '/read_messages/')
+      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.diailogId + '/')
+      api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
     },
     getMessage () {
       this.$options.sockets.onmessage = data => {
@@ -121,7 +121,7 @@ export default {
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
         console.log(JSON.parse(data.data))
-        api.axios.post('/api/dialog/' + this.id + '/read_messages/')       
+        api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
       }
     },
     isOwnMessage (author) {
