@@ -3,6 +3,7 @@
     <v-container
       v-for="(message, i) in messages"
       :key="i"
+      py-2
     >
       <div
         v-if="isOwnMessage(message.user_detail.username)"
@@ -30,6 +31,7 @@
       </div>
       <v-container
         class="d-flex"
+        py-0
       >
         <div
           v-if="!isOwnMessage(message.user_detail.username)"

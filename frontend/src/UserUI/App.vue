@@ -200,7 +200,7 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                {{ getNameOfAnotherUser(dialog.users_detail) }}
+                {{ getContactName(dialog.users_detail) }}
               </v-list-item-title>
               <v-list-item-subtitle v-if="dialog.last_message">
                 <span
@@ -383,14 +383,17 @@ export default {
     },
     getDialogsList () {
       api.axios
-        .get('/api/dialog/', {
-          params: {
-            users: this.user_id
-          }
-        }).then(res => { this.dialogs = res.data.results })
+        .get('/api/dialog/', { params: { users: this.user_id } })
+        .then(response => {
+          this.dialogs = response.data.results
+          console.log('dialogsList:', response.data.results)
+        })
     },
     openDialog (dialogId) {
-      this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
+      console.log('Route ID:', this.$route.params.id)
+      if (this.$route.params.id !== dialogId) {
+        this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
+      }
     },
     allusers () {
       this.$router.push({ name: 'allUser' })
@@ -433,7 +436,7 @@ export default {
         }
       }
     },
-    isFirstAndLastName (user) {
+    getUserName (user) {
       if (user.first_name && user.last_name) {
         return (user.first_name + ' ' + user.last_name)
       } else if (user.first_name) {
@@ -444,21 +447,15 @@ export default {
         return user.username
       }
     },
-    getAnotherUser (users) {
-      if (users[0].id === this.user_id) {
-        return users[1]
-      } else {
-        return users[0]
-      }
+    getContact (users) {
+      return (users[0].id === this.user_id) ? users[1] : users[0]
     },
-    getNameOfAnotherUser (users) {
+    getContactName (users) {
       console.log(users)
       if (users.length > 1) {
-        let user = this.getAnotherUser(users)
-        return this.isFirstAndLastName(user)
+        return this.getUserName(this.getContact(users))
       } else {
-        let onlyOwner = 'В диалоге нет других пользователей'
-        return onlyOwner
+        return 'В диалоге нет других пользователей'
       }
     }
   }
