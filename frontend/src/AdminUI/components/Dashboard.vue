@@ -327,7 +327,7 @@ export default {
         LastActivity: '2020-03-10 13:53:19.368414'
       }
     ],
-    ws: new WebSocket('ws://' + window.location.host + '/ws/chat/system/'),
+    ws: new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/system/'),
     dashboardStats: {
       currentlyOnline: undefined,
       todayRegistration: undefined,
@@ -339,7 +339,7 @@ export default {
       currentBranches: undefined
     },
     initial_time: moment(),
-    minutes_went: moment().fromNow(),
+    minutes_went: moment().fromNow()
   }),
   created () {
     this.getGitlabMetrics()
@@ -354,28 +354,18 @@ export default {
     startInterval: function () {
       setInterval(() => {
           this.minutes_went = this.initial_time.fromNow()
-        }, 60000);
-      },
+      }, 60000)
+    },
     getGitlabMetrics () {
-      const instance = axios.create({
-        timeout: 2000,
-        headers: { 'Authorization': 'Bearer q_CTeYuyhchyiXxiRVBS' }
-      })
-      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/issues_statistics')
+      axios.get('/api/admin/gitlabmetrics/')
         .then(res => {
-          this.gitlabMetrics.openedIssues = res.data.statistics.counts.opened
+          this.gitlabMetrics.openedIssues = res.data.opened_issues
+          this.gitlabMetrics.openedMergeRequests = res.data.opened_merge_requests
+          this.gitlabMetrics.currentBranches = res.data.current_branches
         })
-      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/merge_requests?state=opened')
-        .then(res => {
-          this.gitlabMetrics.openedMergeRequests = res.data.length
-        })
-      instance.get('https://gitlab.informatics.ru/api/v4/projects/1932/repository/branches')
-        .then(res => {
-          this.gitlabMetrics.currentBranches = res.data.length
-        })
-      this.startInterval()
     },
     getDashboardStatistics () {
+      this.startInterval()
       axios.get('/api/admin/users/stat/')
         .then(res => {
           this.dashboardStats.currentlyOnline = res.data.count
@@ -385,8 +375,8 @@ export default {
           this.dashboardStats.todayRegistrations = res.data.count
         })
       axios.get('/api/messages/count/')
-      .then(res => {
-        this.dashboardStats.todayMessages = res.data.count
+        .then(res => {
+          this.dashboardStats.todayMessages = res.data.count
         })
     },
     SendMessage (Message, type) {

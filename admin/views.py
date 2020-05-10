@@ -1,10 +1,11 @@
 from rest_framework import viewsets
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 
-from admin.models import Invite
+from admin.models import Invite, GitlabMetrics
 from admin.serializers import InviteSerializer
 from datetime import datetime
 
@@ -33,3 +34,11 @@ class UserStatView(APIView):
     def get(self, request):
         online_count = UserProfile.objects.filter(is_online=True).count()
         return Response({"count": online_count})
+
+
+class GitlabMetricsView(APIView):
+    def get(self, request):
+        data = [GitlabMetrics.objects.filter(key=key).last() for key, _ in GitlabMetrics.KEY_CHOICES]
+        response = {item.get_key_display(): item.value for item in data}
+        return Response(response)
+

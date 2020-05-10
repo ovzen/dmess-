@@ -332,6 +332,7 @@ export default {
     expandOnHover: false,
     group: [],
     for_user: true,
+    unread_messages_qty: [],
     username: 'Test',
     firstName: undefined,
     lastName: undefined,
@@ -362,6 +363,7 @@ export default {
     setInterval(this.updateToken, 1000)
     this.getDialogsList()
     this.getUserData(this.user_id)
+    setInterval(this.getUnreadMessagesQty, 2000)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
       this.getChatName()
@@ -457,6 +459,13 @@ export default {
       } else {
         return 'В диалоге нет других пользователей'
       }
+    },
+    getUnreadMessagesQty () {
+      api.axios
+        .get('/api/dialogs')
+        .then(res => {
+          this.unread_messages_qty = res.data['unread_messages']
+        })
     }
   }
 }
