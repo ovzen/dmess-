@@ -2,12 +2,15 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from main.models import *
+from admin.models import Invite
+from main import models
+
+UserModel = get_user_model()
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
+        model = models.UserProfile
         exclude = ('user', )
 
 
@@ -15,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
 
     class Meta:
-        model = User
+        model = UserModel
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile')
 
     def update(self, instance, validated_data):
@@ -33,26 +36,27 @@ class MessageSerializer(serializers.ModelSerializer):
     user_detail = UserSerializer(source='user', read_only=True)
 
     class Meta:
-        model = Message
+        model = models.Message
         fields = '__all__'
 
 
 class DialogSerializer(serializers.ModelSerializer):
     last_message = MessageSerializer(read_only=True)
     users_detail = UserSerializer(source='users', many=True, read_only=True)
+    unread_messages = serializers.DictField(read_only=True)
 
     class Meta:
-        model = Dialog
+        model = models.Dialog
         fields = '__all__'
 
 
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Contact
+        model = models.Contact
         fields = '__all__'
         validators = [
             UniqueTogetherValidator(
-                queryset=Contact.objects.all(),
+                queryset=models.Contact.objects.all(),
                 fields=['user', 'contact'],
                 message='You have already added this contact.'
             )
@@ -61,7 +65,7 @@ class ContactSerializer(serializers.ModelSerializer):
 
 class WikiPageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WikiPage
+        model = models.WikiPage
         fields = '__all__'
         read_only_fields = ['image']
 
