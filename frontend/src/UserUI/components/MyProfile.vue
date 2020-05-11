@@ -29,25 +29,36 @@
         <v-list-item-content
           class="ml-4"
         >
-          <v-text-field
-            value="John Doe"
-            label="NAME"
-            style="color:#6202EE;"
-            disabled
-          ></v-text-field>
-          <v-list-item-subtitle>
-            <span
-              class="basic--text text--lighten"
-            >
-              online
-            </span>
-          </v-list-item-subtitle>
+          <div
+            class="pt-5 overline basic--text"
+          >
+            NAME
+          </div>
+          <div
+            class="body-2 grey--text"
+          >
+            Name
+            <v-divider
+              width="425"
+              class="mt-2"
+            />
+          </div>
+          <div
+            class="pt-2 overline basic--text"
+          >
+            USERNAME
+          </div>
+          <div
+            class="body-2 grey--text"
+          >
+            User :)
+            <v-divider
+              width="425"
+              class="mt-2"
+            />
+          </div>
         </v-list-item-content>
       </v-list-item>
-      <v-divider
-        class="ml-8"
-        width="555"
-      />
 
       <v-card-text
         class="ml-9 mt-4"
@@ -58,7 +69,7 @@
           BIO
         </div>
         <div
-          class="body-2 black--text"
+          class="body-2 grey--text"
         >
           text bio
         </div>
@@ -73,7 +84,7 @@
           USERNAME
         </div>
         <div
-          class="body-2 black--text"
+          class="body-2 grey--text"
         >
           Name_USER
         </div>
@@ -88,7 +99,7 @@
           EMAIL
         </div>
         <div
-          class="body-2 black--text"
+          class="body-2 grey--text"
         >
           name@mail.ru
         </div>
@@ -108,14 +119,14 @@
                 class="ml-3 pb-4"
                 color="basic"
               >
-                mdi-plus
+                mdi-lead-pencil
               </v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title
                 class="pb-4 body-1 black--text"
               >
-                Add to contact list
+                Edit profile
               </v-list-item-title>
               <v-divider
                 width="538"
@@ -129,16 +140,16 @@
             <v-list-item-action>
               <v-icon
                 class="ml-3 pb-6"
-                color="basic"
+                color="red"
               >
-                mdi-message-text-outline
+                mdi-login-variant
               </v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title
-                class="pb-6 body-1 black--text"
+                class="pb-6 body-1 red--text"
               >
-                Start messaging
+                Logout
               </v-list-item-title>
               <v-divider
                 width="550"
@@ -153,7 +164,7 @@
 
 <script>
 export default {
-  name: 'Example',
+  name: 'MyProfile',
   data: () => ({
   })
 }

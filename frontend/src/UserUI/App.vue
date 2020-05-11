@@ -208,9 +208,7 @@
     <v-content
       class="background_main"
     >
-      <v-container fluid>
-        <router-view />
-      </v-container>
+      <router-view />
     </v-content>
     <SystemInfo
       style="position: fixed; bottom: 0px; text-align: right;"
