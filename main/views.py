@@ -1,20 +1,14 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
-from main.models import Dialog, Contact, WikiPage
-from main.models import Message
-from main.permissions import IsOwnerOrReadOnly, IsAdminUserOrReadOnly
-from main.serializers import MessageSerializer, ContactSerializer
-from main.serializers import UserSerializer, DialogSerializer, MyTokenObtainPairSerializer, UserProfileSerializer, \
-    WikiPageSerializer
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
 from rest_framework import mixins
 
-User = get_user_model()
+from main import serializers
+from main.models import Dialog, Contact, WikiPage, Message
+from main.permissions import IsAdminUserOrReadOnly
 
 
 # noinspection PyUnresolvedReferences
@@ -37,15 +31,25 @@ class UserViewSet(mixins.ListModelMixin,
                   CountModelMixin,
                   viewsets.GenericViewSet):
     """
-    ViewSet для просмотра профилей пользователей.
+    ViewSet для работы с профилями пользователей.
+    Не имеет возможности создать нового пользователя.
     """
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = serializers.UserSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    search_fields = ['id', 'username', 'first_name', 'last_name', 'email']
+
+    @action(detail=True, methods=['post'])
+    def add_contact(self, request, pk=None):
+        user = self.get_object()
+        contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
+        return Response(
+            {'status': f'{user.username} {"successfully added" if created else "is already"} in your contact list'}
+        )
 
 
 class ContactViewSet(viewsets.ModelViewSet):
-    serializer_class = ContactSerializer
+    serializer_class = serializers.ContactSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -57,9 +61,9 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     ViewSet для работы с диалогами
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = DialogSerializer
+    serializer_class = serializers.DialogSerializer
     queryset = Dialog.objects.all()
-    filterset_fields = ('users', 'name', 'id')
+    filterset_fields = ['users', 'name', 'id']
 
     def get_queryset(self):
         user = self.request.user
@@ -92,15 +96,14 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     Send all messages from chat
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = MessageSerializer
+    serializer_class = serializers.MessageSerializer
     queryset = Message.objects.all()
-    search_fields = ('text',)
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['text']
     filterset_fields = '__all__'
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+    serializer_class = serializers.MyTokenObtainPairSerializer
 
 
 class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
@@ -108,6 +111,6 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     ViewSet для работы с вики-страницей
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = WikiPageSerializer
+    serializer_class = serializers.WikiPageSerializer
     queryset = WikiPage.objects.all()
-    filterset_fields = ('title', 'dialog', 'message')
+    filterset_fields = ['title', 'dialog', 'message']
