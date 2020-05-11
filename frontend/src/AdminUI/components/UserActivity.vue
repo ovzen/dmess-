@@ -268,7 +268,7 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
-        api.axios.put('/api/users/' + this.editedIndex + '/',
+        api.axios.put('/api/users/' + this.editedItem.id + '/',
           {
             username: this.editedItem.username,
             password: this.editedItem.password,
