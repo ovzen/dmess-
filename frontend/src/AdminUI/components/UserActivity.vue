@@ -228,19 +228,16 @@ export default {
           first_name: this.editedItem.first_name,
           last_name: this.editedItem.last_name,
           email: this.editedItem.email
-        })
-        .catch(error => {
-          console.log(error)
-          if (error.response.status === 400) {
-            alert('Пользователь с таким именем уже существует.')
-          }
         }).then(res => {
           if (res.status === 201) {
             this.loading = true
             this.update()
           }
-        }
-        )
+        }).catch(error => {
+          if (error.response.status === 400) {
+            alert(error.response.data[Object.keys(error.response.data)[0]].join(' '))
+          }
+        })
     },
     editItem (item) {
       this.editedIndex = this.Users.indexOf(item)
@@ -280,6 +277,10 @@ export default {
           if (res.status === 200) {
             this.loading = true
             this.update()
+          }
+        }).catch(error => {
+          if (error.response.status === 400) {
+            alert(error.response.data[Object.keys(error.response.data)[0]].join(' '))
           }
         })
       } else {
