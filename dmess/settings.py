@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'admin.apps.AdminConfig',
     'channels',
-    'django_filters'
+    'django_filters',
+    'rest_registration'
 ]
 
 REST_FRAMEWORK = {
@@ -90,7 +91,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -220,7 +220,7 @@ SWAGGER_SETTINGS = {
     "is_superuser": False,  # Set to True to enforce admin only access
 }
 
-LOGIN_URL='/auth/'
+LOGIN_URL = '/auth/'
 
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
@@ -240,3 +240,11 @@ GITLAB_PROJECT_ID = 1932
 FIXTURE_DIRS = [
     'main/fixtures',
 ]
+
+REST_REGISTRATION = {
+    'REGISTER_VERIFICATION_ENABLED': False,
+    'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
+    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
+    'PROFILE_SERIALIZER_CLASS': 'main.serializers.UserSerializer',
+    'REGISTER_SERIALIZER_PASSWORD_CONFIRM': False
+}

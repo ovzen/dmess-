@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     аватар, статус и т.п.
     """
 
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='profile', primary_key=True)
     avatar = models.ImageField(
         upload_to='avatars',
         null=True,
@@ -34,7 +34,7 @@ class Dialog(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     users = models.ManyToManyField(User)
     admin_only = models.BooleanField(default=False)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     def last_message(self):
