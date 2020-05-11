@@ -31,20 +31,18 @@ router.register(r'api/contacts', views.ContactViewSet, basename='contact')
 router.register(r'api/dialog', views.DialogViewSet, basename='dialog')
 router.register(r'api/messages', views.MessageViewSet, basename='message')
 router.register(r'api/wiki', views.WikiPageViewSet, basename='wiki')
+router.register(r'api/users', views.UserViewSet, basename='user')
 
 
 schema_view = get_swagger_view(title='API')
 
 urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
+    path('api/accounts/', include('rest_registration.api.urls')),
     url(r'^docs/', schema_view),
-
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
-
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/register/', views.UserView.as_view()),
-    path('api/users/<int:pk>', views.UserProfileView.as_view()),
     path('api/admin/', include('admin.urls')),
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path(
@@ -58,5 +56,4 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
         name="index",
     ),
     path('admin_tools/', include('admin_tools.urls')),
-
 ]

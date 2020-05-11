@@ -194,6 +194,7 @@ export default {
       first_name: '',
       last_name: '',
       email: '',
+      profile: '',
       actions: 0
     },
     defaultItem: {
@@ -214,29 +215,31 @@ export default {
   },
   methods: {
     update () {
-      api.axios.get('/api/register/').then(res => {
+      api.axios.get('/api/users/').then(res => {
         this.Users = res.data.results
         this.loading = false
       })
     },
     Create () {
       api.axios
-        .post('/api/register/', {
+        .post('/api/accounts/register/', {
           username: this.editedItem.username,
           password: this.editedItem.password,
           first_name: this.editedItem.first_name,
           last_name: this.editedItem.last_name,
-          email: this.editedItem.email,
-          invite_code: this.editedItem.invitecode
+          email: this.editedItem.email
         })
         .catch(error => {
           console.log(error)
           if (error.response.status === 400) {
             alert('Пользователь с таким именем уже существует.')
           }
-        }).then(
-          this.loading = true,
-          setTimeout(this.update(), 1000)
+        }).then(res => {
+          if (res.status === 201) {
+            this.loading = true
+            this.update()
+          }
+        }
         )
     },
     editItem (item) {
@@ -245,8 +248,13 @@ export default {
       this.dialog = true
     },
     deleteItem (item) {
-      const index = this.Users.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      confirm('Are you sure you want to delete this item?') &&
+      api.axios.delete('/api/users/' + item.id + '/').then(res => {
+        if (res.status === 204) {
+          this.loading = true
+          this.update()
+        }
+      })
     },
     CopyLink (item) {
       navigator.clipboard.writeText(window.location.host + '/auth/register/' + item.code + '/')
@@ -260,6 +268,20 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
+        api.axios.put('/api/users/' + this.editedIndex + '/',
+          {
+            username: this.editedItem.username,
+            password: this.editedItem.password,
+            first_name: this.editedItem.first_name,
+            last_name: this.editedItem.last_name,
+            email: this.editedItem.email,
+            profile: this.editedItem.profile
+          }).then(res => {
+          if (res.status === 200) {
+            this.loading = true
+            this.update()
+          }
+        })
       } else {
         this.Create()
       }
