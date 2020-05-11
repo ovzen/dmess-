@@ -49,7 +49,7 @@
       />
 
       <v-card-text
-        class="ml-7 mt-4"
+        class="ml-9 mt-4"
       >
         <div
           class="pt-5 overline basic--text"
@@ -63,6 +63,7 @@
         </div>
         <v-divider
           width="538"
+          class="mb-2"
         />
 
         <div
@@ -77,10 +78,11 @@
         </div>
         <v-divider
           width="538"
+          class="mb-1"
         />
 
         <div
-          class="pt-2 overline basic--text"
+          class="pt-4 overline basic--text"
         >
           EMAIL
         </div>
@@ -97,10 +99,12 @@
         <v-card-text
           class="mt-12"
         >
-          <v-list-item>
+          <v-list-item
+            @click=""
+          >
             <v-list-item-action>
               <v-icon
-                class="pb-4"
+                class="ml-3 pb-4"
                 color="basic"
               >
                 mdi-plus
@@ -118,10 +122,12 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item>
+          <v-list-item
+            @click=""
+          >
             <v-list-item-action>
               <v-icon
-                class="pb-4"
+                class="ml-3 pb-6"
                 color="basic"
               >
                 mdi-message-text-outline
@@ -129,7 +135,7 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title
-                class="pb-4 body-1 black--text"
+                class="pb-6 body-1 black--text"
               >
                 Start messaging
               </v-list-item-title>

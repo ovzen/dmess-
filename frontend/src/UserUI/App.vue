@@ -167,10 +167,10 @@
         <profiles
           v-if="currentTab.name == 'mdi-account-circle'"
         />
+        <v-divider />
         <settings
           v-if="currentTab.name == 'mdi-settings'"
         />
-        <v-divider />
         <v-footer
           absolute
           padless
