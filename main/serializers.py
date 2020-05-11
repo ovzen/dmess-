@@ -1,11 +1,9 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from admin.models import Invite
 from main import models
-
-UserModel = get_user_model()
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -18,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
 
     class Meta:
-        model = UserModel
+        model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile')
 
     def update(self, instance, validated_data):
