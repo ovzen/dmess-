@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     аватар, статус и т.п.
     """
 
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='profile', primary_key=True)
     avatar = models.ImageField(
         upload_to='avatars',
         null=True,
