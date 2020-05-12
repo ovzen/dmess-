@@ -1,5 +1,5 @@
 <template>
-  <div>
+ <div>
     <v-divider />
     <v-col>
       <a class="basic--text">

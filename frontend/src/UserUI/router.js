@@ -40,7 +40,7 @@ export default new Router({
       component: KnowledgeBase
     },
     {
-      path: '/ChatUser',
+      path: '/ChatUser/:id',
       name: 'ChatUser',
       component: ChatUser
     },
