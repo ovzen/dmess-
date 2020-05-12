@@ -107,8 +107,11 @@ export default {
       api.axios
         .get('/api/messages/', { params: { dialog: this.diailogId } })
         .then(response => {
-          this.messages = this.messages.concat(response.data.results)
+          if (response.data) {
+            this.messages = this.messages.concat(response.data.results)
+          }
         })
+        .catch(error => console.log(error))
       this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.diailogId + '/')
       api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
     },

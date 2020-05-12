@@ -387,9 +387,12 @@ export default {
       api.axios
         .get('/api/dialog/', { params: { users: this.user_id } })
         .then(response => {
-          this.dialogs = response.data.results
-          console.log('dialogsList:', response.data.results)
+          if (response.data) {
+            this.dialogs = response.data.results
+            console.log('dialogsList:', response.data.results)
+          }
         })
+        .catch(error => console.log(error))
     },
     openDialog (dialogId) {
       console.log('Route ID:', this.$route.params.id)
@@ -412,9 +415,12 @@ export default {
             }
           })
           .then(response => {
-            this.chatName = response.data.results[0].name
-            console.log(response)
+            if (response.data) {
+              this.chatName = response.data.results[0].name
+              console.log(response)
+            }
           })
+          .catch(error => console.log(error))
       } else {
         this.chatName = undefined
       }
@@ -423,12 +429,15 @@ export default {
       api.axios
         .get('/api/users/' + this.user_id + '/')
         .then(res => {
-          console.log('user details: ', res)
-          this.avatar = res.data.profile.avatar
-          this.isOnline = res.data.profile.is_online
-          this.firstName = res.data.first_name ? res.data.first_name : undefined
-          this.lastName = res.data.last_name ? res.data.last_name : undefined
+          if (res.data) {
+            console.log('user details: ', res)
+            this.avatar = res.data.profile.avatar
+            this.isOnline = res.data.profile.is_online
+            this.firstName = res.data.first_name ? res.data.first_name : undefined
+            this.lastName = res.data.last_name ? res.data.last_name : undefined
+          }
         })
+        .catch(error => console.log(error))
     },
     formatTime (datetime) {
       if (datetime) {
@@ -465,8 +474,11 @@ export default {
       api.axios
         .get('/api/dialogs')
         .then(res => {
-          this.unread_messages_qty = res.data['unread_messages']
+          if (res.data) {
+            this.unread_messages_qty = res.data['unread_messages']
+          }
         })
+        .catch(error => console.log(error))
     }
   }
 }
