@@ -20,7 +20,7 @@
             <v-list-item-title
               class="title"
             >
-              {{ chatName }}
+              Name User
             </v-list-item-title>
             <v-list-item-subtitle>
               online/offline
@@ -362,7 +362,7 @@ export default {
   mounted () {
     setInterval(this.updateToken, 1000)
     this.getDialogsList()
-    this.getUserData(this.user_id)
+    this.getUserData()
     setInterval(this.getUnreadMessagesQty, 2000)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
@@ -421,12 +421,13 @@ export default {
     },
     getUserData () {
       api.axios
-        .get('/api/users/' + this.user_id)
+        .get('/api/users/' + this.user_id + '/')
         .then(res => {
-          this.avatar = res.data['avatar']
-          this.isOnline = res.data.is_online
-          this.firstName = res.data['user'].first_name
-          this.lastName = res.data['user'].last_name
+          console.log('user details: ', res)
+          this.avatar = res.data.profile.avatar
+          this.isOnline = res.data.profile.is_online
+          this.firstName = res.data.first_name ? res.data.first_name : undefined
+          this.lastName = res.data.last_name ? res.data.last_name : undefined
         })
     },
     formatTime (datetime) {
