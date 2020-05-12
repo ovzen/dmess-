@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  name: 'Example',
+  name: 'Settings',
   data: () => ({
   })
 }

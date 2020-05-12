@@ -6,6 +6,8 @@ import Profile from './components/Profile'
 import AllUsers from './components/AllUsers'
 import KnowledgeBase from './components/KnowledgeBase'
 import ChatUser from './components/ChatUser'
+import UserProfile from './components/UserProfile'
+import MyProfile from './components/MyProfile'
 Vue.use(Router)
 
 export default new Router({
@@ -41,6 +43,16 @@ export default new Router({
       path: '/ChatUser/:id',
       name: 'ChatUser',
       component: ChatUser
+    },
+    {
+      path: '/UserProfile',
+      name: 'UserProfile',
+      component: UserProfile
+    },
+    {
+      path: '/MyProfile',
+      name: 'MyProfile',
+      component: MyProfile
     }
   ]
 })
