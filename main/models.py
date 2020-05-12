@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     аватар, статус и т.п.
     """
 
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='profile', primary_key=True)
     avatar = models.ImageField(
         upload_to='avatars',
         null=True,
@@ -21,7 +21,7 @@ class UserProfile(models.Model):
     )
     width_field = models.IntegerField(default=0)
     height_field = models.IntegerField(default=0)
-    bio = models.CharField(max_length=70, default="Hey there! I'm using dmess")
+    bio = models. CharField(max_length=70, default="Hey there! I'm using dmess")
     is_online = models.BooleanField(default=False)
 
 
@@ -34,14 +34,15 @@ class Dialog(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     users = models.ManyToManyField(User)
     admin_only = models.BooleanField(default=False)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    def __str__(self):
-        return self.name
 
     def last_message(self):
         return self.message_set.order_by('-create_date').first()
+
+    def unread_messages(self):
+        messages = self.message_set.filter(is_read=False)
+        return {user.id: messages.exclude(user=user).count() for user in self.users.get_queryset()}
 
 
 class Message(models.Model):
@@ -49,6 +50,7 @@ class Message(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
 
 class WikiPage(models.Model):

@@ -268,6 +268,7 @@ export default {
     group: [],
     for_user: true,
     dialogs_for_user: [],
+    unread_messages_qty: [],
     username: 'Test',
     firstName: undefined,
     lastName: undefined,
@@ -302,6 +303,7 @@ export default {
   },
   mounted () {
     setInterval(this.updateToken, 1000)
+    setInterval(this.getUnreadMessagesQty, 2000)
     this.getDialogs()
     this.getUserData()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
@@ -366,6 +368,13 @@ export default {
           this.isOnline = res.data.is_online
           this.firstName = res.data['user'].first_name
           this.lastName = res.data['user'].last_name
+        })
+    },
+    getUnreadMessagesQty () {
+      api.axios
+        .get('/api/dialogs')
+        .then(res => {
+          this.unread_messages_qty = res.data['unread_messages']
         })
     }
   }
