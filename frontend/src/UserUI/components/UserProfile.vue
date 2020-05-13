@@ -1,7 +1,7 @@
 <template>
   <v-responsive
     class="background_white mx-auto"
-    height="100vh"
+    height="100%"
     max-width="650"
   >
     <v-container>
