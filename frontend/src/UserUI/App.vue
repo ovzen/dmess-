@@ -358,11 +358,13 @@
               :class="['tab-button', { active: currentTab.name === tab.name }]"
               @click="currentTab = tab"
             >
-              <v-icon
-                size="24px"
-              >
-                {{ tab.name }}
-              </v-icon>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on }">
+                    <v-icon size="24px" v-on="on">{{ tab.name }}</v-icon>
+                  </template>
+                  <span>{{ tab.display_name }}</span>
+                </v-tooltip>
+
             </v-btn>
           </v-card-actions>
         </v-footer>
@@ -394,21 +396,25 @@ Vue.use(VueCookie)
 var tabs = [
   {
     name: 'mdi-account-circle',
+    display_name: 'Contacts',
     component: {
     }
   },
   {
     name: 'mdi-message-text',
+    display_name: 'dialogs',
     component: {
     }
   },
   {
     name: 'mdi-room-service',
+    display_name: 'Notifications',
     component: {
     }
   },
   {
     name: 'mdi-settings',
+    display_name: 'Settings',
     component: {
     }
   }
