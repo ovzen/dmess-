@@ -16,7 +16,7 @@
       />
     </v-col>
     <v-divider />
-    <v-list-item to="/ChatUser">
+    <v-list-item to="/UserProfile">
       <v-list-item-avatar>
         <v-avatar
           size="36px"

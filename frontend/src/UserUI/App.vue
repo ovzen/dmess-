@@ -20,7 +20,7 @@
             <v-list-item-title
               class="title"
             >
-              {{ chatName }}
+              Name User
             </v-list-item-title>
             <v-list-item-subtitle>
               online/offline
@@ -161,16 +161,195 @@
       <div
         id="dynamic-component"
       >
-        <chats
-          v-if="currentTab.name == 'mdi-message-text'"
-        />
-        <profiles
-          v-if="currentTab.name == 'mdi-account-circle'"
-        />
+        <div v-if="currentTab.name == 'mdi-account-circle'">
+          <v-divider />
+          <v-col>
+            <v-text-field
+              v-model="userSearch"
+              clearable
+              solo
+              background-color="grey lighten-2"
+              dense
+              flat
+              color="basic"
+              hide-details
+              prepend-inner-icon="mdi-magnify"
+              label="Search for users"
+              style="border-radius:50px; max-width:450px;"
+              @input="getUsersBySearch(userSearch)"
+            />
+          </v-col>
+          <v-divider />
+          <div
+            v-for="contact in (userSearch != '' ? SortContacts : contacts)"
+            :key="contact.id"
+          >
+            <v-list-item
+              :to="'/UserProfile/' + contact.Contact.id"
+            >
+              <v-list-item-avatar>
+                <v-avatar
+                  size="36px"
+                  color="basic"
+                >
+                  <span
+                    class="white--text"
+                  >
+                    NU
+                  </span>
+                <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+                </v-avatar>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ contact.Contact.username }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <span
+                    class="basic--text text--lighten"
+                  >
+                    {{ ( contact.Contact.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                  </span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider
+              v-if="contact.id != SortContacts[SortContacts.length-1].id"
+              inset
+            />
+          </div>
+          <div
+            v-if="userSearch"
+          >
+            <v-divider />
+            <h1
+              class="basic--text"
+              style="font-family: Roboto;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 16px;
+                    padding:16px"
+            >
+              Global Search
+            </h1>
+            <v-divider />
+            <div
+              v-for="user in findedUsers"
+              :key="user.id"
+            >
+              <v-list-item
+                :to="'/UserProfile/' + user.id"
+              >
+                <v-list-item-avatar>
+                  <v-avatar
+                    size="36px"
+                    color="basic"
+                  >
+                    <span
+                      class="white--text"
+                    >
+                      NU
+                    </span>
+                    <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ user.username }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span
+                      class="basic--text text--lighten"
+                    >
+                      {{ ( user.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider
+                v-if="user.id !== findedUsers[findedUsers.length-1].id"
+                inset
+              />
+            </div>
+          </div>
+        </div>
+        <div v-if="currentTab.name == 'mdi-message-text'">
+          <v-divider />
+          <v-col>
+            <v-text-field
+              clearable
+              solo
+              color="basic"
+              background-color="grey lighten-2"
+              dense
+              flat
+              hide-details
+              prepend-inner-icon="mdi-magnify"
+              label="Search for dialogs"
+              style="border-radius:50px; max-width:450px;"
+            />
+          </v-col>
+          <v-divider />
+          <v-list-item
+            v-for="(dialog, i) in dialogs"
+            :key="i"
+            @click="openDialog(dialog.id)"
+          >
+            <v-list-item-avatar>
+              <v-avatar
+                size="36px"
+                color="basic"
+              >
+                <span
+                  class="white--text"
+                >
+                  NU
+                </span>
+              </v-avatar>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ getContactName(dialog.users_detail) }}
+              </v-list-item-title>
+              <v-list-item-subtitle v-if="dialog.last_message">
+                <span
+                  style="color:#757575; font-size:115%;"
+                >
+                  {{ dialog.last_message.text }}
+                </span>
+              </v-list-item-subtitle>
+              <v-list-item-subtitle v-else>
+                <span
+                  style="color:#757575; font-size:115%;"
+                >
+                  Тут пока ничего не написано
+                </span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-list-item-action-text v-if="dialog.last_message">
+                {{ formatTime(dialog.last_message.create_date) }}
+              </v-list-item-action-text>
+              <!-- Изменить v-if на другое условие: "если есть непрочитанные сообщения" -->
+              <v-avatar
+                v-if="dialog.last_message"
+                color="basic"
+                class="subheading white--text"
+                size="24"
+                v-text="1"
+              />
+            </v-list-item-action>
+          </v-list-item>
+        </div>
+        <v-divider />
         <settings
           v-if="currentTab.name == 'mdi-settings'"
         />
-        <v-divider />
         <v-footer
           absolute
           padless
@@ -208,9 +387,7 @@
     <v-content
       class="background_main"
     >
-      <v-container fluid>
-        <router-view />
-      </v-container>
+      <router-view />
     </v-content>
     <SystemInfo
       style="position: fixed; bottom: 0px; text-align: right;"
@@ -224,9 +401,10 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
-import chats from './components/chats'
 import profiles from './components/profiles'
 import settings from './components/settings'
+import moment from 'moment'
+
 Vue.use(VueCookie)
 var tabs = [
   {
@@ -253,14 +431,14 @@ var tabs = [
 
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, profiles, chats, settings },
+  components: { SystemInfo, settings },
   data: () => ({
     login: '',
     button: 'Войти',
     chatName: '',
     password: '',
-    message_text: '',
     data: '',
+    userSearch: '',
     messages: [],
     dialog: false,
     id: 0,
@@ -269,7 +447,6 @@ export default {
     expandOnHover: false,
     group: [],
     for_user: true,
-    dialogs_for_user: [],
     unread_messages_qty: [],
     username: 'Test',
     firstName: undefined,
@@ -278,16 +455,22 @@ export default {
     avatar: '',
     isOnline: false,
     currentTab: tabs[0],
-    tabs: tabs
+    tabs: tabs,
+    contacts: [],
+    findedUsers: [],
+    dialogs: []
   }),
   computed: {
     Route () {
       return this.$route
+    },
+    SortContacts () {
+      return this.contacts.filter(contact => { return contact.Contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['getDialogs', 'disconnect', 'getChatName']
+    $route: ['disconnect', 'getChatName']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -296,24 +479,37 @@ export default {
       console.warn('The current user was not found')
     }
   },
-  beforeCreate () {
-    if (this.$cookie.get('Authentication')) {
-      this.user_id = this.$cookie.get('Authentication').user_id
-    } else {
-      console.warn('The current user was not found')
-    }
-  },
   mounted () {
     setInterval(this.updateToken, 1000)
-    setInterval(this.getUnreadMessagesQty, 2000)
-    this.getDialogs()
+    this.getContacts()
+    this.getDialogsList()
     this.getUserData()
+    setInterval(this.getUnreadMessagesQty, 2000)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.Route.params.id) {
       this.getChatName()
     }
   },
   methods: {
+    getUsersBySearch () {
+      api.axios.get('/api/users/', {
+        params: {
+          search: this.userSearch
+        }
+      }).then(res => {
+        this.findedUsers = res.data.results.filter(user => {
+          for (let contact in this.contacts) {
+            if (user.username === this.contacts[contact].Contact.username) {
+              return false
+            }
+          }
+          return true
+        })
+      })
+    },
+    getContacts () {
+      api.axios.get('/api/contacts/').then(res => { this.contacts = res.data.results })
+    },
     disconnect () {
       this.$disconnect()
     },
@@ -327,19 +523,22 @@ export default {
         )
       }
     },
-    getDialogs () {
-      api.axios.get('/api/dialog/', {
-        params: {
-          users: this.user_id
-        }
-      })
-        .then(res => {
-          this.dialogs_for_user = res.data
-          console.log(this.dialogs_for_user)
+    getDialogsList () {
+      api.axios
+        .get('/api/dialog/', { params: { users: this.user_id } })
+        .then(response => {
+          if (response.data) {
+            this.dialogs = response.data.results
+            console.log('dialogsList:', response.data.results)
+          }
         })
+        .catch(error => console.log(error))
     },
     openDialog (dialogId) {
-      this.$router.push({ name: 'Chat', params: { id: dialogId } })
+      console.log('Route ID:', this.$route.params.id)
+      if (this.$route.params.id !== dialogId) {
+        this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
+      }
     },
     allusers () {
       this.$router.push({ name: 'allUser' })
@@ -348,7 +547,7 @@ export default {
       this.$router.push({ name: 'Profile', params: { id: this.user_id } })
     },
     getChatName () {
-      if (this.$route.name === 'Chat') {
+      if (this.$route.name === 'ChatUser') {
         api.axios
           .get('/api/dialog/', {
             params: {
@@ -356,28 +555,70 @@ export default {
             }
           })
           .then(response => {
-            this.chatName = response.data.results[0].name
+            if (response.data) {
+              this.chatName = response.data.results[0].name
+              console.log(response)
+            }
           })
+          .catch(error => console.log(error))
       } else {
         this.chatName = undefined
       }
     },
     getUserData () {
       api.axios
-        .get('/api/users/' + this.user_id)
+        .get('/api/users/' + this.user_id + '/')
         .then(res => {
-          this.avatar = res.data['avatar']
-          this.isOnline = res.data.is_online
-          this.firstName = res.data['user'].first_name
-          this.lastName = res.data['user'].last_name
+          if (res.data) {
+            console.log('user details: ', res)
+            this.avatar = res.data.profile.avatar
+            this.isOnline = res.data.profile.is_online
+            this.firstName = res.data.first_name ? res.data.first_name : undefined
+            this.lastName = res.data.last_name ? res.data.last_name : undefined
+          }
         })
+        .catch(error => console.log(error))
+    },
+    formatTime (datetime) {
+      if (datetime) {
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).format('hh:mm')
+        }
+      }
+    },
+    getUserName (user) {
+      if (user.first_name && user.last_name) {
+        return (user.first_name + ' ' + user.last_name)
+      } else if (user.first_name) {
+        return user.first_name
+      } else if (user.last_name) {
+        return user.last_name
+      } else {
+        return user.username
+      }
+    },
+    getContact (users) {
+      return (users[0].id === this.user_id) ? users[1] : users[0]
+    },
+    getContactName (users) {
+      console.log(users)
+      if (users.length > 1) {
+        return this.getUserName(this.getContact(users))
+      } else {
+        return 'В диалоге нет других пользователей'
+      }
     },
     getUnreadMessagesQty () {
       api.axios
         .get('/api/dialogs')
         .then(res => {
-          this.unread_messages_qty = res.data['unread_messages']
+          if (res.data) {
+            this.unread_messages_qty = res.data['unread_messages']
+          }
         })
+        .catch(error => console.log(error))
     }
   }
 }
