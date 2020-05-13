@@ -164,13 +164,123 @@
         <chats
           v-if="currentTab.name == 'mdi-message-text'"
         />
-        <profiles
-          v-if="currentTab.name == 'mdi-account-circle'"
-        />
+        <div v-if="currentTab.name == 'mdi-account-circle'">
+          <v-divider />
+          <v-col>
+            <v-text-field
+              v-model="userSearch"
+              clearable
+              solo
+              background-color="grey lighten-2"
+              dense
+              flat
+              color="basic"
+              hide-details
+              prepend-inner-icon="mdi-magnify"
+              label="Search for users"
+              style="border-radius:50px; max-width:450px;"
+              @input="getUsersBySearch(userSearch)"
+            />
+          </v-col>
+          <v-divider />
+          <div
+            v-for="contact in (userSearch != '' ? SortContacts : contacts)"
+            :key="contact.id"
+          >
+            <v-list-item
+              :to="'/profile/' + contact.id"
+            >
+              <v-list-item-avatar>
+                <v-avatar
+                  size="36px"
+                  color="basic"
+                >
+                  <span
+                    class="white--text"
+                  >
+                    NU
+                  </span>
+                <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+                </v-avatar>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ contact.Contactname }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <span
+                    class="basic--text text--lighten"
+                  >
+                    {{ ( contact.Contactstatus == true ? 'В сети' : 'Не в сети' ) }}
+                  </span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider
+              v-if="contact.id != SortContacts[SortContacts.length-1].id"
+              inset
+            />
+          </div>
+          <div
+            v-if="userSearch"
+          >
+            <v-divider />
+            <h1
+              class="basic--text"
+              style="font-family: Roboto;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 16px;
+                    padding:16px"
+            >
+              Global Search
+            </h1>
+            <v-divider />
+            <div
+              v-for="user in findedUsers"
+              :key="user.id"
+            >
+              <v-list-item
+                :to="'/profile/' + user.id"
+              >
+                <v-list-item-avatar>
+                  <v-avatar
+                    size="36px"
+                    color="basic"
+                  >
+                    <span
+                      class="white--text"
+                    >
+                      NU
+                    </span>
+                    <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ user.username }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span
+                      class="basic--text text--lighten"
+                    >
+                      {{ ( user.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider inset />
+            </div>
+          </div>
+        </div>
         <settings
           v-if="currentTab.name == 'mdi-settings'"
         />
-        <v-divider />
         <v-footer
           absolute
           padless
@@ -253,7 +363,7 @@ var tabs = [
 
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, profiles, chats, settings },
+  components: { SystemInfo, chats, settings },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -261,6 +371,7 @@ export default {
     password: '',
     message_text: '',
     data: '',
+    userSearch: '',
     messages: [],
     dialog: false,
     id: 0,
@@ -278,11 +389,16 @@ export default {
     avatar: '',
     isOnline: false,
     currentTab: tabs[0],
-    tabs: tabs
+    tabs: tabs,
+    contacts: [],
+    findedUsers: []
   }),
   computed: {
     Route () {
       return this.$route
+    },
+    SortContacts () {
+      return this.contacts.filter(contact => { return contact.Contactname.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
   },
   watch: {
@@ -305,7 +421,8 @@ export default {
   },
   mounted () {
     setInterval(this.updateToken, 1000)
-    setInterval(this.getUnreadMessagesQty, 2000)
+    setInterval(this.getUnreadMessagesQty, 20000)
+    this.getContacts()
     this.getDialogs()
     this.getUserData()
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
@@ -314,6 +431,26 @@ export default {
     }
   },
   methods: {
+    getUsersBySearch (search) {
+      api.axios.get('/api/users/', {
+        params: {
+          search: search
+        }
+      }).then(res => {
+        this.findedUsers = res.data.results.filter(user => {
+          for (let contact in this.contacts) {
+            console.log(user.username, ' ', this.contacts[contact].Contactname)
+            if (user.username === this.contacts[contact].Contactname) {
+              return false
+            }
+          }
+          return true
+        })
+      })
+    },
+    getContacts () {
+      api.axios.get('/api/contacts/').then(res => { this.contacts = res.data.results })
+    },
     disconnect () {
       this.$disconnect()
     },

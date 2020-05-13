@@ -4,12 +4,13 @@ from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from main import models
+from main.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        exclude = ('user', )
+        exclude = ('user',)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -49,6 +50,11 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    Username = serializers.CharField(source='user.username', read_only=True)
+    Userstatus = serializers.BooleanField(source='user.profile.is_online', read_only=True)
+    Contactname = serializers.CharField(source='contact.username', read_only=True)
+    Contactstatus = serializers.BooleanField(source='contact.profile.is_online', read_only=True)
+
     class Meta:
         model = models.Contact
         fields = '__all__'
