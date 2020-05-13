@@ -207,13 +207,13 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  {{ contact.Contactname }}
+                  {{ contact.Contact.username }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   <span
                     class="basic--text text--lighten"
                   >
-                    {{ ( contact.Contactstatus == true ? 'В сети' : 'Не в сети' ) }}
+                    {{ ( contact.Contact.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
                   </span>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -398,7 +398,7 @@ export default {
       return this.$route
     },
     SortContacts () {
-      return this.contacts.filter(contact => { return contact.Contactname.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
+      return this.contacts.filter(contact => { return contact.Contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
   },
   watch: {
@@ -439,8 +439,7 @@ export default {
       }).then(res => {
         this.findedUsers = res.data.results.filter(user => {
           for (let contact in this.contacts) {
-            console.log(user.username, ' ', this.contacts[contact].Contactname)
-            if (user.username === this.contacts[contact].Contactname) {
+            if (user.username === this.contacts[contact].Contact.username) {
               return false
             }
           }
