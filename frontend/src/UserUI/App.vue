@@ -64,7 +64,7 @@
           color="background_white"
         >
           <v-list-item
-            to="/MyProfile"
+            :to="{ name: 'MyProfile', params: {} }"
           >
             <v-list-item-title>
               Profile
