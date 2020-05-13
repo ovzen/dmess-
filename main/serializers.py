@@ -50,10 +50,7 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-    Username = serializers.CharField(source='user.username', read_only=True)
-    Userstatus = serializers.BooleanField(source='user.profile.is_online', read_only=True)
-    Contactname = serializers.CharField(source='contact.username', read_only=True)
-    Contactstatus = serializers.BooleanField(source='contact.profile.is_online', read_only=True)
+    contact = UserSerializer()
 
     class Meta:
         model = models.Contact
