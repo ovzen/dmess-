@@ -1,95 +1,65 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from admin.models import Invite
-from main.models import Dialog, UserProfile, Message, Contact, WikiPage
-
-
-UserModel = get_user_model()
-
-
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    invite_code = serializers.UUIDField(required=False, allow_null=True, write_only=True)
-
-    def create(self, validated_data):
-        user = UserModel.objects.create(
-            username=validated_data['username'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            email=validated_data['email'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-
-        code = self.validated_data.get('invite_code')
-        if code:
-            invite_object = Invite.objects.filter(code=code)
-            if invite_object.exists():
-                invite = invite_object.first()
-                user.is_staff = invite.is_active
-                user.save()
-                invite.use(user)
-                invite.save()
-
-        profile = UserProfile(user=user)
-        profile.save()
-        return user
-
-    class Meta:
-        model = UserModel
-        # Tuple of serialized model fields (see link [2])
-        fields = (
-            "id", "username", "password",
-            "first_name", "last_name", "email",
-            "invite_code"
-        )
-
-
-class UserRegSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=150)
-    date_joined = serializers.DateTimeField()
-
-    class Meta:
-        model = User
-        fields = ("username", "date_joined")
+from main import models
+from main.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    class Meta:
+        model = models.UserProfile
+        exclude = ('user',)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    profile = UserProfileSerializer()
 
     class Meta:
-        model = UserProfile
-        fields = '__all__'
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile')
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile')
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        for key, value in profile_data.items():
+            setattr(instance.profile, key, value)
+        instance.profile.save()
+        instance.save()
+        return instance
 
 
 class MessageSerializer(serializers.ModelSerializer):
     user_detail = UserSerializer(source='user', read_only=True)
 
     class Meta:
-        model = Message
+        model = models.Message
         fields = '__all__'
 
 
 class DialogSerializer(serializers.ModelSerializer):
     last_message = MessageSerializer(read_only=True)
     users_detail = UserSerializer(source='users', many=True, read_only=True)
+    unread_messages = serializers.DictField(read_only=True)
 
     class Meta:
-        model = Dialog
+        model = models.Dialog
         fields = '__all__'
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    User = UserSerializer(read_only=True, source='user')
+    Contact = UserSerializer(read_only=True, source='contact')
+
     class Meta:
-        model = Contact
+        model = models.Contact
         fields = '__all__'
+        extra_kwargs = {'user': {'write_only': True}, 'contact': {'write_only': True}}
         validators = [
             UniqueTogetherValidator(
-                queryset=Contact.objects.all(),
+                queryset=models.Contact.objects.all(),
                 fields=['user', 'contact'],
                 message='You have already added this contact.'
             )
@@ -98,10 +68,9 @@ class ContactSerializer(serializers.ModelSerializer):
 
 class WikiPageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WikiPage
+        model = models.WikiPage
         fields = '__all__'
         read_only_fields = ['image']
-
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

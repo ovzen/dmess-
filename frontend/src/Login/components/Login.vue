@@ -36,9 +36,11 @@
                         required
                         outlined
                         :error-messages="error_text"
+                        @keyup.enter="FocusOn('password')"
                       />
 
                       <v-text-field
+                        ref="password"
                         v-model="password"
                         :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="vanish ? 'text' : 'password'"
@@ -48,6 +50,7 @@
                         required
                         outlined
                         @click:append="vanish = !vanish"
+                        @keyup.enter="auth(login, password)"
                       />
                     </v-col>
                   </v-row>
@@ -126,10 +129,10 @@ export default {
           password: password
         })
         .catch(err => {
-          if (err != 0) {
+          if (err !== 0) {
             this.error_text = 'Invalid Login or Password'
             console.log(err)
-          } else if (err == 0) {
+          } else if (err === 0) {
             this.error_text = ''
           }
         })
@@ -145,6 +148,11 @@ export default {
           console.log(jwt.decode(this.$cookie.get('Authentication')))
           window.location.href = this.next
         })
+    },
+    FocusOn (value) {
+      this.$nextTick(() => {
+        this.$refs[value].focus()
+      })
     }
   }
 }

@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "text": "Hello",
-      "author": 1,
+      "user": 1,
       "dialog": 1,
       "create_date": "2020-04-11T18:44:48.783Z"
     }
@@ -14,7 +14,7 @@
     "pk": 2,
     "fields": {
       "text": "test",
-      "author": 2,
+      "user": 2,
       "dialog": 2,
       "create_date": "2020-04-15T13:27:51.656Z"
     }
@@ -99,6 +99,14 @@
       "height_field": 0,
       "bio": "Hey there! I'm using dmess",
       "is_online": false
+    }
+  },
+  {
+    "model": "main.contact",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "contact": 2
     }
   }
 ]

@@ -1,28 +1,40 @@
 <template>
   <div>
-    <v-container>
+    <v-container
+      v-for="(message, i) in messages"
+      :key="i"
+      py-2
+    >
       <div
+        v-if="isOwnMessage(message.user_detail.username)"
         class="text-left"
       >
         <v-card
           max-width="460px"
           class="float-right d-flex"
           style="border-radius: 20px;"
+          flat
         >
-          <v-card-text class="text message_color--text">
-            Text Message
-            <v-list-item-action-text
-              class="pl-5"
+          <v-card-text>
+            <span
+              class="font-weight-light message_color--text"
             >
-              18:00
-            </v-list-item-action-text>
+              {{ message.text }}
+            </span>
+            <span
+              class="float-right ml-2"
+            >
+              {{ formatTime(message.create_date) }}
+            </span>
           </v-card-text>
         </v-card>
       </div>
       <v-container
         class="d-flex"
+        py-0
       >
         <div
+          v-if="!isOwnMessage(message.user_detail.username)"
           class="text-left"
         >
           <v-card
@@ -30,87 +42,102 @@
             max-width="460px"
             class="d-flex"
             color="background_pink"
+            flat
           >
-            <v-card-text class="text message_color--text">
-              Text Message
-              <v-list-item-action-text
-                class="pl-5"
+            <v-card-text>
+              <span
+                class="font-weight-light message_color--text"
               >
-                18:00
-              </v-list-item-action-text>
+                {{ message.text }}
+              </span>
+              <span
+                class="float-right ml-2"
+              >
+                {{ formatTime(message.create_date) }}
+              </span>
             </v-card-text>
           </v-card>
         </div>
       </v-container>
     </v-container>
-    <v-footer
-      color="background_white"
-      absolute
-      padless
-      style="height:54px"
-    >
-      <v-form style="width:100%;">
-        <v-row>
-          <v-col
-            style="padding-bottom: 0px; padding-top: 0px; padding-left:20px; padding-right:20px"
-            cols="12"
-          >
-            <v-text-field
-              v-model="message"
-              dense
-              single-line
-              :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
-              :prepend-icon="icon"
-              label="Message"
-              type="text"
-              @click:append-outer="sendMessage"
-              @click:prepend="changeIcon"
-            />
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-footer>
+    <ChatInput />
   </div>
 </template>
 
 <script>
+import ChatInput from './ChatInput'
+import api from '../api'
+import VueNativeSock from 'vue-native-websocket'
+import VueCookie from 'vue-cookie'
+import Vue from 'vue'
+import jwt from 'jsonwebtoken'
+import moment from 'moment'
+
+Vue.use(VueCookie)
+Vue.use(
+  VueNativeSock,
+  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
+  {
+    connectManually: true
+  }
+)
 export default {
   name: 'ChatUser',
+  components: { ChatInput },
   data: () => ({
-    password: 'Password',
-    show: false,
-    message: '',
-    marker: true,
-    iconIndex: 0,
-    icons: [
-      'mdi-paperclip'
-    ]
+    messages: [],
+    diailogId: 0
   }),
-
-  computed: {
-    icon () {
-      return this.icons[this.iconIndex]
-    }
+  watch: {
+    // при изменениях маршрута запрашиваем данные снова
+    $route: ['updateDialog']
   },
-
+  mounted () {
+    this.updateDialog()
+    this.getMessage()
+  },
+  beforeDestroy () {
+    this.$disconnect()
+  },
   methods: {
-    toggleMarker () {
-      this.marker = !this.marker
+    updateDialog () {
+      this.$disconnect()
+      this.messages = []
+      this.diailogId = this.$route.params.id
+      api.axios
+        .get('/api/messages/', { params: { dialog: this.diailogId } })
+        .then(response => {
+          if (response.data) {
+            this.messages = this.messages.concat(response.data.results)
+          }
+        })
+        .catch(error => console.log(error))
+      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.diailogId + '/')
+      api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
     },
-    sendMessage () {
-      this.resetIcon()
-      this.clearMessage()
+    getMessage () {
+      this.$options.sockets.onmessage = data => {
+        this.messages.push({
+          id: this.messages.length,
+          text: JSON.parse(data.data).message,
+          user_detail: { username: JSON.parse(data.data).author },
+          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
+        })
+        console.log(JSON.parse(data.data))
+        api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
+      }
     },
-    clearMessage () {
-      this.message = ''
+    isOwnMessage (author) {
+      return author === jwt.decode(this.$cookie.get('Authentication')).name
     },
-    resetIcon () {
-      this.iconIndex = 0
-    },
-    changeIcon () {
-      this.iconIndex === this.icons.length - 1
-        ? this.iconIndex = 0
-        : this.iconIndex++
+    formatTime (datetime) {
+      if (datetime) {
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).format('hh:mm')
+        }
+      }
     }
   }
 }
