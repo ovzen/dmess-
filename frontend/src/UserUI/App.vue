@@ -63,26 +63,11 @@
         <v-list
           color="background_white"
         >
-          <v-list-item>
-            <v-list-item-title>
-              Logout
-            </v-list-item-title>
-          </v-list-item>
           <v-list-item
-            @click="goProfilePage()"
+            to="/MyProfile"
           >
             <v-list-item-title>
-              Button 2
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>
-              Button 3
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>
-              Button 4
+              Profile
             </v-list-item-title>
           </v-list-item>
         </v-list>
