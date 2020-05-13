@@ -45,7 +45,7 @@ export default new Router({
       component: ChatUser
     },
     {
-      path: '/UserProfile',
+      path: '/UserProfile/:Userid',
       name: 'UserProfile',
       component: UserProfile
     },

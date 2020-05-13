@@ -161,9 +161,123 @@
       <div
         id="dynamic-component"
       >
-        <profiles
-          v-if="currentTab.name == 'mdi-account-circle'"
-        />
+        <div v-if="currentTab.name == 'mdi-account-circle'">
+          <v-divider />
+          <v-col>
+            <v-text-field
+              v-model="userSearch"
+              clearable
+              solo
+              background-color="grey lighten-2"
+              dense
+              flat
+              color="basic"
+              hide-details
+              prepend-inner-icon="mdi-magnify"
+              label="Search for users"
+              style="border-radius:50px; max-width:450px;"
+              @input="getUsersBySearch(userSearch)"
+            />
+          </v-col>
+          <v-divider />
+          <div
+            v-for="contact in (userSearch != '' ? SortContacts : contacts)"
+            :key="contact.id"
+          >
+            <v-list-item
+              :to="'/UserProfile/' + contact.Contact.id"
+            >
+              <v-list-item-avatar>
+                <v-avatar
+                  size="36px"
+                  color="basic"
+                >
+                  <span
+                    class="white--text"
+                  >
+                    NU
+                  </span>
+                <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+                </v-avatar>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ contact.Contact.username }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <span
+                    class="basic--text text--lighten"
+                  >
+                    {{ ( contact.Contact.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                  </span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider
+              v-if="contact.id != SortContacts[SortContacts.length-1].id"
+              inset
+            />
+          </div>
+          <div
+            v-if="userSearch"
+          >
+            <v-divider />
+            <h1
+              class="basic--text"
+              style="font-family: Roboto;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 16px;
+                    padding:16px"
+            >
+              Global Search
+            </h1>
+            <v-divider />
+            <div
+              v-for="user in findedUsers"
+              :key="user.id"
+            >
+              <v-list-item
+                :to="'/UserProfile/' + user.id"
+              >
+                <v-list-item-avatar>
+                  <v-avatar
+                    size="36px"
+                    color="basic"
+                  >
+                    <span
+                      class="white--text"
+                    >
+                      NU
+                    </span>
+                    <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ user.username }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span
+                      class="basic--text text--lighten"
+                    >
+                      {{ ( user.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider
+                v-if="user.id !== findedUsers[findedUsers.length-1].id"
+                inset
+              />
+            </div>
+          </div>
+        </div>
         <div v-if="currentTab.name == 'mdi-message-text'">
           <v-divider />
           <v-col>
@@ -317,13 +431,16 @@ var tabs = [
 
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, profiles, settings },
+  components: { SystemInfo, settings },
   data: () => ({
     login: '',
     button: 'Войти',
     chatName: '',
     password: '',
     data: '',
+    userSearch: '',
+    messages: [],
+    dialog: false,
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
@@ -339,11 +456,16 @@ export default {
     isOnline: false,
     currentTab: tabs[0],
     tabs: tabs,
+    contacts: [],
+    findedUsers: [],
     dialogs: []
   }),
   computed: {
     Route () {
       return this.$route
+    },
+    SortContacts () {
+      return this.contacts.filter(contact => { return contact.Contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
   },
   watch: {
@@ -359,6 +481,7 @@ export default {
   },
   mounted () {
     setInterval(this.updateToken, 1000)
+    this.getContacts()
     this.getDialogsList()
     this.getUserData()
     setInterval(this.getUnreadMessagesQty, 2000)
@@ -368,6 +491,25 @@ export default {
     }
   },
   methods: {
+    getUsersBySearch () {
+      api.axios.get('/api/users/', {
+        params: {
+          search: this.userSearch
+        }
+      }).then(res => {
+        this.findedUsers = res.data.results.filter(user => {
+          for (let contact in this.contacts) {
+            if (user.username === this.contacts[contact].Contact.username) {
+              return false
+            }
+          }
+          return true
+        })
+      })
+    },
+    getContacts () {
+      api.axios.get('/api/contacts/').then(res => { this.contacts = res.data.results })
+    },
     disconnect () {
       this.$disconnect()
     },

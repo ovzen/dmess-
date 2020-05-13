@@ -37,7 +37,7 @@ class UserViewSet(mixins.ListModelMixin,
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    search_fields = ['id', 'username', 'first_name', 'last_name', 'email']
+    search_fields = ['username', 'first_name', 'last_name', 'email']
 
     @action(detail=True, methods=['post'])
     def add_contact(self, request, pk=None):
