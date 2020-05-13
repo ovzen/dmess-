@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,7 +9,7 @@
         <meta name="author" content="" />
         <title>Dmess</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="{% static "assets/img/favicon.ico" %}" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
@@ -16,7 +18,7 @@
         <!-- Third party plugin CSS-->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="static/css/styles.css" rel="stylesheet" />
+        <link href="{% static "css/styles.css" %}" rel="stylesheet" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     </head>
     <body id="page-top">
@@ -107,21 +109,21 @@
                 <i class="fas fa-4x fa-comment d-flex my-4" style="color: rgb(98,2,238);"></i>
                 </center>
                 <p style="font-family: Roboto;">Messages</p>
-                <p class="count" >100000</p>
+                <p class="count" >{{ messages_stat }}</p>
             </div>
             <div class="col-lg-3 col-md-6 text-center py-4">
                 <center>
                 <i class="fas fa-4x fa-user d-flex my-4" style="color: rgb(98,2,238);"></i>
                 </center>
                 <p style="font-family: Roboto;">Online</p>
-                <p class="count" >1337</p>
+                <p class="count" >{{ online_stat }}</p>
             </div>
             <div class="col-lg-3 col-md-6 text-center py-4">
                 <center>
                 <i class="fas fa-4x fa-users d-flex my-4" style="color: rgb(98,2,238); "></i>
                 </center>
                 <p style="font-family: Roboto;">New users</p>
-                <p class="count" >100</p>
+                <p class="count" >{{ registers_stat }}</p>
             </div>
     </div>
         
@@ -160,16 +162,15 @@
             <div class="container"><div class="small text-center text-muted">Copyright © 2020 - Dmess</div></div>
         </footer>
         <!-- Bootstrap core JS-->
-        <script
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
         <!-- Third party plugin JS-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
         <!-- Core theme JS-->
-        <script src="static/js/custom.js"></script>
-        <script src="static/js/jquery.spincrement.min.js"></script>
-        <script src="static/js/scripts.js"></script>
+        <script src="{% static "js/custom.js" %}"></script>
+        <script src="{% static "js/jquery.spincrement.min.js" %}"></script>
+        <script src="{% static "js/scripts.js" %}"></script>
 
 
 
