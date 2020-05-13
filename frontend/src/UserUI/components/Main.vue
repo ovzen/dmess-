@@ -107,7 +107,7 @@ export default {
           })
           .then(response => {
             if (response.data.length > 0) {
-              this.$router.push('chat/' + response.data[0].id)
+              this.$router.push('ChatUser/' + response.data[0].id)
             } else {
               api.axios
                 .post('/api/dialog/', {
@@ -117,7 +117,7 @@ export default {
                 .then(response => {
                   console.log('post response:', response)
                   if (response && response.data && response.data.id) {
-                    this.$router.push('chat/' + response.data.id)
+                    this.$router.push('ChatUser/' + response.data.id)
                   }
                 })
             }
