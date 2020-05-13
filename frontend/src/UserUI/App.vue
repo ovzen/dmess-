@@ -210,7 +210,7 @@
                   <span
                     class="basic--text text--lighten"
                   >
-                    {{ ( contact.Contact.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                    {{ contact.Contact.profile.status }}
                   </span>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -266,7 +266,7 @@
                     <span
                       class="basic--text text--lighten"
                     >
-                      {{ ( user.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                      {{ user.status }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
