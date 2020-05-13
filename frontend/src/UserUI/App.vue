@@ -29,21 +29,6 @@
         </v-list-item>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn
-        icon
-        disabled
-      >
-        <v-icon>
-          mdi-magnify
-        </v-icon>
-      </v-btn>
-      <v-btn
-        icon
-      >
-        <v-icon>
-          mdi-book-multiple
-        </v-icon>
-      </v-btn>
 
       <v-menu
         offset-y
@@ -238,9 +223,6 @@
                     >
                       NU
                     </span>
-                    <!--<v-img
-            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-          />-->
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
