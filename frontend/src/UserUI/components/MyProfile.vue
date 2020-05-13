@@ -210,7 +210,7 @@
           </v-list-item>
 
           <v-list-item
-            @click=""
+            @click="exit()"
           >
             <v-list-item-action>
               <v-icon
@@ -238,8 +238,11 @@
 </template>
 
 <script>
+import VueCookie from 'vue-cookie'
+import Vue from 'vue'
 import api from '../api'
 import jwt from 'jsonwebtoken'
+Vue.use(VueCookie)
 export default {
   name: 'MyProfile',
   data: () => ({
@@ -278,6 +281,10 @@ export default {
         .catch(error => {
           alert(error)
         })
+    },
+    exit () {
+      localStorage.removeItem('UpdateKey')
+      this.$cookie.delete('Authentication')
     }
   }
 }
