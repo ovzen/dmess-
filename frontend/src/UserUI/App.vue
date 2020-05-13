@@ -271,7 +271,10 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-divider inset />
+              <v-divider
+                v-if="user.id !== findedUsers[findedUsers.length-1].id"
+                inset
+              />
             </div>
           </div>
         </div>
@@ -488,10 +491,10 @@ export default {
     }
   },
   methods: {
-    getUsersBySearch (search) {
+    getUsersBySearch () {
       api.axios.get('/api/users/', {
         params: {
-          search: search
+          search: this.userSearch
         }
       }).then(res => {
         this.findedUsers = res.data.results.filter(user => {

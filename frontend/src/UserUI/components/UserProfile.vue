@@ -139,7 +139,7 @@
           class="mt-12"
         >
           <v-list-item
-            @click=""
+            @click="add_contact()"
           >
             <v-list-item-action>
               <v-icon
@@ -191,6 +191,7 @@
 
 <script>
 import api from '../api'
+import jwt from 'jsonwebtoken'
 export default {
   name: 'UserProfile',
   data: () => ({
@@ -216,6 +217,24 @@ export default {
         .catch(error => {
           alert(error)
         })
+    },
+    add_contact () {
+      api.axios.post('/api/contacts/', {
+        user: jwt.decode(this.$cookie.get('Authentication')).user_id,
+        contact: this.$route.params.Userid
+      }).then(res => {
+        if (res.status === 201) {
+          this.$root.$children[0].getContacts()
+          this.$root.$children[0].findedUsers = this.$root.$children[0].findedUsers.filter(user => {
+            console.log(user.id, ' ', this.$route.params.Userid)
+            if (user.id === parseInt(this.$route.params.Userid)) {
+              return false
+            }
+            return true
+          })
+          this.$root.$children[0].$forceUpdate()
+        }
+      })
     }
   }
 }
