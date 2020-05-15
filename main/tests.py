@@ -23,7 +23,7 @@ class WikiTestCase(APITestCase):
         data = {
             'title': 'Hello',
             'text_markdown': '> Hi\nthis is *markdown text*',
-            'dialog': 1,
+            'dialog': '449411b9-1ea1-47ce-b0f8-523dc4d71f44',
             'message': 1,
         }
         response = self.client.post(url, data, format='json')
@@ -95,16 +95,16 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_dialog(self):
-        url_valid = reverse('dialog-detail', kwargs={'pk': 1})
-        url_invalid = reverse('dialog-detail', kwargs={'pk': 42})
+        url_valid = reverse('dialog-detail', kwargs={'pk': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'})
+        url_invalid = reverse('dialog-detail', kwargs={'pk': '56989add477e45358b344cc25842955c'})
         response_1 = self.client.get(url_valid, format='json')
         response_2 = self.client.get(url_invalid, format='json')
         self.assertEqual(response_1.status_code, status.HTTP_200_OK)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_dialog(self):
-        url_valid = reverse('dialog-detail', kwargs={'pk': 1})
-        url_invalid = reverse('dialog-detail', kwargs={'pk': 42})
+        url_valid = reverse('dialog-detail', kwargs={'pk': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'})
+        url_invalid = reverse('dialog-detail', kwargs={'pk': '56989add477e45358b344cc25842955c'})
         response_1 = self.client.delete(url_valid, format='json')
         response_2 = self.client.delete(url_invalid, format='json')
         self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
@@ -129,7 +129,7 @@ class MessageTestCase(APITestCase):
         data = {
             'text': 'test',
             'user': 1,
-            'dialog': 1
+            'dialog': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
