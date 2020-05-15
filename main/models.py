@@ -27,7 +27,8 @@ class UserProfile(models.Model):
     last_online = models.DateTimeField(auto_now=True)
 
     def status(self):
-        return "last seen " + timesince(self.last_online) + " ago" if (self.is_online == False) else "online"
+        return f'last seen {timesince(self.last_online)} ago' if not self.online else 'online'
+
 
 
 class Contact(models.Model):
