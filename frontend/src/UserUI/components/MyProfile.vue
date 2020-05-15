@@ -270,7 +270,7 @@ export default {
     },
     save () {
       api.axios
-        .put('/api/users/' + this.user_id + '/', {
+        .put('/api/accounts/profile/', {
           username: this.UserProfile.username,
           email: this.UserProfile.email,
           profile: this.UserProfile.profile
@@ -285,6 +285,7 @@ export default {
     exit () {
       localStorage.removeItem('UpdateKey')
       this.$cookie.delete('Authentication')
+      window.location.reload()
     }
   }
 }
