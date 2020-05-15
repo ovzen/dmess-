@@ -335,7 +335,7 @@
           </v-btn>
           <v-dialog
             v-model="dialog"
-            max-width="290"
+            max-width="700"
           >
             <v-card>
               <v-card-title
@@ -352,7 +352,7 @@
                 <v-spacer />
 
                 <v-btn
-                  color="green darken-1"
+                  color="basic"
                   text
                   @click="dialog = false"
                 >
