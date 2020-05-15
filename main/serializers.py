@@ -48,6 +48,15 @@ class DialogSerializer(serializers.ModelSerializer):
         model = models.Dialog
         fields = '__all__'
 
+    def validate_users(self, value):
+        supposed_dialog = models.Dialog.objects.filter(users__in=value)
+        if supposed_dialog.exists():
+            raise serializers.ValidationError(
+                f'Dialog with users {value} in already exists.'
+                f' check: /api/dialog/{supposed_dialog.first().id}/'
+            )
+
+
 
 class ContactSerializer(serializers.ModelSerializer):
     User = UserSerializer(read_only=True, source='user')
