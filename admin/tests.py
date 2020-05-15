@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth import get_user_model
+import json
 
 
 User = get_user_model()
@@ -54,10 +55,20 @@ class RegisterStatTestCase(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=user)
 
-    def test_get_registers(self):
+    def test_get_registers_without_date(self):
         url = reverse('register-stat')
         response = self.client.get(url, format='json')
+        count = json.loads(response.content)['count']
+        self.assertEqual(count, 1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_registers_with_date(self):
+        url = reverse('register-stat')
+        response = self.client.get(url, format='json', data={'date': '2020-05-14'})
+        count = json.loads(response.content)['count']
+        self.assertEqual(count, 2)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 
 class UserStatTestCase(APITestCase):
@@ -71,4 +82,6 @@ class UserStatTestCase(APITestCase):
     def test_get_online(self):
         url = reverse('user-stat')
         response = self.client.get(url, format='json')
+        count = json.loads(response.content)['count']
+        self.assertEqual(count, 0)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
