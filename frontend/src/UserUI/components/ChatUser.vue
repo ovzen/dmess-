@@ -60,7 +60,32 @@
         </div>
       </v-container>
     </v-container>
-    <ChatInput />
+    <v-footer
+      color="background_white"
+      absolute
+      padless
+    >
+      <v-form style="width:100%;">
+        <v-row>
+          <v-col
+            style="padding-bottom: 0px; padding-top: 0px; padding-left:20px; padding-right:20px"
+            cols="12"
+          >
+            <v-text-field
+              v-model="message"
+              dense
+              single-line
+              :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
+              :prepend-icon="icon"
+              label="Message"
+              type="text"
+              @click:append-outer="sendMessage(message)"
+              @click:prepend="changeIcon"
+            />
+          </v-col>
+        </v-row>
+      </v-form>
+    </v-footer>
   </div>
 </template>
 
