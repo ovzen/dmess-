@@ -23,7 +23,7 @@
               <span
                 class="display-1 white--text"
               >
-                NU
+                {{ getUserAvatar }}
               </span>
               <v-skeleton-loader />
               <!--<v-img
@@ -161,9 +161,7 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item
-            @click=""
-          >
+          <v-list-item>
             <v-list-item-action>
               <v-icon
                 class="ml-3 pb-6"
@@ -198,6 +196,14 @@ export default {
     loading: true,
     UserProfile: undefined
   }),
+  computed: {
+    getUserAvatar () {
+      if (typeof this.UserProfile !== 'undefined') {
+        return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
+      }
+      return ''
+    }
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['get_data']

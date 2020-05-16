@@ -169,7 +169,7 @@
                   <span
                     class="white--text"
                   >
-                    NU
+                    {{ getUserAvatar(contact.Contact) }}
                   </span>
                 <!--<v-img
             src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
@@ -225,7 +225,7 @@
                     <span
                       class="white--text"
                     >
-                      NU
+                      {{ getUserAvatar(user) }}
                     </span>
                   </v-avatar>
                 </v-list-item-avatar>
@@ -471,6 +471,9 @@ export default {
     }
   },
   methods: {
+    getUserAvatar (UserProfile) {
+      return (UserProfile.first_name[0] + UserProfile.last_name[0]).toUpperCase()
+    },
     getUsersBySearch () {
       api.axios.get('/api/users/', {
         params: {
