@@ -1,47 +1,19 @@
 <template>
   <div>
-    <v-container
-      v-for="(message, i) in messages"
-      :key="i"
-      py-2
-    >
-      <div
-        v-if="isOwnMessage(message.user_detail.username)"
-        class="text-left"
-      >
-        <v-card
-          max-width="460px"
-          class="float-right d-flex"
-          style="border-radius: 20px;"
-          flat
-        >
-          <v-card-text>
-            <span
-              class="font-weight-light message_color--text"
-            >
-              {{ message.text }}
-            </span>
-            <span
-              class="float-right ml-2"
-            >
-              {{ formatTime(message.create_date) }}
-            </span>
-          </v-card-text>
-        </v-card>
-      </div>
+    <div style="margin-bottom:60px">
       <v-container
-        class="d-flex"
-        py-0
+        v-for="(message, i) in messages"
+        :key="i"
+        py-2
       >
         <div
-          v-if="!isOwnMessage(message.user_detail.username)"
+          v-if="isOwnMessage(message.user_detail.username)"
           class="text-left"
         >
           <v-card
-            style="border-radius: 20px;"
             max-width="460px"
-            class="d-flex"
-            color="background_pink"
+            class="float-right d-flex"
+            style="border-radius: 20px;"
             flat
           >
             <v-card-text>
@@ -58,32 +30,72 @@
             </v-card-text>
           </v-card>
         </div>
+        <v-container
+          class="d-flex"
+          py-0
+        >
+          <div
+            v-if="!isOwnMessage(message.user_detail.username)"
+            class="text-left"
+          >
+            <v-card
+              style="border-radius: 20px;"
+              max-width="460px"
+              class="d-flex"
+              color="background_pink"
+              flat
+            >
+              <v-card-text>
+                <span
+                  class="font-weight-light message_color--text"
+                >
+                  {{ message.text }}
+                </span>
+                <span
+                  class="float-right ml-2"
+                >
+                  {{ formatTime(message.create_date) }}
+                </span>
+              </v-card-text>
+            </v-card>
+          </div>
+        </v-container>
       </v-container>
-    </v-container>
+    </div>
     <v-footer
       color="background_white"
       absolute
       padless
+      style="box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
     >
-      <v-form style="width:100%;">
-        <v-row>
-          <v-col
-            style="padding-bottom: 0px; padding-top: 0px; padding-left:20px; padding-right:20px"
-            cols="12"
-          >
-            <v-text-field
-              v-model="message"
-              dense
-              single-line
-              :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
-              :prepend-icon="icon"
-              label="Message"
-              type="text"
-              @click:append-outer="sendMessage(message)"
-              @click:prepend="changeIcon"
-            />
-          </v-col>
-        </v-row>
+      <v-form
+        class="d-inline-flex"
+        style="width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px"
+      >
+        <v-textarea
+          ref="myTextArea"
+          v-model="message"
+          auto-grow
+          autofocus
+          rows="1"
+          placeholder="Message"
+          hide-details
+          color="false"
+          @keydown.enter.prevent=""
+          @keyup.enter="sendMessage()"
+          @blur="alwaysfocus(sendMessage)"
+        />
+        <v-btn
+          icon
+          color="basic"
+          class="align-self-sm-end"
+          style="padding:5px;"
+          @click="sendMessage()"
+        >
+          <v-icon>
+            mdi-send
+          </v-icon>
+        </v-btn>
       </v-form>
     </v-footer>
   </div>
@@ -108,9 +120,9 @@ Vue.use(
 )
 export default {
   name: 'ChatUser',
-  components: { ChatInput },
   data: () => ({
     messages: [],
+    message: '',
     diailogId: 0
   }),
   watch: {
@@ -125,8 +137,25 @@ export default {
     this.$disconnect()
   },
   methods: {
+    sendMessage () {
+      if (this.message) {
+        console.log('messagetext: ', this.message)
+        this.$socket.send(
+          JSON.stringify({
+            message: this.message
+          })
+        )
+      }
+      this.message = ''
+    },
+    alwaysfocus () {
+      this.$nextTick(() => {
+        this.$refs['myTextArea'].$refs.input.focus()
+      })
+    },
     updateDialog () {
       this.$disconnect()
+      this.message = ''
       this.messages = []
       this.diailogId = this.$route.params.id
       api.axios

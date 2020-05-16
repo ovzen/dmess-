@@ -60,6 +60,7 @@
     </v-app-bar>
 
     <v-navigation-drawer
+      style=""
       v-model="drawer"
       :width="($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225)"
       app
@@ -320,7 +321,7 @@
         <v-footer
           absolute
           padless
-          style="height:54px; background :#ffffff;"
+          style="height:56px; background :#ffffff;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
         >
           <v-btn
             fab
@@ -340,13 +341,17 @@
               :class="['tab-button', { active: currentTab.name === tab.name }]"
               @click="currentTab = tab"
             >
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-icon size="24px" v-on="on">{{ tab.name }}</v-icon>
-                  </template>
-                  <span>{{ tab.display_name }}</span>
-                </v-tooltip>
-
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    size="24px"
+                    v-on="on"
+                  >
+                    {{ tab.name }}
+                  </v-icon>
+                </template>
+                <span>{{ tab.display_name }}</span>
+              </v-tooltip>
             </v-btn>
           </v-card-actions>
         </v-footer>
@@ -370,7 +375,6 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
-import profiles from './components/profiles'
 import settings from './components/settings'
 import moment from 'moment'
 
