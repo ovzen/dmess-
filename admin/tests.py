@@ -59,7 +59,7 @@ class RegisterStatTestCase(APITestCase):
         url = reverse('register-stat')
         response = self.client.get(url, format='json')
         count = json.loads(response.content)['count']
-        self.assertEqual(count, 1)
+        self.assertEqual(count, 0)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_registers_with_date(self):
