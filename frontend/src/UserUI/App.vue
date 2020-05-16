@@ -302,7 +302,6 @@
               <v-list-item-action-text v-if="dialog.last_message">
                 {{ formatTime(dialog.last_message.create_date) }}
               </v-list-item-action-text>
-              <!-- Изменить v-if на другое условие: "если есть непрочитанные сообщения" -->
               <v-avatar
                 v-if="unread_messages_qty[i]"
                 color="basic"
@@ -388,7 +387,7 @@ var tabs = [
   },
   {
     name: 'mdi-message-text',
-    display_name: 'dialogs',
+    display_name: 'Dialogs',
     component: {
     }
   },
@@ -594,7 +593,7 @@ export default {
             this.unread_messages_qty = []
             for (let i = 0; i < Object.keys(response.data.results).length; i++) {
               console.log(this.user_id)
-              this.unread_messages_qty.push(response.data.results[0].unread_messages[this.user_id-1])
+              this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
             }
             console.log(this.unread_messages_qty)
           }
