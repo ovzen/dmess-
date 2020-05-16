@@ -83,7 +83,6 @@
           color="false"
           @keydown.enter.prevent=""
           @keyup.enter="sendMessage()"
-          @blur="alwaysfocus(sendMessage)"
         />
         <v-btn
           icon
@@ -147,11 +146,6 @@ export default {
         )
       }
       this.message = ''
-    },
-    alwaysfocus () {
-      this.$nextTick(() => {
-        this.$refs['myTextArea'].$refs.input.focus()
-      })
     },
     updateDialog () {
       this.$disconnect()
