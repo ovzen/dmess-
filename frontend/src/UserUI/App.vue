@@ -60,8 +60,8 @@
     </v-app-bar>
 
     <v-navigation-drawer
-      style=""
       v-model="drawer"
+      style=""
       :width="($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225)"
       app
       color="background_white"
@@ -99,13 +99,16 @@
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-avatar
+            <router-link
               v-if="avatar"
+              to="/MyProfile"
             >
-              <v-img
-                :src="avatar"
-              />
-            </v-list-item-avatar>
+              <v-list-item-avatar>
+                <v-img
+                  :src="avatar"
+                />
+              </v-list-item-avatar>
+            </router-link>
             <v-list-item-avatar
               v-else
               color="#FFFFFF"

@@ -273,7 +273,7 @@ export default {
         .put('/api/accounts/profile/', {
           username: this.UserProfile.username,
           email: this.UserProfile.email,
-          profile: this.UserProfile.profile
+          profile: { bio: this.UserProfile.profile.bio }
         })
         .then(res => {
           console.log(res)
