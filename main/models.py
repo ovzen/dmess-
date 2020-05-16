@@ -4,6 +4,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.timesince import timesince
 
 
 class UserProfile(models.Model):
@@ -22,8 +23,13 @@ class UserProfile(models.Model):
     )
     width_field = models.IntegerField(default=0)
     height_field = models.IntegerField(default=0)
-    bio = models. CharField(max_length=70, default="Hey there! I'm using dmess")
+    bio = models.CharField(max_length=70, default="Hey there! I'm using dmess")
     is_online = models.BooleanField(default=False)
+    last_online = models.DateTimeField(auto_now=True)
+
+    def status(self):
+        return f'last seen {timesince(self.last_online)} ago' if not self.online else 'online'
+
 
 
 class Contact(models.Model):
