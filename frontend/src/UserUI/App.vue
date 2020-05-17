@@ -180,7 +180,7 @@
                   <span
                     class="basic--text text--lighten"
                   >
-                    {{ ( contact.Contact.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                    {{ contact.Contact.profile.status }}
                   </span>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -233,7 +233,7 @@
                     <span
                       class="basic--text text--lighten"
                     >
-                      {{ ( user.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                      {{ user.status }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -302,13 +302,12 @@
               <v-list-item-action-text v-if="dialog.last_message">
                 {{ formatTime(dialog.last_message.create_date) }}
               </v-list-item-action-text>
-              <!-- Изменить v-if на другое условие: "если есть непрочитанные сообщения" -->
               <v-avatar
-                v-if="dialog.last_message"
+                v-if="unread_messages_qty[i]"
                 color="basic"
                 class="subheading white--text"
                 size="24"
-                v-text="1"
+                v-text="unread_messages_qty[i]"
               />
             </v-list-item-action>
           </v-list-item>
@@ -379,9 +378,7 @@
                     {{ tab.name }}
                   </v-icon>
                 </template>
-                <span>
-                  {{ tab.display_name }}
-                </span>
+                <span>{{ tab.display_name }}</span>
               </v-tooltip>
             </v-btn>
           </v-card-actions>
@@ -420,7 +417,7 @@ var tabs = [
   },
   {
     name: 'mdi-message-text',
-    display_name: 'dialogs',
+    display_name: 'Dialogs',
     component: {
     }
   },
@@ -538,7 +535,6 @@ export default {
         .then(response => {
           if (response.data) {
             this.dialogs = response.data.results
-            console.log('dialogsList:', response.data.results)
           }
         })
         .catch(error => console.log(error))
@@ -621,10 +617,15 @@ export default {
     },
     getUnreadMessagesQty () {
       api.axios
-        .get('/api/dialogs')
-        .then(res => {
-          if (res.data) {
-            this.unread_messages_qty = res.data['unread_messages']
+        .get('/api/dialog/')
+        .then(response => {
+          if (response.data) {
+            this.unread_messages_qty = []
+            for (let i = 0; i < Object.keys(response.data.results).length; i++) {
+              console.log(this.user_id)
+              this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
+            }
+            console.log(this.unread_messages_qty)
           }
         })
         .catch(error => console.log(error))
