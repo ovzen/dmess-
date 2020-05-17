@@ -162,7 +162,7 @@
           </v-list-item>
 
           <v-list-item
-            @click=""
+            @click="findChat()"
           >
             <v-list-item-action>
               <v-icon
@@ -196,14 +196,20 @@ export default {
   name: 'UserProfile',
   data: () => ({
     loading: true,
-    UserProfile: undefined
+    UserProfile: undefined,
+    current_user_id: undefined
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['get_data']
   },
   created () {
-    this.get_data()
+    this.get_data();
+    if (this.$cookie.get('Authentication')) {
+      this.current_user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
+    } else {
+      console.warn('The current user was not found')
+    }
   },
   methods: {
     get_data () {
@@ -233,6 +239,29 @@ export default {
             return true
           })
           this.$root.$children[0].$forceUpdate()
+        }
+      })
+    },
+    findChat() {
+      api.axios
+      .get('/api/dialog/', {
+        params: {
+          users: this.$route.params.Userid
+        }
+      })
+      .then(response => {
+        if (response.data.results.length > 0) {
+          this.$router.push('/ChatUser/' + response.data.results[0].id)
+        } else {
+          api.axios
+            .post('/api/dialog/', {
+              users: [this.current_user_id, this.$route.params.Userid]
+            })
+            .then(response => {
+              if (response && response.data && response.data.id) {
+                this.$router.push('/ChatUser/' + response.data.id)
+              }
+            })
         }
       })
     }
