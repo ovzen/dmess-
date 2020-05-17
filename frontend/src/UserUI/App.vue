@@ -328,9 +328,39 @@
             top
             right
             absolute
+            @click.stop="dialog = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
+          <v-dialog
+            v-model="dialog"
+            max-width="700"
+          >
+            <v-card>
+              <v-card-title
+                class="headline"
+              >
+                We're so sorry, but we haven't kept up to develop this feature.
+              </v-card-title>
+
+              <v-card-text>
+                This button seems to us so beautiful and cute that we could not just remove it :)
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="dialog = false"
+                >
+                  Okay, I agree with you
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-card-actions>
             <v-btn
               v-for="tab in tabs"
