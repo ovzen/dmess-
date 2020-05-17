@@ -510,7 +510,7 @@ export default {
         .catch(error => console.log(error))
     },
     openDialog (dialogId) {
-      console.log('Route ID:', this.$route.params.id)
+      // console.log('Route ID:', this.$route.params.id)
       if (this.$route.params.id !== dialogId) {
         this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
       }
@@ -532,7 +532,7 @@ export default {
           .then(response => {
             if (response.data) {
               this.chatName = response.data.results[0].name
-              console.log(response)
+              // console.log(response)
             }
           })
           .catch(error => console.log(error))
@@ -545,7 +545,7 @@ export default {
         .get('/api/users/' + this.user_id + '/')
         .then(res => {
           if (res.data) {
-            console.log('user details: ', res)
+            // console.log('user details: ', res)
             this.avatar = res.data.profile.avatar
             this.isOnline = res.data.profile.is_online
             this.firstName = res.data.first_name ? res.data.first_name : undefined
@@ -578,7 +578,7 @@ export default {
       return (users[0].id === this.user_id) ? users[1] : users[0]
     },
     getContactName (users) {
-      console.log(users)
+      // console.log(users)
       if (users.length > 1) {
         return this.getUserName(this.getContact(users))
       } else {
@@ -592,10 +592,10 @@ export default {
           if (response.data) {
             this.unread_messages_qty = []
             for (let i = 0; i < Object.keys(response.data.results).length; i++) {
-              console.log(this.user_id)
+              // console.log(this.user_id)
               this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
             }
-            console.log(this.unread_messages_qty)
+            // console.log(this.unread_messages_qty)
           }
         })
         .catch(error => console.log(error))
