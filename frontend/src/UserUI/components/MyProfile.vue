@@ -302,9 +302,12 @@ export default {
   computed: {
     getUserAvatar () {
       if (typeof this.UserProfile !== 'undefined') {
-        return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
-      }
-      return ''
+        if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
+          return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
+        } else {
+          return this.UserProfile.username[0].toUpperCase()
+        }
+      } return ''
     }
   },
   created () {
@@ -327,8 +330,8 @@ export default {
     save () {
       api.axios
         .put('/api/accounts/profile/', {
-          first_name: this.ucFirst(this.UserProfile.first_name),
-          last_name: this.ucFirst(this.UserProfile.last_name),
+          first_name: this.UserProfile.first_name,
+          last_name: this.UserProfile.last_name,
           username: this.UserProfile.username,
           email: this.UserProfile.email,
           profile: { bio: this.UserProfile.profile.bio }

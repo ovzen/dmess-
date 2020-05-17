@@ -472,7 +472,13 @@ export default {
   },
   methods: {
     getUserAvatar (UserProfile) {
-      return (UserProfile.first_name[0] + UserProfile.last_name[0]).toUpperCase()
+      if (typeof UserProfile !== 'undefined') {
+        if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
+          return (UserProfile.first_name[0] + UserProfile.last_name[0]).toUpperCase()
+        } else {
+          return UserProfile.username[0].toUpperCase()
+        }
+      } return ''
     },
     getUsersBySearch () {
       api.axios.get('/api/users/', {

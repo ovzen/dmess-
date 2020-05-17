@@ -199,9 +199,12 @@ export default {
   computed: {
     getUserAvatar () {
       if (typeof this.UserProfile !== 'undefined') {
-        return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
-      }
-      return ''
+        if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
+          return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
+        } else {
+          return this.UserProfile.username[0].toUpperCase()
+        }
+      } return ''
     }
   },
   watch: {
