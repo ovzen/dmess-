@@ -11,7 +11,7 @@ from rest_framework.test import APITestCase, APIClient
 import json
 import unittest
 
-from main.models import UserProfile
+from main.models import UserProfile, Contact, Message
 
 
 class WikiTestCase(APITestCase):
@@ -114,6 +114,11 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_read_messages(self):
+        url = reverse('dialog-detail', kwargs={'pk': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'}) + 'read_messages/'
+        response = self.client.post(url, 2, format='json')
+        self.assertEqual(Message.objects.filter(user=2).first().is_read, True)
+
 
 class MessageTestCase(APITestCase):
     fixtures = ['db.json']
@@ -191,6 +196,19 @@ class UserTestCase(APITestCase):
         self.assertEqual(count, 3)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_add_contact(self):
+        url = reverse('user-detail', kwargs={'pk': 3}) + 'add_contact/'
+        response = self.client.post(url, 1, format='json')
+        self.assertEqual(Contact.objects.filter(user=1, contact=3).exists(), True)
+
+    def test_update_user(self):
+        url = reverse('user-detail', kwargs={'pk': 1})
+        response = self.client.get(url, format='json')
+        data = json.loads(response.content)
+        data['username'] = 'something'
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 class UserProfileCreationTestCase(unittest.TestCase):
     def test_user_profile_creation(self):
@@ -207,13 +225,35 @@ class UserInviteProcessingTestCase(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=user)
 
-    def test_user_invite_processing(self):
+    def test_invite_processing(self):
         url = '/api/accounts/register/?invite_code=9a46812a-b0e8-44b0-b1cd-021a84aba71f'
         data = {
-            'username': 'Test2',
+            'username': 'Test',
             'password': 'ytrewq123',
             'email': 'pascal@abc.net'
         }
         response = self.client.post(url, data, format='json')
-        user = User.objects.get(username='Test2')
+        user = User.objects.get(username='Test')
         self.assertEqual(user.is_staff, True)
+
+    def test_used_invite_processing(self):
+        url = '/api/accounts/register/?invite_code=598ba2aa-1a34-4d09-8ef6-2b61c3c5a3d5'
+        data = {
+            'username': 'Test',
+            'password': 'ytrewq123',
+            'email': 'pascal@abc.net'
+        }
+        response = self.client.post(url, data, format='json')
+        user = User.objects.get(username='Test')
+        self.assertEqual(user.is_staff, False)
+
+    def test_nonexistent_invite_processing(self):
+        url = '/api/accounts/register/?invite_code=777ba2aa-1a34-4d09-8ef6-2b61c3c5a888'
+        data = {
+            'username': 'Test',
+            'password': 'ytrewq123',
+            'email': 'pascal@abc.net'
+        }
+        response = self.client.post(url, data, format='json')
+        user = User.objects.get(username='Test')
+        self.assertEqual(user.is_staff, False)

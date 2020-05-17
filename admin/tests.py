@@ -1,10 +1,13 @@
 # Create your tests here.
+from datetime import datetime
+
 from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth import get_user_model
 import json
 
+from main.models import UserProfile
 
 User = get_user_model()
 
@@ -59,14 +62,14 @@ class RegisterStatTestCase(APITestCase):
         url = reverse('register-stat')
         response = self.client.get(url, format='json')
         count = json.loads(response.content)['count']
-        self.assertEqual(count, 0)
+        self.assertEqual(count, User.objects.filter(date_joined__startswith=datetime.now().date()).count())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_registers_with_date(self):
         url = reverse('register-stat')
         response = self.client.get(url, format='json', data={'date': '2020-05-14'})
         count = json.loads(response.content)['count']
-        self.assertEqual(count, 2)
+        self.assertEqual(count, User.objects.filter(date_joined__startswith='2020-05-14').count())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
@@ -83,5 +86,19 @@ class UserStatTestCase(APITestCase):
         url = reverse('user-stat')
         response = self.client.get(url, format='json')
         count = json.loads(response.content)['count']
-        self.assertEqual(count, 0)
+        self.assertEqual(count, UserProfile.objects.filter(is_online=True).count())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class GitlabMetricsTestCase(APITestCase):
+    fixtures = ['db.json']
+
+    def setUp(self):
+        user = User.objects.get(id=1)
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
+
+    def test_get_gitlab_metrics(self):
+        url = reverse('gitlabmetrics')
+        response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
