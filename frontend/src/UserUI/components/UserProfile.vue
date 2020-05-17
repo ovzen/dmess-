@@ -250,15 +250,14 @@ export default {
         }
       })
       .then(response => {
-        if (response.data.length > 0) {
-          this.$router.push('/ChatUser/' + response.data[0].id)
+        if (response.data.results.length > 0) {
+          this.$router.push('/ChatUser/' + response.data.results[0].id)
         } else {
           api.axios
             .post('/api/dialog/', {
               users: [this.current_user_id, this.$route.params.Userid]
             })
             .then(response => {
-              // console.log('post response:', response)
               if (response && response.data && response.data.id) {
                 this.$router.push('/ChatUser/' + response.data.id)
               }
