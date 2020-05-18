@@ -102,7 +102,7 @@
     >
       <v-form
         class="d-inline-flex"
-        style="width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px"
+        :style="'padding-left:'+ (($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225) + 10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
       >
         <v-textarea
           ref="myTextArea"
