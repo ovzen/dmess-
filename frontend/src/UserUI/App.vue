@@ -605,13 +605,13 @@ export default {
               } else {
                 if (response.data.users_detail[0].username !== this.username) {
                   this.ChatInfo = response.data.users_detail[0]
+                } else {
+                  this.ChatInfo = { username: 'Произошла ошибка', profile: { avatar: null, status: '' } }
                 }
               }
             }
           })
           .catch(error => console.log(error))
-      } else {
-        this.ChatInfo = undefined
       }
     },
     getUserData () {
