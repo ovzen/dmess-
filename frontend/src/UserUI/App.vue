@@ -31,7 +31,7 @@
         v-if="Route.name === 'ChatUser'"
       >
         <v-list-item>
-          <v-list-item-avatar v-if="ChatInfo.profile.avatar !== ''">
+          <v-list-item-avatar v-if="ChatInfo.profile.avatar">
             <v-img
               :src="ChatInfo.profile.avatar"
             />
@@ -465,7 +465,7 @@ export default {
   data: () => ({
     login: '',
     button: 'Войти',
-    ChatInfo: { username: 'Загрузка...', profile: { avatar: '', status: 'Загрузка...' } },
+    ChatInfo: { username: 'Загрузка...', profile: { avatar: null, status: 'Загрузка...' } },
     password: '',
     data: '',
     userSearch: '',

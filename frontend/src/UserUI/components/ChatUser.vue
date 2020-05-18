@@ -9,6 +9,7 @@
           v-for="(message, i) in messages"
           :key="i"
           py-2
+          :id="'Message_' + message.id"
         >
           <div
             v-if="isOwnMessage(message.user_detail.username)"
@@ -197,11 +198,12 @@ export default {
     getMessage () {
       this.$options.sockets.onmessage = data => {
         this.messages.push({
-          id: this.messages.length,
+          id: data.data.id,
           text: JSON.parse(data.data).message,
           user_detail: { username: JSON.parse(data.data).author },
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
+        this.$vuetify.goTo(document.getElementById('Message_' + data.data.id))
         console.log(JSON.parse(data.data))
         api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
       }
