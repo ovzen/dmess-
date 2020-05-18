@@ -119,6 +119,7 @@
                           <v-text-field
                             ref="repeatpassword"
                             v-model="repeatpassword"
+                            :error-messages="usernameError"
                             :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="vanish ? 'text' : 'password'"
                             clearable
@@ -146,9 +147,9 @@
                     :disabled="step === 1"
                     @click="step--"
                   >
-                    <v-card-text class="text-center headline white--text">
-                      ←
-                    </v-card-text>
+                    <v-icon class="text-center headline white--text">
+                      mdi-arrow-left
+                    </v-icon>
                   </v-btn>
 
                   <v-btn
@@ -167,9 +168,9 @@
                     color="purple darken-4"
                     @click="step++"
                   >
-                    <v-card-text class="text-center headline white--text">
-                      →
-                    </v-card-text>
+                    <v-icon class="text-center headline white--text">
+                      mdi-arrow-right
+                    </v-icon>
                   </v-btn>
                 </v-row>
               </v-card-actions>
@@ -215,6 +216,7 @@ export default {
     next: '',
     vanish: false,
     step: 1,
+    usernameError: null,
     loginRules: [
       v => !!v || 'Login is required',
       v => (v || '').length >= 2 || `Minimal length of username is 2 symbols`
@@ -291,10 +293,11 @@ export default {
           }
           })
           .catch(error => {
-            if (error.response.status === 400) {   
+            if (error.response.status === 400) {
               Object.values(error.response.data).forEach(error => {
                 if (error.length) {
-                  alert(error);
+                  this.usernameError = (error);
+                  setTimeout(() => { this.usernameError=null }, 3000);
                 }
               });
             }
