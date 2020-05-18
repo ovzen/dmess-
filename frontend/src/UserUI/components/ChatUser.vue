@@ -7,9 +7,9 @@
       <v-flex>
         <v-container
           v-for="(message, i) in messages"
+          :id="'Message_' + message.id"
           :key="i"
           py-2
-          :id="'Message_' + message.id"
         >
           <div
             v-if="isOwnMessage(message.user_detail.username)"
@@ -87,7 +87,8 @@
               line-height: 16px;
               text-align: center;
               letter-spacing: 0.75px;
-              text-transform: uppercase;"
+              text-transform: uppercase;
+              padding-top:15px"
             class="smile_color--text"
           >
             there are no messages yet
