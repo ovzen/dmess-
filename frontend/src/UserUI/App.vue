@@ -180,7 +180,7 @@
                   <span
                     class="basic--text text--lighten"
                   >
-                    {{ ( contact.Contact.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                    {{ contact.Contact.profile.status }}
                   </span>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -233,7 +233,7 @@
                     <span
                       class="basic--text text--lighten"
                     >
-                      {{ ( user.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                      {{ user.status }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -302,13 +302,12 @@
               <v-list-item-action-text v-if="dialog.last_message">
                 {{ formatTime(dialog.last_message.create_date) }}
               </v-list-item-action-text>
-              <!-- Изменить v-if на другое условие: "если есть непрочитанные сообщения" -->
               <v-avatar
-                v-if="dialog.last_message"
+                v-if="unread_messages_qty[i]"
                 color="basic"
                 class="subheading white--text"
                 size="24"
-                v-text="1"
+                v-text="unread_messages_qty[i]"
               />
             </v-list-item-action>
           </v-list-item>
@@ -329,9 +328,39 @@
             top
             right
             absolute
+            @click.stop="dialog = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
+          <v-dialog
+            v-model="dialog"
+            max-width="700"
+          >
+            <v-card>
+              <v-card-title
+                class="headline"
+              >
+                We're so sorry, but we haven't kept up to develop this feature.
+              </v-card-title>
+
+              <v-card-text>
+                This button seems to us so beautiful and cute that we could not just remove it :)
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="dialog = false"
+                >
+                  Okay, I agree with you
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-card-actions>
             <v-btn
               v-for="tab in tabs"
@@ -340,13 +369,17 @@
               :class="['tab-button', { active: currentTab.name === tab.name }]"
               @click="currentTab = tab"
             >
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-icon size="24px" v-on="on">{{ tab.name }}</v-icon>
-                  </template>
-                  <span>{{ tab.display_name }}</span>
-                </v-tooltip>
-
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    size="24px"
+                    v-on="on"
+                  >
+                    {{ tab.name }}
+                  </v-icon>
+                </template>
+                <span>{{ tab.display_name }}</span>
+              </v-tooltip>
             </v-btn>
           </v-card-actions>
         </v-footer>
@@ -384,7 +417,7 @@ var tabs = [
   },
   {
     name: 'mdi-message-text',
-    display_name: 'dialogs',
+    display_name: 'Dialogs',
     component: {
     }
   },
@@ -502,13 +535,12 @@ export default {
         .then(response => {
           if (response.data) {
             this.dialogs = response.data.results
-            console.log('dialogsList:', response.data.results)
           }
         })
         .catch(error => console.log(error))
     },
     openDialog (dialogId) {
-      console.log('Route ID:', this.$route.params.id)
+      // console.log('Route ID:', this.$route.params.id)
       if (this.$route.params.id !== dialogId) {
         this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
       }
@@ -530,7 +562,7 @@ export default {
           .then(response => {
             if (response.data) {
               this.chatName = response.data.results[0].name
-              console.log(response)
+              // console.log(response)
             }
           })
           .catch(error => console.log(error))
@@ -543,7 +575,7 @@ export default {
         .get('/api/users/' + this.user_id + '/')
         .then(res => {
           if (res.data) {
-            console.log('user details: ', res)
+            // console.log('user details: ', res)
             this.avatar = res.data.profile.avatar
             this.isOnline = res.data.profile.is_online
             this.firstName = res.data.first_name ? res.data.first_name : undefined
@@ -576,7 +608,7 @@ export default {
       return (users[0].id === this.user_id) ? users[1] : users[0]
     },
     getContactName (users) {
-      console.log(users)
+      // console.log(users)
       if (users.length > 1) {
         return this.getUserName(this.getContact(users))
       } else {
@@ -585,10 +617,15 @@ export default {
     },
     getUnreadMessagesQty () {
       api.axios
-        .get('/api/dialogs')
-        .then(res => {
-          if (res.data) {
-            this.unread_messages_qty = res.data['unread_messages']
+        .get('/api/dialog/')
+        .then(response => {
+          if (response.data) {
+            this.unread_messages_qty = []
+            for (let i = 0; i < Object.keys(response.data.results).length; i++) {
+              // console.log(this.user_id)
+              this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
+            }
+            // console.log(this.unread_messages_qty)
           }
         })
         .catch(error => console.log(error))

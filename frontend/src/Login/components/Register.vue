@@ -264,7 +264,9 @@ export default {
   },
   methods: {
     validateField () {
-      this.$refs.passwords.validate()
+      if (this.$refs.passwords) {
+        this.$refs.passwords.validate();
+      }
     },
     GoToLogin () {
       this.$root.$children[0].login = this.login
@@ -289,13 +291,16 @@ export default {
           }
           })
           .catch(error => {
-            console.log(error)
-            if (error.response.status === 400) {
-              alert('Пользователь с таким именем уже существует.')
+            if (error.response.status === 400) {   
+              Object.values(error.response.data).forEach(error => {
+                if (error.length) {
+                  alert(error);
+                }
+              });
             }
           })
           .then(data => {
-            if (data.status === 201) {
+            if (data && data.status === 201) {
               api.axios
                 .post('/api/token/', {
                   username: username,

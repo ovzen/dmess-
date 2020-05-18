@@ -44,3 +44,11 @@ django и django rest framework, пишем новые тесты.
 .. code-block:: bash
 
     coverage report --omit=venv/*
+
+5. Создаем интерактивную html страницу с отчетом о покрытии (исключая папку виртуального окружения):
+
+.. code-block:: bash
+
+    coverage html -i --omit=venv/*
+
+После этой команды в проекте появится папка htmlcov, в которой надо открыть index.html

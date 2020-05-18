@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 import uuid
 
 from django.db import models
@@ -26,7 +26,7 @@ class Invite(models.Model):
         self.is_active = False
         user.is_staff = True
         user.save()
-        self.used_at = datetime.datetime.now()
+        self.used_at = timezone.now()
         self.for_user = user
 
 
