@@ -136,17 +136,19 @@ export default {
             this.error_text = ''
           }
         })
-        .then(res => {
-          console.log(res.data)
-          this.$cookie.set('Authentication', res.data.access, {
-            expires: '5m'
-          })
-          localStorage.setItem('UpdateKey', res.data.refresh)
-          this.button =
-            'Приветствуем ' +
-            jwt.decode(this.$cookie.get('Authentication')).name
-          console.log(jwt.decode(this.$cookie.get('Authentication')))
-          window.location.href = this.next
+        .then(res => {          
+          if (res) {
+            console.log(res.data)
+            this.$cookie.set('Authentication', res.data.access, {
+              expires: '5m'
+            })
+            localStorage.setItem('UpdateKey', res.data.refresh)
+            this.button =
+              'Приветствуем ' +
+              jwt.decode(this.$cookie.get('Authentication')).name
+            console.log(jwt.decode(this.$cookie.get('Authentication')))
+            window.location.href = this.next
+        }
         })
     },
     FocusOn (value) {

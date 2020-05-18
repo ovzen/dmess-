@@ -29,21 +29,6 @@
         </v-list-item>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn
-        icon
-        disabled
-      >
-        <v-icon>
-          mdi-magnify
-        </v-icon>
-      </v-btn>
-      <v-btn
-        icon
-      >
-        <v-icon>
-          mdi-book-multiple
-        </v-icon>
-      </v-btn>
 
       <v-menu
         offset-y
@@ -63,26 +48,11 @@
         <v-list
           color="background_white"
         >
-          <v-list-item>
-            <v-list-item-title>
-              Logout
-            </v-list-item-title>
-          </v-list-item>
           <v-list-item
-            @click="goProfilePage()"
+            :to="{ name: 'MyProfile', params: {} }"
           >
             <v-list-item-title>
-              Button 2
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>
-              Button 3
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>
-              Button 4
+              Profile
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -161,9 +131,120 @@
       <div
         id="dynamic-component"
       >
-        <profiles
-          v-if="currentTab.name == 'mdi-account-circle'"
-        />
+        <div v-if="currentTab.name == 'mdi-account-circle'">
+          <v-divider />
+          <v-col>
+            <v-text-field
+              v-model="userSearch"
+              clearable
+              solo
+              background-color="grey lighten-2"
+              dense
+              flat
+              color="basic"
+              hide-details
+              prepend-inner-icon="mdi-magnify"
+              label="Search for users"
+              style="border-radius:50px; max-width:450px;"
+              @input="getUsersBySearch(userSearch)"
+            />
+          </v-col>
+          <v-divider />
+          <div
+            v-for="contact in (userSearch != '' ? SortContacts : contacts)"
+            :key="contact.id"
+          >
+            <v-list-item
+              :to="'/UserProfile/' + contact.Contact.id"
+            >
+              <v-list-item-avatar>
+                <v-avatar
+                  size="36px"
+                  color="basic"
+                >
+                  <span
+                    class="white--text"
+                  >
+                    NU
+                  </span>
+                <!--<v-img
+            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+          />-->
+                </v-avatar>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ contact.Contact.username }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <span
+                    class="basic--text text--lighten"
+                  >
+                    {{ contact.Contact.profile.status }}
+                  </span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider
+              v-if="contact.id != SortContacts[SortContacts.length-1].id"
+              inset
+            />
+          </div>
+          <div
+            v-if="userSearch"
+          >
+            <v-divider />
+            <h1
+              class="basic--text"
+              style="font-family: Roboto;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 16px;
+                    padding:16px"
+            >
+              Global Search
+            </h1>
+            <v-divider />
+            <div
+              v-for="user in findedUsers"
+              :key="user.id"
+            >
+              <v-list-item
+                :to="'/UserProfile/' + user.id"
+              >
+                <v-list-item-avatar>
+                  <v-avatar
+                    size="36px"
+                    color="basic"
+                  >
+                    <span
+                      class="white--text"
+                    >
+                      NU
+                    </span>
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ user.username }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span
+                      class="basic--text text--lighten"
+                    >
+                      {{ user.status }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider
+                v-if="user.id !== findedUsers[findedUsers.length-1].id"
+                inset
+              />
+            </div>
+          </div>
+        </div>
         <div v-if="currentTab.name == 'mdi-message-text'">
           <v-divider />
           <v-col>
@@ -221,13 +302,12 @@
               <v-list-item-action-text v-if="dialog.last_message">
                 {{ formatTime(dialog.last_message.create_date) }}
               </v-list-item-action-text>
-              <!-- Изменить v-if на другое условие: "если есть непрочитанные сообщения" -->
               <v-avatar
-                v-if="dialog.last_message"
+                v-if="unread_messages_qty[i]"
                 color="basic"
                 class="subheading white--text"
                 size="24"
-                v-text="1"
+                v-text="unread_messages_qty[i]"
               />
             </v-list-item-action>
           </v-list-item>
@@ -248,9 +328,39 @@
             top
             right
             absolute
+            @click.stop="dialog = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
+          <v-dialog
+            v-model="dialog"
+            max-width="700"
+          >
+            <v-card>
+              <v-card-title
+                class="headline"
+              >
+                We're so sorry, but we haven't kept up to develop this feature.
+              </v-card-title>
+
+              <v-card-text>
+                This button seems to us so beautiful and cute that we could not just remove it :)
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="dialog = false"
+                >
+                  Okay, I agree with you
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-card-actions>
             <v-btn
               v-for="tab in tabs"
@@ -259,11 +369,17 @@
               :class="['tab-button', { active: currentTab.name === tab.name }]"
               @click="currentTab = tab"
             >
-              <v-icon
-                size="24px"
-              >
-                {{ tab.name }}
-              </v-icon>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    size="24px"
+                    v-on="on"
+                  >
+                    {{ tab.name }}
+                  </v-icon>
+                </template>
+                <span>{{ tab.display_name }}</span>
+              </v-tooltip>
             </v-btn>
           </v-card-actions>
         </v-footer>
@@ -295,21 +411,25 @@ Vue.use(VueCookie)
 var tabs = [
   {
     name: 'mdi-account-circle',
+    display_name: 'Contacts',
     component: {
     }
   },
   {
     name: 'mdi-message-text',
+    display_name: 'Dialogs',
     component: {
     }
   },
   {
     name: 'mdi-room-service',
+    display_name: 'Notifications',
     component: {
     }
   },
   {
     name: 'mdi-settings',
+    display_name: 'Settings',
     component: {
     }
   }
@@ -317,13 +437,16 @@ var tabs = [
 
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, profiles, settings },
+  components: { SystemInfo, settings },
   data: () => ({
     login: '',
     button: 'Войти',
     chatName: '',
     password: '',
     data: '',
+    userSearch: '',
+    messages: [],
+    dialog: false,
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
@@ -339,11 +462,16 @@ export default {
     isOnline: false,
     currentTab: tabs[0],
     tabs: tabs,
+    contacts: [],
+    findedUsers: [],
     dialogs: []
   }),
   computed: {
     Route () {
       return this.$route
+    },
+    SortContacts () {
+      return this.contacts.filter(contact => { return contact.Contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
   },
   watch: {
@@ -359,6 +487,7 @@ export default {
   },
   mounted () {
     setInterval(this.updateToken, 1000)
+    this.getContacts()
     this.getDialogsList()
     this.getUserData()
     setInterval(this.getUnreadMessagesQty, 2000)
@@ -368,6 +497,25 @@ export default {
     }
   },
   methods: {
+    getUsersBySearch () {
+      api.axios.get('/api/users/', {
+        params: {
+          search: this.userSearch
+        }
+      }).then(res => {
+        this.findedUsers = res.data.results.filter(user => {
+          for (let contact in this.contacts) {
+            if (user.username === this.contacts[contact].Contact.username) {
+              return false
+            }
+          }
+          return true
+        })
+      })
+    },
+    getContacts () {
+      api.axios.get('/api/contacts/').then(res => { this.contacts = res.data.results })
+    },
     disconnect () {
       this.$disconnect()
     },
@@ -387,13 +535,12 @@ export default {
         .then(response => {
           if (response.data) {
             this.dialogs = response.data.results
-            console.log('dialogsList:', response.data.results)
           }
         })
         .catch(error => console.log(error))
     },
     openDialog (dialogId) {
-      console.log('Route ID:', this.$route.params.id)
+      // console.log('Route ID:', this.$route.params.id)
       if (this.$route.params.id !== dialogId) {
         this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
       }
@@ -415,7 +562,7 @@ export default {
           .then(response => {
             if (response.data) {
               this.chatName = response.data.results[0].name
-              console.log(response)
+              // console.log(response)
             }
           })
           .catch(error => console.log(error))
@@ -428,7 +575,7 @@ export default {
         .get('/api/users/' + this.user_id + '/')
         .then(res => {
           if (res.data) {
-            console.log('user details: ', res)
+            // console.log('user details: ', res)
             this.avatar = res.data.profile.avatar
             this.isOnline = res.data.profile.is_online
             this.firstName = res.data.first_name ? res.data.first_name : undefined
@@ -461,7 +608,7 @@ export default {
       return (users[0].id === this.user_id) ? users[1] : users[0]
     },
     getContactName (users) {
-      console.log(users)
+      // console.log(users)
       if (users.length > 1) {
         return this.getUserName(this.getContact(users))
       } else {
@@ -470,10 +617,15 @@ export default {
     },
     getUnreadMessagesQty () {
       api.axios
-        .get('/api/dialogs')
-        .then(res => {
-          if (res.data) {
-            this.unread_messages_qty = res.data['unread_messages']
+        .get('/api/dialog/')
+        .then(response => {
+          if (response.data) {
+            this.unread_messages_qty = []
+            for (let i = 0; i < Object.keys(response.data.results).length; i++) {
+              // console.log(this.user_id)
+              this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
+            }
+            // console.log(this.unread_messages_qty)
           }
         })
         .catch(error => console.log(error))

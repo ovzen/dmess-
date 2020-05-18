@@ -4,12 +4,15 @@ from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from main import models
+from main.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    status = serializers.CharField()
+
     class Meta:
         model = models.UserProfile
-        exclude = ('user', )
+        exclude = ('user','last_online')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -47,11 +50,24 @@ class DialogSerializer(serializers.ModelSerializer):
         model = models.Dialog
         fields = '__all__'
 
+    # def validate_users(self, value):
+    #     supposed_dialog = models.Dialog.objects.filter(users__in=value)
+    #     if supposed_dialog.exists():
+    #         raise serializers.ValidationError(
+    #             f'Dialog with users {value} in already exists.'
+    #             f' check: /api/dialog/{supposed_dialog.first().id}/'
+    #         )
+
+
 
 class ContactSerializer(serializers.ModelSerializer):
+    User = UserSerializer(read_only=True, source='user')
+    Contact = UserSerializer(read_only=True, source='contact')
+
     class Meta:
         model = models.Contact
         fields = '__all__'
+        extra_kwargs = {'user': {'write_only': True}, 'contact': {'write_only': True}}
         validators = [
             UniqueTogetherValidator(
                 queryset=models.Contact.objects.all(),
