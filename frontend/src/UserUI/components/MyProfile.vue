@@ -16,20 +16,48 @@
             color="basic"
           >
             <v-skeleton-loader
-              :loading="loading"
+              v-if="loading"
               type="avatar"
               class="mx-auto"
+            />
+            <div
+              v-if="!edit && !UserProfile.profile.avatar"
             >
               <span
                 class="display-1 white--text"
               >
-                {{ getUserAvatar }}
+                {{ getUserInitials }}
               </span>
-              <v-skeleton-loader />
-              <!--<v-img
-              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-            />-->
-            </v-skeleton-loader>
+            </div>
+
+            <v-img
+              v-if="!edit"
+              :src="UserProfile.profile.avatar"
+            />
+            <v-img
+              v-if="edit"
+              :src="UserProfile.profile.avatar"
+              style="opacity: 0.3"
+            >
+            </v-img>
+            <v-btn
+              v-if="edit"
+              icon
+              dark
+              absolute
+              style="left:50%;top:50%;transform: translate(-50%, -50%);"
+              @click="runFileSelect"
+            >
+              <v-icon large>
+                mdi-camera-outline
+              </v-icon>
+            </v-btn>
+            <input
+              ref="file"
+              type="file"
+              style="display:none"
+              @change="onFileSelected"
+            />
           </v-avatar>
         </v-list-item-avatar>
         <v-list-item-content
@@ -300,7 +328,7 @@ export default {
     edit: false
   }),
   computed: {
-    getUserAvatar () {
+    getUserInitials () {
       if (typeof this.UserProfile !== 'undefined') {
         if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
           return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
@@ -328,14 +356,22 @@ export default {
         })
     },
     save () {
+      let formData = new FormData()
+
+      formData.append('first_name', this.UserProfile.first_name)
+      formData.append('last_name', this.UserProfile.last_name)
+      formData.append('username', this.UserProfile.username)
+      formData.append('email', this.UserProfile.email)
+      formData.append('profile.bio', this.UserProfile.profile.bio)
+      // если не отправить статус, то появляется ошибка "this field is required"
+      formData.append('profile.status', 'online')
+      if (this.UserProfile.avatar) {
+        formData.append('profile.avatar', this.UserProfile.avatar)
+      }
+      
+
       api.axios
-        .put('/api/accounts/profile/', {
-          first_name: this.UserProfile.first_name,
-          last_name: this.UserProfile.last_name,
-          username: this.UserProfile.username,
-          email: this.UserProfile.email,
-          profile: { bio: this.UserProfile.profile.bio }
-        })
+        .put('/api/accounts/profile/', formData)
         .then(res => {
           console.log(res)
         })
@@ -347,7 +383,15 @@ export default {
       localStorage.removeItem('UpdateKey')
       this.$cookie.delete('Authentication')
       window.location.reload()
+    },
+    runFileSelect () {
+      this.$refs.file.click()
+    },
+    onFileSelected () {
+      this.UserProfile.avatar = this.$refs.file.files[0]
+      console.log('avatar: ', this.UserProfile.avatar)
     }
+
   }
 }
 </script>
