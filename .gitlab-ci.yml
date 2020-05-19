@@ -3,7 +3,7 @@ image: python:latest
 stages:
   - test
   - codestyle
-#   - docs
+  - docs
   - deploy
 
 tests:
@@ -28,15 +28,15 @@ codestyle:
     paths:
       - ./public/codestyle.txt
 
-# docs:
-#   stage: docs
-#   script:
-#     - ./ci/doc_runner.sh
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == 'develop'
-#   artifacts:
-#     paths:
-#       - ./public/docs.txt
+docs:
+  stage: docs
+  script:
+    - ci/doc_runner.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'develop'
+  artifacts:
+    paths:
+      - ./public/docs.txt
 
 production:
   stage: deploy
