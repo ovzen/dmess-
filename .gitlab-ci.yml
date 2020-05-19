@@ -31,7 +31,7 @@ codestyle:
 docs:
   stage: docs
   script:
-    - ci/doc_runner.sh
+    - sudo ./ci/doc_runner.sh
   rules:
     - if: $CI_COMMIT_BRANCH == 'develop'
   artifacts:
