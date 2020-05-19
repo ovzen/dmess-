@@ -11,26 +11,32 @@
         <v-list-item-avatar
           size="100px"
         >
-          <v-avatar
-            size="100px"
-            color="basic"
-          >
-            <v-skeleton-loader
-              :loading="loading"
-              type="avatar"
-              class="mx-auto"
+          <v-skeleton-loader
+            v-if="loading"
+            type="avatar"
+            class="mx-auto"
+          />
+          <div v-else>
+            <v-avatar
+              v-if="UserProfile.profile.avatar"
+              size="100px"
+            >
+              <v-img
+                :src="UserProfile.profile.avatar"
+              />
+            </v-avatar>
+            <v-avatar
+              v-else
+              size="100px"
+              color="basic"
             >
               <span
                 class="display-1 white--text"
               >
                 {{ getUserAvatar }}
               </span>
-              <v-skeleton-loader />
-              <!--<v-img
-              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-            />-->
-            </v-skeleton-loader>
-          </v-avatar>
+            </v-avatar>
+          </div>
         </v-list-item-avatar>
         <v-list-item-content
           class="ml-4"
@@ -215,7 +221,7 @@ export default {
     $route: ['get_data']
   },
   created () {
-    this.get_data();
+    this.get_data()
     if (this.$cookie.get('Authentication')) {
       this.current_user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
     } else {
@@ -253,28 +259,28 @@ export default {
         }
       })
     },
-    findChat() {
+    findChat () {
       api.axios
-      .get('/api/dialog/', {
-        params: {
-          users: this.$route.params.Userid
-        }
-      })
-      .then(response => {
-        if (response.data.results.length > 0) {
-          this.$router.push('/ChatUser/' + response.data.results[0].id)
-        } else {
-          api.axios
-            .post('/api/dialog/', {
-              users: [this.current_user_id, this.$route.params.Userid]
-            })
-            .then(response => {
-              if (response && response.data && response.data.id) {
-                this.$router.push('/ChatUser/' + response.data.id)
-              }
-            })
-        }
-      })
+        .get('/api/dialog/', {
+          params: {
+            users: this.$route.params.Userid
+          }
+        })
+        .then(response => {
+          if (response.data.results.length > 0) {
+            this.$router.push('/ChatUser/' + response.data.results[0].id)
+          } else {
+            api.axios
+              .post('/api/dialog/', {
+                users: [this.current_user_id, this.$route.params.Userid]
+              })
+              .then(response => {
+                if (response && response.data && response.data.id) {
+                  this.$router.push('/ChatUser/' + response.data.id)
+                }
+              })
+          }
+        })
     }
   }
 }
