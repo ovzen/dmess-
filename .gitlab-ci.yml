@@ -8,6 +8,8 @@ stages:
 
 tests:
   stage: test
+  before_script:
+    - pip install -r ./requirements.txt
   script:
     - source ./ci/test_runner.sh
   rules:
