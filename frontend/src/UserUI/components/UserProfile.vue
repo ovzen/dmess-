@@ -161,13 +161,9 @@
             </v-list-item-content>
           </v-list-item>
 
-<<<<<<< HEAD
           <v-list-item
             @click="findChat()"
           >
-=======
-          <v-list-item>
->>>>>>> hotfix/message_input
             <v-list-item-action>
               <v-icon
                 class="ml-3 pb-6"
