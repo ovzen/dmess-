@@ -23,7 +23,7 @@
               <span
                 class="display-1 white--text"
               >
-                NU
+                {{ getUserAvatar }}
               </span>
               <v-skeleton-loader />
               <!--<v-img
@@ -161,9 +161,13 @@
             </v-list-item-content>
           </v-list-item>
 
+<<<<<<< HEAD
           <v-list-item
             @click="findChat()"
           >
+=======
+          <v-list-item>
+>>>>>>> hotfix/message_input
             <v-list-item-action>
               <v-icon
                 class="ml-3 pb-6"
@@ -199,6 +203,17 @@ export default {
     UserProfile: undefined,
     current_user_id: undefined
   }),
+  computed: {
+    getUserAvatar () {
+      if (typeof this.UserProfile !== 'undefined') {
+        if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
+          return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
+        } else {
+          return this.UserProfile.username[0].toUpperCase()
+        }
+      } return ''
+    }
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['get_data']
