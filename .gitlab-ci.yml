@@ -30,6 +30,8 @@ codestyle:
 
 docs:
   stage: docs
+  before_script:
+    - pip install -r ./ci/docs_requirements.txt
   script:
     - source ./ci/doc_runner.sh
   rules:
