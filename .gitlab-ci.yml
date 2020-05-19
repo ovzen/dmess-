@@ -1,7 +1,42 @@
 image: python:latest
 
 stages:
+  - test
+  - codestyle
+  - docs
   - deploy
+
+tests:
+  stage: test
+  script:
+    - ./ci/test_runner.sh
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+  artifacts:
+    paths:
+      - ./public/tests.txt
+
+codestyle:
+  stage: codestyle
+  before_script:
+    - pip install -r ./ci/codestyle_requirements.txt
+  script:
+    - ./ci/pylint_runner.sh
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+  artifacts:
+    paths:
+      - ./public/codestyle.txt
+
+docs:
+  stage: docs
+  script:
+    - ./ci/doc_runner.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'develop'
+  artifacts:
+    paths:
+      - ./public/docs.txt
 
 production:
   stage: deploy
