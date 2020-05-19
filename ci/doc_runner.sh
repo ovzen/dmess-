@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 pwd
-cd ~/dmess/docs || exit
+cd ./docs || exit
 
 make html
 

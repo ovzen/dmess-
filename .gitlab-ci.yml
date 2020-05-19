@@ -9,7 +9,7 @@ stages:
 tests:
   stage: test
   script:
-    - ./ci/test_runner.sh
+    - source ./ci/test_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
   artifacts:
@@ -21,7 +21,7 @@ codestyle:
   before_script:
     - pip install -r ./ci/codestyle_requirements.txt
   script:
-    - ./ci/pylint_runner.sh
+    - source ./ci/pylint_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
   artifacts:
