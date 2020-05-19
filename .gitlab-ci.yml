@@ -14,7 +14,7 @@ tests:
     - if: $CI_MERGE_REQUEST_ID
   artifacts:
     paths:
-      -./public/tests.txt
+      - ./public/tests.txt
 
 codestyle:
   stage: codestyle
@@ -26,7 +26,7 @@ codestyle:
     - if: $CI_MERGE_REQUEST_ID
   artifacts:
     paths:
-      -./public/codestyle.txt
+      - ./public/codestyle.txt
 
 docs:
   stage: docs
@@ -36,7 +36,7 @@ docs:
     - if: $CI_COMMIT_BRANCH == 'develop'
   artifacts:
     paths:
-      -./public/docs.txt
+      - ./public/docs.txt
 
 production:
   stage: deploy
