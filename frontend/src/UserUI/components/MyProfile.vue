@@ -11,26 +11,52 @@
         <v-list-item-avatar
           size="100px"
         >
-          <v-avatar
-            size="100px"
-            color="basic"
-          >
-            <v-skeleton-loader
-              :loading="loading"
-              type="avatar"
-              class="mx-auto"
+          <v-skeleton-loader
+            v-if="loading"
+            type="avatar"
+            class="mx-auto"
+          />
+          <div v-else>
+            <v-avatar
+              size="100px"
+              :color="( (edit || !UserProfile.profile.avatar) === true ? 'basic' : '')"
             >
               <span
+                v-if="!edit && !UserProfile.profile.avatar"
                 class="display-1 white--text"
               >
-                NU
+                {{ getUserInitials }}
               </span>
-              <v-skeleton-loader />
-              <!--<v-img
-              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-            />-->
-            </v-skeleton-loader>
-          </v-avatar>
+
+              <v-img
+                v-if="!edit"
+                :src="UserProfile.profile.avatar"
+              />
+              <v-img
+                v-if="edit"
+                :src="UserProfile.profile.avatar"
+                style="opacity: 0.3"
+              />
+              <v-btn
+                v-if="edit"
+                icon
+                dark
+                absolute
+                style="left:50%;top:50%;transform: translate(-50%, -50%);"
+                @click="runFileSelect"
+              >
+                <v-icon large>
+                  mdi-camera-outline
+                </v-icon>
+              </v-btn>
+              <input
+                ref="file"
+                type="file"
+                style="display:none"
+                @change="onFileSelected"
+              >
+            </v-avatar>
+          </div>
         </v-list-item-avatar>
         <v-list-item-content
           class="ml-4"
@@ -44,25 +70,73 @@
             <v-list-item-title
               class="headline"
             >
-              {{ UserProfile.username }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <span
-                class="basic--text text--lighten"
+              <div
+                class="overline basic--text"
               >
-                {{ ( UserProfile.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
-              </span>
+                Name
+              </div>
+              <v-skeleton-loader
+                v-if="loading"
+                type="text"
+                class="mx-auto"
+                style="width:75%;position:absolute;left:10%;"
+              />
+              <div v-else>
+                <div
+                  v-if="!edit"
+                  class="body-2 black--text"
+                >
+                  {{ UserProfile.first_name || "Не указано" }}
+                </div>
+                <v-text-field
+                  v-else
+                  v-model="UserProfile.first_name"
+                  style="width:90.6%;margin-top:-20px;margin-bottom:-20px;"
+                  color="basic"
+                />
+              </div>
+              <v-divider
+                v-if="!loading && !edit"
+                width="404"
+              />
+            </v-list-item-title>
+
+            <v-list-item-subtitle>
+              <div
+                class="pt-2 overline basic--text"
+              >
+                Surname
+              </div>
+              <v-skeleton-loader
+                v-if="loading"
+                type="text"
+                class="mx-auto"
+                style="width:75%;position:absolute;left:10%;"
+              />
+              <div v-else>
+                <div
+                  v-if="!edit"
+                  class="body-2 black--text"
+                >
+                  {{ UserProfile.last_name || "Не указано" }}
+                </div>
+                <v-text-field
+                  v-else
+                  v-model="UserProfile.last_name"
+                  style="width:90.6%;margin-top:-20px;margin-bottom:-20px;"
+                  color="basic"
+                />
+              </div>
+              <v-divider
+                v-if="!loading && !edit"
+                width="404"
+              />
             </v-list-item-subtitle>
           </div>
         </v-list-item-content>
       </v-list-item>
-      <v-divider
-        class="ml-8"
-        width="555"
-      />
-
       <v-card-text
-        class="ml-9 mt-4"
+        class="ml-9"
       >
         <div
           class="pt-5 overline basic--text"
@@ -251,6 +325,17 @@ export default {
     loading: true,
     edit: false
   }),
+  computed: {
+    getUserInitials () {
+      if (typeof this.UserProfile !== 'undefined') {
+        if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
+          return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
+        } else {
+          return this.UserProfile.username[0].toUpperCase()
+        }
+      } return ''
+    }
+  },
   created () {
     this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
     this.get_data()
@@ -269,14 +354,26 @@ export default {
         })
     },
     save () {
+      let formData = new FormData()
+
+      formData.append('first_name', this.UserProfile.first_name)
+      formData.append('last_name', this.UserProfile.last_name)
+      formData.append('username', this.UserProfile.username)
+      formData.append('email', this.UserProfile.email)
+      formData.append('profile.bio', this.UserProfile.profile.bio)
+      // если не отправить статус, то появляется ошибка "this field is required"
+      formData.append('profile.status', 'online')
+      if (this.UserProfile.avatar) {
+        formData.append('profile.avatar', this.UserProfile.avatar)
+      }
+
       api.axios
-        .put('/api/accounts/profile/', {
-          username: this.UserProfile.username,
-          email: this.UserProfile.email,
-          profile: this.UserProfile.profile
-        })
+        .put('/api/accounts/profile/', formData)
         .then(res => {
           console.log(res)
+          if (res.status === 200) {
+            this.get_data()
+          }
         })
         .catch(error => {
           alert(error)
@@ -286,7 +383,15 @@ export default {
       localStorage.removeItem('UpdateKey')
       this.$cookie.delete('Authentication')
       window.location.reload()
+    },
+    runFileSelect () {
+      this.$refs.file.click()
+    },
+    onFileSelected () {
+      this.UserProfile.avatar = this.$refs.file.files[0]
+      console.log('avatar: ', this.UserProfile.avatar)
     }
+
   }
 }
 </script>
