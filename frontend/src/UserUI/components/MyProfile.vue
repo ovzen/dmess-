@@ -11,54 +11,52 @@
         <v-list-item-avatar
           size="100px"
         >
-          <v-avatar
-            size="100px"
-            color="basic"
-          >
-            <v-skeleton-loader
-              v-if="loading"
-              type="avatar"
-              class="mx-auto"
-            />
-            <div
-              v-if="!edit && !UserProfile.profile.avatar"
+          <v-skeleton-loader
+            v-if="loading"
+            type="avatar"
+            class="mx-auto"
+          />
+          <div v-else>
+            <v-avatar
+              size="100px"
+              :color="( (edit || !UserProfile.profile.avatar) === true ? 'basic' : '')"
             >
               <span
+                v-if="!edit && !UserProfile.profile.avatar"
                 class="display-1 white--text"
               >
                 {{ getUserInitials }}
               </span>
-            </div>
 
-            <v-img
-              v-if="!edit"
-              :src="UserProfile.profile.avatar"
-            />
-            <v-img
-              v-if="edit"
-              :src="UserProfile.profile.avatar"
-              style="opacity: 0.3"
-            >
-            </v-img>
-            <v-btn
-              v-if="edit"
-              icon
-              dark
-              absolute
-              style="left:50%;top:50%;transform: translate(-50%, -50%);"
-              @click="runFileSelect"
-            >
-              <v-icon large>
-                mdi-camera-outline
-              </v-icon>
-            </v-btn>
-            <input
-              ref="file"
-              type="file"
-              style="display:none"
-              @change="onFileSelected"
-            />
-          </v-avatar>
+              <v-img
+                v-if="!edit"
+                :src="UserProfile.profile.avatar"
+              />
+              <v-img
+                v-if="edit"
+                :src="UserProfile.profile.avatar"
+                style="opacity: 0.3"
+              />
+              <v-btn
+                v-if="edit"
+                icon
+                dark
+                absolute
+                style="left:50%;top:50%;transform: translate(-50%, -50%);"
+                @click="runFileSelect"
+              >
+                <v-icon large>
+                  mdi-camera-outline
+                </v-icon>
+              </v-btn>
+              <input
+                ref="file"
+                type="file"
+                style="display:none"
+                @change="onFileSelected"
+              >
+            </v-avatar>
+          </div>
         </v-list-item-avatar>
         <v-list-item-content
           class="ml-4"
@@ -368,12 +366,14 @@ export default {
       if (this.UserProfile.avatar) {
         formData.append('profile.avatar', this.UserProfile.avatar)
       }
-      
 
       api.axios
         .put('/api/accounts/profile/', formData)
         .then(res => {
           console.log(res)
+          if (res.status === 200) {
+            this.get_data()
+          }
         })
         .catch(error => {
           alert(error)
