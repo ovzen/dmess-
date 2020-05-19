@@ -11,26 +11,33 @@
         <v-list-item-avatar
           size="100px"
         >
-          <v-avatar
-            size="100px"
-            color="basic"
-          >
-            <v-skeleton-loader
-              :loading="loading"
-              type="avatar"
-              class="mx-auto"
+          <v-skeleton-loader
+            v-if="loading"
+            type="avatar"
+            class="mx-auto"
+          />
+          <div v-else>
+            <v-avatar
+              v-if="UserProfile.profile.avatar"
+              size="100px"
+            >
+              <v-img
+                :src="UserProfile.profile.avatar"
+              />
+            </v-avatar>
+            <v-avatar
+              v-else
+              size="100px"
+              color="basic"
             >
               <span
                 class="display-1 white--text"
               >
                 {{ getUserAvatar }}
               </span>
-              <v-skeleton-loader />
-              <!--<v-img
-              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-            />-->
-            </v-skeleton-loader>
-          </v-avatar>
+            </v-avatar>
+          </div>
+          </v-skeleton-loader>
         </v-list-item-avatar>
         <v-list-item-content
           class="ml-4"

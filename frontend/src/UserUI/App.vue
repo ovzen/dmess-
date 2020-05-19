@@ -128,33 +128,32 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <router-link
-              v-if="avatar"
               to="/MyProfile"
             >
-              <v-list-item-avatar>
+              <v-list-item-avatar v-if="avatar">
                 <v-img
                   :src="avatar"
                 />
               </v-list-item-avatar>
+              <v-list-item-avatar
+                v-else
+                color="#FFFFFF"
+                class="justify-center indigo--text"
+              >
+                <span v-if="(firstName && lastName)">
+                  {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+                </span>
+                <span v-else-if="(firstName)">
+                  {{ firstName[0].toUpperCase() }}
+                </span>
+                <span v-else-if="(lastName)">
+                  {{ lastName[0].toUpperCase() }}
+                </span>
+                <span v-else>
+                  {{ username[0].toUpperCase() }}
+                </span>
+              </v-list-item-avatar>
             </router-link>
-            <v-list-item-avatar
-              v-else
-              color="#FFFFFF"
-              class="justify-center indigo--text"
-            >
-              <span v-if="(firstName && lastName)">
-                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
-              </span>
-              <span v-else-if="(firstName)">
-                {{ firstName[0].toUpperCase() }}
-              </span>
-              <span v-else-if="(lastName)">
-                {{ lastName[0].toUpperCase() }}
-              </span>
-              <span v-else>
-                {{ username[0].toUpperCase() }}
-              </span>
-            </v-list-item-avatar>
           </v-list-item>
         </v-list>
       </v-card>
