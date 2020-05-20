@@ -6,8 +6,11 @@ from rest_registration.signals import user_registered
 
 from main.models import WikiPage, UserProfile, User, Message
 from admin.models import Invite, InviteAlreadyUsed
+from main.serializers import DialogSerializer
 
 from main.tasks import markdown_convert
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 
 @receiver(post_save, sender=WikiPage)
@@ -49,5 +52,22 @@ def user_invite_processing(user, request, **kwargs):
 def dialog_ws_notification(**kwargs):
     dialog = kwargs['instance'].dialog
     for user in dialog.users.all():
-        # channel group add should be there
-        print(f'dialog_user_{user.id}')
+        sync_update_dialog = async_to_sync(update_dialog)
+        sync_update_dialog(user, dialog)
+
+
+async def update_dialog(user, dialog):
+    group_name = f'dialogs_user_{user.id}'
+    serializer = DialogSerializer(dialog)
+    channel_layer = get_channel_layer()
+    content = {
+        'action': 'update',
+        'data': serializer.data
+    }
+    await channel_layer.group_send(
+        group_name,
+        {
+            'type': 'notify',
+            'content': content
+        }
+    )
