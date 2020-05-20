@@ -457,7 +457,7 @@ var tabs = [
     }
   }
 ]
-
+let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/dialog_notifications/')
 export default {
   new: '#dynamic-component',
   components: { SystemInfo, settings },
@@ -510,6 +510,7 @@ export default {
   },
   mounted () {
     let Vue = this
+    ws.onmessage = function (event) { Vue.message = JSON.parse(event.data).message; Vue.type = JSON.parse(event.data).message_type }
     document.addEventListener('keydown', function (event) {
       const key = event.key // Or const {key} = event; in ES6+
       if (key === 'Escape' && Vue.Route.fullPath !== '/') {
