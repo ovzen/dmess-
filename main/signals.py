@@ -10,7 +10,6 @@ from main.serializers import DialogSerializer
 
 from main.tasks import markdown_convert
 from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 
 
 @receiver(post_save, sender=WikiPage)
@@ -52,8 +51,7 @@ def user_invite_processing(user, request, **kwargs):
 def dialog_ws_notification(**kwargs):
     dialog = kwargs['instance'].dialog
     for user in dialog.users.all():
-        sync_update_dialog = async_to_sync(update_dialog)
-        sync_update_dialog(user, dialog)
+        update_dialog(user, dialog)
 
 
 async def update_dialog(user, dialog):
