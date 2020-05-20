@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_registration.signals import user_registered
 
-from main.models import WikiPage, UserProfile, User
+from main.models import WikiPage, UserProfile, User, Message
 from admin.models import Invite, InviteAlreadyUsed
 
 from main.tasks import markdown_convert
@@ -43,3 +43,11 @@ def user_invite_processing(user, request, **kwargs):
         return
     except InviteAlreadyUsed:
         return
+
+
+@receiver(post_save, sender=Message)
+def dialog_ws_notification(**kwargs):
+    dialog = kwargs['instance'].dialog
+    for user in dialog.users.all():
+        # channel group add should be there
+        print(f'dialog_user_{user.id}')
