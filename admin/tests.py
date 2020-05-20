@@ -73,7 +73,6 @@ class RegisterStatTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-
 class UserStatTestCase(APITestCase):
     fixtures = ['db.json']
 
