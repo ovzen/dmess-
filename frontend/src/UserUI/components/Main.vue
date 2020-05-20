@@ -26,18 +26,6 @@
         Комнатка модератора
       </v-btn>
     </a>
-    <a
-      href="/AllUsers/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="basic"
-      >
-        Список Пользователей
-      </v-btn>
-    </a>
     <v-form>
       <v-container>
         <v-row>
@@ -58,9 +46,7 @@
         </v-row>
       </v-container>
     </v-form>
-    <router-link to="/chat/1">
-      Перейти к chat
-    </router-link>
+
     <div class="main">
       <h1 class="main_smile smile_color--text">
         ¯\_(^ ‿ ^)\
