@@ -1,10 +1,16 @@
 image: python:latest
 
+
+services:
+  - redis:2.8
+
+
 stages:
   - test
   - codestyle
   - docs
   - deploy
+
 
 tests:
   stage: test
@@ -18,6 +24,7 @@ tests:
     paths:
       - ./public/tests.txt
 
+
 codestyle:
   stage: codestyle
   before_script:
@@ -30,6 +37,7 @@ codestyle:
     paths:
       - ./public/codestyle.txt
 
+
 docs:
   stage: docs
   before_script:
@@ -41,6 +49,7 @@ docs:
   artifacts:
     paths:
       - ./public/docs.txt
+
 
 production:
   stage: deploy
