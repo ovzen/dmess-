@@ -1,4 +1,6 @@
 """signals.py - собрание функций, привязанных к изменениям моделей django"""
+import json
+
 from django.dispatch import receiver
 
 from django.db.models.signals import post_save
@@ -10,6 +12,7 @@ from main.serializers import DialogSerializer
 
 from main.tasks import markdown_convert
 from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 
 @receiver(post_save, sender=WikiPage)
@@ -51,10 +54,10 @@ def user_invite_processing(user, request, **kwargs):
 def dialog_ws_notification(**kwargs):
     dialog = kwargs['instance'].dialog
     for user in dialog.users.all():
-        update_dialog(user, dialog)
+        send_notification(user, dialog)
 
 
-async def update_dialog(user, dialog):
+def send_notification(user, dialog):
     group_name = f'dialogs_user_{user.id}'
     serializer = DialogSerializer(dialog)
     channel_layer = get_channel_layer()
@@ -62,10 +65,20 @@ async def update_dialog(user, dialog):
         'action': 'update',
         'data': serializer.data
     }
-    await channel_layer.group_send(
+
+    content = normalize_uuid(content)
+
+    async_to_sync(channel_layer.group_send)(
         group_name,
         {
             'type': 'notify',
             'content': content
         }
     )
+
+
+def normalize_uuid(content):
+    """В redis_layer есть баг, из-за чего не сериализуется UUID"""
+    content['data']['id'] = str(content['data']['id'])
+    content['data']['last_message']['dialog'] = str(content['data']['last_message']['dialog'])
+    return content
