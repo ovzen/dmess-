@@ -6,9 +6,9 @@
     >
       <v-flex>
         <v-container
-          v-for="(message, i) in messages"
+          v-for="message in messages"
           :id="'Message_' + message.id"
-          :key="i"
+          :key="message.id"
           py-2
         >
           <div
@@ -100,11 +100,12 @@
       color="background_white"
       fixed
       padless
+      inset
       style="box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
     >
       <v-form
         class="d-inline-flex"
-        :style="'padding-left:'+ (($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225) + 10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
+        :style="'padding-left:'+ (this.$vuetify.application.left+10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
       >
         <v-textarea
           ref="myTextArea"
@@ -161,6 +162,9 @@ export default {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['updateDialog']
   },
+  beforeMount () {
+    setTimeout(this.GetOldMessages, 2000)
+  },
   mounted () {
     this.updateDialog()
     this.getMessage()
@@ -169,6 +173,26 @@ export default {
     this.$disconnect()
   },
   methods: {
+    CheckIsVisible (el) {
+      var rect = el.getBoundingClientRect()
+      var elemTop = rect.top
+      var elemBottom = rect.bottom
+      var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight)
+      return isVisible
+    },
+    GetOldMessages () {
+      if (this.CheckIsVisible(document.getElementById('Message_' + this.messages[this.messages.length - 3].id))) {
+        console.log('visible')
+        api.axios
+          .get('/api/messages/', { params: { dialog: this.diailogId, limit: 5, offset: this.messages.length } })
+          .then(response => {
+            if (response.status === 200) {
+              this.messages = this.messages.concat(response.data.results)
+            }
+          })
+      }
+      setTimeout(this.GetOldMessages, 2000)
+    },
     sendMessage () {
       if (this.message) {
         console.log('messagetext: ', this.message)
@@ -186,10 +210,15 @@ export default {
       this.messages = []
       this.diailogId = this.$route.params.id
       api.axios
-        .get('/api/messages/', { params: { dialog: this.diailogId } })
+        .get('/api/messages/', { params: { dialog: this.diailogId, limit: 5 } })
         .then(response => {
-          if (response.data) {
+          if (response.status === 200) {
             this.messages = this.messages.concat(response.data.results)
+            console.log(this.messages[this.messages.length - 1].id)
+            var Data = this
+            Vue.nextTick(function () {
+              Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[Data.messages.length - 1].id))
+            })
           }
         })
         .catch(error => console.log(error))
