@@ -1,7 +1,9 @@
 Паттерны проектирования, используемые в dmess
 =============================================
 
-1. **MVT, или Model-View-Template**
+--------------------------------
+**MVT, или Model-View-Template**
+--------------------------------
 
 Паттерн, используемый в django. Представляет собой набор
 моделей (models), представлений (views) и шаблонов (templates).
@@ -17,14 +19,18 @@
 Model в MVT соответствует таковая в MVC, View соответствует
 Controller, а Template - View.
 
-Подробнее: https://ru.wikipedia.org/wiki/Model-View-Controller
-https://docs.djangoproject.com/en/3.0/#the-model-layer
+Подробнее:
+
+- https://ru.wikipedia.org/wiki/Model-View-Controller
+- https://docs.djangoproject.com/en/3.0/#the-model-layer
 
 В dmess он представлен файлами models.py и views.py, две пары
 которых находятся в папках **admin/** и **main/**, а также папкой
 **templates/** в корне проекта.
 
-2. **Декоратор (Decorator)**
+-------------------------
+**Декоратор (Decorator)**
+-------------------------
 
 Структурный паттерн проектирования, который позволяет
 динамически добавлять объектам новую функциональность,
@@ -53,7 +59,7 @@ https://docs.djangoproject.com/en/3.0/#the-model-layer
         return wrapper
 
 В dmess используются как стандартные декораторы из python
-(**@classmethod** в классе MyTokenObtainPairSerializer,
+(**@classmethod** в классе :class:`MyTokenObtainPairSerializer`,
 файл serializers.py), так и, например, декораторы из
-django rest framework (**@action** в классах CountModelMixin,
-UserViewSet и DialogViewSet, файл views.py).
+django rest framework (**@action** в классах :class:`CountModelMixin`,
+:class:`UserViewSet` и :class:`DialogViewSet`, файл views.py).

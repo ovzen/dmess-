@@ -17,7 +17,7 @@ Welcome to Dmess's documentation!
    prepare.rst
    run.rst
    tests.rst
-
+   patterns.rst
 
 Указатели
 =========
