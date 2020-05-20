@@ -101,6 +101,7 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     queryset = Message.objects.all()
     search_fields = ['text']
     filterset_fields = '__all__'
+    ordering_fields = ['id', 'create_date']
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

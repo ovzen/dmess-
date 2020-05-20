@@ -1,24 +1,54 @@
 <template>
   <div style="height:100%;">
     <v-row
+      v-if="messages.length > 0"
+      class="d-flex flex-column-reverse"
       style="padding-bottom:56px;height:100%;"
-      :align="(messages.length === 0 ? 'center' : 'end')"
+      align="end"
     >
-      <v-flex>
+      <v-container
+        v-for="message in messages"
+        :id="'Message_' + message.id"
+        :key="message.id"
+        py-2
+      >
+        <div
+          v-if="isOwnMessage(message.user_detail.username)"
+          class="text-left"
+        >
+          <v-card
+            max-width="460px"
+            class="float-right d-flex"
+            style="border-radius: 20px;"
+            flat
+          >
+            <v-card-text>
+              <span
+                class="font-weight-light message_color--text"
+              >
+                {{ message.text }}
+              </span>
+              <span
+                class="float-right ml-2"
+              >
+                {{ formatTime(message.create_date) }}
+              </span>
+            </v-card-text>
+          </v-card>
+        </div>
         <v-container
-          v-for="(message, i) in messages"
-          :id="'Message_' + message.id"
-          :key="i"
-          py-2
+          class="d-flex"
+          py-0
         >
           <div
-            v-if="isOwnMessage(message.user_detail.username)"
+            v-if="!isOwnMessage(message.user_detail.username)"
             class="text-left"
           >
             <v-card
-              max-width="460px"
-              class="float-right d-flex"
               style="border-radius: 20px;"
+              max-width="460px"
+              class="d-flex"
+              color="background_pink"
               flat
             >
               <v-card-text>
@@ -35,52 +65,30 @@
               </v-card-text>
             </v-card>
           </div>
-          <v-container
-            class="d-flex"
-            py-0
-          >
-            <div
-              v-if="!isOwnMessage(message.user_detail.username)"
-              class="text-left"
-            >
-              <v-card
-                style="border-radius: 20px;"
-                max-width="460px"
-                class="d-flex"
-                color="background_pink"
-                flat
-              >
-                <v-card-text>
-                  <span
-                    class="font-weight-light message_color--text"
-                  >
-                    {{ message.text }}
-                  </span>
-                  <span
-                    class="float-right ml-2"
-                  >
-                    {{ formatTime(message.create_date) }}
-                  </span>
-                </v-card-text>
-              </v-card>
-            </div>
-          </v-container>
         </v-container>
-        <div class="d-flex flex-column">
-          <span
-            v-if="messages.length === 0"
-            style="font-weight: 300;
+      </v-container>
+    </v-row>
+    <v-row
+      v-else
+      align="center"
+      justify="center"
+      style="padding-bottom:56px;height:100%;"
+    >
+      <div class="d-flex flex-column">
+        <span
+          v-if="messages.length === 0"
+          style="font-weight: 300;
               font-size: 96px;
               line-height: 112px;
               text-align: center;
               letter-spacing: -1.5px;"
-            class="smile_color--text"
-          >
-            ¯\_(ツ)_/¯
-          </span>
-          <span
-            v-if="messages.length === 0"
-            style="font-family: Roboto;
+          class="smile_color--text"
+        >
+          ¯\_(ツ)_/¯
+        </span>
+        <span
+          v-if="messages.length === 0"
+          style="font-family: Roboto;
               font-style: normal;
               font-weight: 500;
               font-size: 14px;
@@ -89,22 +97,22 @@
               letter-spacing: 0.75px;
               text-transform: uppercase;
               padding-top:15px"
-            class="smile_color--text"
-          >
-            there are no messages yet
-          </span>
-        </div>
-      </v-flex>
+          class="smile_color--text"
+        >
+          there are no messages yet
+        </span>
+      </div>
     </v-row>
     <v-footer
       color="background_white"
       fixed
       padless
+      inset
       style="box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
     >
       <v-form
         class="d-inline-flex"
-        :style="'padding-left:'+ (($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225) + 10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
+        :style="'padding-left:'+ (this.$vuetify.application.left+10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
       >
         <v-textarea
           ref="myTextArea"
@@ -155,11 +163,15 @@ export default {
   data: () => ({
     messages: [],
     message: '',
+    dialogMessagesLength: 0,
     diailogId: 0
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['updateDialog']
+  },
+  beforeMount () {
+    setTimeout(this.GetOldMessages, 1000)
   },
   mounted () {
     this.updateDialog()
@@ -169,6 +181,35 @@ export default {
     this.$disconnect()
   },
   methods: {
+    CheckIsVisible (el) {
+      var rect = el.getBoundingClientRect()
+      var elemTop = rect.top
+      var elemBottom = rect.bottom
+      var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight)
+      return isVisible
+    },
+    GetOldMessages () {
+      if (this.dialogMessagesLength > 0 && this.messages.length > 0) {
+        if (this.dialogMessagesLength > this.messages.length && this.CheckIsVisible(document.getElementById('Message_' + this.messages[this.messages.length - 1].id))) {
+          console.log('visible')
+          api.axios
+            .get('/api/messages/', { params: { dialog: this.diailogId, limit: 30, offset: this.messages.length, ordering: '-create_date' } })
+            .then(response => {
+              if (response.status === 200) {
+                if (response.data.count > 0) {
+                  let length = this.messages.length
+                  this.messages = this.messages.concat(response.data.results)
+                  var Data = this
+                  Vue.nextTick(function () {
+                    Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[length].id), { duration: 0 })
+                  })
+                }
+              }
+            })
+        }
+      }
+      setTimeout(this.GetOldMessages, 1000)
+    },
     sendMessage () {
       if (this.message) {
         console.log('messagetext: ', this.message)
@@ -185,11 +226,18 @@ export default {
       this.message = ''
       this.messages = []
       this.diailogId = this.$route.params.id
+      api.axios.get('/api/messages/count/', { params: { dialog: this.diailogId } }).then(res => { this.dialogMessagesLength = res.data.count })
       api.axios
-        .get('/api/messages/', { params: { dialog: this.diailogId } })
+        .get('/api/messages/', { params: { dialog: this.diailogId, limit: 30, ordering: '-create_date' } })
         .then(response => {
-          if (response.data) {
+          if (response.status === 200) {
             this.messages = this.messages.concat(response.data.results)
+            if (response.data.count > 0) {
+              var Data = this
+              Vue.nextTick(function () {
+                Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[0].id), { duration: 0 })
+              })
+            }
           }
         })
         .catch(error => console.log(error))
@@ -198,14 +246,19 @@ export default {
     },
     getMessage () {
       this.$options.sockets.onmessage = data => {
-        this.messages.push({
-          id: data.data.id,
+        console.log(data)
+        let computedMessageId = (this.messages[0].id || this.messages[this.messages.length + 1].id) + 1
+        this.messages.unshift({
+          id: computedMessageId,
           text: JSON.parse(data.data).message,
           user_detail: { username: JSON.parse(data.data).author },
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
-        this.$vuetify.goTo(document.getElementById('Message_' + data.data.id))
-        console.log(JSON.parse(data.data))
+        this.dialogMessagesLength += 1
+        var Data = this
+        Vue.nextTick(function () {
+          Data.$vuetify.goTo(document.getElementById('Message_' + computedMessageId))
+        })
         api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
       }
     },
