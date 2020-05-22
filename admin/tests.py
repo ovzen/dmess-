@@ -34,7 +34,7 @@ class InviteTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_invite(self):
-        url_valid = reverse('invite-detail', kwargs={'pk': '9a46812a-b0e8-44b0-b1cd-021a84aba71f'})
+        url_valid = reverse('invite-detail', kwargs={'pk': 'be95691d-869a-4460-abc5-a3bd4a48c62c'})
         url_invalid = reverse('invite-detail', kwargs={'pk': '5d34c8fc97b6414eb42052d2fb525abc'})
         response_1 = self.client.get(url_valid, format='json', )
         response_2 = self.client.get(url_invalid, format='json')
@@ -42,7 +42,7 @@ class InviteTestCase(APITestCase):
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_invite(self):
-        url_valid = reverse('invite-detail', kwargs={'pk': '9a46812a-b0e8-44b0-b1cd-021a84aba71f'})
+        url_valid = reverse('invite-detail', kwargs={'pk': 'be95691d-869a-4460-abc5-a3bd4a48c62c'})
         url_invalid = reverse('invite-detail', kwargs={'pk': '7fc9cbe7a49c422fa15e8c218822dfe0'})
         response_1 = self.client.delete(url_valid, format='json')
         response_2 = self.client.delete(url_invalid, format='json')
@@ -71,7 +71,6 @@ class RegisterStatTestCase(APITestCase):
         count = json.loads(response.content)['count']
         self.assertEqual(count, User.objects.filter(date_joined__startswith='2020-05-14').count())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
 
 class UserStatTestCase(APITestCase):

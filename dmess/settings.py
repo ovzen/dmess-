@@ -78,7 +78,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter'
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter'
     ]
 }
 WSGIPassAuthorization = 'On'
@@ -185,7 +186,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT=os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "templates/static/")
@@ -218,7 +219,7 @@ SWAGGER_SETTINGS = {
         'patch',
         'delete'
     ],
-    "api_key": '', # An API key
+    "api_key": '',  # An API key
     "is_authenticated": False,  # Set to True to enforce user authentication,
     "is_superuser": False,  # Set to True to enforce admin only access
 }

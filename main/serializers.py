@@ -8,11 +8,11 @@ from main.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    status = serializers.CharField()
+    status = serializers.CharField(read_only=True)
 
     class Meta:
         model = models.UserProfile
-        exclude = ('user','last_online')
+        exclude = ('user', 'last_online')
 
 
 class UserSerializer(serializers.ModelSerializer):

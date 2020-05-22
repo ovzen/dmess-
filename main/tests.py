@@ -27,7 +27,7 @@ class WikiTestCase(APITestCase):
         data = {
             'title': 'Hello',
             'text_markdown': '> Hi\nthis is *markdown text*',
-            'dialog': '449411b9-1ea1-47ce-b0f8-523dc4d71f44',
+            'dialog': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1',
             'message': 1,
         }
         response = self.client.post(url, data, format='json')
@@ -99,7 +99,7 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_dialog(self):
-        url_valid = reverse('dialog-detail', kwargs={'pk': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'})
+        url_valid = reverse('dialog-detail', kwargs={'pk': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'})
         url_invalid = reverse('dialog-detail', kwargs={'pk': '56989add477e45358b344cc25842955c'})
         response_1 = self.client.get(url_valid, format='json')
         response_2 = self.client.get(url_invalid, format='json')
@@ -107,7 +107,7 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_dialog(self):
-        url_valid = reverse('dialog-detail', kwargs={'pk': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'})
+        url_valid = reverse('dialog-detail', kwargs={'pk': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'})
         url_invalid = reverse('dialog-detail', kwargs={'pk': '56989add477e45358b344cc25842955c'})
         response_1 = self.client.delete(url_valid, format='json')
         response_2 = self.client.delete(url_invalid, format='json')
@@ -115,9 +115,9 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_read_messages(self):
-        url = reverse('dialog-detail', kwargs={'pk': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'}) + 'read_messages/'
-        response = self.client.post(url, 2, format='json')
-        self.assertEqual(Message.objects.filter(user=2).first().is_read, True)
+        url = reverse('dialog-detail', kwargs={'pk': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'}) + 'read_messages/'
+        response = self.client.post(url, format='json')
+        self.assertEqual(Message.objects.filter(user=2, dialog='3b0da1d8-ff62-4798-b466-d1ef70f4bea1').first().is_read, True)
 
 
 class MessageTestCase(APITestCase):
@@ -138,7 +138,7 @@ class MessageTestCase(APITestCase):
         data = {
             'text': 'test',
             'user': 1,
-            'dialog': '449411b9-1ea1-47ce-b0f8-523dc4d71f44'
+            'dialog': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -226,7 +226,7 @@ class UserInviteProcessingTestCase(APITestCase):
         self.client.force_authenticate(user=user)
 
     def test_invite_processing(self):
-        url = '/api/accounts/register/?invite_code=9a46812a-b0e8-44b0-b1cd-021a84aba71f'
+        url = '/api/accounts/register/?invite_code=be95691d-869a-4460-abc5-a3bd4a48c62c'
         data = {
             'username': 'Test',
             'password': 'ytrewq123',
@@ -237,7 +237,7 @@ class UserInviteProcessingTestCase(APITestCase):
         self.assertEqual(user.is_staff, True)
 
     def test_used_invite_processing(self):
-        url = '/api/accounts/register/?invite_code=598ba2aa-1a34-4d09-8ef6-2b61c3c5a3d5'
+        url = '/api/accounts/register/?invite_code=c0131d62-9161-4114-b6aa-dcf6a42660e0'
         data = {
             'username': 'Test',
             'password': 'ytrewq123',
@@ -248,7 +248,7 @@ class UserInviteProcessingTestCase(APITestCase):
         self.assertEqual(user.is_staff, False)
 
     def test_nonexistent_invite_processing(self):
-        url = '/api/accounts/register/?invite_code=777ba2aa-1a34-4d09-8ef6-2b61c3c5a888'
+        url = '/api/accounts/register/?invite_code=7775691d-869a-4460-abc5-a3bd4a48c777'
         data = {
             'username': 'Test',
             'password': 'ytrewq123',

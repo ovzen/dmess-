@@ -22,6 +22,10 @@ cd ..
 cp -R frontend/dist/* templates/
 python manage.py collectstatic --noinput
 
+echo "Make documentation"
+cd docs || exit
+make html
+
 echo "Restarting server"
 sudo /bin/systemctl restart dmess_celery
 sudo /bin/systemctl restart dmess_daphne
