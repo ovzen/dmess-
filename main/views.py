@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework import mixins
 
 from main import serializers
-from main.models import Dialog, Contact, WikiPage, Message
+from main.models import Dialog, Contact, WikiPage, Message, UserProfile
 from main.permissions import IsAdminUserOrReadOnly
 
 
@@ -114,3 +115,12 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     serializer_class = serializers.WikiPageSerializer
     queryset = WikiPage.objects.all()
     filterset_fields = ['title', 'dialog', 'message']
+
+
+def landing_view(request):
+    context = {
+        'online_stat': UserProfile.objects.filter(is_online=True).count(),
+        'registers_stat': User.objects.count(),
+        'messages_stat': Message.objects.count()
+    }
+    return render(request, 'landing.html', context)
