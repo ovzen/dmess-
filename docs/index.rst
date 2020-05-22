@@ -17,6 +17,7 @@ Welcome to Dmess's documentation!
    prepare.rst
    run.rst
    tests.rst
+   user_guide.rst
 
 
 Указатели
