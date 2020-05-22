@@ -537,7 +537,14 @@ export default {
   },
   methods: {
     GetUnreadMessages (dialog) {
-      return '' || (dialog.unread_messages[0] === this.id ? dialog.unread_messages[1] : dialog.unread_messages[1] )
+      console.log(dialog.unread_messages[dialog.users[1]])
+      if (typeof this.user_id !== 'undefined') {
+        if (dialog.users[0] === this.user_id) {
+          return dialog.unread_messages[dialog.users[0]]
+        }
+        return dialog.unread_messages[dialog.users[1]]
+      }
+      return ''
     },
     GoBack () {
       this.$router.go(-1)

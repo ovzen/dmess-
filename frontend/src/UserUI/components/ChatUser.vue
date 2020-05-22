@@ -258,6 +258,7 @@ export default {
           user_detail: { username: JSON.parse(data.data).author },
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
+        this.$root.$children[0].getDialogsList()
         this.dialogMessagesLength += 1
         var Data = this
         Vue.nextTick(function () {
