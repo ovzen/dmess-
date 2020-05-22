@@ -327,11 +327,11 @@
                 {{ formatTime(dialog.last_message.create_date) }}
               </v-list-item-action-text>
               <v-avatar
-                v-if="unread_messages_qty[i]"
+                v-if="GetUnreadMessages(dialog)"
                 color="basic"
                 class="subheading white--text"
                 size="24"
-                v-text="unread_messages_qty[i]"
+                v-text="GetUnreadMessages(dialog)"
               />
             </v-list-item-action>
           </v-list-item>
@@ -510,7 +510,16 @@ export default {
   },
   mounted () {
     let Vue = this
-    ws.onmessage = function (event) { Vue.message = JSON.parse(event.data).message; Vue.type = JSON.parse(event.data).message_type }
+    ws.onmessage = function (event) {
+      let newDialog = JSON.parse(event.data).data
+      for (let dialog in Vue.dialogs) {
+        if (Vue.dialogs[dialog].id === newDialog.id) {
+          Vue.dialogs[dialog] = newDialog
+          console.log(newDialog)
+          Vue.$forceUpdate()
+        }
+      }
+    }
     document.addEventListener('keydown', function (event) {
       const key = event.key // Or const {key} = event; in ES6+
       if (key === 'Escape' && Vue.Route.fullPath !== '/') {
@@ -521,13 +530,15 @@ export default {
     this.getContacts()
     this.getDialogsList()
     this.getUserData()
-    setInterval(this.getUnreadMessagesQty, 2000)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.$route.name === 'ChatUser') {
       this.getChatInfo()
     }
   },
   methods: {
+    GetUnreadMessages (dialog) {
+      return '' || (dialog.unread_messages[0] === this.id ? dialog.unread_messages[1] : dialog.unread_messages[1] )
+    },
     GoBack () {
       this.$router.go(-1)
     },
@@ -658,21 +669,6 @@ export default {
       } else {
         return 'В диалоге нет других пользователей'
       }
-    },
-    getUnreadMessagesQty () {
-      api.axios
-        .get('/api/dialog/')
-        .then(response => {
-          if (response.data) {
-            this.unread_messages_qty = []
-            for (let i = 0; i < Object.keys(response.data.results).length; i++) {
-              // console.log(this.user_id)
-              this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
-            }
-            // console.log(this.unread_messages_qty)
-          }
-        })
-        .catch(error => console.log(error))
     }
   }
 }
