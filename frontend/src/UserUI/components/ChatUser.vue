@@ -242,7 +242,11 @@ export default {
         })
         .catch(error => console.log(error))
       this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.diailogId + '/')
-      api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
+      api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/').then(res => {
+        if (res.status === 200) {
+          this.$root.$children[0].getDialogsList()
+        }
+      })
     },
     getMessage () {
       this.$options.sockets.onmessage = data => {
