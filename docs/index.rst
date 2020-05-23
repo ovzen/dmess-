@@ -9,7 +9,7 @@ Welcome to Dmess's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Содержание:
-
+   user_guide.rst
    modules/docs
    readme
    vue_page
@@ -17,7 +17,7 @@ Welcome to Dmess's documentation!
    prepare.rst
    run.rst
    tests.rst
-   user_guide.rst
+   load_testing.rst
 
 
 Указатели
