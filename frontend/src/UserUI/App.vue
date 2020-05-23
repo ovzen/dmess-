@@ -77,6 +77,48 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item
+            @click.stop="clearChatDialog = true"
+          >
+            <v-list-item-title>
+              Clear chat
+            </v-list-item-title>
+          </v-list-item>
+          <v-dialog
+            v-model="clearChatDialog"
+            max-width="400"
+          >
+            <v-card>
+              <v-card-title class="headline">
+                Clear chat
+              </v-card-title>
+
+              <v-card-text>
+                Are you sure you want to delete all message history in this dialog?<br>
+                This action cannot be undone.
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="clearChatDialog = false"
+                >
+                  NO,NO! CANCEL
+                </v-btn>
+
+                <v-btn
+                  color="red"
+                  text
+                  @click="clearChatDialog = false"
+                >
+                  OKAY, DELETE
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-list-item
             :to="{ name: 'MyProfile'}"
           >
             <v-list-item-title>
@@ -471,6 +513,7 @@ export default {
     userSearch: '',
     messages: [],
     dialog: false,
+    clearChatDialog: false,
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
