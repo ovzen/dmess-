@@ -10,6 +10,7 @@ Welcome to Dmess's documentation!
    :maxdepth: 2
    :caption: Содержание:
 
+   user_guide.rst
    modules/docs
    readme
    vue_page
