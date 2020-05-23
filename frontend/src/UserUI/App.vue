@@ -178,6 +178,7 @@
               label="Search for users"
               style="border-radius:50px; max-width:450px;"
               @input="getUsersBySearch(userSearch)"
+              @click:clear="clearSearch"
             />
           </v-col>
           <v-divider />
@@ -676,6 +677,9 @@ export default {
       } else {
         return 'В диалоге нет других пользователей'
       }
+    },
+    clearSearch () {
+      this.userSearch = ''
     }
   }
 }
