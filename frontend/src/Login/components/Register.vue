@@ -119,6 +119,7 @@
                           <v-text-field
                             ref="repeatpassword"
                             v-model="repeatpassword"
+                            :error-messages="usernameError"
                             :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="vanish ? 'text' : 'password'"
                             clearable
@@ -146,9 +147,9 @@
                     :disabled="step === 1"
                     @click="step--"
                   >
-                    <v-card-text class="text-center headline white--text">
-                      ←
-                    </v-card-text>
+                    <v-icon class="text-center headline white--text">
+                      mdi-arrow-left
+                    </v-icon>
                   </v-btn>
 
                   <v-btn
@@ -167,13 +168,25 @@
                     color="purple darken-4"
                     @click="step++"
                   >
-                    <v-card-text class="text-center headline white--text">
-                      →
-                    </v-card-text>
+                    <v-icon class="text-center headline white--text">
+                      mdi-arrow-right
+                    </v-icon>
                   </v-btn>
                 </v-row>
               </v-card-actions>
-
+              <v-snackbar
+                v-model="snackbar"
+                :multi-line="multiLine"
+              >
+                {{ notificationErrors }}
+                <v-btn
+                  color="red"
+                  text
+                  @click="snackbar = false"
+                >
+                  Close
+                </v-btn>
+              </v-snackbar>
               <v-card-actions class="text-center">
                 <v-card-text class="text--secondary caption mb-10">
                   ALREADY HAVE AN ACCOUNT?
@@ -215,6 +228,10 @@ export default {
     next: '',
     vanish: false,
     step: 1,
+    usernameError: null,
+    multiLine: true,
+    snackbar: false,
+    notificationErrors: null,
     loginRules: [
       v => !!v || 'Login is required',
       v => (v || '').length >= 2 || `Minimal length of username is 2 symbols`
@@ -264,7 +281,9 @@ export default {
   },
   methods: {
     validateField () {
-      this.$refs.passwords.validate()
+      if (this.$refs.passwords) {
+        this.$refs.passwords.validate();
+      }
     },
     GoToLogin () {
       this.$root.$children[0].login = this.login
@@ -289,13 +308,19 @@ export default {
           }
           })
           .catch(error => {
-            console.log(error)
             if (error.response.status === 400) {
-              alert('Пользователь с таким именем уже существует.')
+              this.notificationErrors = error.response.data[Object.keys(error.response.data)[0]].join(' ');
+              this.snackbar = (error);
+              Object.values(error.response.data).forEach(error => {
+                if (error.length) {
+                  this.usernameError = (error);
+                  setTimeout(() => { this.usernameError = null }, 3000);
+                }
+              });
             }
           })
           .then(data => {
-            if (data.status === 201) {
+            if (data && data.status === 201) {
               api.axios
                 .post('/api/token/', {
                   username: username,

@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
+import json
+import unittest
+
+from main.models import UserProfile, Contact, Message
 
 
 class WikiTestCase(APITestCase):
@@ -23,7 +27,7 @@ class WikiTestCase(APITestCase):
         data = {
             'title': 'Hello',
             'text_markdown': '> Hi\nthis is *markdown text*',
-            'dialog': 1,
+            'dialog': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1',
             'message': 1,
         }
         response = self.client.post(url, data, format='json')
@@ -95,20 +99,25 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_dialog(self):
-        url_valid = reverse('dialog-detail', kwargs={'pk': 1})
-        url_invalid = reverse('dialog-detail', kwargs={'pk': 42})
+        url_valid = reverse('dialog-detail', kwargs={'pk': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'})
+        url_invalid = reverse('dialog-detail', kwargs={'pk': '56989add477e45358b344cc25842955c'})
         response_1 = self.client.get(url_valid, format='json')
         response_2 = self.client.get(url_invalid, format='json')
         self.assertEqual(response_1.status_code, status.HTTP_200_OK)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_dialog(self):
-        url_valid = reverse('dialog-detail', kwargs={'pk': 1})
-        url_invalid = reverse('dialog-detail', kwargs={'pk': 42})
+        url_valid = reverse('dialog-detail', kwargs={'pk': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'})
+        url_invalid = reverse('dialog-detail', kwargs={'pk': '56989add477e45358b344cc25842955c'})
         response_1 = self.client.delete(url_valid, format='json')
         response_2 = self.client.delete(url_invalid, format='json')
         self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_read_messages(self):
+        url = reverse('dialog-detail', kwargs={'pk': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'}) + 'read_messages/'
+        response = self.client.post(url, format='json')
+        self.assertEqual(Message.objects.filter(user=2, dialog='3b0da1d8-ff62-4798-b466-d1ef70f4bea1').first().is_read, True)
 
 
 class MessageTestCase(APITestCase):
@@ -129,7 +138,7 @@ class MessageTestCase(APITestCase):
         data = {
             'text': 'test',
             'user': 1,
-            'dialog': 1
+            'dialog': '3b0da1d8-ff62-4798-b466-d1ef70f4bea1'
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -149,3 +158,102 @@ class MessageTestCase(APITestCase):
         response_2 = self.client.delete(url_invalid, format='json')
         self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class UserTestCase(APITestCase):
+    fixtures = ['db.json']
+
+    def setUp(self):
+        user = User.objects.get(id=1)
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
+
+    def test_get_users_list(self):
+        url = reverse('user-list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_user(self):
+        url_valid = reverse('user-detail', kwargs={'pk': 1})
+        url_invalid = reverse('user-detail', kwargs={'pk': 42})
+        response_1 = self.client.get(url_valid, format='json')
+        response_2 = self.client.get(url_invalid, format='json')
+        self.assertEqual(response_1.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_user(self):
+        url_valid = reverse('user-detail', kwargs={'pk': 1})
+        url_invalid = reverse('user-detail', kwargs={'pk': 42})
+        response_1 = self.client.delete(url_valid, format='json')
+        response_2 = self.client.delete(url_invalid, format='json')
+        self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_count_users(self):
+        url = reverse('user-count')
+        response = self.client.get(url, format='json')
+        count = json.loads(response.content)['count']
+        self.assertEqual(count, 3)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_add_contact(self):
+        url = reverse('user-detail', kwargs={'pk': 3}) + 'add_contact/'
+        response = self.client.post(url, 1, format='json')
+        self.assertEqual(Contact.objects.filter(user=1, contact=3).exists(), True)
+
+    def test_update_user(self):
+        url = reverse('user-detail', kwargs={'pk': 1})
+        response = self.client.get(url, format='json')
+        data = json.loads(response.content)
+        data['username'] = 'something'
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class UserProfileCreationTestCase(unittest.TestCase):
+    def test_user_profile_creation(self):
+        user = User.objects.create_user('Test', 'pascal@abc.net', 'ytrewq123')
+        is_user_profile_exists = UserProfile.objects.filter(user=user).exists()
+        self.assertEqual(is_user_profile_exists, True)
+
+
+class UserInviteProcessingTestCase(APITestCase):
+    fixtures = ['db.json']
+
+    def setUp(self):
+        user = User.objects.get(id=1)
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
+
+    def test_invite_processing(self):
+        url = '/api/accounts/register/?invite_code=be95691d-869a-4460-abc5-a3bd4a48c62c'
+        data = {
+            'username': 'Test',
+            'password': 'ytrewq123',
+            'email': 'pascal@abc.net'
+        }
+        response = self.client.post(url, data, format='json')
+        user = User.objects.get(username='Test')
+        self.assertEqual(user.is_staff, True)
+
+    def test_used_invite_processing(self):
+        url = '/api/accounts/register/?invite_code=c0131d62-9161-4114-b6aa-dcf6a42660e0'
+        data = {
+            'username': 'Test',
+            'password': 'ytrewq123',
+            'email': 'pascal@abc.net'
+        }
+        response = self.client.post(url, data, format='json')
+        user = User.objects.get(username='Test')
+        self.assertEqual(user.is_staff, False)
+
+    def test_nonexistent_invite_processing(self):
+        url = '/api/accounts/register/?invite_code=7775691d-869a-4460-abc5-a3bd4a48c777'
+        data = {
+            'username': 'Test',
+            'password': 'ytrewq123',
+            'email': 'pascal@abc.net'
+        }
+        response = self.client.post(url, data, format='json')
+        user = User.objects.get(username='Test')
+        self.assertEqual(user.is_staff, False)

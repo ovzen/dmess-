@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-pylint admin/ dmess/ main/
+cd ~/dmess/ || exit
+
+#pylint admin/ dmess/ main/
+pylint --load-plugins pylint_django -j 0 ./main

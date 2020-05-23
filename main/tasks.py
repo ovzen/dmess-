@@ -11,6 +11,7 @@ from dmess.celery import app
 from main.models import WikiPage
 
 
+
 @app.task()
 def markdown_convert(**kwargs):
     """Отложенное задание для преобразования markdown-поля в модели в html-код.

@@ -149,7 +149,7 @@ export default {
         this.messages = this.messages.concat(res.data.results)
       })
       this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.id + '/')
-      api.axios.post('/api/dialog/' + this.id + '/read_messages/')
+      this.readMessages()
     },
     goBack () {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
@@ -166,7 +166,7 @@ export default {
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
         console.log(JSON.parse(data.data))
-        api.axios.post('/api/dialog/' + this.id + '/read_messages/')
+        this.readMessages()
       }
     },
     send (messagetext) {
@@ -196,6 +196,15 @@ export default {
           return moment(String(datetime)).calendar()
         }
       }
+    },
+    readMessages () {
+      api.axios
+        .post('/api/dialog/' + this.id + '/read_messages/')
+        .then(response => {
+          console.log('read messages')
+          console.log(response.data.status)
+
+        })
     }
   }
 }

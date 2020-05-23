@@ -6,24 +6,44 @@
       height="80"
       color="background_white"
     >
+      <v-toolbar-title
+        v-if="Route.name === 'MyProfile'"
+        @click="GoBack()"
+      >
+        <v-btn
+          text
+          small
+          style="font-family: Roboto;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 10px;
+                line-height: 16px;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                color: #757575;"
+        >
+          <v-icon> mdi-keyboard-backspace </v-icon>
+          Back
+        </v-btn>
+      </v-toolbar-title>
       <!-- <v-app-bar-nav-icon @click="drawer = true" /> -->
       <v-toolbar-title
-        v-if="Route.params.id"
+        v-if="Route.name === 'ChatUser'"
       >
         <v-list-item>
-          <v-list-item-avatar>
+          <v-list-item-avatar v-if="ChatInfo.profile.avatar">
             <v-img
-              src="https://cdn.vuetifyjs.com/images/cards/girl.jpg"
+              :src="ChatInfo.profile.avatar"
             />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="title"
             >
-              Name User
+              {{ ChatInfo.username }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              online/offline
+              {{ ChatInfo.profile.status }}
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -31,6 +51,7 @@
       <v-spacer />
 
       <v-menu
+        v-if="Route.name === 'ChatUser'"
         offset-y
         min-width="128"
       >
@@ -49,7 +70,14 @@
           color="background_white"
         >
           <v-list-item
-            :to="{ name: 'MyProfile', params: {} }"
+            to="/"
+          >
+            <v-list-item-title>
+              Collapse chat
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            :to="{ name: 'MyProfile'}"
           >
             <v-list-item-title>
               Profile
@@ -61,6 +89,7 @@
 
     <v-navigation-drawer
       v-model="drawer"
+      style=""
       :width="($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225)"
       app
       color="background_white"
@@ -98,31 +127,33 @@
                 offline
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-avatar
-              v-if="avatar"
+            <router-link
+              to="/MyProfile"
             >
-              <v-img
-                :src="avatar"
-              />
-            </v-list-item-avatar>
-            <v-list-item-avatar
-              v-else
-              color="#FFFFFF"
-              class="justify-center indigo--text"
-            >
-              <span v-if="(firstName && lastName)">
-                {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
-              </span>
-              <span v-else-if="(firstName)">
-                {{ firstName[0].toUpperCase() }}
-              </span>
-              <span v-else-if="(lastName)">
-                {{ lastName[0].toUpperCase() }}
-              </span>
-              <span v-else>
-                {{ username[0].toUpperCase() }}
-              </span>
-            </v-list-item-avatar>
+              <v-list-item-avatar v-if="avatar">
+                <v-img
+                  :src="avatar"
+                />
+              </v-list-item-avatar>
+              <v-list-item-avatar
+                v-else
+                color="#FFFFFF"
+                class="justify-center indigo--text"
+              >
+                <span v-if="(firstName && lastName)">
+                  {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
+                </span>
+                <span v-else-if="(firstName)">
+                  {{ firstName[0].toUpperCase() }}
+                </span>
+                <span v-else-if="(lastName)">
+                  {{ lastName[0].toUpperCase() }}
+                </span>
+                <span v-else>
+                  {{ username[0].toUpperCase() }}
+                </span>
+              </v-list-item-avatar>
+            </router-link>
           </v-list-item>
         </v-list>
       </v-card>
@@ -165,7 +196,7 @@
                   <span
                     class="white--text"
                   >
-                    NU
+                    {{ getUserAvatar(contact.Contact) }}
                   </span>
                 <!--<v-img
             src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
@@ -180,7 +211,7 @@
                   <span
                     class="basic--text text--lighten"
                   >
-                    {{ ( contact.Contact.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                    {{ contact.Contact.profile.status }}
                   </span>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -221,7 +252,7 @@
                     <span
                       class="white--text"
                     >
-                      NU
+                      {{ getUserAvatar(user) }}
                     </span>
                   </v-avatar>
                 </v-list-item-avatar>
@@ -233,7 +264,7 @@
                     <span
                       class="basic--text text--lighten"
                     >
-                      {{ ( user.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                      {{ user.status }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -283,18 +314,11 @@
               <v-list-item-title>
                 {{ getContactName(dialog.users_detail) }}
               </v-list-item-title>
-              <v-list-item-subtitle v-if="dialog.last_message">
+              <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
                 <span
                   style="color:#757575; font-size:115%;"
                 >
-                  {{ dialog.last_message.text }}
-                </span>
-              </v-list-item-subtitle>
-              <v-list-item-subtitle v-else>
-                <span
-                  style="color:#757575; font-size:115%;"
-                >
-                  Тут пока ничего не написано
+                  {{ (dialog.last_message ? dialog.last_message.text : '') }}
                 </span>
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -302,13 +326,12 @@
               <v-list-item-action-text v-if="dialog.last_message">
                 {{ formatTime(dialog.last_message.create_date) }}
               </v-list-item-action-text>
-              <!-- Изменить v-if на другое условие: "если есть непрочитанные сообщения" -->
               <v-avatar
-                v-if="dialog.last_message"
+                v-if="unread_messages_qty[i]"
                 color="basic"
                 class="subheading white--text"
                 size="24"
-                v-text="1"
+                v-text="unread_messages_qty[i]"
               />
             </v-list-item-action>
           </v-list-item>
@@ -320,7 +343,7 @@
         <v-footer
           absolute
           padless
-          style="height:54px; background :#ffffff;"
+          style="height:56px; background :#ffffff;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
         >
           <v-btn
             fab
@@ -329,9 +352,39 @@
             top
             right
             absolute
+            @click.stop="dialog = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
+          <v-dialog
+            v-model="dialog"
+            max-width="700"
+          >
+            <v-card>
+              <v-card-title
+                class="headline"
+              >
+                We're so sorry, but we haven't kept up to develop this feature.
+              </v-card-title>
+
+              <v-card-text>
+                This button seems to us so beautiful and cute that we could not just remove it :)
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="dialog = false"
+                >
+                  Okay, I agree with you
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-card-actions>
             <v-btn
               v-for="tab in tabs"
@@ -340,13 +393,17 @@
               :class="['tab-button', { active: currentTab.name === tab.name }]"
               @click="currentTab = tab"
             >
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-icon size="24px" v-on="on">{{ tab.name }}</v-icon>
-                  </template>
-                  <span>{{ tab.display_name }}</span>
-                </v-tooltip>
-
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    size="24px"
+                    v-on="on"
+                  >
+                    {{ tab.name }}
+                  </v-icon>
+                </template>
+                <span>{{ tab.display_name }}</span>
+              </v-tooltip>
             </v-btn>
           </v-card-actions>
         </v-footer>
@@ -370,21 +427,20 @@ import VueCookie from 'vue-cookie'
 import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
-import profiles from './components/profiles'
 import settings from './components/settings'
 import moment from 'moment'
 
 Vue.use(VueCookie)
 var tabs = [
   {
-    name: 'mdi-account-circle',
-    display_name: 'Contacts',
+    name: 'mdi-message-text',
+    display_name: 'Dialogs',
     component: {
     }
   },
   {
-    name: 'mdi-message-text',
-    display_name: 'dialogs',
+    name: 'mdi-account-circle',
+    display_name: 'Contacts',
     component: {
     }
   },
@@ -408,7 +464,7 @@ export default {
   data: () => ({
     login: '',
     button: 'Войти',
-    chatName: '',
+    ChatInfo: { username: 'Загрузка...', profile: { avatar: null, status: 'Загрузка...' } },
     password: '',
     data: '',
     userSearch: '',
@@ -443,7 +499,7 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['disconnect', 'getChatName']
+    $route: ['disconnect', 'getChatInfo']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -453,17 +509,36 @@ export default {
     }
   },
   mounted () {
+    let Vue = this
+    document.addEventListener('keydown', function (event) {
+      const key = event.key // Or const {key} = event; in ES6+
+      if (key === 'Escape' && Vue.Route.fullPath !== '/') {
+        Vue.$router.push('/')
+      }
+    })
     setInterval(this.updateToken, 1000)
     this.getContacts()
     this.getDialogsList()
     this.getUserData()
     setInterval(this.getUnreadMessagesQty, 2000)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
-    if (this.Route.params.id) {
-      this.getChatName()
+    if (this.$route.name === 'ChatUser') {
+      this.getChatInfo()
     }
   },
   methods: {
+    GoBack () {
+      this.$router.go(-1)
+    },
+    getUserAvatar (UserProfile) {
+      if (typeof UserProfile !== 'undefined') {
+        if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
+          return (UserProfile.first_name[0] + UserProfile.last_name[0]).toUpperCase()
+        } else {
+          return UserProfile.username[0].toUpperCase()
+        }
+      } return ''
+    },
     getUsersBySearch () {
       api.axios.get('/api/users/', {
         params: {
@@ -502,13 +577,12 @@ export default {
         .then(response => {
           if (response.data) {
             this.dialogs = response.data.results
-            console.log('dialogsList:', response.data.results)
           }
         })
         .catch(error => console.log(error))
     },
     openDialog (dialogId) {
-      console.log('Route ID:', this.$route.params.id)
+      // console.log('Route ID:', this.$route.params.id)
       if (this.$route.params.id !== dialogId) {
         this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
       }
@@ -519,23 +593,24 @@ export default {
     goProfilePage () {
       this.$router.push({ name: 'Profile', params: { id: this.user_id } })
     },
-    getChatName () {
+    getChatInfo () {
       if (this.$route.name === 'ChatUser') {
         api.axios
-          .get('/api/dialog/', {
-            params: {
-              id: this.$route.params.id
-            }
-          })
+          .get('/api/dialog/' + this.$route.params.id + '/')
           .then(response => {
-            if (response.data) {
-              this.chatName = response.data.results[0].name
-              console.log(response)
+            if (response.status === 200) {
+              if (response.data.users_detail[0].username === this.username && typeof response.data.users_detail[1] !== 'undefined') {
+                this.ChatInfo = response.data.users_detail[1]
+              } else {
+                if (response.data.users_detail[0].username !== this.username) {
+                  this.ChatInfo = response.data.users_detail[0]
+                } else {
+                  this.ChatInfo = { username: 'Произошла ошибка', profile: { avatar: null, status: '' } }
+                }
+              }
             }
           })
           .catch(error => console.log(error))
-      } else {
-        this.chatName = undefined
       }
     },
     getUserData () {
@@ -543,7 +618,7 @@ export default {
         .get('/api/users/' + this.user_id + '/')
         .then(res => {
           if (res.data) {
-            console.log('user details: ', res)
+            // console.log('user details: ', res)
             this.avatar = res.data.profile.avatar
             this.isOnline = res.data.profile.is_online
             this.firstName = res.data.first_name ? res.data.first_name : undefined
@@ -576,7 +651,7 @@ export default {
       return (users[0].id === this.user_id) ? users[1] : users[0]
     },
     getContactName (users) {
-      console.log(users)
+      // console.log(users)
       if (users.length > 1) {
         return this.getUserName(this.getContact(users))
       } else {
@@ -585,10 +660,15 @@ export default {
     },
     getUnreadMessagesQty () {
       api.axios
-        .get('/api/dialogs')
-        .then(res => {
-          if (res.data) {
-            this.unread_messages_qty = res.data['unread_messages']
+        .get('/api/dialog/')
+        .then(response => {
+          if (response.data) {
+            this.unread_messages_qty = []
+            for (let i = 0; i < Object.keys(response.data.results).length; i++) {
+              // console.log(this.user_id)
+              this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
+            }
+            // console.log(this.unread_messages_qty)
           }
         })
         .catch(error => console.log(error))

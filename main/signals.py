@@ -1,11 +1,12 @@
 """signals.py - собрание функций, привязанных к изменениям моделей django"""
+from django.dispatch import receiver
 
 from django.db.models.signals import post_save
-from django.dispatch import receiver
 from rest_registration.signals import user_registered
 
-from admin.models import Invite, InviteAlreadyUsed
 from main.models import WikiPage, UserProfile, User
+from admin.models import Invite, InviteAlreadyUsed
+
 from main.tasks import markdown_convert
 
 

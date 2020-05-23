@@ -37,6 +37,7 @@ router.register(r'api/users', views.UserViewSet, basename='user')
 schema_view = get_swagger_view(title='API')
 
 urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
+    path('landing/', views.landing_view),
     path('api/accounts/', include('rest_registration.api.urls')),
     url(r'^docs/', schema_view),
     path('django_admin/', admin.site.urls),

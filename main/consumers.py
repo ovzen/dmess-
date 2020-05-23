@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
@@ -82,6 +84,7 @@ class System(WebsocketConsumer):
         User = UserProfile.objects.get(user=self.scope['user'])
         print('exit')
         User.is_online = False
+        User.last_online = datetime.now()
         User.save()
 
     # Receive message from WebSocket

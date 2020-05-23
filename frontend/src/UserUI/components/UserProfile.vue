@@ -11,26 +11,32 @@
         <v-list-item-avatar
           size="100px"
         >
-          <v-avatar
-            size="100px"
-            color="basic"
-          >
-            <v-skeleton-loader
-              :loading="loading"
-              type="avatar"
-              class="mx-auto"
+          <v-skeleton-loader
+            v-if="loading"
+            type="avatar"
+            class="mx-auto"
+          />
+          <div v-else>
+            <v-avatar
+              v-if="UserProfile.profile.avatar"
+              size="100px"
+            >
+              <v-img
+                :src="UserProfile.profile.avatar"
+              />
+            </v-avatar>
+            <v-avatar
+              v-else
+              size="100px"
+              color="basic"
             >
               <span
                 class="display-1 white--text"
               >
-                NU
+                {{ getUserAvatar }}
               </span>
-              <v-skeleton-loader />
-              <!--<v-img
-              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-            />-->
-            </v-skeleton-loader>
-          </v-avatar>
+            </v-avatar>
+          </div>
         </v-list-item-avatar>
         <v-list-item-content
           class="ml-4"
@@ -162,7 +168,7 @@
           </v-list-item>
 
           <v-list-item
-            @click=""
+            @click="findChat()"
           >
             <v-list-item-action>
               <v-icon
@@ -196,14 +202,31 @@ export default {
   name: 'UserProfile',
   data: () => ({
     loading: true,
-    UserProfile: undefined
+    UserProfile: undefined,
+    current_user_id: undefined
   }),
+  computed: {
+    getUserAvatar () {
+      if (typeof this.UserProfile !== 'undefined') {
+        if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
+          return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
+        } else {
+          return this.UserProfile.username[0].toUpperCase()
+        }
+      } return ''
+    }
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['get_data']
   },
   created () {
     this.get_data()
+    if (this.$cookie.get('Authentication')) {
+      this.current_user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
+    } else {
+      console.warn('The current user was not found')
+    }
   },
   methods: {
     get_data () {
@@ -235,6 +258,29 @@ export default {
           this.$root.$children[0].$forceUpdate()
         }
       })
+    },
+    findChat () {
+      api.axios
+        .get('/api/dialog/', {
+          params: {
+            users: this.$route.params.Userid
+          }
+        })
+        .then(response => {
+          if (response.data.results.length > 0) {
+            this.$router.push('/ChatUser/' + response.data.results[0].id)
+          } else {
+            api.axios
+              .post('/api/dialog/', {
+                users: [this.current_user_id, this.$route.params.Userid]
+              })
+              .then(response => {
+                if (response && response.data && response.data.id) {
+                  this.$router.push('/ChatUser/' + response.data.id)
+                }
+              })
+          }
+        })
     }
   }
 }
