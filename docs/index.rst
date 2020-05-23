@@ -18,6 +18,7 @@ Welcome to Dmess's documentation!
    run.rst
    tests.rst
    patterns.rst
+   load_testing.rst
 
 Указатели
 =========
