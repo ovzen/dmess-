@@ -40,7 +40,7 @@
             <v-list-item-title
               class="title"
             >
-              {{ ChatInfo.username }}
+              {{ getUserName(ChatInfo) }}
             </v-list-item-title>
             <v-list-item-subtitle>
               {{ ChatInfo.profile.status }}
@@ -147,16 +147,9 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title
-                v-if="(firstName || lastName)"
                 class="title"
               >
-                {{ firstName }} {{ lastName }}
-              </v-list-item-title>
-              <v-list-item-title
-                v-else
-                class="title"
-              >
-                {{ username }}
+                {{ getUserName(userProfile) }}
               </v-list-item-title>
               <v-list-item-subtitle
                 v-if="isOnline"
@@ -182,17 +175,8 @@
                 color="#FFFFFF"
                 class="justify-center indigo--text"
               >
-                <span v-if="(firstName && lastName)">
-                  {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
-                </span>
-                <span v-else-if="(firstName)">
-                  {{ firstName[0].toUpperCase() }}
-                </span>
-                <span v-else-if="(lastName)">
-                  {{ lastName[0].toUpperCase() }}
-                </span>
-                <span v-else>
-                  {{ username[0].toUpperCase() }}
+                <span>
+                  {{ getUserInitials(userProfile) }}
                 </span>
               </v-list-item-avatar>
             </router-link>
@@ -239,16 +223,13 @@
                   <span
                     class="white--text"
                   >
-                    {{ getUserAvatar(contact.Contact) }}
+                    {{ getUserInitials(contact.Contact) }}
                   </span>
-                <!--<v-img
-            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-          />-->
                 </v-avatar>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  {{ contact.Contact.username }}
+                  {{ getUserName(contact.Contact) }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   <span
@@ -295,13 +276,13 @@
                     <span
                       class="white--text"
                     >
-                      {{ getUserAvatar(user) }}
+                      {{ getUserInitials(user) }}
                     </span>
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ user.username }}
+                    {{ getUserName(user) }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     <span
@@ -522,8 +503,7 @@ export default {
     for_user: true,
     unread_messages_qty: [],
     username: 'Test',
-    firstName: undefined,
-    lastName: undefined,
+    userProfile: undefined,
     user_id: undefined,
     avatar: '',
     isOnline: false,
@@ -593,15 +573,6 @@ export default {
     GoBack () {
       this.$router.go(-1)
     },
-    getUserAvatar (UserProfile) {
-      if (typeof UserProfile !== 'undefined') {
-        if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
-          return (UserProfile.first_name[0] + UserProfile.last_name[0]).toUpperCase()
-        } else {
-          return UserProfile.username[0].toUpperCase()
-        }
-      } return ''
-    },
     getUsersBySearch () {
       api.axios.get('/api/users/', {
         params: {
@@ -664,9 +635,11 @@ export default {
             if (response.status === 200) {
               if (response.data.users_detail[0].username === this.username && typeof response.data.users_detail[1] !== 'undefined') {
                 this.ChatInfo = response.data.users_detail[1]
+                console.log('Chat info', this.ChatInfo)
               } else {
                 if (response.data.users_detail[0].username !== this.username) {
                   this.ChatInfo = response.data.users_detail[0]
+                  console.log('Chat info', this.ChatInfo)
                 } else {
                   this.ChatInfo = { username: 'Произошла ошибка', profile: { avatar: null, status: '' } }
                 }
@@ -682,13 +655,25 @@ export default {
         .then(res => {
           if (res.data) {
             // console.log('user details: ', res)
+            this.userProfile = res.data
             this.avatar = res.data.profile.avatar
             this.isOnline = res.data.profile.is_online
-            this.firstName = res.data.first_name ? res.data.first_name : undefined
-            this.lastName = res.data.last_name ? res.data.last_name : undefined
           }
         })
         .catch(error => console.log(error))
+    },
+    getUserInitials (user) {
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name[0] + user.last_name[0]).toUpperCase()
+        } else if (user.first_name) {
+          return user.first_name[0].toUpperCase()
+        } else if (user.last_name) {
+          return user.last_name[0].toUpperCase()
+        } else {
+          return user.username[0].toUpperCase()
+        }
+      } return ''
     },
     formatTime (datetime) {
       if (datetime) {
@@ -700,14 +685,16 @@ export default {
       }
     },
     getUserName (user) {
-      if (user.first_name && user.last_name) {
-        return (user.first_name + ' ' + user.last_name)
-      } else if (user.first_name) {
-        return user.first_name
-      } else if (user.last_name) {
-        return user.last_name
-      } else {
-        return user.username
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name + ' ' + user.last_name)
+        } else if (user.first_name) {
+          return user.first_name
+        } else if (user.last_name) {
+          return user.last_name
+        } else {
+          return user.username
+        }
       }
     },
     getContact (users) {
