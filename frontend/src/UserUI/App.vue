@@ -433,23 +433,25 @@ import moment from 'moment'
 Vue.use(VueCookie)
 var tabs = [
   {
-    name: 'mdi-message-text',
-    display_name: 'Dialogs',
-    component: {
-    }
-  },
-  {
     name: 'mdi-account-circle',
     display_name: 'Contacts',
     component: {
     }
   },
   {
+    name: 'mdi-message-text',
+    display_name: 'Dialogs',
+    component: {
+    }
+  },
+  /*
+ {
     name: 'mdi-room-service',
     display_name: 'Notifications',
     component: {
     }
   },
+  */
   {
     name: 'mdi-settings',
     display_name: 'Settings',
@@ -483,7 +485,7 @@ export default {
     user_id: undefined,
     avatar: '',
     isOnline: false,
-    currentTab: tabs[0],
+    currentTab: tabs[1],
     tabs: tabs,
     contacts: [],
     findedUsers: [],
