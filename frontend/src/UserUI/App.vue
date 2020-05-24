@@ -77,23 +77,23 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item
-            @click.stop="clearChatDialog = true"
+            @click.stop="dialogForDeleteChat = true"
           >
             <v-list-item-title>
-              Clear chat
+              Delete chat
             </v-list-item-title>
           </v-list-item>
           <v-dialog
-            v-model="clearChatDialog"
+            v-model="dialogForDeleteChat"
             max-width="400"
           >
             <v-card>
               <v-card-title class="headline">
-                Clear chat
+                Delete chat
               </v-card-title>
 
               <v-card-text>
-                Are you sure you want to delete all message history in this dialog?<br>
+                Are you sure you want to delete this chat and all its messages?<br>
                 This action cannot be undone.
               </v-card-text>
 
@@ -103,17 +103,17 @@
                 <v-btn
                   color="basic"
                   text
-                  @click="clearChatDialog = false"
+                  @click="dialogForDeleteChat = false"
                 >
-                  NO,NO! CANCEL
+                  CANCEL
                 </v-btn>
 
                 <v-btn
                   color="red"
                   text
-                  @click="clearChatDialog = false"
+                  @click="deleteChat(); dialogForDeleteChat = false"
                 >
-                  OKAY, DELETE
+                  DELETE CHAT
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -395,12 +395,12 @@
             top
             right
             absolute
-            @click.stop="dialog = true"
+            @click.stop="dialogForPlusButton = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
           <v-dialog
-            v-model="dialog"
+            v-model="dialogForPlusButton"
             max-width="700"
           >
             <v-card>
@@ -420,7 +420,7 @@
                 <v-btn
                   color="basic"
                   text
-                  @click="dialog = false"
+                  @click="dialogForPlusButton = false"
                 >
                   Okay, I agree with you
                 </v-btn>
@@ -512,8 +512,8 @@ export default {
     data: '',
     userSearch: '',
     messages: [],
-    dialog: false,
-    clearChatDialog: false,
+    dialogForPlusButton: false,
+    dialogForDeleteChat: false,
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
@@ -581,7 +581,7 @@ export default {
   },
   methods: {
     GetUnreadMessages (dialog) {
-      console.log(dialog.unread_messages[dialog.users[1]])
+      // console.log(dialog.unread_messages[dialog.users[1]])
       if (typeof this.user_id !== 'undefined') {
         if (dialog.users[0] === this.user_id) {
           return dialog.unread_messages[dialog.users[0]]
@@ -723,6 +723,10 @@ export default {
     },
     clearSearch () {
       this.userSearch = ''
+    },
+    deleteChat () {
+      console.log('deleted chat id: ', this.$route.params.id)
+      api.axios.delete('/api/dialog/' + this.$route.params.id + '/')
     }
   }
 }
