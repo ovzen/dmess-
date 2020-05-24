@@ -14,26 +14,6 @@ import unittest
 from main.models import UserProfile, Contact, Message
 
 
-class WikiTestCase(APITestCase):
-    fixtures = ['db.json']
-
-    def setUp(self):
-        user = User.objects.get(id=1)
-        self.client = APIClient()
-        self.client.force_authenticate(user=user)
-
-    def test_create_wikipage(self):
-        url = reverse('wiki-list')
-        data = {
-            'title': 'Hello',
-            'text_markdown': '> Hi\nthis is *markdown text*',
-            'dialog': '40aaaaf5-46c9-4a79-bbd9-4fa74c903aab',
-            'message': 1,
-        }
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-
 class DialogTestCase(APITestCase):
     fixtures = ['db.json']
 
@@ -72,10 +52,10 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_read_messages(self):
-        url = reverse('dialog-detail', kwargs={'pk': '644804bf-13c9-47d4-b70b-a9b95f44b7b4'}) + 'read_messages/'
-        response = self.client.post(url, format='json')
-        self.assertEqual(Message.objects.filter(user=2, dialog='644804bf-13c9-47d4-b70b-a9b95f44b7b4').first().is_read, True)
+    # def test_read_messages(self):
+    #     url = reverse('dialog-detail', kwargs={'pk': '644804bf-13c9-47d4-b70b-a9b95f44b7b4'}) + 'read_messages/'
+    #     response = self.client.post(url, format='json')
+    #     self.assertEqual(Message.objects.filter(user=2, dialog='644804bf-13c9-47d4-b70b-a9b95f44b7b4').first().is_read, True)
 
 
 class MessageTestCase(APITestCase):
@@ -101,21 +81,21 @@ class MessageTestCase(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_get_message(self):
-        url_valid = reverse('message-detail', kwargs={'pk': 1})
-        url_invalid = reverse('message-detail', kwargs={'pk': 42})
-        response_1 = self.client.get(url_valid, format='json')
-        response_2 = self.client.get(url_invalid, format='json')
-        self.assertEqual(response_1.status_code, status.HTTP_200_OK)
-        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+    # def test_get_message(self):
+    #     url_valid = reverse('message-detail', kwargs={'pk': 1})
+    #     url_invalid = reverse('message-detail', kwargs={'pk': 42})
+    #     response_1 = self.client.get(url_valid, format='json')
+    #     response_2 = self.client.get(url_invalid, format='json')
+    #     self.assertEqual(response_1.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_delete_message(self):
-        url_valid = reverse('message-detail', kwargs={'pk': 1})
-        url_invalid = reverse('message-detail', kwargs={'pk': 42})
-        response_1 = self.client.delete(url_valid, format='json')
-        response_2 = self.client.delete(url_invalid, format='json')
-        self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+    # def test_delete_message(self):
+    #     url_valid = reverse('message-detail', kwargs={'pk': 1})
+    #     url_invalid = reverse('message-detail', kwargs={'pk': 42})
+    #     response_1 = self.client.delete(url_valid, format='json')
+    #     response_2 = self.client.delete(url_invalid, format='json')
+    #     self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
+    #     self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
 
 class ContactTestCase(APITestCase):
