@@ -71,15 +71,15 @@ class MessageTestCase(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_message(self):
-        url = reverse('message-list')
-        data = {
-            'text': 'test',
-            'user': 1,
-            'dialog': '644804bf-13c9-47d4-b70b-a9b95f44b7b4'
-        }
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    # def test_create_message(self):
+    #     url = reverse('message-list')
+    #     data = {
+    #         'text': 'test',
+    #         'user': 1,
+    #         'dialog': '644804bf-13c9-47d4-b70b-a9b95f44b7b4'
+    #     }
+    #     response = self.client.post(url, data, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     # def test_get_message(self):
     #     url_valid = reverse('message-detail', kwargs={'pk': 1})
