@@ -8,17 +8,17 @@
       d-flex
     >
       <v-container
-        class="display-1 grey--text"
+
         d-flex
       >
-        <pre>
-                ／＞　 フ
-                |  _　 _|
-               ／`ミ _x 彡
-              /　　　 　 |
-             /　 ヽ　　  ﾉ
-         ／￣|    |　|　|
-        | (￣ヽ＿-ヽ_)_)
+        <pre class="display-2 grey--text">
+                        ／＞　 フ
+                        |    _　 _|
+                    ／`ミ _x 彡
+                   /　　　     |
+                  /   ヽ　　  ﾉ
+         ／￣|       |　|　 |
+        | (￣ヽ＿_ヽ_)_)
          ＼二つ
         </pre>
       </v-container>
