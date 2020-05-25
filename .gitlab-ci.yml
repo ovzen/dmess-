@@ -20,9 +20,9 @@ tests:
     - source ./ci/test_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
-  artifacts:
-    paths:
-      - ./public/tests.txt
+#  artifacts:
+#    paths:
+#      - ./public/tests.txt
 
 
 codestyle:
@@ -33,6 +33,8 @@ codestyle:
     - source ./ci/pylint_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
+  after_script:
+    - exit
 #  artifacts:
 #    paths:
 #      - ./public/codestyle.txt
@@ -46,9 +48,9 @@ docs:
     - source ./ci/doc_runner.sh
   rules:
     - if: $CI_COMMIT_BRANCH == 'develop'
-  artifacts:
-    paths:
-      - ./public/docs.txt
+#  artifacts:
+#    paths:
+#      - ./public/docs.txt
 
 
 production:
