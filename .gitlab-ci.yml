@@ -4,6 +4,8 @@ image: python:latest
 services:
   - redis:2.8
 
+before_script:
+  - pip install -r ./requirements.txt
 
 stages:
   - test
@@ -14,8 +16,6 @@ stages:
 
 tests:
   stage: test
-  before_script:
-    - pip install -r ./requirements.txt
   script:
     - source ./ci/test_runner.sh
   rules:
@@ -24,8 +24,7 @@ tests:
 
 codestyle:
   stage: codestyle
-  before_script:
-    - pip install -r ./requirements.txt
+  allow_failure: true
   script:
     - source ./ci/pylint_runner.sh
   rules:
@@ -36,8 +35,6 @@ codestyle:
 
 docs:
   stage: docs
-  before_script:
-    - pip install -r ./requirements.txt
   script:
     - source ./ci/doc_runner.sh
   rules:
