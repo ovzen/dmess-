@@ -33,9 +33,9 @@ codestyle:
     - source ./ci/pylint_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
-  artifacts:
-    paths:
-      - ./public/codestyle.txt
+#  artifacts:
+#    paths:
+#      - ./public/codestyle.txt
 
 
 docs:
