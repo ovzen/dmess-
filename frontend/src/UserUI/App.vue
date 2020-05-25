@@ -182,45 +182,65 @@
           </v-col>
           <v-divider />
           <div
-            v-for="contact in (userSearch != '' ? SortContacts : contacts)"
-            :key="contact.id"
+            v-if="contacts.length"
           >
-            <v-list-item
-              :to="'/UserProfile/' + contact.Contact.id"
+            <div
+              v-for="contact in (userSearch != '' ? SortContacts : contacts)"
+              :key="contact.id"
             >
-              <v-list-item-avatar>
-                <v-avatar
-                  size="36px"
-                  color="basic"
-                >
-                  <span
-                    class="white--text"
+              <v-list-item
+                :to="'/UserProfile/' + contact.Contact.id"
+              >
+                <v-list-item-avatar>
+                  <v-avatar
+                    size="36px"
+                    color="basic"
                   >
-                    {{ getUserAvatar(contact.Contact) }}
-                  </span>
-                <!--<v-img
-            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-          />-->
-                </v-avatar>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ contact.Contact.username }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  <span
-                    class="basic--text text--lighten"
-                  >
-                    {{ contact.Contact.profile.status }}
-                  </span>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider
-              v-if="contact.id != SortContacts[SortContacts.length-1].id"
-              inset
-            />
+                    <span
+                      class="white--text"
+                    >
+                      {{ getUserAvatar(contact.Contact) }}
+                    </span>
+                  <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ contact.Contact.username }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span
+                      class="basic--text text--lighten"
+                    >
+                      {{ contact.Contact.profile.status }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider
+                v-if="contact.id != SortContacts[SortContacts.length-1].id"
+                inset
+              />
+            </div>
           </div>
+          <v-list-item
+            v-if="!userSearch && !contacts.length"
+          >
+            <v-list-item-content>
+              <v-list-item-title
+                class="display-1 text-center grey--text"
+              >
+                ʕつ •ᴥ• ʔつ
+              </v-list-item-title>
+              <span
+                class="pt-4 overline font-weight-medium text-center text_second--text"
+              >
+                ADD NEW CONTANCTS! THEY WILL BE DISPLAY HERE
+              </span>
+            </v-list-item-content>
+          </v-list-item>
           <div
             v-if="userSearch"
           >
@@ -238,42 +258,62 @@
             </h1>
             <v-divider />
             <div
-              v-for="user in findedUsers"
-              :key="user.id"
+              v-if="findedUsers.length"
             >
-              <v-list-item
-                :to="'/UserProfile/' + user.id"
+              <div
+                v-for="user in findedUsers"
+                :key="user.id"
               >
-                <v-list-item-avatar>
-                  <v-avatar
-                    size="36px"
-                    color="basic"
-                  >
-                    <span
-                      class="white--text"
+                <v-list-item
+                  :to="'/UserProfile/' + user.id"
+                >
+                  <v-list-item-avatar>
+                    <v-avatar
+                      size="36px"
+                      color="basic"
                     >
-                      {{ getUserAvatar(user) }}
-                    </span>
-                  </v-avatar>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ user.username }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    <span
-                      class="basic--text text--lighten"
-                    >
-                      {{ user.status }}
-                    </span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider
-                v-if="user.id !== findedUsers[findedUsers.length-1].id"
-                inset
-              />
+                      <span
+                        class="white--text"
+                      >
+                        {{ getUserAvatar(user) }}
+                      </span>
+                    </v-avatar>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ user.username }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <span
+                        class="basic--text text--lighten"
+                      >
+                        {{ user.status }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider
+                  v-if="user.id !== findedUsers[findedUsers.length-1].id"
+                  inset
+                />
+              </div>
             </div>
+            <v-list-item
+              v-else
+            >
+              <v-list-item-content>
+                <v-list-item-title
+                  class="display-1 text-center grey--text"
+                >
+                  ( ͡° ͜ʖ ͡°)
+                </v-list-item-title>
+                <span
+                  class="pt-4 overline font-weight-medium text-center text_second--text"
+                >
+                  NO RESULTS
+                </span>
+              </v-list-item-content>
+            </v-list-item>
           </div>
         </div>
         <div v-if="currentTab.name == 'mdi-message-text'">
