@@ -28,7 +28,7 @@ tests:
 codestyle:
   stage: codestyle
   before_script:
-    - pip install -r ./ci/codestyle_requirements.txt
+    - pip install -r ./requirements.txt
   script:
     - source ./ci/pylint_runner.sh
   rules:
