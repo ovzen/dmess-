@@ -32,8 +32,17 @@ class UserProfile(models.Model):
 
 
 class Contact(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='user')
-    contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='contact')
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE,
+        related_name='user'
+    )
+    contact = models.ForeignKey(
+        to=User, on_delete=models.CASCADE,
+        related_name='contact'
+    )
+
+    class Meta:
+        unique_together = ['user', 'contact']
 
 
 class Dialog(models.Model):
