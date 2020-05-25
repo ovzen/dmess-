@@ -52,6 +52,7 @@
       </v-card>
     </v-dialog>
     <v-list-item
+      v-if="userIsStaff"
       @click.stop="dialogsWarnings = true"
     >
       <v-icon
@@ -74,11 +75,35 @@
 </template>
 
 <script>
+import api from '../api'
+import jwt from 'jsonwebtoken'
 export default {
   name: 'Settings',
   data: () => ({
-    dialogsWarnings: false
-  })
+    dialogsWarnings: false,
+    userId: undefined,
+    userIsStaff: false
+  }),
+  created () {
+    this.userId = jwt.decode(this.$cookie.get('Authentication')).user_id
+    this.getUserStaff()
+  },
+  methods: {
+    getUserStaff  () {
+      this.loading = true
+      api.axios
+        .get('/api/users/' + this.userId + '/')
+        .then(res => {
+          if (res.data) {
+            this.userIsStaff = res.data.is_staff
+            console.log('userIsStaff', res.data.is_staff)
+          }
+        })
+        .catch(error => {
+          alert(error)
+        })
+    }
+  }
 }
 </script>
 
