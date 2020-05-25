@@ -293,47 +293,67 @@
             />
           </v-col>
           <v-divider />
-          <v-list-item
-            v-for="(dialog, i) in dialogs"
-            :key="i"
-            @click="openDialog(dialog.id)"
+          <div
+            v-if="dialogs.length"
           >
-            <v-list-item-avatar>
-              <v-avatar
-                size="36px"
-                color="basic"
-              >
-                <span
-                  class="white--text"
+            <v-list-item
+              v-for="(dialog, i) in dialogs"
+              :key="i"
+              @click="openDialog(dialog.id)"
+            >
+              <v-list-item-avatar>
+                <v-avatar
+                  size="36px"
+                  color="basic"
                 >
-                  NU
-                </span>
-              </v-avatar>
-            </v-list-item-avatar>
+                  <span
+                    class="white--text"
+                  >
+                    NU
+                  </span>
+                </v-avatar>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ getContactName(dialog.users_detail) }}
+                </v-list-item-title>
+                <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
+                  <span
+                    style="color:#757575; font-size:115%;"
+                  >
+                    {{ (dialog.last_message ? dialog.last_message.text : '') }}
+                  </span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-list-item-action-text v-if="dialog.last_message">
+                  {{ formatTime(dialog.last_message.create_date) }}
+                </v-list-item-action-text>
+                <v-avatar
+                  v-if="unread_messages_qty[i]"
+                  color="basic"
+                  class="subheading white--text"
+                  size="24"
+                  v-text="unread_messages_qty[i]"
+                />
+              </v-list-item-action>
+            </v-list-item>
+          </div>
+          <v-list-item
+            v-else
+          >
             <v-list-item-content>
-              <v-list-item-title>
-                {{ getContactName(dialog.users_detail) }}
+              <v-list-item-title
+                class="display-1 text-center grey--text"
+              >
+                ( つ ^◡^ )つ
               </v-list-item-title>
-              <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
-                <span
-                  style="color:#757575; font-size:115%;"
-                >
-                  {{ (dialog.last_message ? dialog.last_message.text : '') }}
-                </span>
-              </v-list-item-subtitle>
+              <span
+                class="pt-4 overline font-weight-medium text-center text_second--text"
+              >
+                start messaging with someone chat will be display here
+              </span>
             </v-list-item-content>
-            <v-list-item-action>
-              <v-list-item-action-text v-if="dialog.last_message">
-                {{ formatTime(dialog.last_message.create_date) }}
-              </v-list-item-action-text>
-              <v-avatar
-                v-if="unread_messages_qty[i]"
-                color="basic"
-                class="subheading white--text"
-                size="24"
-                v-text="unread_messages_qty[i]"
-              />
-            </v-list-item-action>
           </v-list-item>
         </div>
         <v-divider />
