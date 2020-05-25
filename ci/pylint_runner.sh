@@ -4,3 +4,4 @@
 
 #pylint admin/ dmess/ main/
 pylint --load-plugins pylint_django -j 0 ./main
+exit 0
