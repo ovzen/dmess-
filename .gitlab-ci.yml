@@ -8,18 +8,18 @@ before_script:
   - pip install -r ./requirements.txt
 
 stages:
-  - test
+#  - test
   - codestyle
   - docs
   - deploy
 
 
-tests:
-  stage: test
-  script:
-    - source ./ci/test_runner.sh
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
+#tests:
+#  stage: test
+#  script:
+#    - source ./ci/test_runner.sh
+#  rules:
+#    - if: $CI_MERGE_REQUEST_ID
 
 
 codestyle:
@@ -30,7 +30,7 @@ codestyle:
   rules:
     - if: $CI_MERGE_REQUEST_ID
   after_script:
-    - exit 0
+    - ls -a
 
 
 docs:
