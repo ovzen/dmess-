@@ -225,22 +225,22 @@
               />
             </div>
           </div>
-          <v-list-item
+          <div
             v-if="!userSearch && !contacts.length"
+            class="d-flex flex-column justify-center align-center fill-height"
+            style="height:75vh"
           >
-            <v-list-item-content>
-              <v-list-item-title
-                class="display-1 text-center grey--text"
-              >
+            <div class="mt-12">
+              <p class="display-2 text-center grey--text">
                 ʕつ •ᴥ• ʔつ
-              </v-list-item-title>
-              <span
-                class="pt-4 overline font-weight-medium text-center text_second--text"
-              >
-                ADD NEW CONTANCTS! THEY WILL BE DISPLAY HERE
-              </span>
-            </v-list-item-content>
-          </v-list-item>
+              </p>
+              <p class="overline text-center font-weight-medium text_second--text">
+                ADD NEW CONTACTS!
+                <br />
+                THEY WILL BE DISPLAY HERE
+              </p>
+            </div>
+          </div>
           <div
             v-if="userSearch"
           >
@@ -298,25 +298,25 @@
                 />
               </div>
             </div>
-            <v-list-item
+            <div
               v-else
+              class="d-flex flex-column justify-center align-center fill-height"
+              style="height:69vh"
             >
-              <v-list-item-content>
-                <v-list-item-title
-                  class="display-1 text-center grey--text"
-                >
-                  ( ͡° ͜ʖ ͡°)
-                </v-list-item-title>
-                <span
-                  class="pt-4 overline font-weight-medium text-center text_second--text"
-                >
+              <div>
+                <p class="display-2 text-center grey--text">
+                  ( ͡° ʖ̯ ͡°)
+                </p>
+                <p class="overline text-center font-weight-medium text_second--text">
                   NO RESULTS
-                </span>
-              </v-list-item-content>
-            </v-list-item>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        <div v-if="currentTab.name == 'mdi-message-text'">
+        <div
+          v-if="currentTab.name == 'mdi-message-text'"
+        >
           <v-divider />
           <v-col>
             <v-text-field
@@ -379,22 +379,22 @@
               </v-list-item-action>
             </v-list-item>
           </div>
-          <v-list-item
+          <div
             v-else
+            class="d-flex flex-column justify-center align-center fill-height"
+            style="height:75vh"
           >
-            <v-list-item-content>
-              <v-list-item-title
-                class="display-1 text-center grey--text"
-              >
-                ( つ ^◡^ )つ
-              </v-list-item-title>
-              <span
-                class="pt-4 overline font-weight-medium text-center text_second--text"
-              >
-                start messaging with someone chat will be display here
-              </span>
-            </v-list-item-content>
-          </v-list-item>
+            <div class="mt-12">
+              <p class="display-2 text-center grey--text">
+                ( つ ^‿^ )つ
+              </p>
+              <p class="overline text-center font-weight-medium text_second--text">
+                START MESSAGING WITH SOMEONE
+                <br />
+                CHAT WILL BE DISPLAY HERE
+              </p>
+            </div>
+          </div>
         </div>
         <v-divider />
         <settings
