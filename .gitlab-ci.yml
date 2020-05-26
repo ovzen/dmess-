@@ -7,8 +7,8 @@ cache:
 services:
   - redis:2.8
 
-#before_script:
-#  - pip install -r ./requirements.txt
+before_script:
+  - pip install -r ./requirements.txt
 
 stages:
 #  - test
@@ -32,8 +32,8 @@ codestyle:
     - source ./ci/pylint_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
-  after_script:
-    - ls -a
+#  after_script:
+#    - ls -a
 
 
 #docs:
