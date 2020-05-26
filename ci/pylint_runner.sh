@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # run pylint
-pylint --load-plugins pylint_django -j 0 ./main | tee pylint.txt
+pylint --load-plugins pylint_django -j 0 ./main > pylint.txt
 
 # get badge
 mkdir public
