@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # run pylint
-pylint --load-plugins pylint_django -j 0 ./main > pylint.txt
+pylint --load-plugins pylint_django -j 0 ../main | tee pylint.txt
 ls -a
 cat pylint.txt
+echo 'the end of pylint!!'
 
 # get badge
 #mkdir public
