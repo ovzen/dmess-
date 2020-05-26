@@ -27,6 +27,8 @@ stages:
 
 codestyle:
   stage: codestyle
+  before_script:
+    - pip install -r ./ci/pylint_requirements.txt
   allow_failure: true
   script:
     - source ./ci/pylint_runner.sh
