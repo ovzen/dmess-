@@ -220,7 +220,6 @@
                 </v-list-item-content>
               </v-list-item>
               <v-divider
-                v-if="contact.id != SortContacts[SortContacts.length-1].id"
                 inset
               />
             </div>
@@ -293,7 +292,6 @@
                   </v-list-item-content>
                 </v-list-item>
                 <v-divider
-                  v-if="user.id !== findedUsers[findedUsers.length-1].id"
                   inset
                 />
               </div>
@@ -336,48 +334,54 @@
           <div
             v-if="dialogs.length"
           >
-            <v-list-item
+            <div
               v-for="(dialog, i) in dialogs"
               :key="i"
-              @click="openDialog(dialog.id)"
             >
-              <v-list-item-avatar>
-                <v-avatar
-                  size="36px"
-                  color="basic"
-                >
-                  <span
-                    class="white--text"
+              <v-list-item
+                @click="openDialog(dialog.id)"
+              >
+                <v-list-item-avatar>
+                  <v-avatar
+                    size="36px"
+                    color="basic"
                   >
-                    NU
-                  </span>
-                </v-avatar>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ getContactName(dialog.users_detail) }}
-                </v-list-item-title>
-                <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
-                  <span
-                    style="color:#757575; font-size:115%;"
-                  >
-                    {{ (dialog.last_message ? dialog.last_message.text : '') }}
-                  </span>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-list-item-action-text v-if="dialog.last_message">
-                  {{ formatTime(dialog.last_message.create_date) }}
-                </v-list-item-action-text>
-                <v-avatar
-                  v-if="unread_messages_qty[i]"
-                  color="basic"
-                  class="subheading white--text"
-                  size="24"
-                  v-text="unread_messages_qty[i]"
-                />
-              </v-list-item-action>
-            </v-list-item>
+                    <span
+                      class="white--text"
+                    >
+                      NU
+                    </span>
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ getContactName(dialog.users_detail) }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
+                    <span
+                      style="color:#757575; font-size:115%;"
+                    >
+                      {{ (dialog.last_message ? dialog.last_message.text : '') }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-list-item-action-text v-if="dialog.last_message">
+                    {{ formatTime(dialog.last_message.create_date) }}
+                  </v-list-item-action-text>
+                  <v-avatar
+                    v-if="unread_messages_qty[i]"
+                    color="basic"
+                    class="subheading white--text"
+                    size="24"
+                    v-text="unread_messages_qty[i]"
+                  />
+                </v-list-item-action>
+              </v-list-item>
+              <v-divider
+                inset
+              />
+            </div>
           </div>
           <div
             v-else
@@ -396,7 +400,6 @@
             </div>
           </div>
         </div>
-        <v-divider />
         <settings
           v-if="currentTab.name == 'mdi-settings'"
         />
