@@ -105,19 +105,12 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title
-                v-if="(firstName || lastName)"
                 class="title"
               >
-                {{ firstName }} {{ lastName }}
-              </v-list-item-title>
-              <v-list-item-title
-                v-else
-                class="title"
-              >
-                {{ username }}
+                {{ MakeName }}
               </v-list-item-title>
               <v-list-item-subtitle
-                v-if="isOnline"
+                v-if="getClientProfile.is_online"
               >
                 online
               </v-list-item-subtitle>
@@ -130,9 +123,9 @@
             <router-link
               to="/MyProfile"
             >
-              <v-list-item-avatar v-if="avatar">
+              <v-list-item-avatar v-if="getClientProfile.avatar">
                 <v-img
-                  :src="avatar"
+                  :src="getClientProfile.avatar"
                 />
               </v-list-item-avatar>
               <v-list-item-avatar
@@ -140,17 +133,8 @@
                 color="#FFFFFF"
                 class="justify-center indigo--text"
               >
-                <span v-if="(firstName && lastName)">
-                  {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
-                </span>
-                <span v-else-if="(firstName)">
-                  {{ firstName[0].toUpperCase() }}
-                </span>
-                <span v-else-if="(lastName)">
-                  {{ lastName[0].toUpperCase() }}
-                </span>
-                <span v-else>
-                  {{ username[0].toUpperCase() }}
+                <span>
+                  {{ MakeAvatar }}
                 </span>
               </v-list-item-avatar>
             </router-link>
@@ -162,120 +146,7 @@
       <div
         id="dynamic-component"
       >
-        <div v-if="currentTab.name == 'mdi-account-circle'">
-          <v-divider />
-          <v-col>
-            <v-text-field
-              v-model="userSearch"
-              clearable
-              solo
-              background-color="grey lighten-2"
-              dense
-              flat
-              color="basic"
-              hide-details
-              prepend-inner-icon="mdi-magnify"
-              label="Search for users"
-              style="border-radius:50px; max-width:450px;"
-              @input="getUsersBySearch(userSearch)"
-            />
-          </v-col>
-          <v-divider />
-          <div
-            v-for="contact in (userSearch != '' ? SortContacts : contacts)"
-            :key="contact.id"
-          >
-            <v-list-item
-              :to="'/UserProfile/' + contact.Contact.id"
-            >
-              <v-list-item-avatar>
-                <v-avatar
-                  size="36px"
-                  color="basic"
-                >
-                  <span
-                    class="white--text"
-                  >
-                    {{ getUserAvatar(contact.Contact) }}
-                  </span>
-                <!--<v-img
-            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-          />-->
-                </v-avatar>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ contact.Contact.username }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  <span
-                    class="basic--text text--lighten"
-                  >
-                    {{ contact.Contact.profile.status }}
-                  </span>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider
-              v-if="contact.id != SortContacts[SortContacts.length-1].id"
-              inset
-            />
-          </div>
-          <div
-            v-if="userSearch"
-          >
-            <v-divider />
-            <h1
-              class="basic--text"
-              style="font-family: Roboto;
-                    font-style: normal;
-                    font-weight: 500;
-                    font-size: 16px;
-                    line-height: 16px;
-                    padding:16px"
-            >
-              Global Search
-            </h1>
-            <v-divider />
-            <div
-              v-for="user in findedUsers"
-              :key="user.id"
-            >
-              <v-list-item
-                :to="'/UserProfile/' + user.id"
-              >
-                <v-list-item-avatar>
-                  <v-avatar
-                    size="36px"
-                    color="basic"
-                  >
-                    <span
-                      class="white--text"
-                    >
-                      {{ getUserAvatar(user) }}
-                    </span>
-                  </v-avatar>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ user.username }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    <span
-                      class="basic--text text--lighten"
-                    >
-                      {{ user.status }}
-                    </span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider
-                v-if="user.id !== findedUsers[findedUsers.length-1].id"
-                inset
-              />
-            </div>
-          </div>
-        </div>
+        <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
         <div v-if="currentTab.name == 'mdi-message-text'">
           <v-divider />
           <v-col>
@@ -428,7 +299,9 @@ import api from './api'
 import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
 import settings from './components/settings'
+import ContactList from './components/ContactList'
 import moment from 'moment'
+import { mapActions, mapGetters } from 'vuex'
 
 Vue.use(VueCookie)
 var tabs = [
@@ -460,7 +333,7 @@ var tabs = [
 let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/dialog_notifications/')
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, settings },
+  components: { SystemInfo, settings, ContactList },
   data: () => ({
     login: '',
     button: 'Войти',
@@ -490,11 +363,43 @@ export default {
     dialogs: []
   }),
   computed: {
+    ...mapGetters(['getUserId', 'getClient', 'getClientProfile']),
     Route () {
       return this.$route
     },
-    SortContacts () {
-      return this.contacts.filter(contact => { return contact.Contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
+    MakeName () {
+      if (typeof this.getClient !== 'undefined') {
+        if (typeof this.getClient.first_name !== 'undefined' && typeof this.getClient.last_name !== 'undefined') {
+          return this.getClient.first_name + ' ' + this.getClient.last_name
+        }
+        if (typeof this.getClient.first_name !== 'undefined') {
+          return this.getClient.first_name
+        }
+        if (typeof this.getClient.last_name !== 'undefined') {
+          return this.getClient.last_name
+        }
+        if (typeof this.getClient.username !== 'undefined') {
+          return this.getClient.username
+        }
+      }
+      return 'Загрузка...'
+    },
+    MakeAvatar () {
+      if (typeof this.getClient !== 'undefined') {
+        if (typeof this.getClient.first_name !== 'undefined' && typeof this.getClient.last_name !== 'undefined') {
+          return this.getClient.first_name[0] + this.getClient.last_name[0]
+        }
+        if (typeof this.getClient.first_name !== 'undefined') {
+          return this.getClient.first_name[0]
+        }
+        if (typeof this.getClient.last_name !== 'undefined') {
+          return this.getClient.last_name[0]
+        }
+        if (typeof this.getClient.username !== 'undefined') {
+          return this.getClient.username[0]
+        }
+      }
+      return '...'
     }
   },
   watch: {
@@ -527,15 +432,17 @@ export default {
       }
     })
     setInterval(this.updateToken, 1000)
-    this.getContacts()
     this.getDialogsList()
-    this.getUserData()
+    this.getUserData(this.getUserId)
+    this.getContactsData()
+    console.log(this.getUserId)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.$route.name === 'ChatUser') {
       this.getChatInfo()
     }
   },
   methods: {
+    ...mapActions(['getUserData', 'getContactsData']),
     GetUnreadMessages (dialog) {
       console.log(dialog.unread_messages[dialog.users[1]])
       if (typeof this.user_id !== 'undefined') {
@@ -548,34 +455,6 @@ export default {
     },
     GoBack () {
       this.$router.go(-1)
-    },
-    getUserAvatar (UserProfile) {
-      if (typeof UserProfile !== 'undefined') {
-        if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
-          return (UserProfile.first_name[0] + UserProfile.last_name[0]).toUpperCase()
-        } else {
-          return UserProfile.username[0].toUpperCase()
-        }
-      } return ''
-    },
-    getUsersBySearch () {
-      api.axios.get('/api/users/', {
-        params: {
-          search: this.userSearch
-        }
-      }).then(res => {
-        this.findedUsers = res.data.results.filter(user => {
-          for (let contact in this.contacts) {
-            if (user.username === this.contacts[contact].Contact.username) {
-              return false
-            }
-          }
-          return true
-        })
-      })
-    },
-    getContacts () {
-      api.axios.get('/api/contacts/').then(res => { this.contacts = res.data.results })
     },
     disconnect () {
       this.$disconnect()
@@ -631,20 +510,6 @@ export default {
           })
           .catch(error => console.log(error))
       }
-    },
-    getUserData () {
-      api.axios
-        .get('/api/users/' + this.user_id + '/')
-        .then(res => {
-          if (res.data) {
-            // console.log('user details: ', res)
-            this.avatar = res.data.profile.avatar
-            this.isOnline = res.data.profile.is_online
-            this.firstName = res.data.first_name ? res.data.first_name : undefined
-            this.lastName = res.data.last_name ? res.data.last_name : undefined
-          }
-        })
-        .catch(error => console.log(error))
     },
     formatTime (datetime) {
       if (datetime) {

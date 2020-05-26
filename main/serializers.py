@@ -59,13 +59,10 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-    User = UserSerializer(read_only=True, source='user')
-    Contact = UserSerializer(read_only=True, source='contact')
 
     class Meta:
         model = models.Contact
         fields = '__all__'
-        extra_kwargs = {'user': {'write_only': True}, 'contact': {'write_only': True}}
         validators = [
             UniqueTogetherValidator(
                 queryset=models.Contact.objects.all(),
