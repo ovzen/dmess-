@@ -1,5 +1,8 @@
 image: python:latest
 
+cache:
+  paths:
+  - ~/.cache/pip/
 
 services:
   - redis:2.8
