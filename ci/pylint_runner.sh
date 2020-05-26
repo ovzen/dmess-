@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # run pylint
-#pylint --load-plugins pylint_django -j 0 ./main > pylint.txt
-echo "lalala test" > pylint.txt
+pylint --load-plugins pylint_django -j 0 ./main > pylint.txt
 ls -a
 cat pylint.txt
 
