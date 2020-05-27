@@ -9,7 +9,7 @@ services:
 
 before_script:
   - python3 -V
-  - pip install -r ./requirements.txt
+  - pip install -r requirements.txt
 
 stages:
   - test
@@ -19,8 +19,6 @@ stages:
 
 coverage:
   stage: test
-  before_script:
-    - pip install -r requirements.txt
   script:
     - source ./ci/test_runner.sh
   rules:
@@ -42,12 +40,14 @@ pylint:
 
 
 
-#docs:
-#  stage: docs
-#  script:
-#    - source ./ci/doc_runner.sh
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == 'develop'
+docs:
+  stage: docs
+  before_script:
+    - pip install -r ci/docs_requirements.txt
+  script:
+    - source ./ci/doc_runner.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'develop'
 
 
 production:
