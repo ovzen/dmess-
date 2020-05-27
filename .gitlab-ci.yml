@@ -1,5 +1,6 @@
 image: python:latest
 
+
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
 
@@ -9,8 +10,10 @@ cache:
     - .cache/pip/
     - venv
 
+
 services:
   - redis:2.8
+
 
 default:
   tags:
@@ -23,21 +26,22 @@ default:
     - pip install --upgrade pip
     - pip install -r requirements.txt
 
+
 stages:
   - test
   - style
   - docs
   - deploy
 
+
 coverage:
   stage: test
   script:
     - source ./ci/test_runner.sh
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
   artifacts:
     paths:
       - public/coverage
+
 
 pylint:
   stage: style
@@ -48,7 +52,6 @@ pylint:
     paths:
       - public/pylint.svg
       - public/pylint.html
-
 
 
 docs:
