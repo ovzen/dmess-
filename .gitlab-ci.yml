@@ -55,7 +55,7 @@ docs:
   stage: docs
   script:
     - pip install -r ci/docs_requirements.txt
-    - source ./ci/doc_runner.sh
+    - source ./ci/docs_runner.sh
   rules:
     - if: $CI_COMMIT_BRANCH == 'develop'
 
