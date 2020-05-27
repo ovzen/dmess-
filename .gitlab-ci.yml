@@ -1,15 +1,27 @@
 image: python:latest
 
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+
+
 cache:
   paths:
-  - ~/.cache/pip/
+    - .cache/pip/
+    - venv
 
 services:
   - redis:2.8
 
-before_script:
-  - python3 -V
-  - pip install -r requirements.txt
+default:
+  tags:
+    - django
+  before_script:
+    - python -V
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
 
 stages:
   - test
@@ -29,10 +41,9 @@ coverage:
 
 pylint:
   stage: style
-  before_script:
-  - pip install -r ci/pylint_requirements.txt
   script:
-  - ./ci/pylint_runner.sh
+    - pip install -r ci/pylint_requirements.txt
+    - ./ci/pylint_runner.sh
   artifacts:
     paths:
       - public/pylint.svg
@@ -42,9 +53,8 @@ pylint:
 
 docs:
   stage: docs
-  before_script:
-    - pip install -r ci/docs_requirements.txt
   script:
+    - pip install -r ci/docs_requirements.txt
     - source ./ci/doc_runner.sh
   rules:
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -53,8 +63,8 @@ docs:
 production:
   stage: deploy
 
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
 
   before_script:
     - apt-get install -qq git
