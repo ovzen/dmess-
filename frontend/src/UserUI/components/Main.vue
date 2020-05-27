@@ -2,51 +2,6 @@
   <v-container
     fluid
   >
-    <a
-      href="/django_admin/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="basic"
-      >
-        Комнатка админа
-      </v-btn>
-    </a>
-    <a
-      href="/admin/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="basic"
-      >
-        Комнатка модератора
-      </v-btn>
-    </a>
-    <v-form>
-      <v-container>
-        <v-row>
-          <v-text-field
-            v-model="ChatName"
-            clearable
-            label="Chat name"
-            required
-          />
-          <v-btn
-            class="ma-2"
-            outlined
-            color="basic"
-            @click="FindChat(ChatName)"
-          >
-            Перейти в чат
-          </v-btn>
-        </v-row>
-      </v-container>
-    </v-form>
-
     <div class="main">
       <h1 class="main_smile smile_color--text">
         ¯\_(^ ‿ ^)\
