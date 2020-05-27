@@ -1,54 +1,70 @@
 image: python:latest
 
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+
+
 cache:
   paths:
-  - ~/.cache/pip/
+    - .cache/pip/
+    - venv
 
 services:
   - redis:2.8
 
-before_script:
-  - pip install -r ./requirements.txt
+default:
+  tags:
+    - django
+  before_script:
+    - python -V
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
 
 stages:
-#  - test
-  - codestyle
-#  - docs
+  - test
+  - style
+  - docs
   - deploy
 
-
-#tests:
-#  stage: test
-#  script:
-#    - source ./ci/test_runner.sh
-#  rules:
-#    - if: $CI_MERGE_REQUEST_ID
-
-
-codestyle:
-  stage: codestyle
-  allow_failure: true
+coverage:
+  stage: test
   script:
-    - source ./ci/pylint_runner.sh
+    - source ./ci/test_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
-#  after_script:
-#    - ls -a
+  artifacts:
+    paths:
+      - public/coverage
+
+pylint:
+  stage: style
+  script:
+    - pip install -r ci/pylint_requirements.txt
+    - ./ci/pylint_runner.sh
+  artifacts:
+    paths:
+      - public/pylint.svg
+      - public/pylint.html
 
 
-#docs:
-#  stage: docs
-#  script:
-#    - source ./ci/doc_runner.sh
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == 'develop'
+
+docs:
+  stage: docs
+  script:
+    - pip install -r ci/docs_requirements.txt
+    - source ./ci/doc_runner.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'develop'
 
 
 production:
   stage: deploy
 
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
 
   before_script:
     - apt-get install -qq git

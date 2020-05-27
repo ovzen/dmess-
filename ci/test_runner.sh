@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-# cd ~/dmess/ || exit
-
-python manage.py test
+coverage run --omit='venv/*' manage.py test
+coverage report --omit=manage.py,venv
+coverage html --omit=manage.py,venv
+mkdir public
+mv htmlcov public/coverage
