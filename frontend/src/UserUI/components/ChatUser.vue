@@ -26,7 +26,7 @@
               <span
                 class="font-weight-light message_color--text"
               >
-                {{ message.text }}
+                {{ decodeEmojiCode(message.text) }}
               </span>
               <span
                 class="float-right ml-2"
@@ -55,7 +55,7 @@
                 <span
                   class="font-weight-light message_color--text"
                 >
-                  {{ message.text }}
+                  {{ decodeEmojiCode(message.text) }}
                 </span>
                 <span
                   class="float-right ml-2"
@@ -114,6 +114,15 @@
         class="d-inline-flex"
         :style="'padding-left:'+ (this.$vuetify.application.left+10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
       >
+        <picker
+          :data="emojiIndex"
+          @select="addEmoji"
+        />
+        <Emoji
+          absolute
+          style="padding-right: 35px;"
+          @click="selectedEmoji"
+        />
         <v-textarea
           ref="myTextArea"
           v-model="message"
@@ -143,12 +152,15 @@
 </template>
 
 <script>
+import data from 'emoji-mart-vue-fast/data/all.json'
+import { VueChatEmoji, emojis } from 'vue-chat-emoji'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
+require('vue-chat-emoji/dist/vue-chat-emoji.css')
 
 Vue.use(VueCookie)
 Vue.use(
@@ -160,6 +172,9 @@ Vue.use(
 )
 export default {
   name: 'ChatUser',
+  components: {
+    Emoji: VueChatEmoji
+  },
   data: () => ({
     messages: [],
     message: '',
@@ -181,6 +196,12 @@ export default {
     this.$disconnect()
   },
   methods: {
+    decodeEmojiCode (str) {
+      return emojis.decodeEmoji(str)
+    },
+    selectedEmoji (args) {
+      this.message += args.emoji
+    },
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
       var elemTop = rect.top
@@ -215,7 +236,7 @@ export default {
         console.log('messagetext: ', this.message)
         this.$socket.send(
           JSON.stringify({
-            message: this.message
+            message: emojis.encodeEmoji(this.message)
           })
         )
       }
