@@ -17,6 +17,7 @@ tests:
   before_script:
     - pip install -r ./requirements.txt
   script:
+    - celery worker -B -A dmess --loglevel=debug --concurrency=4 &
     - source ./ci/test_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
