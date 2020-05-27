@@ -1,54 +1,47 @@
 image: python:latest
 
+cache:
+  paths:
+  - ~/.cache/pip/
 
 services:
   - redis:2.8
 
+before_script:
+  - pip install -r ./requirements.txt
 
 stages:
-  - test
+#  - test
   - codestyle
-  - docs
+#  - docs
   - deploy
 
 
-tests:
-  stage: test
-  before_script:
-    - pip install -r ./requirements.txt
-  script:
-    - source ./ci/test_runner.sh
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-  artifacts:
-    paths:
-      - ./public/tests.txt
+#tests:
+#  stage: test
+#  script:
+#    - source ./ci/test_runner.sh
+#  rules:
+#    - if: $CI_MERGE_REQUEST_ID
 
 
 codestyle:
   stage: codestyle
-  before_script:
-    - pip install -r ./ci/codestyle_requirements.txt
+  allow_failure: true
   script:
     - source ./ci/pylint_runner.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
-  artifacts:
-    paths:
-      - ./public/codestyle.txt
+#  after_script:
+#    - ls -a
 
 
-docs:
-  stage: docs
-  before_script:
-    - pip install -r ./requirements.txt
-  script:
-    - source ./ci/doc_runner.sh
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
-  artifacts:
-    paths:
-      - ./public/docs.txt
+#docs:
+#  stage: docs
+#  script:
+#    - source ./ci/doc_runner.sh
+#  rules:
+#    - if: $CI_COMMIT_BRANCH == 'develop'
 
 
 production:

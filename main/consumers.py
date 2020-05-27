@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketConsumer
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder
@@ -116,3 +116,37 @@ class System(WebsocketConsumer):
             'message': message,
             'message_type': message_type
         }))
+
+
+class DialogNotificationConsumer(AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        # We're always going to accept the connection, though we may
+        # close it later based on other factors.
+        user = self.scope['user']
+        group_name = f'dialogs_user_{user.id}'
+        print(group_name)
+        # The AsyncJsonWebsocketConsumer parent class has a
+        # self.groups list already. It uses it in cleanup.
+        self.groups.append(group_name)
+        # This actually subscribes the requesting socket to the
+        # named group:
+        await self.channel_layer.group_add(
+            group_name,
+            self.channel_name,
+        )
+        await self.accept()
+
+    async def notify(self, event):
+        """
+        This handles calls elsewhere in this codebase that look
+        like:
+
+            channel_layer.group_send(group_name, {
+                'type': 'notify',  # This routes it to this handler.
+                'content': json_message,
+            })
+
+        Don't try to directly use send_json or anything; this
+        decoupling will help you as things grow.
+        """
+        await self.send_json(event["content"])

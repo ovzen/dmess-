@@ -31,7 +31,6 @@ class UserProfile(models.Model):
         return f'last seen {timesince(self.last_online)} ago' if not self.is_online else 'online'
 
 
-
 class Contact(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='user')
     contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='contact')

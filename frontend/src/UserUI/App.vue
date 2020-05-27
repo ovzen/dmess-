@@ -522,7 +522,7 @@ var tabs = [
     }
   }
 ]
-
+let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/dialog_notifications/')
 export default {
   new: '#dynamic-component',
   components: { SystemInfo, settings },
@@ -575,6 +575,16 @@ export default {
   },
   mounted () {
     let Vue = this
+    ws.onmessage = function (event) {
+      let newDialog = JSON.parse(event.data).data
+      for (let dialog in Vue.dialogs) {
+        if (Vue.dialogs[dialog].id === newDialog.id) {
+          Vue.dialogs[dialog] = newDialog
+          console.log(newDialog)
+          Vue.$forceUpdate()
+        }
+      }
+    }
     document.addEventListener('keydown', function (event) {
       const key = event.key // Or const {key} = event; in ES6+
       if (key === 'Escape' && Vue.Route.fullPath !== '/') {
@@ -585,13 +595,22 @@ export default {
     this.getContacts()
     this.getDialogsList()
     this.getUserData()
-    setInterval(this.getUnreadMessagesQty, 2000)
     this.username = jwt.decode(this.$cookie.get('Authentication')).name
     if (this.$route.name === 'ChatUser') {
       this.getChatInfo()
     }
   },
   methods: {
+    GetUnreadMessages (dialog) {
+      console.log(dialog.unread_messages[dialog.users[1]])
+      if (typeof this.user_id !== 'undefined') {
+        if (dialog.users[0] === this.user_id) {
+          return dialog.unread_messages[dialog.users[0]]
+        }
+        return dialog.unread_messages[dialog.users[1]]
+      }
+      return ''
+    },
     GoBack () {
       this.$router.go(-1)
     },
@@ -722,21 +741,6 @@ export default {
       } else {
         return 'В диалоге нет других пользователей'
       }
-    },
-    getUnreadMessagesQty () {
-      api.axios
-        .get('/api/dialog/')
-        .then(response => {
-          if (response.data) {
-            this.unread_messages_qty = []
-            for (let i = 0; i < Object.keys(response.data.results).length; i++) {
-              // console.log(this.user_id)
-              this.unread_messages_qty.push(response.data.results[i].unread_messages[this.user_id])
-            }
-            // console.log(this.unread_messages_qty)
-          }
-        })
-        .catch(error => console.log(error))
     }
   }
 }
