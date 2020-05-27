@@ -6,7 +6,7 @@
 
 .. code-block:: bash
 
-    docker run -p 6379:6379 -d redis:2.8
+    docker run -p 6379:6379 -d --restart always redis:2.8
 
 2. Активировать виртуальное окружение
 

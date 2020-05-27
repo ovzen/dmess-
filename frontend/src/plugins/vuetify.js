@@ -16,7 +16,8 @@ export default new Vuetify({
         message_color: '#000000',
         icons_color: '#DADADA',
         text_main: '#1F1E21',
-        text_second: '#6F6A75'
+        text_second: '#6F6A75',
+        smile_color: '#969696'
       }
     }
   }

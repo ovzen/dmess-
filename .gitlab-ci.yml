@@ -1,7 +1,48 @@
 image: python:latest
 
+cache:
+  paths:
+  - ~/.cache/pip/
+
+services:
+  - redis:2.8
+
+before_script:
+  - pip install -r ./requirements.txt
+
 stages:
+#  - test
+  - codestyle
+#  - docs
   - deploy
+
+
+#tests:
+#  stage: test
+#  script:
+#    - source ./ci/test_runner.sh
+#  rules:
+#    - if: $CI_MERGE_REQUEST_ID
+
+
+codestyle:
+  stage: codestyle
+  allow_failure: true
+  script:
+    - source ./ci/pylint_runner.sh
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+#  after_script:
+#    - ls -a
+
+
+#docs:
+#  stage: docs
+#  script:
+#    - source ./ci/doc_runner.sh
+#  rules:
+#    - if: $CI_COMMIT_BRANCH == 'develop'
+
 
 production:
   stage: deploy

@@ -4,15 +4,14 @@ from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from main import models
-from main.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    status = serializers.CharField()
+    status = serializers.CharField(read_only=True)
 
     class Meta:
         model = models.UserProfile
-        exclude = ('user','last_online')
+        exclude = ('user', 'last_online')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'is_staff')
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile')
@@ -57,7 +56,6 @@ class DialogSerializer(serializers.ModelSerializer):
     #             f'Dialog with users {value} in already exists.'
     #             f' check: /api/dialog/{supposed_dialog.first().id}/'
     #         )
-
 
 
 class ContactSerializer(serializers.ModelSerializer):

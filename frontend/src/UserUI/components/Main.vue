@@ -2,70 +2,11 @@
   <v-container
     fluid
   >
-    <a
-      href="/django_admin/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="basic"
-      >
-        Комнатка админа
-      </v-btn>
-    </a>
-    <a
-      href="/admin/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="basic"
-      >
-        Комнатка модератора
-      </v-btn>
-    </a>
-    <a
-      href="/AllUsers/"
-      style="text-decoration: none;"
-    >
-      <v-btn
-        class="ma-2"
-        outlined
-        color="basic"
-      >
-        Список Пользователей
-      </v-btn>
-    </a>
-    <v-form>
-      <v-container>
-        <v-row>
-          <v-text-field
-            v-model="ChatName"
-            clearable
-            label="Chat name"
-            required
-          />
-          <v-btn
-            class="ma-2"
-            outlined
-            color="basic"
-            @click="FindChat(ChatName)"
-          >
-            Перейти в чат
-          </v-btn>
-        </v-row>
-      </v-container>
-    </v-form>
-    <router-link to="/chat/1">
-      Перейти к chat
-    </router-link>
     <div class="main">
-      <h1 class="main_smile">
+      <h1 class="main_smile smile_color--text">
         ¯\_(^ ‿ ^)\
       </h1>
-      <span class="main_smile_text">
+      <span class="main_smile_text smile_color--text">
         select a dialog to start messaging
       </span>
     </div>
@@ -186,7 +127,6 @@ export default {
   line-height: 112px;
   /* identical to box height */
   letter-spacing: -1.5px;
-  color: #969696;
 }
 .main_smile_text {
   margin-top: 32px;
@@ -197,6 +137,5 @@ export default {
   line-height: 16px;
   letter-spacing: 0.75px;
   text-transform: uppercase;
-  color: #969696;
 }
 </style>

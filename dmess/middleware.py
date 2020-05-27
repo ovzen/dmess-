@@ -8,6 +8,7 @@ from rest_framework import authentication
 from rest_framework_simplejwt import exceptions
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
+from django.contrib.auth.models import User
 
 
 class AuthMiddleware:
@@ -28,7 +29,7 @@ class AuthMiddleware:
                         request.user.save()
                     else:
                         request.user = AnonymousUser
-                except exceptions.AuthenticationFailed:
+                except (exceptions.AuthenticationFailed, User.DoesNotExist):
                     request.user = AnonymousUser
             except InvalidToken:
                 return self.get_response(request)
@@ -97,7 +98,7 @@ class DRFAuthentication(authentication.BaseAuthentication):
                         return user, None
                     else:
                         return AnonymousUser
-                except exceptions.AuthenticationFailed:
+                except (exceptions.AuthenticationFailed, User.DoesNotExist):
                     return None
             except InvalidToken:
                 return None
