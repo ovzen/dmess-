@@ -230,7 +230,14 @@
               <v-list-item
                 :to="'/UserProfile/' + contact.Contact.id"
               >
-                <v-list-item-avatar>
+                <v-list-item-avatar v-if="contact.Contact.profile.avatar">
+                  <v-img
+                    :src="contact.Contact.profile.avatar"
+                  />
+                </v-list-item-avatar>
+                <v-list-item-avatar
+                  v-else
+                >
                   <v-avatar
                     size="36px"
                     color="basic"
@@ -305,7 +312,14 @@
                 <v-list-item
                   :to="'/UserProfile/' + user.id"
                 >
-                  <v-list-item-avatar>
+                  <v-list-item-avatar v-if="user.profile.avatar">
+                    <v-img
+                      :src="user.profile.avatar"
+                    />
+                  </v-list-item-avatar>
+                  <v-list-item-avatar
+                    v-else
+                  >
                     <v-avatar
                       size="36px"
                       color="basic"
@@ -325,7 +339,7 @@
                       <span
                         class="basic--text text--lighten"
                       >
-                        {{ user.status }}
+                        {{ user.profile.status }}
                       </span>
                     </v-list-item-subtitle>
                   </v-list-item-content>
@@ -380,7 +394,14 @@
               <v-list-item
                 @click="openDialog(dialog.id)"
               >
-                <v-list-item-avatar>
+                <v-list-item-avatar v-if="getContact(dialog.users_detail).profile.avatar">
+                  <v-img
+                    :src="getContact(dialog.users_detail).profile.avatar"
+                  />
+                </v-list-item-avatar>
+                <v-list-item-avatar
+                  v-else
+                >
                   <v-avatar
                     size="36px"
                     color="basic"
@@ -388,7 +409,7 @@
                     <span
                       class="white--text"
                     >
-                      NU
+                      {{ getUserInitials(getContact(dialog.users_detail)) }}
                     </span>
                   </v-avatar>
                 </v-list-item-avatar>
@@ -591,7 +612,8 @@ export default {
     tabs: tabs,
     contacts: [],
     findedUsers: [],
-    dialogs: []
+    dialogs: [],
+    dialogContact: ''
   }),
   computed: {
     Route () {
@@ -800,6 +822,9 @@ export default {
           return user.username[0].toUpperCase()
         }
       } return ''
+    },
+    getContactAvatar (users) {
+      return this.getContact(users).profile.avatar
     }
   }
 }
