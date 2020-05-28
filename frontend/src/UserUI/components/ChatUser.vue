@@ -129,6 +129,9 @@
         />
         <Emoji
           style="padding-right: 28px; margin-left: 10px;"
+          :open="emojiChoiceStatus"
+          @mouseover.native="emojiChoiceActivate()"
+          @mouseout.native="emojiChoiceDeactivate()"
           @click="selectedEmoji"
         />
         <v-btn
@@ -173,7 +176,9 @@ export default {
     messages: [],
     message: '',
     dialogMessagesLength: 0,
-    diailogId: 0
+    diailogId: 0,
+    emojiChoiceStatus: false,
+    emojiChoiceReactivated: false
   }),
   watch: {
     // при изменениях маршрута запрашиваем данные снова
@@ -190,6 +195,14 @@ export default {
     this.$disconnect()
   },
   methods: {
+    emojiChoiceActivate () {
+      this.emojiChoiceStatus = true
+      this.emojiChoiceReactivated = true
+    },
+    emojiChoiceDeactivate () {
+      this.emojiChoiceReactivated = false
+      setTimeout(() => { if (!this.emojiChoiceReactivated) { this.emojiChoiceStatus = false } }, 2000)
+    },
     decodeEmojiCode (str) {
       return emojis.decodeEmoji(str)
     },
