@@ -30,7 +30,9 @@
       <v-toolbar-title
         v-if="Route.name === 'ChatUser'"
       >
-        <v-list-item>
+        <v-list-item
+          :to="'/UserProfile/' + ChatInfo.id"
+        >
           <v-list-item-avatar v-if="ChatInfo.profile.avatar">
             <v-img
               :src="ChatInfo.profile.avatar"
@@ -53,7 +55,11 @@
               {{ getUserName(ChatInfo) }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              {{ ChatInfo.profile.status }}
+              <span
+                :class="(ChatInfo.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+              >
+                {{ ChatInfo.profile.status }}
+              </span>
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -258,7 +264,7 @@
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     <span
-                      class="basic--text text--lighten"
+                       :class="(contact.Contact.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
                     >
                       {{ contact.Contact.profile.status }}
                     </span>
