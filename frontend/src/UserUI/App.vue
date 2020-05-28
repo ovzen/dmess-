@@ -36,6 +36,16 @@
               :src="ChatInfo.profile.avatar"
             />
           </v-list-item-avatar>
+          <v-list-item-avatar
+            v-else
+            color="basic"
+          >
+            <span
+              class="white--text"
+            >
+              {{ getUserInitials(ChatInfo) }}
+            </span>
+          </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="title"
@@ -163,6 +173,7 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <router-link
+              style="text-decoration: none;"
               to="/MyProfile"
             >
               <v-list-item-avatar v-if="avatar">
@@ -172,10 +183,11 @@
               </v-list-item-avatar>
               <v-list-item-avatar
                 v-else
-                color="#FFFFFF"
-                class="justify-center indigo--text"
+                color="background_white"
               >
-                 <span>
+                <span
+                  class="basic--text"
+                >
                   {{ getUserInitials(userProfile) }}
                 </span>
               </v-list-item-avatar>
