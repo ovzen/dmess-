@@ -115,6 +115,7 @@
         :style="'padding-left:'+ (this.$vuetify.application.left+10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
       >
         <v-textarea
+          id="for_emoji"
           ref="myTextArea"
           v-model="message"
           auto-grow
@@ -127,7 +128,7 @@
           @keyup.enter="sendMessage()"
         />
         <Emoji
-          style="padding-right: 28px;"
+          style="padding-right: 28px; margin-left: 10px;"
           @click="selectedEmoji"
         />
         <v-btn
@@ -193,7 +194,17 @@ export default {
       return emojis.decodeEmoji(str)
     },
     selectedEmoji (args) {
-      this.message += args.emoji
+      let textarea = document.getElementById('for_emoji')
+      let caret = JSON.parse(JSON.stringify(textarea.selectionStart))
+      let front = (textarea.value).substring(0, caret)
+      let back = (textarea.value).substring(textarea.selectionEnd, textarea.value.length)
+      this.message = front + args.emoji + back
+      textarea = document.getElementById('for_emoji')
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = caret + 2
+      }, 10)
+      textarea.focus()
+      // this.message += args.emoji
     },
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()

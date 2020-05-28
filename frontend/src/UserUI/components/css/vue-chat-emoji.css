@@ -4216,25 +4216,25 @@ body[data-v-03349ba9]{height:100vh}
 .emoji-category[data-v-03349ba9]{vertical-align:middle;display:inline-block;font-size:24px}
 .category[data-v-03349ba9]{padding-top:5px;padding-bottom:5px;flex-direction:row;margin-bottom:15px}
 .category[data-v-03349ba9],.tone-category[data-v-03349ba9]{display:inline-flex;text-align:center;justify-content:space-around;cursor:pointer}
-.tone-category[data-v-03349ba9]{margin-top:5px;margin-bottom:5px;flex:1;flex-direction:row;justify-content:center;align-items:center;box-sizing:border-box}
+.tone-category[data-v-03349ba9]{visibility: hidden;;margin-top:5px;margin-bottom:5px;flex:1;flex-direction:row;justify-content:center;align-items:center;box-sizing:border-box}
 .tone-category-group[data-v-03349ba9]{border-top:1px solid #ccc;margin-bottom:30px;height:50px}
 .tone-category.active[data-v-03349ba9]{border-bottom:2px solid #337ab7;-webkit-filter:saturate(3);filter:saturate(3);padding-bottom:1px}
 .tone-category-item[data-v-03349ba9]{vertical-align:middle;display:inline-block;margin:0 5px;cursor:pointer}
 .category.active[data-v-03349ba9]{border-bottom:3px solid #337ab7;-webkit-filter:saturate(3);filter:saturate(3);padding-bottom:1px}
 .icon-send[data-v-03349ba9]{transform:rotate(60deg);color:#222;font-size:20px}
-.icon-emoticon[data-v-03349ba9]{color:#000;font-size:24px;top:50%;left:50%;padding-bottom:8px}
+.icon-emoticon[data-v-03349ba9]{color:#9f9f9f;font-size:24px;top:50%;left:50%;padding-bottom:8px}
 .fixed-bottom[data-v-03349ba9]{width:100%;bottom:0;position:fixed;margin-bottom:10px}
 span.send-button[data-v-03349ba9]{outline:0;border:none;padding:10px 0;cursor:pointer;bottom:0;position:absolute}
 .composer-popover-input[data-v-03349ba9]{font-size-adjust:none;font-size:50%;font-style:normal;letter-spacing:normal;font-stretch:normal;font-variant:normal;font-weight:400;font:normal normal 100% intercom-font,Helvetica Neue,Helvetica,Arial,sans-serif;text-align:left;-moz-text-align-last:auto;text-align-last:auto;text-decoration:none;-webkit-text-emphasis:none;text-emphasis:none;text-height:auto;text-indent:0;text-justify:auto;text-outline:none;text-shadow:none;text-transform:none;text-wrap:normal;alignment-adjust:auto;alignment-baseline:baseline;-webkit-animation:0 1 ease 0 normal none;animation:0 1 ease 0 normal none;-webkit-animation-play-state:running;animation-play-state:running;-webkit-appearance:normal;-moz-appearance:normal;appearance:normal;azimuth:center;-webkit-backface-visibility:visible;backface-visibility:visible;background:none 0 0 auto repeat scroll padding-box transparent;background-color:transparent;-ms-filter:"progid:DXImageTransform.Microsoft.gradient(enabled=false)";-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .composer-popover[data-v-03349ba9]{position:absolute;right:.3%;vertical-align:middle;box-shadow:0 1px 15px 1px rgba(0,0,0,.08);transition-duration:.2s;transition-delay:0s;transform-style:flat;transform-origin:50% 50% 0;opacity:0;transition:all .2s linear;visibility:hidden;border:1px solid #ccc;width:40%;height:270px;overflow-y:hidden;overflow-x:hidden;z-index:1000}
-.composer-popover.active[data-v-03349ba9]{visibility:visible;opacity:1;bottom:70px;position:fixed;background-color: #fff !important}
-.composer-popover-input[data-v-03349ba9]{font-family:Roboto;font-weight:700;font-size:20px;color:#777;text-align:center;padding-left:20px;padding-top:10px;height:40px;width:100%;border:none;outline:0}
+.composer-popover.active[data-v-03349ba9]{visibility:visible;opacity:1;bottom:70px;position:fixed;background-color:#fff!important}
+.composer-popover-input[data-v-03349ba9]{font-family:Roboto;font-weight:700;font-size:20px;color:#777;text-align:center;padding-left:15px;padding-right:15px;padding-top:10px;height:40px;width:100%;border:none;outline:0}
 .composer-popover-input[data-v-03349ba9]::-webkit-input-placeholder{color:#777}
 .composer-popover-input[data-v-03349ba9]::-moz-placeholder{color:#777}
 .composer-popover-input[data-v-03349ba9]:-ms-input-placeholder{color:#777}
 .composer-popover-input[data-v-03349ba9]::-ms-input-placeholder{color:#777}
 .composer-popover-input[data-v-03349ba9]::placeholder{color:#777}
-.composer-popover-body[data-v-03349ba9]{position:absolute;top:80px;left:0;right:0;bottom:0;padding-bottom:10px;overflow-y:auto;overflow-x:hidden;margin-bottom:50px}
+.composer-popover-body[data-v-03349ba9]{position:absolute;top:40px;left:0;right:0;bottom:0;padding-bottom:10px;overflow-y:auto;overflow-x:hidden;margin-bottom:50px}
 .composer-popover-body[data-v-03349ba9]::-webkit-scrollbar{width:4px}
 .composer-popover-body[data-v-03349ba9]::-webkit-scrollbar-track{background:#ddd}
 .composer-popover-body[data-v-03349ba9]::-webkit-scrollbar-thumb{background:#bdbdbd;border-radius:4px}
