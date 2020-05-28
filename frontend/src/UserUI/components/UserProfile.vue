@@ -50,13 +50,13 @@
             <v-list-item-title
               class="headline"
             >
-              {{ UserProfile.username }}
+              {{ getUserName(UserProfile) }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <span
                 class="basic--text text--lighten"
               >
-                {{ ( UserProfile.profile.is_online == true ? 'В сети' : 'Не в сети' ) }}
+                {{ UserProfile.profile.status }}
               </span>
             </v-list-item-subtitle>
           </div>
@@ -281,6 +281,19 @@ export default {
               })
           }
         })
+    },
+    getUserName (user) {
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name + ' ' + user.last_name)
+        } else if (user.first_name) {
+          return user.first_name
+        } else if (user.last_name) {
+          return user.last_name
+        } else {
+          return user.username
+        }
+      }
     }
   }
 }
