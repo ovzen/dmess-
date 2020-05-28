@@ -224,7 +224,7 @@ SWAGGER_SETTINGS = {
     "is_superuser": False,  # Set to True to enforce admin only access
 }
 
-LOGIN_URL = '/auth/'
+LOGIN_URL = '/landing/'
 
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'

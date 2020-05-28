@@ -45,9 +45,14 @@
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#team">Team</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger"
-                            href="https://d-messenger.ml/documentation/">Documentation</a></li>
-                    <li class="nav-item"><a class="nav-link border px-2 rounded border-info js-scroll-trigger"
-                            href="https://d-messenger.ml/auth/login">Join Us</a></li>
+                            href="">Documentation</a></li>
+                    <li class="nav-item" style="margin-left: 50px">
+                        <a class="nav-link border px-2 rounded js-scroll-trigger"
+                            href="{% url 'Auth' %}register">Sign Up</a>
+                    </li>
+                    <li class="nav-item" style="margin-left: 15px">
+                        <a class="nav-link border px-2 rounded btn-primary js-scroll-trigger"
+                            href="{% url 'Auth' %}register" style="color: white">Sign In</a></li>
                 </ul>
             </div>
         </div>
@@ -397,9 +402,9 @@
         <div class="container text-center">
             <h2 class="mb-4" style="font-family: Roboto;">Interested in? Then you can safely become part of the
                 community!</h2>
-            <a class="btn  mx-4 btn-light btn-xl" href="https://d-messenger.ml/auth/register">Sign Up</a>
+            <a class="btn  mx-4 btn-light btn-xl" href="{% url 'Auth' %}register">Sign Up</a>
             <a class="btn mx-4 btn-xl" style="color: white; background-color: #6202EE;"
-                href="https://d-messenger.ml/auth/login">Sign In</a>
+                href="{% url 'Auth' %}">Sign In</a>
         </div>
     </section>
 
