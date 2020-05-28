@@ -106,7 +106,7 @@ import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
-require('vue-chat-emoji-dmess-mod/dist/vue-chat-emoji.css')
+require('./css/vue-chat-emoji.css')
 
 Vue.use(VueCookie)
 Vue.use(

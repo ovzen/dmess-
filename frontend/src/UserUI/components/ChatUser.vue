@@ -147,15 +147,14 @@
 </template>
 
 <script>
-import { VueChatEmoji, emojis } from 'vue-chat-emoji-dmess-mod'
+import { VueChatEmoji, emojis } from 'vue-chat-emoji'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
-require('vue-chat-emoji-dmess-mod/dist/vue-chat-emoji.css')
-
+require('./css/vue-chat-emoji.css')
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -226,6 +225,7 @@ export default {
       setTimeout(this.GetOldMessages, 1000)
     },
     sendMessage () {
+      console.log(this.$refs)
       if (this.message) {
         console.log('messagetext: ', this.message)
         this.$socket.send(
@@ -344,5 +344,9 @@ export default {
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
+}
+.composer-popover.active {
+  bottom: -100px !important;
+  left:200px !important;
 }
 </style>
