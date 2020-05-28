@@ -186,7 +186,7 @@
             v-if="contacts.length"
           >
             <div
-              v-for="contact in (userSearch != '' ? SortContacts : contacts)"
+              v-for="contact in (userSearch ? SortContacts : contacts)"
               :key="contact.id"
             >
               <v-list-item
@@ -560,6 +560,7 @@ export default {
       return this.$route
     },
     SortContacts () {
+      console.log('this.userSearch:', this.userSearch)
       return this.contacts.filter(contact => { return contact.Contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
   },
