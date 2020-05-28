@@ -77,6 +77,48 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item
+            @click.stop="dialogForDeleteChat = true"
+          >
+            <v-list-item-title>
+              Delete chat
+            </v-list-item-title>
+          </v-list-item>
+          <v-dialog
+            v-model="dialogForDeleteChat"
+            max-width="400"
+          >
+            <v-card>
+              <v-card-title class="headline">
+                Delete chat
+              </v-card-title>
+
+              <v-card-text>
+                Are you sure you want to delete this chat and all its messages?<br>
+                This action cannot be undone.
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="dialogForDeleteChat = false"
+                >
+                  CANCEL
+                </v-btn>
+
+                <v-btn
+                  color="red"
+                  text
+                  @click="dialogForDeleteChat = false"
+                >
+                  DELETE CHAT
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-list-item
             :to="{ name: 'MyProfile'}"
           >
             <v-list-item-title>
@@ -416,12 +458,12 @@
             top
             right
             absolute
-            @click.stop="dialog = true"
+            @click.stop="dialogForPlusButton = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
           <v-dialog
-            v-model="dialog"
+            v-model="dialogForPlusButton"
             max-width="700"
           >
             <v-card>
@@ -441,7 +483,7 @@
                 <v-btn
                   color="basic"
                   text
-                  @click="dialog = false"
+                  @click="dialogForPlusButton = false"
                 >
                   Okay, I agree with you
                 </v-btn>
@@ -535,7 +577,8 @@ export default {
     data: '',
     userSearch: '',
     messages: [],
-    dialog: false,
+    dialogForPlusButton: false,
+    dialogForDeleteChat: false,
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
@@ -746,6 +789,17 @@ export default {
     },
     clearSearch () {
       this.userSearch = ''
+    },
+    deleteChat () {
+      let deletedChatId = this.$route.params.id
+      api.axios
+        .delete('/api/dialog/' + this.$route.params.id + '/')
+        .then(res => {
+          console.log('res.status', res.status)
+          if (res.status === 204) {
+            this.dialogs.splice(this.dialogs.find(item => item.id === deletedChatId), 1)
+          }
+        })
     }
   }
 }
