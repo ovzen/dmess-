@@ -343,7 +343,7 @@
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       <span
-                        class="basic--text text--lighten"
+                        :class="(user.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
                       >
                         {{ user.profile.status }}
                       </span>
