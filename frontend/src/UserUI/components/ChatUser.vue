@@ -114,15 +114,6 @@
         class="d-inline-flex"
         :style="'padding-left:'+ (this.$vuetify.application.left+10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
       >
-        <picker
-          :data="emojiIndex"
-          @select="addEmoji"
-        />
-        <Emoji
-          absolute
-          style="padding-right: 35px;"
-          @click="selectedEmoji"
-        />
         <v-textarea
           ref="myTextArea"
           v-model="message"
@@ -134,6 +125,10 @@
           color="false"
           @keydown.enter.prevent=""
           @keyup.enter="sendMessage()"
+        />
+        <Emoji
+          style="padding-right: 28px;"
+          @click="selectedEmoji"
         />
         <v-btn
           icon
@@ -152,7 +147,6 @@
 </template>
 
 <script>
-import data from 'emoji-mart-vue-fast/data/all.json'
 import { VueChatEmoji, emojis } from 'vue-chat-emoji'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
