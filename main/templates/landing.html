@@ -11,7 +11,7 @@
     <meta name="author" content="" />
     <title>Dmess</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="{% static "assets/img/favicon.png" %}" />
+    <link rel="icon" type="image/x-icon" href="{% static "favicon.ico" %}" />
     <!-- Font Awesome icons (free version)-->
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/5.2.45/css/materialdesignicons.min.css">
     <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -45,10 +45,10 @@
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#team">Team</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger"
-                            href="">Documentation</a></li>
+                            href="https://digitalmessenger.readthedocs.io/ru/latest/">Documentation</a></li>
                     <li class="nav-item" style="margin-left: 50px">
-                        <a class="nav-link border px-2 rounded js-scroll-trigger"
-                            href="{% url 'Auth' %}register">Sign Up</a>
+                        <a class="nav-link border px-2 rounded js-scroll-trigger" href="{% url 'Auth' %}register">Sign
+                            Up</a>
                     </li>
                     <li class="nav-item" style="margin-left: 15px">
                         <a class="nav-link border px-2 rounded btn-primary js-scroll-trigger"
@@ -170,15 +170,35 @@
             <div class="carousel-item active">
                 <div class="row p-5" style="font-family: Roboto;">
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
-                        <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
+                        <div class="text-center border rounded-0 shadow-lg box w-25 p-3"
                             style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/1.jpg" %}" style="width: 160px; height: 160px;">
+                                src="{% static "people/andrew.jpg" %}" style="width: 160px; height: 160px;">
+                            <h4 class="name"><strong>Смирнов Андрей</h3></strong>
+                                <p class="title">Product owner<br>Master Yoda</p>
+                                <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
+                                    href="#"><a class="text-center" href="https://gitlab.informatics.ru/smirnov"><i
+                                            class="fab fa-gitlab "
+                                            style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                    <a class="text-center" href="https://tlgg.ru/srx64"><i class="fab fa-telegram-plane"
+                                            style="color: rgb(106,113,120);font-size: 20px;"></i></a><a
+                                        class="text-center" href="https://vk.com/srx64"><i class="fab fa-vk  "
+                                            style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row p-5" style="font-family: Roboto;">
+                    <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
+                        <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
+                            style="background-color: #ffffff;">
+                            <p class="rounded-circle my-5 justify-content-center align-items-center"
+                                style="font-size: 40px;">¯\_(ツ)_/¯</p>
                             <h4 class="name"><strong>Поздняков Александр</h3></strong>
                                 <p class="title">Team Lead.&nbsp;<br>Lead developer</p>
                                 <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                    href="#"><a class="text-center" href="#"><i class="fab fa-instagram"
-                                            style="color: rgb(106,113,120);font-size: 20px;"></i></a><a
-                                        class="text-center" href="#"><i class="fab fa-gitlab "
+                                    href="#"><a class="text-center" href="https://gitlab.informatics.ru/bodrbu"><i
+                                            class="fab fa-gitlab "
                                             style="color: rgb(106,113,120);font-size: 20px;"></i></a>
                                     <a class="text-center" href="#"><i class="fab fa-telegram-plane"
                                             style="color: rgb(106,113,120);font-size: 20px;"></i></a><a
@@ -188,55 +208,37 @@
                     </div>
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
-                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/2.jpg" %}" style="width: 160px; height: 160px;">
+                            style="background-color: #ffffff;"><img class="rounded-circle mb-3 img-fluid"
+                                src="{% static "people/fedor.jpg" %}" style="width: 160px; height: 160px;">
                             <h4 class="name"><strong>Иванов Федор</strong></h4>
-                            <p class="title">Team Lead.<br>Lead backend developer</p>
+                            <p class="title">Team Lead.<br>Lead backend and UI/UX developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram  "
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/fedor_ivn"><i
+                                        class="fab fa-gitlab" style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                <a class="text-center" href="https://tlgg.ru/fedor_ivn"><i
+                                        class="fab fa-telegram-plane "
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
-                                <a class="text-center" href="#"><i class="fab fa-telegram-plane "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-vk "
+                                    href="https://vk.com/fedor_ivn"><i class="fab fa-vk "
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
                         </div>
                     </div>
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
-                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/3.jpg" %}" style="width: 160px; height: 160px;">
+                            style="background-color: #ffffff;">
+                            <p class="rounded-circle my-5 justify-content-center align-items-center"
+                                style="font-size: 40px;">¯\_(ツ)_/¯</p>
                             <h4 class="name"><strong>Козырев Петр</strong></h4>
                             <p class="title">Lead frontend <br>developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram  "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/Petr_Kozyrev"><i
+                                        class="fab fa-gitlab " style="color: rgb(106,113,120);font-size: 20px;"></i></a>
                                 <a class="text-center" href="#"><i class="fab fa-telegram-plane "
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
                                     href="#"><i class="fab fa-vk "
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
                         </div>
                     </div>
-                    <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
-                        <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
-                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/4.jpg" %}" style="width: 160px; height: 160px;">
-                            <h4 class="name">Овсянников Евгений</h4>
-                            <p class="title">Frontend<br>developer</p>
-                            <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
-                                <a class="text-center" href="#"><i class="fab fa-telegram-plane "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-vk "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
             <div class="carousel-item">
@@ -244,68 +246,46 @@
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
                             style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/3.jpg" %}" style="width: 160px; height: 160px;">
+                                src="{% static "people/nikita.png" %}" style="width: 160px; height: 160px;">
                             <h4 class="name">Ткаченко Никита</h4>
                             <p class="title">Backend.<br>developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/KinderBug"><i
+                                        class="fab fa-gitlab" style="color: rgb(106,113,120);font-size: 20px;"></i></a>
                                 <a class="text-center" href="#"><i class="fab fa-telegram-plane "
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-vk"
+                                    href="https://vk.com/tka4nik"><i class="fab fa-vk"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
                         </div>
                     </div>
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
                             style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/5.jpg" %}" style="width: 160px; height: 160px;">
+                                src="{% static "people/anton.jpg" %}" style="width: 160px; height: 160px;">
                             <h4 class="name">Виноградов Антон</h4>
                             <p class="title">FullStack<br>developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram "
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/Himym89"><i
+                                        class="fab fa-gitlab " style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                <a class="text-center" href="https://tlgg.ru/Himym89"><i class="fab fa-telegram-plane "
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
-                                <a class="text-center" href="#"><i class="fab fa-telegram-plane "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-vk "
+                                    href="https://vk.com/id108850968"><i class="fab fa-vk "
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
                         </div>
                     </div>
+
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
                             style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/6.jpg" %}" style="width: 160px; height: 160px;">
-                            <h4 class="name">Галкин Клим</h4>
-                            <p class="title">Designer<br>Frontend developer</p>
-                            <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab "
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
-                                <a class="text-center" href="#"><i class="fab fa-telegram-plane"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-vk"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
-                        </div>
-                    </div>
-                    <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
-                        <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
-                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/3.jpg" %}" style="width: 160px; height: 160px;">
+                                src="{% static "people/aleksandrT.jpg" %}" style="width: 160px; height: 160px;">
                             <h4 class="name">Цыганок Александр</h4>
                             <p class="title">Backend<br>developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram"
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/rapier"><i
+                                        class="fab fa-gitlab" style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                <a class="text-center" href="https://tlgg.ru/r4p1er"><i class="fab fa-telegram-plane"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
-                                <a class="text-center" href="#"><i class="fab fa-telegram-plane"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-vk"
+                                    href="https://vk.com/a18564t"><i class="fab fa-vk"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
                         </div>
                     </div>
@@ -315,15 +295,14 @@
                 <div class="row p-5" style="font-family: Roboto;">
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
-                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/1.jpg" %}" style="width: 160px; height: 160px;">
+                            style="background-color: #ffffff;">
+                            <p class="rounded-circle my-5 justify-content-center align-items-center"
+                                style="font-size: 40px;">¯\_(ツ)_/¯</p>
                             <h4 class="name">Белоусов Егор</h4>
                             <p class="title">Backend<br>developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/mregor_787"><i
+                                        class="fab fa-gitlab" style="color: rgb(106,113,120);font-size: 20px;"></i></a>
                                 <a class="text-center" href="#"><i class="fab fa-telegram-plane"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
                                     href="#"><i class="fab fa-vk"
@@ -332,15 +311,14 @@
                     </div>
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
-                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/7.jpg" %}" style="width: 160px; height: 160px;">
-                            <h4 class="name">Акылгали Айтаза</h4>
+                            style="background-color: #ffffff;">
+                            <p class="rounded-circle my-5 justify-content-center align-items-center"
+                                style="font-size: 40px;">¯\_(ツ)_/¯</p>
+                            <h4 class="name">Айтаза Акылгали</h4>
                             <p class="title">Backend<br>developer<br></p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/optimus"><i
+                                        class="fab fa-gitlab" style="color: rgb(106,113,120);font-size: 20px;"></i></a>
                                 <a class="text-center" href="#"><i class="fab fa-telegram-plane"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
                                     href="#"><i class="fab fa-vk"
@@ -349,15 +327,51 @@
                     </div>
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
-                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/4.jpg" %}" style="width: 160px; height: 160px;">
+                            style="background-color: #ffffff;">
+                            <p class="rounded-circle my-5 justify-content-center align-items-center"
+                                style="font-size: 40px;">¯\_(ツ)_/¯</p>
                             <h4 class="name">Смирнов Валерий</h4>
                             <p class="title">Docs frontend<br>developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram"
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/Zanelian"><i
+                                        class="fab fa-gitlab" style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                <a class="text-center" href="#"><i class="fab fa-telegram-plane"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                    href="#"><i class="fab fa-vk"
+                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <div class="row p-5" style="font-family: Roboto;">
+                    <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
+                        <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
+                            style="background-color: #ffffff;"><img class="rounded-circle mb-3"
+                                src="{% static "people/evgenii.png" %}" style="width: 160px; height: 160px;">
+                            <h4 class="name">Овсянников Евгений</h4>
+                            <p class="title">Frontend<br>developer</p>
+                            <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/ovzen"><i
+                                        class="fab fa-gitlab " style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                <a class="text-center" href="https://tlgg.ru/ovzenR"><i class="fab fa-telegram-plane "
+                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
+                                    href="https://vk.com/ovzen"><i class="fab fa-vk "
+                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
+                        </div>
+                    </div>
+                    <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
+                        <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
+                            style="background-color: #ffffff;">
+                            <p class="rounded-circle my-5 justify-content-center align-items-center"
+                                style="font-size: 40px;">¯\_(ツ)_/¯</p>
+                            <h4 class="name">Горячкин Александр</h4>
+                            <p class="title">FullStack<br>developer</p>
+                            <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/JeffHolla"><i
+                                        class="fab fa-gitlab" style="color: rgb(106,113,120);font-size: 20px;"></i></a>
                                 <a class="text-center" href="#"><i class="fab fa-telegram-plane"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
                                     href="#"><i class="fab fa-vk"
@@ -367,32 +381,32 @@
                     <div class="col d-lg-flex d-xl-flex justify-content-lg-center justify-content-xl-center w-25">
                         <div class="text-center border rounded-0 shadow-lg box w-75 p-3"
                             style="background-color: #ffffff;"><img class="rounded-circle mb-3"
-                                src="{% static "people/3.jpg" %}" style="width: 160px; height: 160px;">
-                            <h4 class="name">Горячкин Александр</h4>
-                            <p class="title">FullStack<br>developer</p>
+                                src="{% static "people/klim.jpg" %}" style="width: 160px; height: 160px;">
+                            <h4 class="name">Галкин Клим</h4>
+                            <p class="title">Designer<br>Frontend developer</p>
                             <div class="d-lg-flex d-xl-flex justify-content-around align-items-center align-items-lg-center align-items-xl-center social w-100"
-                                href="#"><a class="text-center" href="#"><i class="fab fa-instagram"
+                                href="#"><a class="text-center" href="https://gitlab.informatics.ru/Shifu"><i
+                                        class="fab fa-gitlab " style="color: rgb(106,113,120);font-size: 20px;"></i></a>
+                                <a class="text-center" href="https://tlgg.ru/sh1fu_ctf"><i class="fab fa-telegram-plane"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-gitlab"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a>
-                                <a class="text-center" href="#"><i class="fab fa-telegram-plane"
-                                        style="color: rgb(106,113,120);font-size: 20px;"></i></a><a class="text-center"
-                                    href="#"><i class="fab fa-vk"
+                                    href="https://vk.com/klim_shifu"><i class="fab fa-vk"
                                         style="color: rgb(106,113,120);font-size: 20px;"></i></a></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div><a class="carousel-control-prev" href="#carousel-1" role="button" data-slide="prev"
-                style="width:50px"><span class="carousel-control-prev-icon"></span><span
-                    class="sr-only">Previous</span></a><a class="carousel-control-next" href="#carousel-1" role="button"
-                data-slide="next" style="width:50px"><span class="carousel-control-next-icon"></span><span
-                    class="sr-only">Next</span></a></div>
+        <div><a class="carousel-control-prev" href="#carousel-1" role="button" data-slide="prev" style="width:100px"><i
+                    class="fas fa-caret-left" style="font-size: 36px;"></i><span class="sr-only">Previous</span></a><a
+                class="carousel-control-next" href="#carousel-1" role="button" style="width:100px" data-slide="next"><i
+                    class="fas fa-caret-right" style="font-size: 36px;"></i><span class="sr-only">Next</span></a></div>
         <ol class="carousel-indicators">
-            <li data-target="#carousel-1" data-slide-to="0" class="active"></li>
-            <li data-target="#carousel-1" data-slide-to="1"></li>
-            <li data-target="#carousel-1" data-slide-to="2"></li>
+            <li data-target="#carousel-1" data-slide-to="0" class="active" style="background-color: rgb(98,2,238);">
+            </li>
+            <li data-target="#carousel-1" data-slide-to="1" style="background-color: rgb(98,2,238);"></li>
+            <li data-target="#carousel-1" data-slide-to="2" style="background-color: rgb(98,2,238);"></li>
+            <li data-target="#carousel-1" data-slide-to="3" style="background-color: rgb(98,2,238);"></li>
+            <li data-target="#carousel-1" data-slide-to="4" style="background-color: rgb(98,2,238);"></li>
         </ol>
     </div>
 
@@ -403,8 +417,8 @@
             <h2 class="mb-4" style="font-family: Roboto;">Interested in? Then you can safely become part of the
                 community!</h2>
             <a class="btn  mx-4 btn-light btn-xl" href="{% url 'Auth' %}register">Sign Up</a>
-            <a class="btn mx-4 btn-xl" style="color: white; background-color: #6202EE;"
-                href="{% url 'Auth' %}">Sign In</a>
+            <a class="btn mx-4 btn-xl" style="color: white; background-color: #6202EE;" href="{% url 'Auth' %}">Sign
+                In</a>
         </div>
     </section>
 
