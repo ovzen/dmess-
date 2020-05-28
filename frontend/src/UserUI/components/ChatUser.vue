@@ -147,14 +147,14 @@
 </template>
 
 <script>
-import { VueChatEmoji, emojis } from 'vue-chat-emoji'
+import { VueChatEmoji, emojis } from 'vue-chat-emoji-dmess-mod'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
-require('vue-chat-emoji/dist/vue-chat-emoji.css')
+require('vue-chat-emoji-dmess-mod/dist/vue-chat-emoji.css')
 
 Vue.use(VueCookie)
 Vue.use(

@@ -429,7 +429,7 @@ import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
 import settings from './components/settings'
 import moment from 'moment'
-import { emojis } from 'vue-chat-emoji'
+import { emojis } from 'vue-chat-emoji-dmess-mod'
 
 Vue.use(VueCookie)
 var tabs = [

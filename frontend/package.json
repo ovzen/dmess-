@@ -14,7 +14,7 @@
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
     "vue": "^2.5.22",
-    "vue-chat-emoji": "^1.1.21",
+    "vue-chat-emoji-dmess-mod": "^0.1.1",
     "vue-cookie": "^1.1.4",
     "vue-native-websocket": "^2.0.14",
     "vue-router": "^3.1.5",
