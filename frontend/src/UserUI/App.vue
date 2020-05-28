@@ -31,19 +31,19 @@
         v-if="Route.name === 'ChatUser'"
       >
         <v-list-item>
-          <v-list-item-avatar v-if="ChatInfo.profile.avatar">
+          <v-list-item-avatar v-if="DialogUser.profile.avatar">
             <v-img
-              :src="ChatInfo.profile.avatar"
+              :src="DialogUser.profile.avatar"
             />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="title"
             >
-              {{ ChatInfo.username }}
+              {{ DialogUser.username }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              {{ ChatInfo.profile.status }}
+              {{ DialogUser.profile.status }}
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -88,7 +88,6 @@
     </v-app-bar>
 
     <v-navigation-drawer
-      v-model="drawer"
       style=""
       :width="($vuetify.breakpoint.width * 0.225 > 600 ? 600 : $vuetify.breakpoint.width * 0.225)"
       app
@@ -147,67 +146,7 @@
         id="dynamic-component"
       >
         <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
-        <div v-if="currentTab.name == 'mdi-message-text'">
-          <v-divider />
-          <v-col>
-            <v-text-field
-              clearable
-              solo
-              color="basic"
-              background-color="grey lighten-2"
-              dense
-              flat
-              hide-details
-              prepend-inner-icon="mdi-magnify"
-              label="Search for dialogs"
-              style="border-radius:50px; max-width:450px;"
-            />
-          </v-col>
-          <v-divider />
-          <v-list-item
-            v-for="(dialog, i) in dialogs"
-            :key="i"
-            @click="openDialog(dialog.id)"
-          >
-            <v-list-item-avatar>
-              <v-avatar
-                size="36px"
-                color="basic"
-              >
-                <span
-                  class="white--text"
-                >
-                  NU
-                </span>
-              </v-avatar>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ getContactName(dialog.users_detail) }}
-              </v-list-item-title>
-              <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
-                <span
-                  style="color:#757575; font-size:115%;"
-                >
-                  {{ (dialog.last_message ? dialog.last_message.text : '') }}
-                </span>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-list-item-action-text v-if="dialog.last_message">
-                {{ formatTime(dialog.last_message.create_date) }}
-              </v-list-item-action-text>
-              <v-avatar
-                v-if="GetUnreadMessages(dialog)"
-                color="basic"
-                class="subheading white--text"
-                size="24"
-                v-text="GetUnreadMessages(dialog)"
-              />
-            </v-list-item-action>
-          </v-list-item>
-        </div>
-        <v-divider />
+        <DialogsList v-if="currentTab.name == 'mdi-message-text'" />
         <settings
           v-if="currentTab.name == 'mdi-settings'"
         />
@@ -300,7 +239,7 @@ import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
 import settings from './components/settings'
 import ContactList from './components/ContactList'
-import moment from 'moment'
+import DialogsList from './components/DialogsList'
 import { mapActions, mapGetters } from 'vuex'
 
 Vue.use(VueCookie)
@@ -330,42 +269,30 @@ var tabs = [
     }
   }
 ]
-let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/dialog_notifications/')
 export default {
   new: '#dynamic-component',
-  components: { SystemInfo, settings, ContactList },
+  components: { SystemInfo, settings, ContactList, DialogsList },
   data: () => ({
-    login: '',
-    button: 'Войти',
-    ChatInfo: { username: 'Загрузка...', profile: { avatar: null, status: 'Загрузка...' } },
-    password: '',
-    data: '',
     userSearch: '',
-    messages: [],
     dialog: false,
-    id: 0,
-    drawer: true,
-    alwaysOnDisplay: false,
-    expandOnHover: false,
-    group: [],
-    for_user: true,
-    unread_messages_qty: [],
-    username: 'Test',
-    firstName: undefined,
-    lastName: undefined,
-    user_id: undefined,
-    avatar: '',
-    isOnline: false,
     currentTab: tabs[0],
-    tabs: tabs,
-    contacts: [],
-    findedUsers: [],
-    dialogs: []
+    tabs: tabs
   }),
   computed: {
-    ...mapGetters(['getUserId', 'getClient', 'getClientProfile']),
+    ...mapGetters(['getUserId', 'getClient', 'getClientProfile', 'getDialogsList', 'getUsersByDialogId']),
     Route () {
       return this.$route
+    },
+    DialogUser () {
+      if (typeof this.getUsersByDialogId(this.$route.params.id) !== 'undefined') {
+        if (this.getUsersByDialogId(this.$route.params.id).length > 0) {
+          return this.getUsersByDialogId(this.$route.params.id)[0]
+        } else {
+          return { username: 'Произошла ошибка', profile: { avatar: null, status: '' }
+          }
+        }
+      }
+      return { username: 'Загрузка...', profile: { avatar: null, status: 'Загрузка...' } }
     },
     MakeName () {
       if (typeof this.getClient !== 'undefined') {
@@ -404,7 +331,7 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: ['disconnect', 'getChatInfo']
+    $route: ['disconnect']
   },
   created () {
     if (this.$cookie.get('Authentication')) {
@@ -415,44 +342,19 @@ export default {
   },
   mounted () {
     let Vue = this
-    ws.onmessage = function (event) {
-      let newDialog = JSON.parse(event.data).data
-      for (let dialog in Vue.dialogs) {
-        if (Vue.dialogs[dialog].id === newDialog.id) {
-          Vue.dialogs[dialog] = newDialog
-          console.log(newDialog)
-          Vue.$forceUpdate()
-        }
-      }
-    }
     document.addEventListener('keydown', function (event) {
       const key = event.key // Or const {key} = event; in ES6+
-      if (key === 'Escape' && Vue.Route.fullPath !== '/') {
+      if (key === 'Escape' && Vue.$route.fullPath !== '/') {
         Vue.$router.push('/')
       }
     })
     setInterval(this.updateToken, 1000)
-    this.getDialogsList()
     this.getUserData(this.getUserId)
     this.getContactsData()
-    console.log(this.getUserId)
-    this.username = jwt.decode(this.$cookie.get('Authentication')).name
-    if (this.$route.name === 'ChatUser') {
-      this.getChatInfo()
-    }
+    this.getDialogsData(this.getUserId)
   },
   methods: {
-    ...mapActions(['getUserData', 'getContactsData']),
-    GetUnreadMessages (dialog) {
-      console.log(dialog.unread_messages[dialog.users[1]])
-      if (typeof this.user_id !== 'undefined') {
-        if (dialog.users[0] === this.user_id) {
-          return dialog.unread_messages[dialog.users[0]]
-        }
-        return dialog.unread_messages[dialog.users[1]]
-      }
-      return ''
-    },
+    ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
     GoBack () {
       this.$router.go(-1)
     },
@@ -469,78 +371,11 @@ export default {
         )
       }
     },
-    getDialogsList () {
-      api.axios
-        .get('/api/dialog/', { params: { users: this.user_id } })
-        .then(response => {
-          if (response.data) {
-            this.dialogs = response.data.results
-          }
-        })
-        .catch(error => console.log(error))
-    },
-    openDialog (dialogId) {
-      // console.log('Route ID:', this.$route.params.id)
-      if (this.$route.params.id !== dialogId) {
-        this.$router.push({ name: 'ChatUser', params: { id: dialogId } })
-      }
-    },
     allusers () {
       this.$router.push({ name: 'allUser' })
     },
     goProfilePage () {
       this.$router.push({ name: 'Profile', params: { id: this.user_id } })
-    },
-    getChatInfo () {
-      if (this.$route.name === 'ChatUser') {
-        api.axios
-          .get('/api/dialog/' + this.$route.params.id + '/')
-          .then(response => {
-            if (response.status === 200) {
-              if (response.data.users_detail[0].username === this.username && typeof response.data.users_detail[1] !== 'undefined') {
-                this.ChatInfo = response.data.users_detail[1]
-              } else {
-                if (response.data.users_detail[0].username !== this.username) {
-                  this.ChatInfo = response.data.users_detail[0]
-                } else {
-                  this.ChatInfo = { username: 'Произошла ошибка', profile: { avatar: null, status: '' } }
-                }
-              }
-            }
-          })
-          .catch(error => console.log(error))
-      }
-    },
-    formatTime (datetime) {
-      if (datetime) {
-        if (moment(datetime).isBefore(moment(), 'day')) {
-          return moment(String(datetime)).format('DD.MM.YYYY')
-        } else {
-          return moment(String(datetime)).format('hh:mm')
-        }
-      }
-    },
-    getUserName (user) {
-      if (user.first_name && user.last_name) {
-        return (user.first_name + ' ' + user.last_name)
-      } else if (user.first_name) {
-        return user.first_name
-      } else if (user.last_name) {
-        return user.last_name
-      } else {
-        return user.username
-      }
-    },
-    getContact (users) {
-      return (users[0].id === this.user_id) ? users[1] : users[0]
-    },
-    getContactName (users) {
-      // console.log(users)
-      if (users.length > 1) {
-        return this.getUserName(this.getContact(users))
-      } else {
-        return 'В диалоге нет других пользователей'
-      }
     }
   }
 }

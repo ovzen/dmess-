@@ -143,6 +143,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
@@ -181,6 +182,7 @@ export default {
     this.$disconnect()
   },
   methods: {
+    ...mapActions(['getDialogsData']),
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
       var elemTop = rect.top
@@ -244,7 +246,7 @@ export default {
       this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.diailogId + '/')
       api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/').then(res => {
         if (res.status === 200) {
-          this.$root.$children[0].getDialogsList()
+          this.getDialogsData()
         }
       })
     },
@@ -258,7 +260,7 @@ export default {
           user_detail: { username: JSON.parse(data.data).author },
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
-        this.$root.$children[0].getDialogsList()
+        this.getDialogsData()
         this.dialogMessagesLength += 1
         var Data = this
         Vue.nextTick(function () {

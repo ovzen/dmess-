@@ -119,7 +119,7 @@
 import api from '../api'
 import { mapActions, mapGetters } from 'vuex'
 export default {
-  name: 'Example',
+  name: 'ContactList',
   data: () => ({
     userSearch: '',
     findedUsers: ''

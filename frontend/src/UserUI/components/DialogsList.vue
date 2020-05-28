@@ -1,0 +1,178 @@
+<template>
+  <div>
+    <div>
+      <v-divider />
+      <v-col>
+        <v-text-field
+          clearable
+          solo
+          color="basic"
+          background-color="grey lighten-2"
+          dense
+          flat
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          label="Search for dialogs"
+          style="border-radius:50px; max-width:450px;"
+        />
+      </v-col>
+      <v-divider />
+      <v-list-item
+        v-for="dialog in getDialogsList"
+        :key="dialog.id"
+        :to="{ name: 'ChatUser', params: { id: dialog.id } }"
+      >
+        <v-list-item-avatar>
+          <v-avatar
+            v-if="getUsersByDialog(dialog).length > 0"
+            size="36px"
+            color="basic"
+          >
+            <v-img
+              v-if="getUsersByDialog(dialog)[0].profile.avatar !== null"
+              :src="getUsersByDialog(dialog)[0].profile.avatar"
+            />
+            <span
+              v-else
+              class="white--text"
+            >
+              {{ MakeAvatar(getUsersByDialog(dialog)[0]) }}
+            </span>
+          </v-avatar>
+          <v-avatar
+            v-else
+            size="36px"
+            color="basic"
+          />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ getContactName(dialog.users_detail) }}
+          </v-list-item-title>
+          <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
+            <span
+              style="color:#757575; font-size:115%;"
+            >
+              {{ (dialog.last_message ? dialog.last_message.text : '') }}
+            </span>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-action-text v-if="dialog.last_message">
+            {{ formatTime(dialog.last_message.create_date) }}
+          </v-list-item-action-text>
+          <v-avatar
+            v-if="GetUnreadMessages(dialog)"
+            color="basic"
+            class="subheading white--text"
+            size="24"
+            v-text="GetUnreadMessages(dialog)"
+          />
+        </v-list-item-action>
+      </v-list-item>
+    </div>
+    <v-divider />
+  </div>
+</template>
+
+<script>
+import api from '../api'
+import moment from 'moment'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/dialog_notifications/')
+
+export default {
+  name: 'DialogsList',
+  data: () => ({
+    userSearch: '',
+    findedUsers: ''
+  }),
+  computed: {
+    ...mapGetters(['getDialogsList', 'getUsersByDialog', 'getUserProfileByDialog', 'getUserId', 'isDialogDownloaded']),
+    SortContacts () {
+      return this.getContacts.filter(contact => { return contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
+    }
+  },
+  mounted () {
+    let Vue = this
+    ws.onmessage = function (event) {
+      let UpdateDialog = JSON.parse(event.data).data
+      Vue.UpdateDialogByWs(UpdateDialog)
+    }
+    this.DownloadUsersInDialogs()
+  },
+  methods: {
+    ...mapMutations(['UpdateDialogByWs']),
+    ...mapActions(['getUserData']),
+    DownloadUsersInDialogs () {
+      if (this.isDialogDownloaded === true) {
+        for (let dialog in this.getDialogsList) {
+          for (let user in this.getDialogsList[dialog].users) {
+            this.getUserData(this.getDialogsList[dialog].users[user])
+          }
+        }
+      } else {
+        setTimeout(this.DownloadUsersInDialogs, 250)
+      }
+    },
+    MakeAvatar (UserProfile) {
+      if (typeof UserProfile !== 'undefined') {
+        if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
+          return UserProfile.first_name[0] + UserProfile.last_name[0]
+        }
+        if (UserProfile.first_name !== '') {
+          return UserProfile.first_name[0]
+        }
+        if (UserProfile.last_name !== '') {
+          return UserProfile.last_name[0]
+        }
+        if (UserProfile.username !== '') {
+          return UserProfile.username[0]
+        }
+      }
+      return '...'
+    },
+    getUserName (user) {
+      if (user.first_name && user.last_name) {
+        return (user.first_name + ' ' + user.last_name)
+      } else if (user.first_name) {
+        return user.first_name
+      } else if (user.last_name) {
+        return user.last_name
+      } else {
+        return user.username
+      }
+    },
+    GetUnreadMessages (dialog) {
+      console.log(dialog.unread_messages[dialog.users[1]])
+      if (typeof this.getUserId !== 'undefined') {
+        if (dialog.users[0] === this.getUserId) {
+          return dialog.unread_messages[dialog.users[0]]
+        }
+        return dialog.unread_messages[dialog.users[1]]
+      }
+      return ''
+    },
+    formatTime (datetime) {
+      if (datetime) {
+        if (moment(datetime).isBefore(moment(), 'day')) {
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        } else {
+          return moment(String(datetime)).format('hh:mm')
+        }
+      }
+    },
+    getContactName (users) {
+      // console.log(users)
+      if (users.length > 1) {
+        return this.getUserName(this.getContact(users))
+      } else {
+        return 'В диалоге нет других пользователей'
+      }
+    },
+    getContact (users) {
+      return (users[0].id === this.user_id) ? users[1] : users[0]
+    }
+  }
+}
+</script>
