@@ -106,6 +106,7 @@ import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
+require('./css/vue-chat-emoji.css')
 
 Vue.use(VueCookie)
 Vue.use(
@@ -203,7 +204,6 @@ export default {
         .then(response => {
           console.log('read messages')
           console.log(response.data.status)
-
         })
     }
   }
