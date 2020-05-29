@@ -11,7 +11,7 @@ const router = new Router({
   mode: 'history',
   base: '/admin/',
   routes: [
-    { path: '/', redirect: '/UserActivity/' },
+    { path: '/', redirect: '/Dashboard/' },
     {
       path: '/UserActivity/',
       name: 'UserActivity',

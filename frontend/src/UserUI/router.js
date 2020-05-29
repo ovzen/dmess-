@@ -12,7 +12,7 @@ import Error500 from './components/Error500.vue'
 import Error404 from './components/Error404.vue'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: '/',
   routes: [
@@ -57,14 +57,20 @@ export default new Router({
       component: MyProfile
     },
     {
-      path: '/Error404',
+      path: '/404',
       name: 'Error404',
       component: Error404
     },
     {
-      path: '/Error500',
+      path: '/500',
       name: 'Error500',
       component: Error500
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
   ]
 })
+
+export default router
