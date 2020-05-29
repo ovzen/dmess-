@@ -51,7 +51,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              {{ getContactName(dialog.users) }}
+              {{ getContactName(getUsersByDialog(dialog)[0]) }}
             </v-list-item-title>
             <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
               <span
@@ -185,8 +185,8 @@ export default {
     },
     getContactName (users) {
       // console.log(users)
-      if (users.length > 1) {
-        return this.getUserName(this.getUserById(users[0]))
+      if (typeof users !== 'undefined') {
+        return this.getUserName(users)
       } else {
         return 'В диалоге нет других пользователей'
       }

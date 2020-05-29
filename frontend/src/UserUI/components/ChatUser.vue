@@ -13,7 +13,7 @@
         py-2
       >
         <div
-          v-if="isOwnMessage(message.user)"
+          v-if="!isOwnMessage(message.user)"
           class="text-left"
         >
           <v-card
@@ -42,7 +42,7 @@
           py-0
         >
           <div
-            v-if="!isOwnMessage(message.user)"
+            v-if="isOwnMessage(message.user)"
             class="text-left"
           >
             <v-card
@@ -105,38 +105,36 @@
     </v-row>
     <v-footer
       color="background_white"
-      style="position:fixed;bottom:-12px;width:100%;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
+      fixed
+      inset
+      app
+      class="d-inline-flex"
+      style="padding:5px;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
     >
-      <div style="width:100%;height:100%">
-        <v-form
-          class="d-inline-flex"
-          style="padding-left:10px;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px"
-        >
-          <v-textarea
-            ref="myTextArea"
-            v-model="message"
-            auto-grow
-            autofocus
-            rows="1"
-            placeholder="Message"
-            hide-details
-            color="false"
-            @keydown.enter.prevent=""
-            @keyup.enter="sendMessage()"
-          />
-          <v-btn
-            icon
-            color="basic"
-            class="align-self-sm-end"
-            style="padding:5px;"
-            @click="sendMessage()"
-          >
-            <v-icon>
-              mdi-send
-            </v-icon>
-          </v-btn>
-        </v-form>
-      </div>
+      <v-textarea
+        ref="myTextArea"
+        v-model="message"
+        auto-grow
+        autofocus
+        rows="1"
+        placeholder="Message"
+        hide-details
+        color="false"
+        style="margin-top:-5px;margin-bottom:7px"
+        @keydown.enter.prevent=""
+        @keyup.enter="sendMessage()"
+      />
+      <v-btn
+        icon
+        color="basic"
+        class="align-self-sm-end"
+        style="margin-bottom:5px"
+        @click="sendMessage()"
+      >
+        <v-icon>
+          mdi-send
+        </v-icon>
+      </v-btn>
     </v-footer>
   </div>
 </template>
@@ -259,7 +257,7 @@ export default {
         this.messages.unshift({
           id: computedMessageId,
           text: JSON.parse(data.data).message,
-          user: JSON.parse(data.data).author,
+          user_detail: { username: JSON.parse(data.data).author },
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
         })
         this.getDialogsData()
