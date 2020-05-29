@@ -66,6 +66,46 @@
             </v-card>
           </div>
         </v-container>
+        <v-container
+          class="d-flex"
+          py-0
+        >
+          <div
+            v-if="isOwnMessage(message.user)"
+            class="text-left"
+          >
+            <v-card
+              style="border-radius: 20px;"
+              max-width="460px"
+              class="d-flex align-content-start flex-wrap"
+              flat
+            >
+              <v-container>
+                <!-- <v-btn> -->
+                <v-img
+                  class="align-content-center"
+                  src="https://www.technistone.com/color-range/image/surface/polished/deska_gobi_black_p.jpg"
+                  max-width="440px"
+                  min-width="120px"
+                  @click.stop="show('https://www.technistone.com/color-range/image/surface/polished/deska_gobi_black_p.jpg')"
+                />
+                <!-- </v-btn> -->
+              </v-container>
+              <v-card-text>
+                <span
+                  class="font-weight-light message_color--text"
+                >
+                  {{ message.text }}
+                </span>
+                <span
+                  class="float-right ml-2"
+                >
+                  {{ formatTime(message.create_date) }}
+                </span>
+              </v-card-text>
+            </v-card>
+          </div>
+        </v-container>
       </v-container>
     </v-row>
     <v-row
@@ -103,6 +143,13 @@
         </span>
       </div>
     </v-row>
+    <v-dialog
+      v-model="showImage"
+    >
+      <v-img
+        :src="link"
+      />
+    </v-dialog>
     <v-footer
       color="background_white"
       fixed
@@ -162,7 +209,9 @@ export default {
     messages: [],
     message: '',
     dialogMessagesLength: 0,
-    diailogId: 0
+    diailogId: 0,
+    showImage: false,
+    link: ''
   }),
   computed: {
     ...mapGetters(['getUserId'])
@@ -183,6 +232,10 @@ export default {
   },
   methods: {
     ...mapActions(['getDialogsData']),
+    show (link) {
+      this.showImage = true
+      this.link = link
+    },
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
       var elemTop = rect.top
