@@ -13,7 +13,7 @@
         py-2
       >
         <div
-          v-if="!isOwnMessage(message.user)"
+          v-if="isOwnMessage(message.user)"
           class="text-left"
         >
           <v-card
@@ -42,7 +42,7 @@
           py-0
         >
           <div
-            v-if="isOwnMessage(message.user)"
+            v-if="!isOwnMessage(message.user)"
             class="text-left"
           >
             <v-card
