@@ -13,7 +13,7 @@
         py-2
       >
         <div
-          v-if="isOwnMessage(message.user_detail.username)"
+          v-if="!isOwnMessage(message.user)"
           class="text-left"
         >
           <v-card
@@ -42,7 +42,7 @@
           py-0
         >
           <div
-            v-if="!isOwnMessage(message.user_detail.username)"
+            v-if="isOwnMessage(message.user)"
             class="text-left"
           >
             <v-card
@@ -105,14 +105,11 @@
     </v-row>
     <v-footer
       color="background_white"
-      fixed
-      padless
-      inset
-      style="box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
+      style="position:fixed;bottom:-12px;width:100%;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
     >
       <v-form
         class="d-inline-flex"
-        :style="'padding-left:'+ (this.$vuetify.application.left+10) +'px;width:100%;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px'"
+        style="padding-left:10px;padding:10px;padding-bottom:13px;padding-top:0px;margin-top:-5px"
       >
         <v-textarea
           ref="myTextArea"
@@ -143,7 +140,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
@@ -167,6 +164,9 @@ export default {
     dialogMessagesLength: 0,
     diailogId: 0
   }),
+  computed: {
+    ...mapGetters(['getUserId'])
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['updateDialog']
@@ -270,7 +270,7 @@ export default {
       }
     },
     isOwnMessage (author) {
-      return author === jwt.decode(this.$cookie.get('Authentication')).name
+      return author === this.getUserId
     },
     formatTime (datetime) {
       if (datetime) {
