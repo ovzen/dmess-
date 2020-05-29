@@ -25,7 +25,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'dmess.settings'
 django.setup()
 
 # -- Project information -----------------------------------------------------
-
+master_doc = 'index'
 project = 'Dmess'
 copyright = '2020, MSHP group s101-04'
 author = 'MSHP group s101-04'

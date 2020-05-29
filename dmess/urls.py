@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls.static import static
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from rest_framework_simplejwt import views as jwt_views
@@ -48,7 +49,7 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path(
         'admin/',
-        login_required(TemplateView.as_view(template_name="admin.html")),
+        staff_member_required(TemplateView.as_view(template_name="admin.html")),
         name="adminUI"
     ),
     re_path(

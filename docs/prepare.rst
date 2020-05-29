@@ -27,6 +27,8 @@
     source venv/bin/activate
     pip install --upgrade pip
     pip install -r requirements.txt
+    pip install -r ci/pylint_requirements.txt
+    pip install -r ci/docs_requirements.txt
 
 4. Выполняем базовые действия в django
 

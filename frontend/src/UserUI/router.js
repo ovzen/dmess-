@@ -8,6 +8,8 @@ import KnowledgeBase from './components/KnowledgeBase'
 import ChatUser from './components/ChatUser'
 import UserProfile from './components/UserProfile'
 import MyProfile from './components/MyProfile'
+import Error500 from './components/Error500.vue'
+import Error404 from './components/Error404.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -53,6 +55,16 @@ export default new Router({
       path: '/MyProfile',
       name: 'MyProfile',
       component: MyProfile
+    },
+    {
+      path: '/Error404',
+      name: 'Error404',
+      component: Error404
+    },
+    {
+      path: '/Error500',
+      name: 'Error500',
+      component: Error500
     }
   ]
 })
