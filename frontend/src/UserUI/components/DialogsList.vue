@@ -51,7 +51,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              {{ getContactName(dialog.users_detail) }}
+              {{ getContactName(dialog.users) }}
             </v-list-item-title>
             <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
               <span
@@ -110,7 +110,7 @@ export default {
     findedUsers: ''
   }),
   computed: {
-    ...mapGetters(['getDialogsList', 'getUsersByDialog', 'getUserProfileByDialog', 'getUserId', 'isDialogDownloaded']),
+    ...mapGetters(['getDialogsList', 'getUsersByDialog', 'getUserProfileByDialog', 'getUserId', 'isDialogDownloaded', 'getUserById']),
     SortContacts () {
       return this.getContacts.filter(contact => { return contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
@@ -166,7 +166,6 @@ export default {
       }
     },
     GetUnreadMessages (dialog) {
-      console.log(dialog.unread_messages[dialog.users[1]])
       if (typeof this.getUserId !== 'undefined') {
         if (dialog.users[0] === this.getUserId) {
           return dialog.unread_messages[dialog.users[0]]
@@ -187,7 +186,7 @@ export default {
     getContactName (users) {
       // console.log(users)
       if (users.length > 1) {
-        return this.getUserName(this.getContact(users))
+        return this.getUserName(this.getUserById(users[0]))
       } else {
         return 'В диалоге нет других пользователей'
       }
