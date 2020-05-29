@@ -19,7 +19,7 @@
           <div v-else>
             <v-avatar
               size="100px"
-              :color="( (edit || !UserProfile.profile.avatar) === true ? 'basic' : '')"
+              :color="( edit ? 'background_grey' : 'basic')"
             >
               <span
                 v-if="!edit && !UserProfile.profile.avatar"
@@ -33,7 +33,7 @@
                 :src="UserProfile.profile.avatar"
               />
               <v-img
-                v-if="edit"
+                v-if="edit && UserProfile.profile.avatar"
                 :src="UserProfile.profile.avatar"
                 style="opacity: 0.3"
               />

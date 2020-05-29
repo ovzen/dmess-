@@ -15,48 +15,75 @@
         label="Search for users"
         style="border-radius:50px; max-width:450px;"
         @input="getUsersBySearch(userSearch)"
+        @click:clear="clearSearch()"
       />
     </v-col>
-    <v-divider v-if="(userSearch != '' ? SortContacts : getContacts).length > 0" />
+    <v-divider />
     <div
-      v-for="contact in (userSearch != '' ? SortContacts : getContacts)"
-      :key="contact.id"
+      v-if="getContacts.length"
     >
-      <v-list-item
-        :to="'/UserProfile/' + contact.id"
+      <div
+        v-for="contact in (userSearch ? SortContacts : getContacts)"
+        :key="contact.id"
       >
-        <v-list-item-avatar>
-          <v-avatar
-            size="36px"
-            color="basic"
+        <v-list-item
+          :to="'/UserProfile/' + contact.id"
+        >
+          <v-list-item-avatar v-if="contact.profile.avatar">
+            <v-img
+              :src="contact.profile.avatar"
+            />
+          </v-list-item-avatar>
+          <v-list-item-avatar
+            v-else
           >
-            <span
-              class="white--text"
+            <v-avatar
+              size="36px"
+              color="basic"
             >
-              {{ MakeAvatar(contact) }}
-            </span>
-            <!--<v-img
-            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
-          />-->
-          </v-avatar>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            {{ contact.username }}
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            <span
-              class="basic--text text--lighten"
-            >
-              {{ contact.profile.status }}
-            </span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider
-        v-if="contact.id != SortContacts[SortContacts.length-1].id"
-        inset
-      />
+              <span
+                class="white--text"
+              >
+                {{ MakeAvatar(contact) }}
+              </span>
+              <!--<v-img
+              src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
+            />-->
+            </v-avatar>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ contact.username }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <span
+                :class="(contact.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+              >
+                {{ contact.profile.status }}
+              </span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider
+          inset
+        />
+      </div>
+    </div>
+    <div
+      v-if="!userSearch && !getContacts.length"
+      class="d-flex flex-column justify-center align-center fill-height"
+      style="height:75vh"
+    >
+      <div class="mt-12">
+        <p class="display-2 text-center grey--text">
+          ʕつ •ᴥ• ʔつ
+        </p>
+        <p class="overline text-center font-weight-medium text_second--text">
+          ADD NEW CONTACTS!
+          <br />
+          THEY WILL BE DISPLAY HERE
+        </p>
+      </div>
     </div>
     <div
       v-if="userSearch"
@@ -73,43 +100,67 @@
       >
         Global Search
       </h1>
-      <v-divider v-if="getUsersByName(userSearch).length > 0" />
+      <v-divider />
       <div
-        v-for="user in getUsersByName(userSearch)"
-        :key="user.id"
+        v-if="getUsersByName(userSearch).length"
       >
-        <v-list-item
-          :to="'/UserProfile/' + user.id"
+        <div
+          v-for="user in getUsersByName(userSearch)"
+          :key="user.id"
         >
-          <v-list-item-avatar>
-            <v-avatar
-              size="36px"
-              color="basic"
+          <v-list-item
+            :to="'/UserProfile/' + user.id"
+          >
+            <v-list-item-avatar v-if="user.profile.avatar">
+              <v-img
+                :src="user.profile.avatar"
+              />
+            </v-list-item-avatar>
+            <v-list-item-avatar
+              v-else
             >
-              <span
-                class="white--text"
+              <v-avatar
+                size="36px"
+                color="basic"
               >
-                {{ MakeAvatar(user) }}
-              </span>
-            </v-avatar>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ user.username }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <span
-                class="basic--text text--lighten"
-              >
-                {{ user.status }}
-              </span>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider
-          v-if="user.id !== getUsersByName(userSearch)[getUsersByName(userSearch).length-1].id"
-          inset
-        />
+                <span
+                  class="white--text"
+                >
+                  {{ MakeAvatar(user) }}
+                </span>
+              </v-avatar>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ user.username }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                <span
+                  :class="(user.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+                >
+                  {{ user.profile.status }}
+                </span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider
+            inset
+          />
+        </div>
+      </div>
+      <div
+        v-else
+        class="d-flex flex-column justify-center align-center fill-height"
+        style="height:69vh"
+      >
+        <div>
+          <p class="display-2 text-center grey--text">
+            ( ͡° ʖ̯ ͡°)
+          </p>
+          <p class="overline text-center font-weight-medium text_second--text">
+            NO RESULTS
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -142,6 +193,9 @@ export default {
           this.getUserData(res.data.results[user].id)
         }
       })
+    },
+    clearSearch () {
+      this.userSearch = ''
     },
     MakeAvatar (UserProfile) {
       if (typeof UserProfile !== 'undefined') {

@@ -30,7 +30,9 @@
       <v-toolbar-title
         v-if="Route.name === 'ChatUser'"
       >
-        <v-list-item>
+        <v-list-item
+          :to="'/UserProfile/' + DialogUser.id"
+        >
           <v-list-item-avatar v-if="DialogUser.profile.avatar">
             <v-img
               :src="DialogUser.profile.avatar"
@@ -53,7 +55,11 @@
               {{ DialogUser.username }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              {{ DialogUser.profile.status }}
+              <span
+                :class="(DialogUser.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+              >
+                {{ DialogUser.profile.status }}
+              </span>
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -121,7 +127,7 @@
                 <v-btn
                   color="red"
                   text
-                  @click="deleteChat(); dialogForDeleteChat = false"
+                  @click="dialogForDeleteChat = false"
                 >
                   DELETE CHAT
                 </v-btn>
@@ -184,7 +190,9 @@
                 v-else
                 color="background_white"
               >
-                <span>
+                <span
+                  class="basic--text"
+                >
                   {{ MakeAvatar }}
                 </span>
               </v-list-item-avatar>
@@ -297,23 +305,25 @@ import { mapActions, mapGetters } from 'vuex'
 Vue.use(VueCookie)
 var tabs = [
   {
-    name: 'mdi-message-text',
-    display_name: 'Dialogs',
-    component: {
-    }
-  },
-  {
     name: 'mdi-account-circle',
     display_name: 'Contacts',
     component: {
     }
   },
   {
+    name: 'mdi-message-text',
+    display_name: 'Dialogs',
+    component: {
+    }
+  },
+  /*
+ {
     name: 'mdi-room-service',
     display_name: 'Notifications',
     component: {
     }
   },
+  */
   {
     name: 'mdi-settings',
     display_name: 'Settings',
@@ -326,9 +336,10 @@ export default {
   components: { SystemInfo, settings, ContactList, DialogsList },
   data: () => ({
     userSearch: '',
-    dialogForPlusButton: false,
-    currentTab: tabs[0],
-    tabs: tabs
+    tabs: tabs,
+    dialogForDeleteChat: false,
+    currentTab: tabs[1],
+    dialogForPlusButton: false
   }),
   computed: {
     ...mapGetters(['getUserId', 'getClient', 'getClientProfile', 'getDialogsList', 'getUsersByDialogId']),
@@ -407,6 +418,19 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
+    getUserInitials (user) {
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name[0] + user.last_name[0]).toUpperCase()
+        } else if (user.first_name) {
+          return user.first_name[0].toUpperCase()
+        } else if (user.last_name) {
+          return user.last_name[0].toUpperCase()
+        } else {
+          return user.username[0].toUpperCase()
+        }
+      } return ''
+    },
     GoBack () {
       this.$router.go(-1)
     },

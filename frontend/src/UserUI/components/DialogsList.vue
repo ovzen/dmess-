@@ -1,82 +1,104 @@
 <template>
   <div>
-    <div>
-      <v-divider />
-      <v-col>
-        <v-text-field
-          clearable
-          solo
-          color="basic"
-          background-color="grey lighten-2"
-          dense
-          flat
-          hide-details
-          prepend-inner-icon="mdi-magnify"
-          label="Search for dialogs"
-          style="border-radius:50px; max-width:450px;"
-        />
-      </v-col>
-      <v-divider />
-      <v-list-item
+    <v-divider />
+    <v-col>
+      <v-text-field
+        clearable
+        solo
+        color="basic"
+        background-color="grey lighten-2"
+        dense
+        flat
+        hide-details
+        prepend-inner-icon="mdi-magnify"
+        label="Search for dialogs"
+        style="border-radius:50px; max-width:450px;"
+      />
+    </v-col>
+    <v-divider />
+    <div
+      v-if="getDialogsList.length"
+    >
+      <div
         v-for="dialog in getDialogsList"
         :key="dialog.id"
-        :to="{ name: 'ChatUser', params: { id: dialog.id } }"
       >
-        <v-list-item-avatar>
-          <v-avatar
-            v-if="getUsersByDialog(dialog).length > 0"
-            size="36px"
-            color="basic"
-          >
-            <v-img
-              v-if="getUsersByDialog(dialog)[0].profile.avatar !== null"
-              :src="getUsersByDialog(dialog)[0].profile.avatar"
-            />
-            <span
+        <v-list-item
+          :to="{ name: 'ChatUser', params: { id: dialog.id } }"
+        >
+          <v-list-item-avatar>
+            <v-avatar
+              v-if="getUsersByDialog(dialog).length > 0"
+              size="36px"
+              color="basic"
+            >
+              <v-img
+                v-if="getUsersByDialog(dialog)[0].profile.avatar !== null"
+                :src="getUsersByDialog(dialog)[0].profile.avatar"
+              />
+              <span
+                v-else
+                class="white--text"
+              >
+                {{ MakeAvatar(getUsersByDialog(dialog)[0]) }}
+              </span>
+            </v-avatar>
+            <v-avatar
               v-else
-              class="white--text"
-            >
-              {{ MakeAvatar(getUsersByDialog(dialog)[0]) }}
-            </span>
-          </v-avatar>
-          <v-avatar
-            v-else
-            size="36px"
-            color="basic"
-          />
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            {{ getContactName(dialog.users_detail) }}
-          </v-list-item-title>
-          <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
-            <span
-              style="color:#757575; font-size:115%;"
-            >
-              {{ (dialog.last_message ? dialog.last_message.text : '') }}
-            </span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-list-item-action-text v-if="dialog.last_message">
-            {{ formatTime(dialog.last_message.create_date) }}
-          </v-list-item-action-text>
-          <v-avatar
-            v-if="GetUnreadMessages(dialog)"
-            color="basic"
-            class="subheading white--text"
-            size="24"
-            v-text="GetUnreadMessages(dialog)"
-          />
-        </v-list-item-action>
-      </v-list-item>
+              size="36px"
+              color="basic"
+            />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ getContactName(dialog.users_detail) }}
+            </v-list-item-title>
+            <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
+              <span
+                style="color:#757575; font-size:115%;"
+              >
+                {{ (dialog.last_message ? dialog.last_message.text : '') }}
+              </span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-list-item-action-text v-if="dialog.last_message">
+              {{ formatTime(dialog.last_message.create_date) }}
+            </v-list-item-action-text>
+            <v-avatar
+              v-if="GetUnreadMessages(dialog)"
+              color="basic"
+              class="subheading white--text"
+              size="24"
+              v-text="GetUnreadMessages(dialog)"
+            />
+          </v-list-item-action>
+        </v-list-item>
+        <v-divider
+          inset
+        />
+      </div>
     </div>
-    <v-divider />
+    <div
+      v-else
+      class="d-flex flex-column justify-center align-center fill-height"
+      style="height:75vh"
+    >
+      <div class="mt-12">
+        <p class="display-2 text-center grey--text">
+          ( つ ^‿^ )つ
+        </p>
+        <p class="overline text-center font-weight-medium text_second--text">
+          START MESSAGING WITH SOMEONE
+          <br>
+          CHAT WILL BE DISPLAY HERE
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import api from '../api'
 import moment from 'moment'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/dialog_notifications/')

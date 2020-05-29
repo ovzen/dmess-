@@ -2,5 +2,5 @@
 mysqlclient==1.4.6
 
 # webserver
-daphne==2.4.1
+daphne==2.5.0
 

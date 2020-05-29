@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls.static import static
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from rest_framework_simplejwt import views as jwt_views
@@ -37,7 +38,6 @@ router.register(r'api/users', views.UserViewSet, basename='user')
 schema_view = get_swagger_view(title='API')
 
 urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
-    path('landing/', views.landing_view),
     path('api/accounts/', include('rest_registration.api.urls')),
     url(r'^docs/', schema_view),
     path('django_admin/', admin.site.urls),
@@ -45,10 +45,11 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/admin/', include('admin.urls')),
+    re_path('landing/', views.landing_view),
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path(
         'admin/',
-        login_required(TemplateView.as_view(template_name="admin.html")),
+        staff_member_required(TemplateView.as_view(template_name="admin.html")),
         name="adminUI"
     ),
     re_path(
@@ -58,3 +59,4 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     ),
     path('admin_tools/', include('admin_tools.urls')),
 ]
+
