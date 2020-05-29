@@ -3,7 +3,6 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import action
 from rest_framework import mixins
 
@@ -105,10 +104,6 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     search_fields = ['text']
     filterset_fields = '__all__'
     ordering_fields = ['id', 'create_date']
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = serializers.MyTokenObtainPairSerializer
 
 
 class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):

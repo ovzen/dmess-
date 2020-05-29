@@ -1,7 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from main import models
 
@@ -66,14 +64,3 @@ class WikiPageSerializer(serializers.ModelSerializer):
         model = models.WikiPage
         fields = '__all__'
         read_only_fields = ['image']
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['name'] = user.username
-        # ...
-        return token
