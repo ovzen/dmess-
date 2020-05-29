@@ -81,7 +81,6 @@
               flat
             >
               <v-container>
-                <!-- <v-btn> -->
                 <v-img
                   class="align-content-center"
                   src="https://www.technistone.com/color-range/image/surface/polished/deska_gobi_black_p.jpg"
@@ -89,7 +88,6 @@
                   min-width="120px"
                   @click.stop="show('https://www.technistone.com/color-range/image/surface/polished/deska_gobi_black_p.jpg')"
                 />
-                <!-- </v-btn> -->
               </v-container>
               <v-card-text>
                 <span
@@ -143,13 +141,33 @@
         </span>
       </div>
     </v-row>
+
     <v-dialog
       v-model="showImage"
+      width="85%"
     >
-      <v-img
-        :src="link"
-      />
+      <v-hover v-slot:default="{ hover }">
+        <v-img
+          :src="link"
+        >
+          <v-fade-transition>
+            <v-overlay
+              :value="hover"
+              absolute
+            >
+              <v-btn
+                text
+                :href="link"
+              >
+                Original Image
+              </v-btn>
+            </v-overlay>
+          </v-fade-transition>
+        </v-img>
+        </v-fade-transition>
+      </v-hover>
     </v-dialog>
+
     <v-footer
       color="background_white"
       fixed
@@ -211,7 +229,8 @@ export default {
     dialogMessagesLength: 0,
     diailogId: 0,
     showImage: false,
-    link: ''
+    link: '',
+    imageOverlay: false
   }),
   computed: {
     ...mapGetters(['getUserId'])
