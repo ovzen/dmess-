@@ -172,8 +172,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'ContactList',
   data: () => ({
-    userSearch: '',
-    findedUsers: ''
+    userSearch: ''
   }),
   computed: {
     ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName']),

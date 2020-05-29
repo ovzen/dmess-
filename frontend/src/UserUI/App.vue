@@ -52,7 +52,7 @@
             <v-list-item-title
               class="title"
             >
-              {{ DialogUser.username }}
+              {{ getUserName(DialogUser) }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <span
@@ -418,6 +418,17 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
+    getUserName (user) {
+      if (user.first_name && user.last_name) {
+        return (user.first_name + ' ' + user.last_name)
+      } else if (user.first_name) {
+        return user.first_name
+      } else if (user.last_name) {
+        return user.last_name
+      } else {
+        return user.username
+      }
+    },
     getUserInitials (user) {
       if (typeof user !== 'undefined') {
         if (user.first_name && user.last_name) {

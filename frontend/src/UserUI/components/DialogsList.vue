@@ -3,6 +3,7 @@
     <v-divider />
     <v-col>
       <v-text-field
+        v-model="dialogSearch"
         clearable
         solo
         color="basic"
@@ -20,7 +21,7 @@
       v-if="getDialogsList.length"
     >
       <div
-        v-for="dialog in getDialogsList"
+        v-for="dialog in (dialogSearch ? SortDialogs : getDialogsList)"
         :key="dialog.id"
       >
         <v-list-item
@@ -106,13 +107,18 @@ let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws:/
 export default {
   name: 'DialogsList',
   data: () => ({
-    userSearch: '',
-    findedUsers: ''
+    dialogSearch: ''
   }),
   computed: {
-    ...mapGetters(['getDialogsList', 'getUsersByDialog', 'getUserProfileByDialog', 'getUserId', 'isDialogDownloaded', 'getUserById']),
-    SortContacts () {
-      return this.getContacts.filter(contact => { return contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
+    ...mapGetters(['getDialogsList', 'getUsersByDialog', 'getUserId', 'isDialogDownloaded', 'getUserById']),
+    SortDialogs () {
+      return this.getDialogsList.filter(dialog => {
+        if (this.getUsersByDialog(dialog).length === 0) {
+          return false
+        } else {
+          return this.getUserName(this.getUsersByDialog(dialog)[0]).toLowerCase().indexOf(this.dialogSearch.toLowerCase()) > -1
+        }
+      })
     }
   },
   mounted () {
