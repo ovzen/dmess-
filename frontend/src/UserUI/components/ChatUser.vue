@@ -13,7 +13,7 @@
         py-2
       >
         <div
-          v-if="isOwnMessage(message.user)"
+          v-if="!isOwnMessage(message.user)"
           class="text-left"
         >
           <v-card
@@ -42,7 +42,7 @@
           py-0
         >
           <div
-            v-if="!isOwnMessage(message.user)"
+            v-if="isOwnMessage(message.user)"
             class="text-left"
           >
             <v-card
@@ -270,7 +270,7 @@ export default {
       }
     },
     isOwnMessage (author) {
-      return author === this.getUserId
+      return author === jwt.decode(this.$cookie.get('Authentication')).user_id
     },
     formatTime (datetime) {
       if (datetime) {
