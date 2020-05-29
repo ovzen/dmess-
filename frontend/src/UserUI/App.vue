@@ -30,20 +30,36 @@
       <v-toolbar-title
         v-if="Route.name === 'ChatUser'"
       >
-        <v-list-item>
+        <v-list-item
+          :to="'/UserProfile/' + ChatInfo.id"
+        >
           <v-list-item-avatar v-if="ChatInfo.profile.avatar">
             <v-img
               :src="ChatInfo.profile.avatar"
             />
           </v-list-item-avatar>
+          <v-list-item-avatar
+            v-else
+            color="basic"
+          >
+            <span
+              class="white--text"
+            >
+              {{ getUserInitials(ChatInfo) }}
+            </span>
+          </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="title"
             >
-              {{ ChatInfo.username }}
+              {{ getUserName(ChatInfo) }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              {{ ChatInfo.profile.status }}
+              <span
+                :class="(ChatInfo.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+              >
+                {{ ChatInfo.profile.status }}
+              </span>
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -77,6 +93,48 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item
+            @click.stop="dialogForDeleteChat = true"
+          >
+            <v-list-item-title>
+              Delete chat
+            </v-list-item-title>
+          </v-list-item>
+          <v-dialog
+            v-model="dialogForDeleteChat"
+            max-width="400"
+          >
+            <v-card>
+              <v-card-title class="headline">
+                Delete chat
+              </v-card-title>
+
+              <v-card-text>
+                Are you sure you want to delete this chat and all its messages?<br>
+                This action cannot be undone.
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="dialogForDeleteChat = false"
+                >
+                  CANCEL
+                </v-btn>
+
+                <v-btn
+                  color="red"
+                  text
+                  @click="dialogForDeleteChat = false"
+                >
+                  DELETE CHAT
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-list-item
             :to="{ name: 'MyProfile'}"
           >
             <v-list-item-title>
@@ -105,16 +163,9 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title
-                v-if="(firstName || lastName)"
                 class="title"
               >
-                {{ firstName }} {{ lastName }}
-              </v-list-item-title>
-              <v-list-item-title
-                v-else
-                class="title"
-              >
-                {{ username }}
+                {{ getUserName(userProfile) }}
               </v-list-item-title>
               <v-list-item-subtitle
                 v-if="isOnline"
@@ -128,6 +179,7 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <router-link
+              style="text-decoration: none;"
               to="/MyProfile"
             >
               <v-list-item-avatar v-if="avatar">
@@ -137,20 +189,12 @@
               </v-list-item-avatar>
               <v-list-item-avatar
                 v-else
-                color="#FFFFFF"
-                class="justify-center indigo--text"
+                color="background_white"
               >
-                <span v-if="(firstName && lastName)">
-                  {{ firstName[0].toUpperCase() }}{{ lastName[0].toUpperCase() }}
-                </span>
-                <span v-else-if="(firstName)">
-                  {{ firstName[0].toUpperCase() }}
-                </span>
-                <span v-else-if="(lastName)">
-                  {{ lastName[0].toUpperCase() }}
-                </span>
-                <span v-else>
-                  {{ username[0].toUpperCase() }}
+                <span
+                  class="basic--text"
+                >
+                  {{ getUserInitials(userProfile) }}
                 </span>
               </v-list-item-avatar>
             </router-link>
@@ -178,6 +222,7 @@
               label="Search for users"
               style="border-radius:50px; max-width:450px;"
               @input="getUsersBySearch(userSearch)"
+              @click:clear="clearSearch"
             />
           </v-col>
           <v-divider />
@@ -185,13 +230,20 @@
             v-if="contacts.length"
           >
             <div
-              v-for="contact in (userSearch != '' ? SortContacts : contacts)"
+              v-for="contact in (userSearch ? SortContacts : contacts)"
               :key="contact.id"
             >
               <v-list-item
                 :to="'/UserProfile/' + contact.Contact.id"
               >
-                <v-list-item-avatar>
+                <v-list-item-avatar v-if="contact.Contact.profile.avatar">
+                  <v-img
+                    :src="contact.Contact.profile.avatar"
+                  />
+                </v-list-item-avatar>
+                <v-list-item-avatar
+                  v-else
+                >
                   <v-avatar
                     size="36px"
                     color="basic"
@@ -199,7 +251,7 @@
                     <span
                       class="white--text"
                     >
-                      {{ getUserAvatar(contact.Contact) }}
+                      {{ getUserInitials(contact.Contact) }}
                     </span>
                   <!--<v-img
               src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
@@ -208,11 +260,11 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ contact.Contact.username }}
+                    {{ getUserName(contact.Contact) }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     <span
-                      class="basic--text text--lighten"
+                       :class="(contact.Contact.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
                     >
                       {{ contact.Contact.profile.status }}
                     </span>
@@ -266,7 +318,14 @@
                 <v-list-item
                   :to="'/UserProfile/' + user.id"
                 >
-                  <v-list-item-avatar>
+                  <v-list-item-avatar v-if="user.profile.avatar">
+                    <v-img
+                      :src="user.profile.avatar"
+                    />
+                  </v-list-item-avatar>
+                  <v-list-item-avatar
+                    v-else
+                  >
                     <v-avatar
                       size="36px"
                       color="basic"
@@ -274,19 +333,19 @@
                       <span
                         class="white--text"
                       >
-                        {{ getUserAvatar(user) }}
+                        {{ getUserInitials(user) }}
                       </span>
                     </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title>
-                      {{ user.username }}
+                      {{ getUserName(user) }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       <span
-                        class="basic--text text--lighten"
+                        :class="(user.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
                       >
-                        {{ user.status }}
+                        {{ user.profile.status }}
                       </span>
                     </v-list-item-subtitle>
                   </v-list-item-content>
@@ -341,7 +400,14 @@
               <v-list-item
                 @click="openDialog(dialog.id)"
               >
-                <v-list-item-avatar>
+                <v-list-item-avatar v-if="getContact(dialog.users_detail).profile.avatar">
+                  <v-img
+                    :src="getContact(dialog.users_detail).profile.avatar"
+                  />
+                </v-list-item-avatar>
+                <v-list-item-avatar
+                  v-else
+                >
                   <v-avatar
                     size="36px"
                     color="basic"
@@ -349,7 +415,7 @@
                     <span
                       class="white--text"
                     >
-                      NU
+                      {{ getUserInitials(getContact(dialog.users_detail)) }}
                     </span>
                   </v-avatar>
                 </v-list-item-avatar>
@@ -415,12 +481,12 @@
             top
             right
             absolute
-            @click.stop="dialog = true"
+            @click.stop="dialogForPlusButton = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
           <v-dialog
-            v-model="dialog"
+            v-model="dialogForPlusButton"
             max-width="700"
           >
             <v-card>
@@ -440,7 +506,7 @@
                 <v-btn
                   color="basic"
                   text
-                  @click="dialog = false"
+                  @click="dialogForPlusButton = false"
                 >
                   Okay, I agree with you
                 </v-btn>
@@ -534,7 +600,8 @@ export default {
     data: '',
     userSearch: '',
     messages: [],
-    dialog: false,
+    dialogForPlusButton: false,
+    dialogForDeleteChat: false,
     id: 0,
     drawer: true,
     alwaysOnDisplay: false,
@@ -543,8 +610,7 @@ export default {
     for_user: true,
     unread_messages_qty: [],
     username: 'Test',
-    firstName: undefined,
-    lastName: undefined,
+    userProfile: undefined,
     user_id: undefined,
     avatar: '',
     isOnline: false,
@@ -552,13 +618,15 @@ export default {
     tabs: tabs,
     contacts: [],
     findedUsers: [],
-    dialogs: []
+    dialogs: [],
+    dialogContact: ''
   }),
   computed: {
     Route () {
       return this.$route
     },
     SortContacts () {
+      console.log('this.userSearch:', this.userSearch)
       return this.contacts.filter(contact => { return contact.Contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
     }
   },
@@ -613,15 +681,6 @@ export default {
     },
     GoBack () {
       this.$router.go(-1)
-    },
-    getUserAvatar (UserProfile) {
-      if (typeof UserProfile !== 'undefined') {
-        if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
-          return (UserProfile.first_name[0] + UserProfile.last_name[0]).toUpperCase()
-        } else {
-          return UserProfile.username[0].toUpperCase()
-        }
-      } return ''
     },
     getUsersBySearch () {
       api.axios.get('/api/users/', {
@@ -703,10 +762,9 @@ export default {
         .then(res => {
           if (res.data) {
             // console.log('user details: ', res)
+            this.userProfile = res.data
             this.avatar = res.data.profile.avatar
             this.isOnline = res.data.profile.is_online
-            this.firstName = res.data.first_name ? res.data.first_name : undefined
-            this.lastName = res.data.last_name ? res.data.last_name : undefined
           }
         })
         .catch(error => console.log(error))
@@ -721,14 +779,16 @@ export default {
       }
     },
     getUserName (user) {
-      if (user.first_name && user.last_name) {
-        return (user.first_name + ' ' + user.last_name)
-      } else if (user.first_name) {
-        return user.first_name
-      } else if (user.last_name) {
-        return user.last_name
-      } else {
-        return user.username
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name + ' ' + user.last_name)
+        } else if (user.first_name) {
+          return user.first_name
+        } else if (user.last_name) {
+          return user.last_name
+        } else {
+          return user.username
+        }
       }
     },
     getContact (users) {
@@ -741,6 +801,36 @@ export default {
       } else {
         return 'В диалоге нет других пользователей'
       }
+    },
+    clearSearch () {
+      this.userSearch = ''
+    },
+    deleteChat () {
+      let deletedChatId = this.$route.params.id
+      api.axios
+        .delete('/api/dialog/' + this.$route.params.id + '/')
+        .then(res => {
+          console.log('res.status', res.status)
+          if (res.status === 204) {
+            this.dialogs.splice(this.dialogs.find(item => item.id === deletedChatId), 1)
+          }
+        })
+    },
+    getUserInitials (user) {
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name[0] + user.last_name[0]).toUpperCase()
+        } else if (user.first_name) {
+          return user.first_name[0].toUpperCase()
+        } else if (user.last_name) {
+          return user.last_name[0].toUpperCase()
+        } else {
+          return user.username[0].toUpperCase()
+        }
+      } return ''
+    },
+    getContactAvatar (users) {
+      return this.getContact(users).profile.avatar
     }
   }
 }

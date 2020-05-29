@@ -13,6 +13,7 @@ export default new Vuetify({
         background_search: '#EBEBEB',
         background_main: '#F2F2F2',
         background_white: '#FFFFFF',
+        background_grey: '#808080',
         message_color: '#000000',
         icons_color: '#DADADA',
         text_main: '#1F1E21',
