@@ -214,7 +214,7 @@ export default {
       this.message = front + args.emoji + back
       textarea = document.getElementById('for_emoji')
       setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = caret + 2
+        textarea.selectionStart = textarea.selectionEnd = caret + args.emoji.length
       }, 10)
       textarea.focus()
       // this.message += args.emoji
