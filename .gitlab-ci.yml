@@ -37,6 +37,7 @@ stages:
 coverage:
   stage: test
   script:
+    - celery worker -B -A dmess --loglevel=debug --concurrency=4 &
     - source ./ci/test_runner.sh
   artifacts:
     paths:
