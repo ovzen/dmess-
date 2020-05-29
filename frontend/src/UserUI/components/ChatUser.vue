@@ -20,6 +20,7 @@
             max-width="460px"
             class="float-right d-flex"
             style="border-radius: 20px;"
+            color="background_pink"
             flat
           >
             <v-card-text>
@@ -48,7 +49,6 @@
               style="border-radius: 20px;"
               max-width="460px"
               class="d-flex"
-              color="background_pink"
               flat
             >
               <v-card-text>

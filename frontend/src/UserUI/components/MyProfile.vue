@@ -29,7 +29,7 @@
               </span>
 
               <v-img
-                v-if="!edit"
+                v-if="!edit && UserProfile.profile.avatar"
                 :src="UserProfile.profile.avatar"
               />
               <v-img

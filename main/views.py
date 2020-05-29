@@ -49,7 +49,10 @@ class UserViewSet(mixins.ListModelMixin,
         )
 
 
-class ContactViewSet(viewsets.ModelViewSet):
+class ContactViewSet(mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
     serializer_class = serializers.ContactSerializer
 
     def get_queryset(self):

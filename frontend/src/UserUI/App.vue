@@ -36,6 +36,16 @@
               :src="DialogUser.profile.avatar"
             />
           </v-list-item-avatar>
+          <v-list-item-avatar
+            v-else
+            color="basic"
+          >
+            <span
+              class="white--text"
+            >
+              {{ getUserInitials(DialogUser) }}
+            </span>
+          </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
               class="title"
@@ -76,6 +86,48 @@
               Collapse chat
             </v-list-item-title>
           </v-list-item>
+          <v-list-item
+            @click.stop="dialogForDeleteChat = true"
+          >
+            <v-list-item-title>
+              Delete chat
+            </v-list-item-title>
+          </v-list-item>
+          <v-dialog
+            v-model="dialogForDeleteChat"
+            max-width="400"
+          >
+            <v-card>
+              <v-card-title class="headline">
+                Delete chat
+              </v-card-title>
+
+              <v-card-text>
+                Are you sure you want to delete this chat and all its messages?<br>
+                This action cannot be undone.
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  color="basic"
+                  text
+                  @click="dialogForDeleteChat = false"
+                >
+                  CANCEL
+                </v-btn>
+
+                <v-btn
+                  color="red"
+                  text
+                  @click="deleteChat(); dialogForDeleteChat = false"
+                >
+                  DELETE CHAT
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <v-list-item
             :to="{ name: 'MyProfile'}"
           >
@@ -120,6 +172,7 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <router-link
+              style="text-decoration: none;"
               to="/MyProfile"
             >
               <v-list-item-avatar v-if="getClientProfile.avatar">
@@ -129,8 +182,7 @@
               </v-list-item-avatar>
               <v-list-item-avatar
                 v-else
-                color="#FFFFFF"
-                class="justify-center indigo--text"
+                color="background_white"
               >
                 <span>
                   {{ MakeAvatar }}
@@ -162,12 +214,12 @@
             top
             right
             absolute
-            @click.stop="dialog = true"
+            @click.stop="dialogForPlusButton = true"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
           <v-dialog
-            v-model="dialog"
+            v-model="dialogForPlusButton"
             max-width="700"
           >
             <v-card>
@@ -187,7 +239,7 @@
                 <v-btn
                   color="basic"
                   text
-                  @click="dialog = false"
+                  @click="dialogForPlusButton = false"
                 >
                   Okay, I agree with you
                 </v-btn>
@@ -274,7 +326,7 @@ export default {
   components: { SystemInfo, settings, ContactList, DialogsList },
   data: () => ({
     userSearch: '',
-    dialog: false,
+    dialogForPlusButton: false,
     currentTab: tabs[0],
     tabs: tabs
   }),

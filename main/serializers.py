@@ -59,17 +59,9 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Contact
-        fields = '__all__'
-        validators = [
-            UniqueTogetherValidator(
-                queryset=models.Contact.objects.all(),
-                fields=['user', 'contact'],
-                message='You have already added this contact.'
-            )
-        ]
+        fields = ['id', 'contact']
 
 
 class WikiPageSerializer(serializers.ModelSerializer):
