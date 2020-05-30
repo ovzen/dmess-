@@ -75,18 +75,20 @@
             class="text-left"
           >
             <v-card
-              style="border-radius: 20px;"
+              style="border-radius: 20px;width:min-content"
               max-width="460px"
-              class="d-flex align-content-start flex-wrap"
+              class="d-flex align-content-start flex-wrap flex-shrink-1"
               flat
             >
-              <v-container>
+              <v-container
+                class="d-inline-flex align-content-center"
+              >
                 <v-img
-                  class="align-content-center"
-                  src="https://www.technistone.com/color-range/image/surface/polished/deska_gobi_black_p.jpg"
+                  style="border-radius: 4px"
+                  src="https://s1.1zoom.ru/b3846/Scenery_Sunrises_and_sunsets_Grass_Fog_580590_225x300.jpg"
                   max-width="440px"
-                  min-width="120px"
-                  @click.stop="show('https://www.technistone.com/color-range/image/surface/polished/deska_gobi_black_p.jpg')"
+                  min-width="200px"
+                  @click.stop="show('https://s1.1zoom.ru/b3846/Scenery_Sunrises_and_sunsets_Grass_Fog_580590_225x300.jpg')"
                 />
               </v-container>
               <v-card-text>
@@ -144,11 +146,15 @@
 
     <v-dialog
       v-model="showImage"
-      width="85%"
+      max-width="85%"
+      max-height="85%"
     >
       <v-hover v-slot:default="{ hover }">
         <v-img
+          contain
           :src="link"
+          :max-height="$vuetify.breakpoint.height * 0.85"
+          :max-width="$vuetify.breakpoint.width * 0.85"
         >
           <v-fade-transition>
             <v-overlay
@@ -164,7 +170,6 @@
             </v-overlay>
           </v-fade-transition>
         </v-img>
-        </v-fade-transition>
       </v-hover>
     </v-dialog>
 
