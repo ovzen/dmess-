@@ -201,17 +201,7 @@ export default {
       return emojis.decodeEmoji(str)
     },
     selectedEmoji (args) {
-      let textarea = document.getElementById('for_emoji')
-      let caret = JSON.parse(JSON.stringify(textarea.selectionStart))
-      let front = (textarea.value).substring(0, caret)
-      let back = (textarea.value).substring(textarea.selectionEnd, textarea.value.length)
-      this.message = front + args.emoji + back
-      textarea = document.getElementById('for_emoji')
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = caret + args.emoji.length
-      }, 10)
-      textarea.focus()
-      // this.message += args.emoji
+      this.message += args.emoji
     },
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
