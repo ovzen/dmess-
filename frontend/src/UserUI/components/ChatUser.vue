@@ -169,7 +169,7 @@ export default {
     diailogId: 0
   }),
   computed: {
-    ...mapGetters(['getUserId'])
+    ...mapGetters(['getUserId', 'getUsersByDialogId'])
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
@@ -181,12 +181,13 @@ export default {
   mounted () {
     this.updateDialog()
     this.getMessage()
+    this.UpdateUserInDialog()
   },
   beforeDestroy () {
     this.$disconnect()
   },
   methods: {
-    ...mapActions(['getDialogsData']),
+    ...mapActions(['getDialogsData', 'getUserData']),
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
       var elemTop = rect.top
@@ -272,6 +273,12 @@ export default {
         })
         api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
       }
+    },
+    UpdateUserInDialog () {
+      if (typeof this.getUsersByDialogId(this.$route.params.id) !== 'undefined') {
+        this.getUserData([this.getUsersByDialogId(this.$route.params.id)[0].id, true])
+      }
+      setTimeout(this.UpdateUserInDialog, 30000)
     },
     isOwnMessage (author) {
       return author === jwt.decode(this.$cookie.get('Authentication')).user_id

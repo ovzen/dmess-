@@ -79,8 +79,11 @@ export default ({
 
   actions: {
     getUserData (context, payload) {
-      console.log()
-      if (context.state.users.filter(user => user.id === payload).length === 0) {
+      if (Array.isArray(payload)) {
+        var ignore = true
+        payload = payload[0]
+      }
+      if (context.state.users.filter(user => user.id === payload).length === 0 || typeof ignore !== 'undefined') {
         api.axios
           .get('/api/users/' + payload + '/')
           .then(res => {
