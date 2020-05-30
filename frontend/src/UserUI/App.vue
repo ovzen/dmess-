@@ -427,7 +427,7 @@
                     <span
                       style="color:#757575; font-size:115%;"
                     >
-                      {{ (dialog.last_message ? dialog.last_message.text : '') }}
+                      {{ decodeEmojiCode(dialog.last_message ? dialog.last_message.text : '') }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -558,6 +558,7 @@ import jwt from 'jsonwebtoken'
 import SystemInfo from './components/SystemInfo'
 import settings from './components/settings'
 import moment from 'moment'
+import { emojis } from 'vue-chat-emoji'
 
 Vue.use(VueCookie)
 var tabs = [
@@ -669,6 +670,9 @@ export default {
     }
   },
   methods: {
+    decodeEmojiCode (str) {
+      return emojis.decodeEmoji(str)
+    },
     GetUnreadMessages (dialog) {
       console.log(dialog.unread_messages[dialog.users[1]])
       if (typeof this.user_id !== 'undefined') {
