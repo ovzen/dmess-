@@ -3,7 +3,7 @@
     <v-row
       v-if="messages.length > 0"
       class="d-flex flex-column-reverse"
-      style="padding-bottom:56px;height:100%;"
+      style="padding-bottom:0px;height:100%;"
       align="end"
     >
       <v-container
@@ -108,15 +108,17 @@
     <file-pond
       ref="pond"
       name="image"
-      style="position:fixed;min-width:450px;bottom:20px;right:0px;max-height:80%"
+      :style="'position:fixed;width:450px;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
       label-idle="Drop files here..."
-      :allow-multiple="true"
+      :allow-multiple="false"
       accepted-file-types="image/jpeg, image/png"
       :files="myFiles"
+      :drop-on-page="true"
+      :drop-on-element="false"
       server="/api/messages/image_upload/"
-      :before-drop-file="handleFilePondInit"
       @init="handleFilePondInit"
-      @processfile="test"
+      @addfile="beforeupload"
+      @processfile="afterupload"
     />
     <v-footer
       color="background_white"
@@ -126,6 +128,17 @@
       class="d-inline-flex"
       style="padding:5px;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
     >
+      <v-btn
+        icon
+        color="#9f9f9f"
+        class="align-self-sm-end"
+        style="margin-bottom:5px"
+        @click="hide=!hide"
+      >
+        <v-icon>
+          mdi-paperclip
+        </v-icon>
+      </v-btn>
       <v-textarea
         ref="myTextArea"
         v-model="message"
@@ -147,6 +160,7 @@
       <v-btn
         icon
         color="basic"
+        :disabled="loading"
         class="align-self-sm-end"
         style="margin-bottom:5px"
         @click="sendMessage()"
@@ -195,9 +209,11 @@ export default {
     messages: [],
     message: '',
     myFiles: [],
+    hide: false,
     dialogMessagesLength: 0,
     dialogId: 0,
-    imageUrl: ''
+    imageUrl: '',
+    loading: false
   }),
   computed: {
     ...mapGetters(['getUserId', 'getUsersByDialogId'])
@@ -219,13 +235,18 @@ export default {
   },
   methods: {
     handleFilePondInit: function () {
-      console.log('FilePond has initialized', this)
-
-      // FilePond instance methods are available on `this.$refs.pond`
+      console.log('FilePond has initialized')
     },
     ...mapActions(['getDialogsData', 'getUserData']),
-    test (file, progress) {
-      console.log(progress.serverId)
+    beforeupload (file, progress) {
+      console.log('beforeupload', file, progress)
+      this.loading = true
+      this.hide = true
+    },
+    afterupload (file, progress) {
+      console.log('afterupload', file, progress)
+      this.imageUrl = progress.serverId
+      this.loading = false
     },
     decodeEmojiCode (str) {
       return emojis.decodeEmoji(str)
@@ -264,16 +285,18 @@ export default {
     },
     sendMessage () {
       console.log(this.$refs)
-      if (this.message) {
+      if (!this.loading) {
         console.log('messagetext: ', this.message)
         this.$socket.send(
           JSON.stringify({
             message: emojis.encodeEmoji(this.message),
-            image_url: this.imageUrl
+            image_url: JSON.parse(this.imageUrl).image_url
           })
         )
       }
+      this.myFiles = []
       this.imageUrl = ''
+      this.hide = false
       this.message = ''
     },
     updateDialog () {
