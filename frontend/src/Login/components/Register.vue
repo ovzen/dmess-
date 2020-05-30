@@ -321,19 +321,7 @@ export default {
           })
           .then(data => {
             if (data && data.status === 201) {
-              api.axios
-                .post('/api/token/', {
-                  username: username,
-                  password: password
-                })
-                .then(res => {
-                  console.log(res.data)
-                  this.$cookie.set('Authentication', res.data.access, {
-                    expires: '5m'
-                  })
-                  localStorage.setItem('UpdateKey', res.data.refresh)
-                  window.location.href = this.next
-                })
+              this.$router.push('/verify/')
             }
           })
       }
