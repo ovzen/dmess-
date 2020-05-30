@@ -71,6 +71,9 @@ export default ({
           state.users.push(payload)
         }
       }
+      if (state.users.length === 0) {
+        state.users[0] = payload
+      }
     },
     addContact: (state, payload) => {
       state.contacts = payload

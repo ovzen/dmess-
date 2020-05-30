@@ -107,13 +107,16 @@
     </v-row>
     <file-pond
       ref="pond"
-      name="test"
+      name="image"
       style="position:fixed;min-width:450px;bottom:20px;right:0px;max-height:80%"
       label-idle="Drop files here..."
       :allow-multiple="true"
       accepted-file-types="image/jpeg, image/png"
       :files="myFiles"
+      server="/api/messages/image_upload/"
+      :before-drop-file="handleFilePondInit"
       @init="handleFilePondInit"
+      @processfile="test"
     />
     <v-footer
       color="background_white"
@@ -193,7 +196,8 @@ export default {
     message: '',
     myFiles: [],
     dialogMessagesLength: 0,
-    dialogId: 0
+    dialogId: 0,
+    imageUrl: ''
   }),
   computed: {
     ...mapGetters(['getUserId', 'getUsersByDialogId'])
@@ -215,11 +219,14 @@ export default {
   },
   methods: {
     handleFilePondInit: function () {
-      console.log('FilePond has initialized')
+      console.log('FilePond has initialized', this)
 
       // FilePond instance methods are available on `this.$refs.pond`
     },
     ...mapActions(['getDialogsData', 'getUserData']),
+    test (file, progress) {
+      console.log(progress.serverId)
+    },
     decodeEmojiCode (str) {
       return emojis.decodeEmoji(str)
     },
@@ -261,10 +268,12 @@ export default {
         console.log('messagetext: ', this.message)
         this.$socket.send(
           JSON.stringify({
-            message: emojis.encodeEmoji(this.message)
+            message: emojis.encodeEmoji(this.message),
+            image_url: this.imageUrl
           })
         )
       }
+      this.imageUrl = ''
       this.message = ''
     },
     updateDialog () {
@@ -302,7 +311,8 @@ export default {
           id: computedMessageId,
           text: JSON.parse(data.data).message,
           user_detail: { username: JSON.parse(data.data).author },
-          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
+          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1),
+          image_url: JSON.parse(data.data).image_url
         })
         this.getDialogsData()
         this.dialogMessagesLength += 1
@@ -330,6 +340,17 @@ export default {
           return moment(String(datetime)).format('hh:mm')
         }
       }
+    },
+    onFileSelected (event) {
+      this.image = event
+      let formData = new FormData()
+      console.log(this.image)
+      formData.append('image', this.image, this.image.name)
+      api.axios
+        .post('/api/messages/image_upload/', formData)
+        .then(response => {
+          this.imageUrl = response.data['image_url']
+        })
     }
   }
 }

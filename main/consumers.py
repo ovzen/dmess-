@@ -33,11 +33,12 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        image = text_data_json['image_url']
         author = self.scope["user"]
         if author == "":
             author = 'AnonymousUser'
 
-        message_obj = Message(user=author, text=message, dialog_id=self.chat_number)
+        message_obj = Message(user=author, text=message, dialog_id=self.chat_number, image_url=image)
         message_obj.save()
 
         # Send message to room group
@@ -46,8 +47,9 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'author': author.id,
-                'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder)
+                'author': author.username,
+                'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder),
+                'image_url': image
             }
         )
 
@@ -56,12 +58,14 @@ class ChatConsumer(WebsocketConsumer):
         message = event['message']
         author = event['author']
         create_date = event['create_date']
+        image = event['image_url']
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message,
             'author': author,
-            'create_date': create_date
+            'create_date': create_date,
+            'image_url': image
         }))
 
 

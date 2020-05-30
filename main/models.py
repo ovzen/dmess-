@@ -64,6 +64,7 @@ class Message(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
+    image_url = models.CharField(max_length=200, default=False, null=True)
     is_read = models.BooleanField(default=False)
 
 
