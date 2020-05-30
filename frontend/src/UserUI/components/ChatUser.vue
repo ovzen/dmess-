@@ -175,7 +175,7 @@ export default {
     messages: [],
     message: '',
     dialogMessagesLength: 0,
-    diailogId: 0
+    dialogId: 0
   }),
   computed: {
     ...mapGetters(['getUserId', 'getUsersByDialogId'])
@@ -215,7 +215,7 @@ export default {
         if (this.dialogMessagesLength > this.messages.length && this.CheckIsVisible(document.getElementById('Message_' + this.messages[this.messages.length - 1].id))) {
           console.log('visible')
           api.axios
-            .get('/api/messages/', { params: { dialog: this.diailogId, limit: 30, offset: this.messages.length, ordering: '-create_date' } })
+            .get('/api/messages/', { params: { dialog: this.dialogId, limit: 30, offset: this.messages.length, ordering: '-create_date' } })
             .then(response => {
               if (response.status === 200) {
                 if (response.data.count > 0) {
@@ -248,10 +248,10 @@ export default {
       this.$disconnect()
       this.message = ''
       this.messages = []
-      this.diailogId = this.$route.params.id
-      api.axios.get('/api/messages/count/', { params: { dialog: this.diailogId } }).then(res => { this.dialogMessagesLength = res.data.count })
+      this.dialogId = this.$route.params.id
+      api.axios.get('/api/messages/count/', { params: { dialog: this.dialogId } }).then(res => { this.dialogMessagesLength = res.data.count })
       api.axios
-        .get('/api/messages/', { params: { dialog: this.diailogId, limit: 30, ordering: '-create_date' } })
+        .get('/api/messages/', { params: { dialog: this.dialogId, limit: 30, ordering: '-create_date' } })
         .then(response => {
           if (response.status === 200) {
             this.messages = this.messages.concat(response.data.results)
@@ -264,8 +264,8 @@ export default {
           }
         })
         .catch(error => console.log(error))
-      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.diailogId + '/')
-      api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/').then(res => {
+      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.dialogId + '/')
+      api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/').then(res => {
         if (res.status === 200) {
           this.getDialogsData()
         }
@@ -287,7 +287,7 @@ export default {
         Vue.nextTick(function () {
           Data.$vuetify.goTo(document.getElementById('Message_' + computedMessageId))
         })
-        api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
+        api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/')
       }
     },
     UpdateUserInDialog () {

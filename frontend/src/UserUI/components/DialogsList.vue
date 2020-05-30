@@ -58,7 +58,7 @@
               <span
                 style="color:#757575; font-size:115%;"
               >
-                {{ (dialog.last_message ? dialog.last_message.text : '') }}
+                {{ (dialog.last_message ? decodeEmojiCode(dialog.last_message.text) : '') }}
               </span>
             </v-list-item-subtitle>
           </v-list-item-content>
@@ -102,6 +102,7 @@
 <script>
 import moment from 'moment'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { emojis } from 'vue-chat-emoji'
 let ws = new WebSocket((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/dialog_notifications/')
 
 export default {
@@ -199,6 +200,9 @@ export default {
     },
     getContact (users) {
       return (users[0].id === this.user_id) ? users[1] : users[0]
+    },
+    decodeEmojiCode (str) {
+      return emojis.decodeEmoji(str)
     }
   }
 }
