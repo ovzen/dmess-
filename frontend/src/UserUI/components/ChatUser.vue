@@ -25,6 +25,7 @@
           >
             <v-card-text>
               <span
+                v-linkified
                 class="font-weight-light message_color--text"
               >
                 {{ message.text }}
@@ -53,6 +54,7 @@
             >
               <v-card-text>
                 <span
+                  v-linkified
                   class="font-weight-light message_color--text"
                 >
                   {{ message.text }}
@@ -147,7 +149,9 @@ import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
+import linkify from 'vue-linkify'
 
+Vue.directive('linkified', linkify)
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
