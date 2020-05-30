@@ -58,7 +58,7 @@
               <span
                 style="color:#757575; font-size:115%;"
               >
-                {{ (dialog.last_message ? decodeEmojiCode(dialog.last_message.text) : '') }}
+                {{ (dialog.last_message.text ? decodeEmojiCode(dialog.last_message.text) : (dialog.last_message.image_url ? 'Image' : ' ')) }}
               </span>
             </v-list-item-subtitle>
           </v-list-item-content>
