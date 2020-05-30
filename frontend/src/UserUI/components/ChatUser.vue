@@ -105,6 +105,16 @@
         </span>
       </div>
     </v-row>
+    <file-pond
+      ref="pond"
+      name="test"
+      style="position:fixed;min-width:450px;bottom:20px;right:0px;max-height:80%"
+      label-idle="Drop files here..."
+      :allow-multiple="true"
+      accepted-file-types="image/jpeg, image/png"
+      :files="myFiles"
+      @init="handleFilePondInit"
+    />
     <v-footer
       color="background_white"
       fixed
@@ -130,6 +140,7 @@
         style="padding-right: 28px; margin-left: 10px;"
         @click="selectedEmoji"
       />
+
       <v-btn
         icon
         color="basic"
@@ -155,7 +166,12 @@ import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
 import linkify from 'vue-linkify'
-
+import vueFilePond from 'vue-filepond'
+import './css/filepond.min.css'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview)
 Vue.directive('linkified', linkify)
 require('./css/vue-chat-emoji.css')
 Vue.use(VueCookie)
@@ -169,11 +185,13 @@ Vue.use(
 export default {
   name: 'ChatUser',
   components: {
+    FilePond,
     Emoji: VueChatEmoji
   },
   data: () => ({
     messages: [],
     message: '',
+    myFiles: [],
     dialogMessagesLength: 0,
     dialogId: 0
   }),
@@ -196,6 +214,11 @@ export default {
     this.$disconnect()
   },
   methods: {
+    handleFilePondInit: function () {
+      console.log('FilePond has initialized')
+
+      // FilePond instance methods are available on `this.$refs.pond`
+    },
     ...mapActions(['getDialogsData', 'getUserData']),
     decodeEmojiCode (str) {
       return emojis.decodeEmoji(str)
@@ -362,5 +385,8 @@ export default {
 .composer-popover.active {
   bottom: -100px !important;
   left:200px !important;
+}
+.filepond--root {
+  background-color: #fff;
 }
 </style>
