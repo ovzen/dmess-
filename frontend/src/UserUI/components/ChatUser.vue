@@ -13,22 +13,35 @@
         py-2
       >
         <div
-          v-if="!isOwnMessage(message.user)"
+          v-if="isOwnMessage(message.user)"
           class="text-left"
         >
           <v-card
+            style="border-radius: 20px;width:min-content"
             max-width="460px"
-            class="float-right d-flex"
-            style="border-radius: 20px;"
-            color="background_pink"
+            class="d-flex align-content-start flex-wrap flex-shrink-1"
             flat
           >
-            <v-card-text>
+            <v-container
+              class="d-inline-flex align-content-center"
+              pb-0
+              mb-0
+            >
+              <v-img
+                style="border-radius: 4px"
+                :src="message.image_url"
+                max-width="440px"
+                min-width="200px"
+                @click="dialog=true,link=message.image_url"
+              />
+            </v-container>
+            <v-card-text
+              style="padding-top: 3px"
+            >
               <span
-                v-linkified
                 class="font-weight-light message_color--text"
               >
-                {{ decodeEmojiCode(message.text) }}
+                {{ message.text }}
               </span>
               <span
                 class="float-right ml-2"
@@ -39,25 +52,40 @@
           </v-card>
         </div>
         <v-container
-          class="d-flex"
+          class="d-flex flex-row-reverse"
           py-0
         >
           <div
-            v-if="isOwnMessage(message.user)"
+            v-if="!isOwnMessage(message.user)"
             class="text-left"
           >
             <v-card
-              style="border-radius: 20px;"
+              style="border-radius: 20px;width:min-content"
               max-width="460px"
-              class="d-flex"
+              class="d-flex align-content-start flex-wrap flex-shrink-1"
+              color="background_pink"
               flat
             >
-              <v-card-text>
+              <v-container
+                class="d-inline-flex align-content-center"
+                pb-0
+                mb-0
+              >
+                <v-img
+                  style="border-radius: 4px"
+                  :src="message.image_url"
+                  max-width="440px"
+                  min-width="200px"
+                  @click="dialog=true,link=message.image_url"
+                />
+              </v-container>
+              <v-card-text
+                style="padding-top: 3px"
+              >
                 <span
-                  v-linkified
                   class="font-weight-light message_color--text"
                 >
-                  {{ decodeEmojiCode(message.text) }}
+                  {{ message.text }}
                 </span>
                 <span
                   class="float-right ml-2"
@@ -105,6 +133,18 @@
         </span>
       </div>
     </v-row>
+    <v-dialog
+      v-model="dialog"
+      content-class="elevation-0"
+    >
+      <v-img
+        contain
+        style="box-shadow: none !important"
+        max-height="85vh"
+        :src="link"
+        @click="dialog=false"
+      />
+    </v-dialog>
     <file-pond
       ref="pond"
       name="image"
@@ -213,7 +253,9 @@ export default {
     dialogMessagesLength: 0,
     dialogId: 0,
     imageUrl: '',
-    loading: false
+    dialog: false,
+    loading: false,
+    link: ''
   }),
   computed: {
     ...mapGetters(['getUserId', 'getUsersByDialogId'])
@@ -287,12 +329,21 @@ export default {
       console.log(this.$refs)
       if (!this.loading) {
         console.log('messagetext: ', this.message)
-        this.$socket.send(
-          JSON.stringify({
-            message: emojis.encodeEmoji(this.message),
-            image_url: JSON.parse(this.imageUrl).image_url
-          })
-        )
+        if (this.imageUrl === '') {
+          this.$socket.send(
+            JSON.stringify({
+              message: emojis.encodeEmoji(this.message),
+              image_url: ''
+            })
+          )
+        } else {
+          this.$socket.send(
+            JSON.stringify({
+              message: emojis.encodeEmoji(this.message),
+              image_url: JSON.parse(this.imageUrl).image_url
+            })
+          )
+        }
       }
       this.myFiles = []
       this.imageUrl = ''
@@ -363,17 +414,6 @@ export default {
           return moment(String(datetime)).format('hh:mm')
         }
       }
-    },
-    onFileSelected (event) {
-      this.image = event
-      let formData = new FormData()
-      console.log(this.image)
-      formData.append('image', this.image, this.image.name)
-      api.axios
-        .post('/api/messages/image_upload/', formData)
-        .then(response => {
-          this.imageUrl = response.data['image_url']
-        })
     }
   }
 }
@@ -432,5 +472,9 @@ export default {
 }
 .filepond--root {
   background-color: #fff;
+}
+.v-image__image{
+  width:100%;
+  height:100%;
 }
 </style>

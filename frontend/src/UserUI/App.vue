@@ -359,16 +359,16 @@ export default {
     },
     MakeName () {
       if (typeof this.getClient !== 'undefined') {
-        if (typeof this.getClient.first_name !== 'undefined' && typeof this.getClient.last_name !== 'undefined') {
+        if (this.getClient.first_name !== '' && this.getClient.last_name !== '') {
           return this.getClient.first_name + ' ' + this.getClient.last_name
         }
-        if (typeof this.getClient.first_name !== 'undefined') {
+        if (this.getClient.first_name !== '') {
           return this.getClient.first_name
         }
-        if (typeof this.getClient.last_name !== 'undefined') {
+        if (this.getClient.last_name !== '') {
           return this.getClient.last_name
         }
-        if (typeof this.getClient.username !== 'undefined') {
+        if (this.getClient.username !== '') {
           return this.getClient.username
         }
       }
@@ -376,17 +376,17 @@ export default {
     },
     MakeAvatar () {
       if (typeof this.getClient !== 'undefined') {
-        if (typeof this.getClient.first_name !== 'undefined' && typeof this.getClient.last_name !== 'undefined') {
-          return this.getClient.first_name[0] + this.getClient.last_name[0]
+        if (this.getClient.first_name !== '' && this.getClient.last_name !== '') {
+          return this.getClient.first_name[0].toUpperCase() + this.getClient.last_name[0].toUpperCase()
         }
-        if (typeof this.getClient.first_name !== 'undefined') {
-          return this.getClient.first_name[0]
+        if (this.getClient.first_name !== '') {
+          return this.getClient.first_name[0].toUpperCase()
         }
-        if (typeof this.getClient.last_name !== 'undefined') {
-          return this.getClient.last_name[0]
+        if (this.getClient.last_name !== '') {
+          return this.getClient.last_name[0].toUpperCase()
         }
-        if (typeof this.getClient.username !== 'undefined') {
-          return this.getClient.username[0]
+        if (this.getClient.username !== '') {
+          return this.getClient.username[0].toUpperCase()
         }
       }
       return '...'
