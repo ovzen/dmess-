@@ -301,6 +301,7 @@ import settings from './components/settings'
 import ContactList from './components/ContactList'
 import DialogsList from './components/DialogsList'
 import { mapActions, mapGetters } from 'vuex'
+import { emojis } from 'vue-chat-emoji'
 
 Vue.use(VueCookie)
 var tabs = [
@@ -427,6 +428,18 @@ export default {
         return user.last_name
       } else {
         return user.username
+      }
+    },
+    decodeEmojiCode (str) {
+      return emojis.decodeEmoji(str)
+    },
+    GetUnreadMessages (dialog) {
+      console.log(dialog.unread_messages[dialog.users[1]])
+      if (typeof this.user_id !== 'undefined') {
+        if (dialog.users[0] === this.user_id) {
+          return dialog.unread_messages[dialog.users[0]]
+        }
+        return dialog.unread_messages[dialog.users[1]]
       }
     },
     getUserInitials (user) {

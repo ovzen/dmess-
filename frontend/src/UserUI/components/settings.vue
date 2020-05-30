@@ -2,11 +2,12 @@
   <div>
     <v-divider />
     <v-col>
-      <a class="basic--text">
-        <u>
-          SETTINGS
-        </u>
-      </a>
+      <p
+        class="basic--text overline font-weight-medium pa-2"
+        style="text-decoration-line: underline; text-transform: uppercase; letter-spacing: 1.5px;"
+      >
+        SETTINGS
+      </p>
     </v-col>
     <v-list-item
       to="/MyProfile"

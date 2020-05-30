@@ -28,7 +28,7 @@
                 v-linkified
                 class="font-weight-light message_color--text"
               >
-                {{ message.text }}
+                {{ decodeEmojiCode(message.text) }}
               </span>
               <span
                 class="float-right ml-2"
@@ -57,7 +57,7 @@
                   v-linkified
                   class="font-weight-light message_color--text"
                 >
-                  {{ message.text }}
+                  {{ decodeEmojiCode(message.text) }}
                 </span>
                 <span
                   class="float-right ml-2"
@@ -126,6 +126,10 @@
         @keydown.enter.prevent=""
         @keyup.enter="sendMessage()"
       />
+      <Emoji
+        style="padding-right: 28px; margin-left: 10px;"
+        @click="selectedEmoji"
+      />
       <v-btn
         icon
         color="basic"
@@ -143,6 +147,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { VueChatEmoji, emojis } from 'vue-chat-emoji'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
@@ -152,6 +157,7 @@ import moment from 'moment'
 import linkify from 'vue-linkify'
 
 Vue.directive('linkified', linkify)
+require('./css/vue-chat-emoji.css')
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -162,6 +168,9 @@ Vue.use(
 )
 export default {
   name: 'ChatUser',
+  components: {
+    Emoji: VueChatEmoji
+  },
   data: () => ({
     messages: [],
     message: '',
@@ -188,6 +197,22 @@ export default {
   },
   methods: {
     ...mapActions(['getDialogsData', 'getUserData']),
+    decodeEmojiCode (str) {
+      return emojis.decodeEmoji(str)
+    },
+    selectedEmoji (args) {
+      let textarea = document.getElementById('for_emoji')
+      let caret = JSON.parse(JSON.stringify(textarea.selectionStart))
+      let front = (textarea.value).substring(0, caret)
+      let back = (textarea.value).substring(textarea.selectionEnd, textarea.value.length)
+      this.message = front + args.emoji + back
+      textarea = document.getElementById('for_emoji')
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = caret + args.emoji.length
+      }, 10)
+      textarea.focus()
+      // this.message += args.emoji
+    },
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
       var elemTop = rect.top
@@ -218,11 +243,12 @@ export default {
       setTimeout(this.GetOldMessages, 1000)
     },
     sendMessage () {
+      console.log(this.$refs)
       if (this.message) {
         console.log('messagetext: ', this.message)
         this.$socket.send(
           JSON.stringify({
-            message: this.message
+            message: emojis.encodeEmoji(this.message)
           })
         )
       }
@@ -342,5 +368,9 @@ export default {
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
+}
+.composer-popover.active {
+  bottom: -100px !important;
+  left:200px !important;
 }
 </style>
