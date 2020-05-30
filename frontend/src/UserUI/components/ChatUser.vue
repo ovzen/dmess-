@@ -82,16 +82,20 @@
             >
               <v-container
                 class="d-inline-flex align-content-center"
+                pb-0
+                mb-0
               >
                 <v-img
                   style="border-radius: 4px"
-                  src="https://s1.1zoom.ru/b3846/Scenery_Sunrises_and_sunsets_Grass_Fog_580590_225x300.jpg"
+                  src="https://media.istockphoto.com/photos/dark-texture-background-picture-id1035728732?k=6&m=1035728732&s=612x612&w=0&h=bLvEx4tBnp-uvevYcJxvRmnsBkbbp0U-1ARZ4lWiGwM="
                   max-width="440px"
                   min-width="200px"
-                  @click.stop="show('https://s1.1zoom.ru/b3846/Scenery_Sunrises_and_sunsets_Grass_Fog_580590_225x300.jpg')"
+                  @click.stop="show('https://media.istockphoto.com/photos/dark-texture-background-picture-id1035728732?k=6&m=1035728732&s=612x612&w=0&h=bLvEx4tBnp-uvevYcJxvRmnsBkbbp0U-1ARZ4lWiGwM=')"
                 />
               </v-container>
-              <v-card-text>
+              <v-card-text
+                style="padding-top: 3px"
+              >
                 <span
                   class="font-weight-light message_color--text"
                 >
@@ -148,13 +152,21 @@
       v-model="showImage"
       max-width="85%"
       max-height="85%"
+      :width="dialogImageWidth"
+      :height="dialogImageHeight"
     >
-      <v-hover v-slot:default="{ hover }">
+      <v-hover
+        v-slot:default="{ hover }"
+      >
         <v-img
+          id="dialogImage"
+          eager
           contain
           :src="link"
           :max-height="$vuetify.breakpoint.height * 0.85"
           :max-width="$vuetify.breakpoint.width * 0.85"
+          :width="dialogImageWidth"
+          :height="dialogImageHeight"
         >
           <v-fade-transition>
             <v-overlay
@@ -235,7 +247,9 @@ export default {
     diailogId: 0,
     showImage: false,
     link: '',
-    imageOverlay: false
+    imageOverlay: false,
+    dialogImageWidth: '85%',
+    dialogImageHeight: '85%'
   }),
   computed: {
     ...mapGetters(['getUserId'])
@@ -259,6 +273,17 @@ export default {
     show (link) {
       this.showImage = true
       this.link = link
+      let image = new Image()
+      image.src = link
+      image.onload = () => {
+        if (image.width >= image.height) {
+          this.dialogImageWidth = window.innerWidth * 0.85
+          this.dialogImageHeight = this.dialogImageWidth / (image.width / image.height)
+        } else {
+          this.dialogImageHeight = window.innerHeight * 0.85
+          this.dialogImageWidth = this.dialogImageHeight * (image.width / image.height)
+        }
+      }
     },
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
@@ -408,5 +433,9 @@ export default {
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
+}
+.v-image__image{
+  width:100%;
+  height:100%;
 }
 </style>
