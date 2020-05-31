@@ -6,9 +6,12 @@ from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketCons
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder
+from djangochannelsrestframework.consumers import AsyncAPIConsumer
 from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
 from djangochannelsrestframework.observer import model_observer
+from djangochannelsrestframework.permissions import AllowAny
+from rest_framework import status
 
 from main.models import Message, Dialog, UserProfile
 from main import models, serializers
@@ -76,9 +79,9 @@ class ChatConsumer(WebsocketConsumer):
 
 class System(WebsocketConsumer):
     def connect(self):
-        User = UserProfile.objects.get(user=self.scope['user'])
-        User.is_online = True
-        User.save()
+        profile = UserProfile.objects.get(user=self.scope['user'])
+        profile.is_online = True
+        profile.save()
         async_to_sync(self.channel_layer.group_add)(
             'system',
             self.channel_name
@@ -90,11 +93,13 @@ class System(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave dialog group
-        User = UserProfile.objects.get(user=self.scope['user'])
+        user = self.scope['user']
+        profile = UserProfile.objects.get(user=user)
         print('exit')
-        User.is_online = False
-        User.last_online = datetime.now()
-        User.save()
+        profile.is_online = False
+        profile.last_online = user.last_login = datetime.now()
+        profile.save()
+        user.save()
 
     # Receive message from WebSocket
     def receive(self, text_data):
@@ -161,9 +166,10 @@ class DialogNotificationConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(event["content"])
 
 
-class UserAPIConsumer(GenericAsyncAPIConsumer):
-    queryset = models.User.objects.all()
-    serializer_class = serializers.UserSerializer
+class UserAPIConsumer(AsyncAPIConsumer):
+    permission_classes = [
+        AllowAny
+    ]
 
     @model_observer(models.User)
     async def user_change_handler(self, message, observer=None, **kwargs):
@@ -189,14 +195,27 @@ class UserAPIConsumer(GenericAsyncAPIConsumer):
         if user is not None:
             yield f'-pk__{user.pk}'
 
-    @action()
-    async def subscribe_to_contacts(self):
-        user = self.scope['user']
-        print(f'user {user.name} has subscribed to it\'s contact list')
-        await self.user_change_handler.subscribe(user_contacts=user)
-        return {'status': f'user {user.name} has subscribed to it\'s contact list'}, 200
+    @model_observer(models.UserProfile)
+    async def user_profile_change_handler(self, message, observer=None, **kwargs):
+        print(message)
+        await self.send_json(message)
+
+    @user_profile_change_handler.groups_for_signal
+    def user_profile_change_handler(self, instance: models.UserProfile, **kwargs):
+        yield f'-pk__{instance.user.pk}'
+        for user in instance.user.users.all():
+            yield f'-contacts__user__{user.pk}'
+
+    @user_profile_change_handler.groups_for_consumer
+    def user_change_handler(self, user_contacts=None, user=None, **kwargs):
+        if user_contacts is not None:
+            yield f'-contacts__user__{user_contacts.pk}'
+        if user is not None:
+            yield f'-pk__{user.pk}'
 
     @action()
-    async def subscribe_to_user(self, pk, **kwargs):
-        user = await database_sync_to_async(self.get_object)(pk=pk)
-        await self.user_change_handler.subscribe(user=user)
+    async def subscribe_to_contacts(self, **kwargs):
+        user = self.scope['user']
+        print(f'user {user.id} has subscribed to it\'s contact list')
+        await self.user_change_handler.subscribe(user_contacts=user)
+        return None, status.HTTP_201_CREATED

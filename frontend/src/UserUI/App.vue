@@ -423,7 +423,8 @@ export default {
       ws.send(
         JSON.stringify(
           {
-            action: 'subscribe_to_contacts'
+            action: 'subscribe_to_contacts',
+            request_id: 1
           }
         )
       )
