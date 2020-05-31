@@ -49,7 +49,9 @@ class ChatConsumer(WebsocketConsumer):
                 'message': message,
                 'author': author.id,
                 'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder),
-                'image_url': image
+                'image_url': image,
+                'name': message_obj.name,
+                'extension': message_obj.extension
             }
         )
 
@@ -65,7 +67,9 @@ class ChatConsumer(WebsocketConsumer):
             'message': message,
             'author': author,
             'create_date': create_date,
-            'image_url': image
+            'image_url': image,
+            'extension': event['extension'],
+            'name': event['name']
         }))
 
 
