@@ -42,7 +42,7 @@ class UserViewSet(mixins.ListModelMixin,
     permission_classes = [IsAdminUserOrReadOnly]
     search_fields = ['username', 'first_name', 'last_name', 'email']
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_contact(self, request, pk=None):
         user = self.get_object()
         contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
