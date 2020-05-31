@@ -75,13 +75,13 @@
                 mb-0
               >
                 <v-img
-                  v-if="message.extension === '.png' || message.extension === '.jpeg'"
+                  v-if="message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg'"
                   :src="message.image_url"
                   max-width="440px"
                   min-width="200px"
                   @click="dialog=true,link=message.image_url"
                 /><file-pond
-                  v-if="!(message.extension === '.png' || message.extension === '.jpeg') && message.image_url"
+                  v-if="!(message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg') && message.image_url"
                   ref="pond2"
                   name="image"
                   :disabled="true"
