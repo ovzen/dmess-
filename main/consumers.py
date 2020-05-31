@@ -1,12 +1,20 @@
 from datetime import datetime
 
 from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
 from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketConsumer
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder
+from djangochannelsrestframework.consumers import AsyncAPIConsumer
+from djangochannelsrestframework.decorators import action
+from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
+from djangochannelsrestframework.observer import model_observer
+from djangochannelsrestframework.permissions import AllowAny
+from rest_framework import status
 
 from main.models import Message, Dialog, UserProfile
+from main import models, serializers
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -75,9 +83,9 @@ class ChatConsumer(WebsocketConsumer):
 
 class System(WebsocketConsumer):
     def connect(self):
-        User = UserProfile.objects.get(user=self.scope['user'])
-        User.is_online = True
-        User.save()
+        profile = UserProfile.objects.get(user=self.scope['user'])
+        profile.is_online = True
+        profile.save()
         async_to_sync(self.channel_layer.group_add)(
             'system',
             self.channel_name
@@ -89,11 +97,13 @@ class System(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave dialog group
-        User = UserProfile.objects.get(user=self.scope['user'])
+        user = self.scope['user']
+        profile = UserProfile.objects.get(user=user)
         print('exit')
-        User.is_online = False
-        User.last_online = datetime.now()
-        User.save()
+        profile.is_online = False
+        profile.last_online = user.last_login = datetime.now()
+        profile.save()
+        user.save()
 
     # Receive message from WebSocket
     def receive(self, text_data):
@@ -158,3 +168,58 @@ class DialogNotificationConsumer(AsyncJsonWebsocketConsumer):
         decoupling will help you as things grow.
         """
         await self.send_json(event["content"])
+
+
+class UserAPIConsumer(AsyncAPIConsumer):
+    permission_classes = [
+        AllowAny
+    ]
+
+    @model_observer(models.User)
+    async def user_change_handler(self, message, observer=None, **kwargs):
+        # due to not being able to make DB QUERIES when selecting a group
+        # maybe do an extra check here to be sure the user has permission
+        # send activity to your frontend
+        print(message)
+        print('Шлем активность')
+        await self.send_json(message)
+
+    @user_change_handler.groups_for_signal
+    def user_change_handler(self, instance: models.User, **kwargs):
+        # this block of code is called very often *DO NOT make DB QUERIES HERE*
+        yield f'-pk__{instance.pk}'
+        for user in instance.users.all():
+            yield f'-contacts__user__{user.pk}'
+
+    @user_change_handler.groups_for_consumer
+    def user_change_handler(self, user_contacts=None, user=None, **kwargs):
+        # This is called when you subscribe/unsubscribe
+        if user_contacts is not None:
+            yield f'-contacts__user__{user_contacts.pk}'
+        if user is not None:
+            yield f'-pk__{user.pk}'
+
+    @model_observer(models.UserProfile)
+    async def user_profile_change_handler(self, message, observer=None, **kwargs):
+        print(message)
+        await self.send_json(message)
+
+    @user_profile_change_handler.groups_for_signal
+    def user_profile_change_handler(self, instance: models.UserProfile, **kwargs):
+        yield f'-pk__{instance.user.pk}'
+        for user in instance.user.users.all():
+            yield f'-contacts__user__{user.pk}'
+
+    @user_profile_change_handler.groups_for_consumer
+    def user_change_handler(self, user_contacts=None, user=None, **kwargs):
+        if user_contacts is not None:
+            yield f'-contacts__user__{user_contacts.pk}'
+        if user is not None:
+            yield f'-pk__{user.pk}'
+
+    @action()
+    async def subscribe_to_contacts(self, **kwargs):
+        user = self.scope['user']
+        print(f'user {user.id} has subscribed to it\'s contact list')
+        await self.user_change_handler.subscribe(user_contacts=user)
+        return None, status.HTTP_201_CREATED

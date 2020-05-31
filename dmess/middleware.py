@@ -25,8 +25,6 @@ class AuthMiddleware:
                     authenticated = JWTTokenUserAuthentication().get_user(val_token).id
                     if authenticated:
                         request.user = User.objects.get(id=authenticated)
-                        request.user.last_login = datetime.datetime.now()
-                        request.user.save()
                     else:
                         request.user = AnonymousUser
                 except (exceptions.AuthenticationFailed, User.DoesNotExist):
@@ -93,8 +91,6 @@ class DRFAuthentication(authentication.BaseAuthentication):
                     authenticated = JWTTokenUserAuthentication().get_user(val_token).id
                     if authenticated:
                         user = User.objects.get(id=authenticated)
-                        user.last_login = datetime.datetime.now()
-                        user.save()
                         return user, None
                     else:
                         return AnonymousUser
