@@ -1,36 +1,41 @@
 <template>
-  <v-container
-    class="fill-height"
-    fluid
-  >
+  <v-container class="fill-height">
     <v-flex
-      justify-center
       d-flex
+      justify-center
     >
-      <v-col
-        md="7"
-        lg="8"
-        xl="5"
-        justify-center
-      >
-        <v-card class="elevation-12">
-          <v-layout>
-            <v-img src="/static/log.JPG" />
-            <v-container>
-              <v-toolbar-title class="text-center pt-7 text--secondary">
-                Final step
-              </v-toolbar-title>
-              <v-card-actions>
-                <v-row justify="space-around">
-                  <v-card-text class="">
-                    Check your e-mail inbox and verify your account!
-                  </v-card-text>
-                </v-row>
-              </v-card-actions>
-            </v-container>
-          </v-layout>
-        </v-card>
-      </v-col>
+      <v-container class="pa-12">
+        <p class="text-center display-2 font-weight-light">
+          Verify your email
+        </p>
+        <v-card-text class="text-center">
+          You will need to verify your email to complete registration
+        </v-card-text>
+        <v-container>
+          <v-flex
+            d-flex
+            justify-center
+          >
+            <pre>
+___________________________________________________
+|\                                                /|
+| \                                              / |
+|  \                                            /  |
+|   \                                          /   |
+|    \________________________________________/    |
+|                                                  |
+|                                                  |
+|                                                  |
+|                                                  |
+|__________________________________________________|
+            </pre>
+          </v-flex>
+        </v-container>
+        <v-card-text class="text-center pa-12">
+          An email has been sent to <strong> user_email@abc.com</strong> with a link to verify your account.<br>
+          If you have not received the mail after a few minutes, please check your spam folder.
+        </v-card-text>
+      </v-container>
     </v-flex>
   </v-container>
 </template>
@@ -45,11 +50,12 @@ export default {
   data: () => ({
     user_id: '',
     timestamp: '',
-    signature: '',
+    signature: ''
   }),
   created () {
-    if (Object.keys(this.$route.query).length) this.verify()
-
+    if (Object.keys(this.$route.query).length) {
+      this.verify()
+    }
   },
   methods: {
     verify () {
@@ -60,7 +66,8 @@ export default {
         .post('/api/accounts/verify-registration/', {
           user_id: this.user_id,
           timestamp: this.timestamp,
-          signature: this.signature})
+          signature: this.signature
+        })
         .catch(error => {
           console.log(error)
         })
@@ -77,7 +84,7 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
   color: #2c3e50;
 }
 </style>
