@@ -52,7 +52,7 @@
     >
       <v-card>
         <v-card-title
-          class="headline textShineBlack"
+          class="headline textShineBlack font-weight-bold"
         >
           You are leaving the client app and go the admin panel!
         </v-card-title>
@@ -80,7 +80,7 @@
       </v-icon>
       <v-list-item-content>
         <v-list-item-title
-          class="pl-7 pb-2 textShineBlack"
+          class="pl-7 pb-2 textShineBlack font-weight-bold"
         >
           The Dark Admin Side
         </v-list-item-title>
@@ -131,7 +131,7 @@ export default {
   color: #2c3e50;
 }
 .textShineBlack {
-  background: linear-gradient(to right, #000 20%, #c31678 30%, #6202ee 70%, #000 80%);
+  background: linear-gradient(to right, #C3005E 20%, #BB86FC 30%, #C3005E 70%, #BB86FC 80%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -141,7 +141,7 @@ export default {
 }
 @keyframes textShine {
   to {
-    background-position: 300%;
+    background-position: 100%;
   }
 }
 </style>
