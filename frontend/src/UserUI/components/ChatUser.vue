@@ -21,6 +21,7 @@
             max-width="460px"
             class="d-flex align-content-start flex-wrap flex-shrink-1"
             flat
+            min-width="200px"
           >
             <v-container
               class="d-inline-flex align-content-center"
@@ -28,6 +29,7 @@
               mb-0
             >
               <v-img
+                v-if="message.extension === '.png' || message.extension === '.jpeg'"
                 style="border-radius: 4px"
                 :src="message.image_url"
                 max-width="440px"
@@ -65,6 +67,7 @@
               class="d-flex align-content-start flex-wrap flex-shrink-1"
               color="background_pink"
               flat
+              min-width="200px"
             >
               <v-container
                 class="d-inline-flex align-content-center"
@@ -72,11 +75,22 @@
                 mb-0
               >
                 <v-img
-                  style="border-radius: 4px"
+                  v-if="message.extension === '.png' || message.extension === '.jpeg'"
                   :src="message.image_url"
                   max-width="440px"
                   min-width="200px"
                   @click="dialog=true,link=message.image_url"
+                /><file-pond
+                  v-if="!(message.extension === '.png' || message.extension === '.jpeg') && message.image_url"
+                  ref="pond2"
+                  name="image"
+                  :disabled="true"
+                  style="max-width=440px;min-width:400px;border-radius:.5em;"
+                  :files="[message.image_url]"
+                  class-name="123"
+                  :instant-upload="false"
+                  :allow-download-by-url="true"
+                  label-idle="Drop files here..."
                 />
               </v-container>
               <v-card-text
@@ -133,16 +147,6 @@
         </span>
       </div>
     </v-row>
-    <file-pond
-      ref="pond2"
-      name="image"
-      :disabled="true"
-      style="padding-bottom:120px;max-width=440px;min-width:200px"
-      :files="['/media/index.js']"
-      :instant-upload="false"
-      :allow-download-by-url="true"
-      label-idle="Drop files here..."
-    />
     <v-dialog
       v-model="dialog"
       content-class="elevation-0"
@@ -158,7 +162,7 @@
     <file-pond
       ref="pond"
       name="image"
-      :style="'position:fixed;width:450px;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
+      :style="'position:fixed;width:450px;color:'+ (!$vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white) +';background-color: ' + ($vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white) + ';border-radius:.5em;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
       label-idle="Drop files here..."
       :allow-multiple="false"
       :files="myFiles"
@@ -202,7 +206,7 @@
         @keyup.enter="sendMessage()"
       />
       <Emoji
-        style="padding-right: 28px; margin-left: 10px;"
+        :style="'padding-right: 28px; margin-left: 10px;background:' + ($vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white)"
         @click="selectedEmoji"
       />
 

@@ -29,6 +29,23 @@
         />
       </v-list-item-content>
     </v-list-item>
+    <v-list-item>
+      <v-switch
+        v-model="$vuetify.theme.dark"
+        class="pb-2"
+        color="basic"
+      />
+      <v-list-item-content>
+        <v-list-item-title
+          class="pl-7 pb-2"
+        >
+          Dark Theme [BETA]
+        </v-list-item-title>
+        <v-divider
+          class="ml-7"
+        />
+      </v-list-item-content>
+    </v-list-item>
     <v-dialog
       v-model="dialogsWarnings"
       width="630px"

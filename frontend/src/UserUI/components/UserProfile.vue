@@ -197,7 +197,6 @@
 
 <script>
 import api from '../api'
-import jwt from 'jsonwebtoken'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'UserProfile',

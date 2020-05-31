@@ -74,9 +74,11 @@ export default ({
         if (state.users.length === 0) {
           state.users[0] = payload
         } else {
-          if (state.users[state.users.findIndex(user => user.id === payload.id)].is_contact)
-          {
-            payload.is_contact = true
+          for (let contact in state.contacts) {
+            console.log(state.contacts[contact].contact)
+            if (state.contacts[contact].contact === payload.id) {
+              payload.is_contact = true
+            }
           }
           state.users[state.users.findIndex(user => user.id === payload.id)] = payload
         }

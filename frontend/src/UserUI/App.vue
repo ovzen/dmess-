@@ -127,7 +127,7 @@
                 <v-btn
                   color="red"
                   text
-                  @click="dialogForDeleteChat = false"
+                  @click="deleteChat(),dialogForDeleteChat = false"
                 >
                   DELETE CHAT
                 </v-btn>
@@ -213,7 +213,8 @@
         <v-footer
           absolute
           padless
-          style="height:56px; background :#ffffff;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
+          class="background_white"
+          style="height:56px;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
         >
           <v-btn
             fab
@@ -457,6 +458,11 @@ export default {
     disconnect () {
       this.$disconnect()
     },
+    deleteChat () {
+      api.axios.delete('/api/dialog/' + this.$route.params.id + '/')
+      this.getDialogsData(this.getUserId)
+      this.$router.go(-1)
+    },
     updateToken () {
       if (localStorage.getItem('UpdateKey') && !this.$cookie.get('Authentication')) {
         api.axios.post('/api/token/refresh/', { refresh: localStorage.getItem('UpdateKey') }).then(res => {
@@ -466,9 +472,6 @@ export default {
         }
         )
       }
-    },
-    allusers () {
-      this.$router.push({ name: 'allUser' })
     },
     goProfilePage () {
       this.$router.push({ name: 'Profile', params: { id: this.user_id } })

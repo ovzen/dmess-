@@ -19,7 +19,7 @@
           <div v-else>
             <v-avatar
               size="100px"
-              :color="( edit ? 'background_grey' : 'basic')"
+              :color="( edit ? 'background_grey' : 'basic_text')"
             >
               <span
                 v-if="!edit && !UserProfile.profile.avatar"
