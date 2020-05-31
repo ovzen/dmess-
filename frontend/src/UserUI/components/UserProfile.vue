@@ -237,10 +237,7 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     add_contact () {
-      api.axios.post('/api/contacts/', {
-        user: jwt.decode(this.$cookie.get('Authentication')).user_id,
-        contact: this.$route.params.Userid
-      }).then(res => {
+      api.axios.post('/api/users/' + this.$route.params.Userid + '/add_contact/').then(res => {
         if (res.status === 201) {
           this.$root.$children[0].getContacts()
           this.$root.$children[0].findedUsers = this.$root.$children[0].findedUsers.filter(user => {

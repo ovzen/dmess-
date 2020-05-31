@@ -384,7 +384,7 @@ export default {
         this.messages.unshift({
           id: computedMessageId,
           text: JSON.parse(data.data).message,
-          user_detail: { username: JSON.parse(data.data).author },
+          user: JSON.parse(data.data).author,
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1),
           image_url: JSON.parse(data.data).image_url
         })
@@ -404,7 +404,8 @@ export default {
       setTimeout(this.UpdateUserInDialog, 30000)
     },
     isOwnMessage (author) {
-      return author === jwt.decode(this.$cookie.get('Authentication')).user_id
+      console.log(author, jwt.decode(this.$cookie.get('Authentication')).user_id)
+      return author !== jwt.decode(this.$cookie.get('Authentication')).user_id
     },
     formatTime (datetime) {
       if (datetime) {

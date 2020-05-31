@@ -61,8 +61,8 @@ export default ({
           }
         } else {
           for (let contact in state.contacts) {
-            console.log('log', state.contacts[contact].contact)
-            if (state.contacts[contact].contact === payload.id || state.contacts[contact].user === payload.id) {
+            console.log(state.contacts[contact].contact)
+            if (state.contacts[contact].contact === payload.id) {
               payload.is_contact = true
               state.users.push(payload)
               return 0
@@ -70,9 +70,16 @@ export default ({
           }
           state.users.push(payload)
         }
-      }
-      if (state.users.length === 0) {
-        state.users[0] = payload
+      } else {
+        if (state.users.length === 0) {
+          state.users[0] = payload
+        } else {
+          if (state.users[state.users.findIndex(user => user.id === payload.id)].is_contact)
+          {
+            payload.is_contact = true
+          }
+          state.users[state.users.findIndex(user => user.id === payload.id)] = payload
+        }
       }
     },
     addContact: (state, payload) => {

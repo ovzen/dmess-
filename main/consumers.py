@@ -47,7 +47,7 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'author': author.username,
+                'author': author.id,
                 'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder),
                 'image_url': image
             }
