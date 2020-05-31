@@ -46,9 +46,7 @@ class UserViewSet(mixins.ListModelMixin,
     def add_contact(self, request, pk=None):
         user = self.get_object()
         contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
-        return Response(
-            {'status': f'{user.username} {"successfully added" if created else "is already"} in your contact list'}
-        )
+        return Response(status=201 if created else 400)
 
 
 class ContactViewSet(mixins.ListModelMixin,
