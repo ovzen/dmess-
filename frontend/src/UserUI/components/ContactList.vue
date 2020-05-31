@@ -65,6 +65,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider
+          v-if="!(SortContacts[SortContacts.length-1].id == contact.id) || !userSearch"
           inset
         />
       </div>
@@ -80,7 +81,7 @@
         </p>
         <p class="overline text-center font-weight-medium text_second--text">
           ADD NEW CONTACTS!
-          <br />
+          <br>
           THEY WILL BE DISPLAY HERE
         </p>
       </div>

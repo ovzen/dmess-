@@ -151,7 +151,6 @@
       :style="'position:fixed;width:450px;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
       label-idle="Drop files here..."
       :allow-multiple="false"
-      accepted-file-types="image/jpeg, image/png"
       :files="myFiles"
       :drop-on-page="true"
       :drop-on-element="false"
@@ -255,6 +254,7 @@ export default {
     imageUrl: '',
     dialog: false,
     loading: false,
+    fileExtension: null,
     link: ''
   }),
   computed: {
@@ -282,6 +282,7 @@ export default {
     ...mapActions(['getDialogsData', 'getUserData']),
     beforeupload (file, progress) {
       console.log('beforeupload', file, progress)
+      this.fileExtension = progress.fileExtension
       this.loading = true
       this.hide = true
     },
