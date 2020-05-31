@@ -41,7 +41,7 @@
               <span
                 class="font-weight-light message_color--text"
               >
-                {{ message.text }}
+                {{ decodeEmojiCode(message.text) }}
               </span>
               <span
                 class="float-right ml-2"
@@ -85,7 +85,7 @@
                 <span
                   class="font-weight-light message_color--text"
                 >
-                  {{ message.text }}
+                  {{ decodeEmojiCode(message.text) }}
                 </span>
                 <span
                   class="float-right ml-2"
@@ -133,6 +133,16 @@
         </span>
       </div>
     </v-row>
+    <file-pond
+      ref="pond2"
+      name="image"
+      :disabled="true"
+      style="padding-bottom:120px;max-width=440px;min-width:200px"
+      :files="['/media/index.js']"
+      :instant-upload="false"
+      :allow-download-by-url="true"
+      label-idle="Drop files here..."
+    />
     <v-dialog
       v-model="dialog"
       content-class="elevation-0"
@@ -227,7 +237,9 @@ import './css/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview)
+import FilePondPluginGetFile from 'filepond-plugin-get-file'
+import './css/filepond-plugin-get-file.min.css'
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginGetFile)
 Vue.directive('linkified', linkify)
 require('./css/vue-chat-emoji.css')
 Vue.use(VueCookie)
@@ -285,6 +297,8 @@ export default {
       this.fileExtension = progress.fileExtension
       this.loading = true
       this.hide = true
+      const pond = FilePond.create()
+      pond.addFile('./ChatUser.vue')
     },
     afterupload (file, progress) {
       console.log('afterupload', file, progress)
@@ -478,5 +492,11 @@ export default {
 .v-image__image{
   width:100%;
   height:100%;
+}
+.test{
+  background: rgba(0, 0, 0, 0.1);
+}
+.filepond--item-panel{
+  background: rgba(0, 0, 0, 0.1) !important
 }
 </style>
