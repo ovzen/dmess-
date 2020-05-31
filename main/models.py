@@ -34,11 +34,11 @@ class UserProfile(models.Model):
 class Contact(models.Model):
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE,
-        related_name='user'
+        related_name='users'
     )
     contact = models.ForeignKey(
         to=User, on_delete=models.CASCADE,
-        related_name='contact'
+        related_name='contacts'
     )
 
     class Meta:
