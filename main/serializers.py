@@ -31,6 +31,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+    extension = serializers.CharField(read_only=True)
+
     class Meta:
         model = models.Message
         fields = '__all__'

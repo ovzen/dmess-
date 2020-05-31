@@ -1,6 +1,7 @@
 # coding=utf-8
 import uuid
 
+from coverage.annotate import os
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -66,6 +67,14 @@ class Message(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     image_url = models.CharField(max_length=200, default=False, null=True)
     is_read = models.BooleanField(default=False)
+
+    @property
+    def extension(self):
+        return os.path.splitext(self.image_url)[1]
+
+    @property
+    def name(self):
+        return os.path.basename(self.image_url)
 
 
 class WikiPage(models.Model):
