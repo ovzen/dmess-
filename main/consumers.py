@@ -3,8 +3,11 @@ from datetime import datetime
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketConsumer
 import json
+from djangochannelsrestframework.consumers import AsyncAPIConsumer
 
 from django.core.serializers.json import DjangoJSONEncoder
+from djangochannelsrestframework.decorators import action
+from djangochannelsrestframework.observer import model_observer
 
 from main.models import Message, Dialog, UserProfile
 
@@ -154,3 +157,37 @@ class DialogNotificationConsumer(AsyncJsonWebsocketConsumer):
         decoupling will help you as things grow.
         """
         await self.send_json(event["content"])
+
+
+# class MyConsumer(AsyncAPIConsumer):
+#
+#     @model_observer(models.Classroom)
+#     async def classroom_change_handler(self, message, observer=None, **kwargs):
+#         # due to not being able to make DB QUERIES when selecting a group
+#         # maybe do an extra check here to be sure the user has permission
+#         # send activity to your frontend
+#         await self.send_json(message)
+#
+#     @classroom_change_handler.groups_for_signal
+#     def classroom_change_handler(self, instance: models.Classroom, **kwargs):
+#         # this block of code is called very often *DO NOT make DB QUERIES HERE*
+#         yield f'-school__{instance.school_id}'
+#         yield f'-pk__{instance.pk}'
+#
+#     @classroom_change_handler.groups_for_consumer
+#     def classroom_change_handler(self, school=None, classroom=None, **kwargs):
+#         # This is called when you subscribe/unsubscribe
+#         if school is not None:
+#             yield f'-school__{school.pk}'
+#         if classroom is not None:
+#             yield f'-pk__{classroom.pk}'
+#
+#     @action()
+#     async def subscribe_to_classrooms_in_school(self, school_pk, **kwargs):
+#         # check user has permission to do this
+#         await self.classroom_change_handler.subscribe(school=school)
+#
+#     @action()
+#     async def subscribe_to_classroom(self, classroom_pk, **kwargs):
+#         # check user has permission to do this
+#         await self.classroom_change_handler.subscribe(classroom=classroom)
