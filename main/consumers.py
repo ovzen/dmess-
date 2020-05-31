@@ -194,6 +194,7 @@ class UserAPIConsumer(GenericAsyncAPIConsumer):
         user = self.scope['user']
         print(f'user {user.name} has subscribed to it\'s contact list')
         await self.user_change_handler.subscribe(user_contacts=user)
+        return {'status': f'user {user.name} has subscribed to it\'s contact list'}, 200
 
     @action()
     async def subscribe_to_user(self, pk, **kwargs):
