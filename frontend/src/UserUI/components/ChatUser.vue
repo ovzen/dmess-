@@ -12,6 +12,22 @@
         :key="message.id"
         py-2
       >
+        <v-card
+          v-if="isNewDate(message)"
+          style="border-radius: 15px;width:min-content"
+          class="d-inline-flex align-content-center"
+          color="background_white"
+        >
+          <v-card-text
+            style="padding: 8px"
+          >
+            <span
+              class="message_color--text message"
+            >
+              {{ getDay(message.create_date) }}
+            </span>
+          </v-card-text>
+        </v-card>
         <div
           v-if="isOwnMessage(message.user)"
           class="text-left"
@@ -41,14 +57,14 @@
               style="padding-top: 3px"
             >
               <span
-                class="font-weight-light message_color--text"
+                class="message_color--text message"
               >
                 {{ decodeEmojiCode(message.text) }}
               </span>
               <span
-                class="float-right ml-2"
+                class="float-right time-text"
               >
-                {{ formatTime(message.create_date) }}
+                {{ getTime(message.create_date) }}
               </span>
             </v-card-text>
           </v-card>
@@ -97,14 +113,14 @@
                 style="padding-top: 3px"
               >
                 <span
-                  class="font-weight-light message_color--text"
+                  class="message_color--text message"
                 >
                   {{ decodeEmojiCode(message.text) }}
                 </span>
                 <span
-                  class="float-right ml-2"
+                  class="float-right time-text"
                 >
-                  {{ formatTime(message.create_date) }}
+                  {{ getTime(message.create_date) }}
                 </span>
               </v-card-text>
             </v-card>
@@ -426,12 +442,30 @@ export default {
       console.log(author, jwt.decode(this.$cookie.get('Authentication')).user_id)
       return author !== jwt.decode(this.$cookie.get('Authentication')).user_id
     },
-    formatTime (datetime) {
+    getTime (datetime) {
       if (datetime) {
-        if (moment(datetime).isBefore(moment(), 'day')) {
-          return moment(String(datetime)).format('DD.MM.YYYY')
+        return moment(String(datetime)).format('HH:mm')
+      }
+    },
+    getDay (datetime) {
+      if (datetime) {
+        if (moment(datetime).isSame(moment(), 'day')) {
+          return 'Today'
         } else {
-          return moment(String(datetime)).format('hh:mm')
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        }
+      }
+    },
+    isNewDate (message) {
+      if (message.id === 1) {
+        return true
+      } else {
+        let previousMessage = this.messages.find(item => item.id === message.id - 1)
+        if (previousMessage) {
+          let previousMessageDate = previousMessage.create_date
+          if (moment(message.create_date).isAfter(moment(previousMessageDate), 'day')) {
+            return true
+          }
         }
       }
     }
@@ -503,4 +537,21 @@ export default {
 .filepond--item-panel{
   background: rgba(0, 0, 0, 0.1) !important
 }
+.message {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  }
+.time-text {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
 </style>
