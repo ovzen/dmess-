@@ -108,13 +108,18 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     filterset_fields = '__all__'
     ordering_fields = ['id', 'create_date']
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return super().get_queryset()
+        else:
+            return Message.objects.filter(dialog__users=user)
+
     @action(detail=False, methods=['post'])
     def image_upload(self, request):
         image = request.FILES['image']
-        print(image)
         image_name = default_storage.save(image.name, image)
         image_url = default_storage.url(image_name)
-        print(image_url)
         return Response({"image_url": image_url})
 
 
@@ -126,6 +131,13 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     serializer_class = serializers.WikiPageSerializer
     queryset = WikiPage.objects.all()
     filterset_fields = ['title', 'dialog', 'message']
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return super().get_queryset()
+        else:
+            return WikiPage.objects.filter(dialog__users=user)
 
 
 def landing_view(request):
