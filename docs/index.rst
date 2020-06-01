@@ -11,6 +11,7 @@ Welcome to Dmess's documentation!
    :caption: Содержание:
 
    user_guide.rst
+   admin_guide.rst
    modules/docs
    readme
    vue_page
