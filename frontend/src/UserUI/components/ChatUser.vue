@@ -229,7 +229,7 @@
       <v-btn
         icon
         color="basic"
-        :disabled="loading"
+        :disabled="loading || !(message !== '' || imageUrl !== '')"
         class="align-self-sm-end"
         style="margin-bottom:5px"
         @click="sendMessage()"
@@ -362,7 +362,7 @@ export default {
     },
     sendMessage () {
       console.log(this.$refs)
-      if (!this.loading) {
+      if (!this.loading && (this.message !== '' || this.imageUrl !== '')) {
         console.log('messagetext: ', this.message)
         if (this.imageUrl === '') {
           this.$socket.send(
@@ -439,7 +439,6 @@ export default {
       setTimeout(this.UpdateUserInDialog, 30000)
     },
     isOwnMessage (author) {
-      console.log(author, jwt.decode(this.$cookie.get('Authentication')).user_id)
       return author !== jwt.decode(this.$cookie.get('Authentication')).user_id
     },
     getTime (datetime) {

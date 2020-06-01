@@ -6,7 +6,7 @@
         v-model="userSearch"
         clearable
         solo
-        background-color="grey lighten-2"
+        background-color="search"
         dense
         flat
         color="basic"
@@ -53,11 +53,11 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              {{ contact.username }}
+              {{ getUserName(contact) }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <span
-                :class="(contact.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+                :class="(contact.profile.status === 'online' ? 'basic_text--text text--lighten' : 'text_second--text')"
               >
                 {{ contact.profile.status }}
               </span>
@@ -133,7 +133,7 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                {{ user.username }}
+                {{ getUserName(user) }}
               </v-list-item-title>
               <v-list-item-subtitle>
                 <span
@@ -183,6 +183,19 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData']),
+    getUserName (user) {
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name + ' ' + user.last_name)
+        } else if (user.first_name) {
+          return user.first_name
+        } else if (user.last_name) {
+          return user.last_name
+        } else {
+          return user.username
+        }
+      }
+    },
     getUsersBySearch () {
       api.axios.get('/api/users/', {
         params: {

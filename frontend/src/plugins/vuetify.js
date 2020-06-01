@@ -19,14 +19,17 @@ export default new Vuetify({
         icons_color: '#DADADA',
         text_main: '#1F1E21',
         text_second: '#6F6A75',
-        smile_color: '#969696'
+        smile_color: '#969696',
+        back_button: '#757575',
+        search: '#e0e0e0'
       },
       dark: {
         basic_text: '#6202EE',
         text_second: '#ffffff',
         background_main: '#141414',
         background_white: '#363636',
-        primary: '#6202EE'
+        primary: '#6202EE',
+        black: '#ffffff'
       }
     }
   }

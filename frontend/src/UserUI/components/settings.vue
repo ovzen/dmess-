@@ -3,7 +3,7 @@
     <v-divider />
     <v-col>
       <p
-        class="basic--text overline font-weight-medium pa-2"
+        class="basic_text--text overline font-weight-medium pa-2"
         style="text-decoration-line: underline; text-transform: uppercase; letter-spacing: 1.5px;"
       >
         SETTINGS

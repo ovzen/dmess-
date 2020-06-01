@@ -7,22 +7,24 @@
       color="background_white"
     >
       <v-toolbar-title
-        v-if="Route.name === 'MyProfile'"
+        v-if="Route.name === 'MyProfile' || Route.name === 'UserProfile'"
         @click="GoBack()"
       >
         <v-btn
           text
           small
+          class="back_button--text"
           style="font-family: Roboto;
                 font-style: normal;
                 font-weight: 500;
                 font-size: 10px;
                 line-height: 16px;
                 letter-spacing: 1.5px;
-                text-transform: uppercase;
-                color: #757575;"
+                text-transform: uppercase;"
         >
-          <v-icon> mdi-keyboard-backspace </v-icon>
+          <v-icon style="padding-bottom:2px">
+            mdi-keyboard-backspace
+          </v-icon>
           Back
         </v-btn>
       </v-toolbar-title>
@@ -164,7 +166,7 @@
               <v-list-item-title
                 class="title"
               >
-                {{ MakeName }}
+                {{ getUserName(getClient) }}
               </v-list-item-title>
               <v-list-item-subtitle
                 v-if="getClientProfile.is_online"
@@ -362,23 +364,6 @@ export default {
       }
       return { username: 'Загрузка...', profile: { avatar: null, status: 'Загрузка...' } }
     },
-    MakeName () {
-      if (typeof this.getClient !== 'undefined') {
-        if (this.getClient.first_name !== '' && this.getClient.last_name !== '') {
-          return this.getClient.first_name + ' ' + this.getClient.last_name
-        }
-        if (this.getClient.first_name !== '') {
-          return this.getClient.first_name
-        }
-        if (this.getClient.last_name !== '') {
-          return this.getClient.last_name
-        }
-        if (this.getClient.username !== '') {
-          return this.getClient.username
-        }
-      }
-      return 'Загрузка...'
-    },
     MakeAvatar () {
       if (typeof this.getClient !== 'undefined') {
         if (this.getClient.first_name !== '' && this.getClient.last_name !== '') {
@@ -427,7 +412,7 @@ export default {
         JSON.stringify(
           {
             action: 'subscribe_to_contacts',
-            request_id: 1
+            request_id: Vue.getUserId
           }
         )
       )
@@ -436,14 +421,16 @@ export default {
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
     getUserName (user) {
-      if (user.first_name && user.last_name) {
-        return (user.first_name + ' ' + user.last_name)
-      } else if (user.first_name) {
-        return user.first_name
-      } else if (user.last_name) {
-        return user.last_name
-      } else {
-        return user.username
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name + ' ' + user.last_name)
+        } else if (user.first_name) {
+          return user.first_name
+        } else if (user.last_name) {
+          return user.last_name
+        } else {
+          return user.username
+        }
       }
     },
     GetUnreadMessages (dialog) {

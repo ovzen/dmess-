@@ -7,7 +7,7 @@
         clearable
         solo
         color="basic"
-        background-color="grey lighten-2"
+        background-color="search"
         dense
         flat
         hide-details
