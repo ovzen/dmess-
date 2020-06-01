@@ -99,13 +99,12 @@ class System(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave dialog group
-        user = self.scope['user']
-        profile = UserProfile.objects.get(user=user)
+        user_id = self.scope['user'].id
+        user = models.User.objects.get(pk=user_id)
         print('exit')
-        profile.is_online = False
-        profile.last_online = user.last_login = datetime.now()
-        profile.save()
-        user.save()
+        user.profile.is_online = False
+        user.profile.last_online = datetime.now()
+        user.profile.save()
 
     # Receive message from WebSocket
     def receive(self, text_data):
