@@ -61,25 +61,22 @@ class ChatConsumer(WebsocketConsumer):
                 'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder),
                 'image_url': image,
                 'name': message_obj.name,
-                'extension': message_obj.extension
+                'extension': message_obj.extension,
+                'id': message_obj.id
             }
         )
 
     # Receive message from dialog group
     def chat_message(self, event):
-        message = event['message']
-        author = event['author']
-        create_date = event['create_date']
-        image = event['image_url']
-
         # Send message to WebSocket
         self.send(text_data=json.dumps({
-            'message': message,
-            'author': author,
-            'create_date': create_date,
-            'image_url': image,
+            'message': event['message'],
+            'author': event['author'],
+            'create_date': event['create_date'],
+            'image_url': event['image_url'],
             'extension': event['extension'],
-            'name': event['name']
+            'name': event['name'],
+            'id': event['id']
         }))
 
 
