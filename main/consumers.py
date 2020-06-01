@@ -9,8 +9,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 from djangochannelsrestframework.consumers import AsyncAPIConsumer
 from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
+from djangochannelsrestframework.mixins import RetrieveModelMixin
 from djangochannelsrestframework.observer import model_observer
-from djangochannelsrestframework.permissions import AllowAny
+from djangochannelsrestframework.observer.generics import ObserverModelInstanceMixin
+from djangochannelsrestframework.permissions import IsAuthenticated
 from rest_framework import status
 
 from main.models import Message, Dialog, UserProfile
@@ -170,19 +172,33 @@ class DialogNotificationConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(event["content"])
 
 
-class UserAPIConsumer(AsyncAPIConsumer):
+class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
+    queryset = models.User.objects.all()
+    serializer_class = serializers.UserSerializer
     permission_classes = [
-        AllowAny
+        IsAuthenticated
     ]
+
+    @action()
+    async def subscribe_to_contacts(self, **kwargs):
+        user = self.scope['user']
+        print(f'user {user.id} has subscribed to it\'s contact list')
+        await self.user_change_handler.subscribe(user_contacts=user)
+        return None, status.HTTP_201_CREATED
+
+    async def handle_observed_action(self, **kwargs):
+        print(kwargs)
+        data, response_status = await self.retrieve(**kwargs)
+        message_action = kwargs.pop('action')
+
+        await self.reply(
+            action=message_action,
+            data=data,
+        )
 
     @model_observer(models.User)
     async def user_change_handler(self, message, observer=None, **kwargs):
-        # due to not being able to make DB QUERIES when selecting a group
-        # maybe do an extra check here to be sure the user has permission
-        # send activity to your frontend
-        print(message)
-        print('Шлем активность')
-        await self.send_json(message)
+        await self.handle_observed_action(**message)
 
     @user_change_handler.groups_for_signal
     def user_change_handler(self, instance: models.User, **kwargs):
@@ -201,8 +217,7 @@ class UserAPIConsumer(AsyncAPIConsumer):
 
     @model_observer(models.UserProfile)
     async def user_profile_change_handler(self, message, observer=None, **kwargs):
-        print(message)
-        await self.send_json(message)
+        await self.handle_observed_action(**message)
 
     @user_profile_change_handler.groups_for_signal
     def user_profile_change_handler(self, instance: models.UserProfile, **kwargs):
@@ -216,10 +231,3 @@ class UserAPIConsumer(AsyncAPIConsumer):
             yield f'-contacts__user__{user_contacts.pk}'
         if user is not None:
             yield f'-pk__{user.pk}'
-
-    @action()
-    async def subscribe_to_contacts(self, **kwargs):
-        user = self.scope['user']
-        print(f'user {user.id} has subscribed to it\'s contact list')
-        await self.user_change_handler.subscribe(user_contacts=user)
-        return None, status.HTTP_201_CREATED

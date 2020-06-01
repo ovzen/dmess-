@@ -303,7 +303,7 @@ import ContactList from './components/ContactList'
 import DialogsList from './components/DialogsList'
 import { mapActions, mapGetters } from 'vuex'
 
-let ws = new WebSocket(
+let ws1 = new WebSocket(
   (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
 )
 
@@ -420,8 +420,10 @@ export default {
     this.getUserData(this.getUserId)
     this.getContactsData()
     this.getDialogsData(this.getUserId)
-    ws.onopen = function () {
-      ws.send(
+
+    // Эксперименты Федора
+    ws1.onopen = function () {
+      ws1.send(
         JSON.stringify(
           {
             action: 'subscribe_to_contacts',
