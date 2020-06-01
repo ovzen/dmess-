@@ -416,7 +416,17 @@ export default {
           }
         )
       )
+      ws1.send(
+        JSON.stringify(
+          {
+            action: 'subscribe_to_user',
+            request_id: 1,
+            pk: 3
+          }
+        )
+      )
     }
+    
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),

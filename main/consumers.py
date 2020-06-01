@@ -186,6 +186,13 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         await self.user_change_handler.subscribe(user_contacts=user)
         return None, status.HTTP_201_CREATED
 
+    @action()
+    async def subscribe_to_user(self, pk, **kwargs):
+        user = await database_sync_to_async(self.get_object)(pk=pk)
+        print(f'You have successfully subscribed to user {user.username} with id: {user.id}')
+        await self.user_change_handler.subscribe(user=user)
+        return None, status.HTTP_201_CREATED
+
     async def handle_observed_action(self, **kwargs):
         print(kwargs)
         data, response_status = await self.retrieve(**kwargs)
