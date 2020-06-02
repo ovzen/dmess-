@@ -284,7 +284,7 @@
           </v-list-item>
 
           <v-list-item
-            @click="exit()"
+            @click.stop="dialogLogout = true"
           >
             <v-list-item-action>
               <v-icon
@@ -300,6 +300,36 @@
               >
                 Logout
               </v-list-item-title>
+              <v-dialog
+                v-model="dialogLogout"
+                max-width="365"
+              >
+                <v-card>
+                  <v-card-title
+                    class="headline"
+                  >
+                    Do you really want to get out?
+                  </v-card-title>
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      color="basic darken-1"
+                      text
+                      @click="dialogLogout = false"
+                    >
+                      NO
+                    </v-btn>
+
+                    <v-btn
+                      color="basic darken-1"
+                      text
+                      @click="exit()"
+                    >
+                      YES
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
               <v-divider
                 width="550"
               />
@@ -323,6 +353,7 @@ export default {
     user_id: undefined,
     UserProfile: undefined,
     loading: true,
+    dialogLogout: false,
     edit: false
   }),
   computed: {
