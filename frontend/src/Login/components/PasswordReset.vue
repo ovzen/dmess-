@@ -1,14 +1,105 @@
 <template>
-  <v-container fluid>
-    <template v-if="login_required === true">
-      <v-container class="fill-height">
+  <v-container>
+    <template v-if="reset_mode === true">
+      <v-container
+        class="fill-height"
+        fluid
+      >
         <v-flex
-          d-flex
           justify-center
+          d-flex
         >
-          <v-container class="pa-12">
-            <p>To be continued...</p>
-          </v-container>
+          <v-col
+            md="7"
+            lg="8"
+            xl="5"
+            justify-center
+          >
+            <v-card class="elevation-12">
+              <v-layout>
+                <v-img
+                  src="/static/reg.JPG"
+                />
+                <v-container>
+                  <v-toolbar-title class="text-center pt-7 text--secondary">
+                    Password Reset
+                  </v-toolbar-title>
+                  <div>
+                    <v-window>
+                      <v-window-item>
+                        <v-card-text>
+                          <v-row justify="center">
+                            <v-col
+                              md="9"
+                              lg="10"
+                              xl="9"
+                            >
+                              <v-text-field
+                                v-model="password"
+                                :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                                :type="vanish ? 'text' : 'password'"
+                                clearable
+                                label="Your new password"
+                                hint="Password must contain letters and numbers"
+                                required
+                                outlined
+                                name="password"
+                                :rules="passwordRules"
+                                @click:append="vanish = !vanish"
+                              />
+
+                              <v-text-field
+                                ref="repeatpassword"
+                                v-model="repeatpassword"
+                                :error-messages="usernameError"
+                                :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                                :type="vanish ? 'text' : 'password'"
+                                clearable
+                                label="Repeat Password"
+                                hint="Repeat your password"
+                                required
+                                outlined
+                                name="Repeat_password"
+                                :rules="repeatpasswordRules"
+                                @click:append="vanish = !vanish"
+                                @keyup.enter="reset_password(password, repeatpassword)"
+                              />
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+                      </v-window-item>
+                    </v-window>
+                  </div>
+                  <v-card-actions>
+                    <v-row justify="space-around">
+                     <v-btn
+                        :disabled="password == '' || password != repeatpassword"
+                        tile
+                        outlined
+                        color="purple darken-4"
+                        @click="reset_password(password, repeatpassword)"
+                      >
+                        I promise not to forget it again!
+                      </v-btn>
+                    </v-row>
+                  </v-card-actions>
+                  <v-snackbar
+                    v-model="snackbar"
+                    :multi-line="multiLine"
+                  >
+                    {{ notificationErrors }}
+                    <v-btn
+                      color="red"
+                      text
+                      @click="snackbar = false"
+                    >
+                      Close
+                    </v-btn>
+                  </v-snackbar>
+                </v-container>
+              </v-layout>
+            </v-card>
+          </v-col>
         </v-flex>
       </v-container>
     </template>
@@ -23,7 +114,7 @@
               Verify your email
             </p>
             <v-card-text class="text-center">
-              You will need to verify your email to reset your password
+              You have to verify your email in order to reset your password
             </v-card-text>
             <v-container>
               <v-flex
@@ -46,7 +137,7 @@ ___________________________________________________
               </v-flex>
             </v-container>
             <v-card-text class="text-center pa-12">
-              An email has been sent to <strong> user_email@abc.com</strong> with a link to reset your account password.<br>
+              An email has been sent to your inbox with a link to reset your account password.<br>
               If you have not received the mail after a few minutes, please check your spam folder.
             </v-card-text>
           </v-container>
@@ -64,28 +155,76 @@ Vue.use(VueCookie)
 export default {
   name: 'PasswordReset',
   data: () => ({
+    vanish: false,
+    usernameError: null,
+    multiLine: true,
+    snackbar: false,
+    notificationErrors: null,
     user_id: '',
     timestamp: '',
     signature: '',
-    login_required: true,
-    boole: true
+    reset_mode: false,
+    password: '',
+    repeatpassword: ''
   }),
+  computed: {
+    repeatpasswordRules () {
+      const rules = []
+      rules.push(v => !!v || ' Repeat password is required')
+      rules.push(v => (!!v && v) === this.password || 'Values do not match')
+      return rules
+    },
+    passwordRules () {
+      const rules = []
+      rules.push(v => !!v || ' Password is required')
+      return rules
+    }
+  },
+  watch: {
+    repeatpassword: 'validateField',
+    password: 'validateField'
+  },
   created () {
-    console.log(Object.keys(this.$route.query).length === 0)
-    if (Object.keys(this.$route.query).length === 0) {
-      this.send_reset_password_link()
-    } else {
-      this.login_required = false
-      this.reset_password()
+    if (Object.keys(this.$route.query).length !== 0) {
+      this.reset_mode = true
     }
   },
   methods: {
-    send_reset_password_link () {
-      // api query on api/account/send-reset-password-link/
+    validateField () {
+      if (this.$refs.passwords) {
+        this.$refs.passwords.validate()
+      }
     },
-    reset_password () {
-      // api query on api/account/reset-password/
-      this.login_required = false
+    reset_password (password, repeatpassword) {
+      this.user_id = this.$route.query.user_id
+      this.timestamp = this.$route.query.timestamp
+      this.signature = this.$route.query.signature
+      if (this.user_id && this.timestamp && this.signature && password == repeatpassword) {
+        api.axios
+          .post('/api/accounts/reset-password/', {
+            password: password,
+            user_id: this.user_id,
+            timestamp: this.timestamp,
+            signature: this.signature
+          })
+          .catch(error => {
+            if (error.response.status === 400) {
+              this.notificationErrors = error.response.data[Object.keys(error.response.data)[0]].join(' ')
+              this.snackbar = (error)
+              Object.values(error.response.data).forEach(error => {
+                if (error.length) {
+                  this.usernameError = (error)
+                  setTimeout(() => { this.usernameError = null }, 3000)
+                }
+              })
+            }
+          })
+          .then(data => {
+            if (data && data.status === 200) {
+              this.$router.push('/login/')
+            }
+          })
+      }
     }
   }
 }

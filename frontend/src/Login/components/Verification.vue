@@ -32,7 +32,7 @@ ___________________________________________________
           </v-flex>
         </v-container>
         <v-card-text class="text-center pa-12">
-          An email has been sent to <strong> user_email@abc.com</strong> with a link to verify your account.<br>
+          An email has been sent to your inbox with a link to verify your account.<br>
           If you have not received the mail after a few minutes, please check your spam folder.
         </v-card-text>
       </v-container>
@@ -72,7 +72,6 @@ export default {
           console.log(error)
         })
         .then(data => {
-          console.log(data.status)
           if (data && data.status === 200) {
             this.$router.push('/login/')
           }

@@ -52,6 +52,14 @@
                         @click:append="vanish = !vanish"
                         @keyup.enter="auth(login, password)"
                       />
+                      <a>
+                        <u
+                          class="text--secondary"
+                          @click="send_reset_password_link(login)"
+                        >
+                          Forgot your password?
+                        </u>
+                      </a>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -136,7 +144,7 @@ export default {
             this.error_text = ''
           }
         })
-        .then(res => {          
+        .then(res => {
           if (res) {
             console.log(res.data)
             this.$cookie.set('Authentication', res.data.access, {
@@ -150,6 +158,27 @@ export default {
             window.location.href = this.next
         }
         })
+    },
+    send_reset_password_link (login) {
+      if (login.length) {
+        api.axios
+        .post('/api/accounts/send-reset-password-link/', {
+          login: login
+        })
+        .catch(err => {
+          if (err !== 0) {
+            this.error_text = 'Unknown or invalid login'
+            console.log(err)
+          } else if (err === 0) {
+            this.error_text = ''
+          }
+        })
+        .then(res => {
+          if (res && res.status === 200) {
+            this.$router.push('/reset-password/')
+          }
+        })
+      }
     },
     FocusOn (value) {
       this.$nextTick(() => {
