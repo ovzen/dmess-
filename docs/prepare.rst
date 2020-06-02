@@ -1,9 +1,9 @@
 Подготовка проекта к запуску
 ============================
 
-Инструкция предоставлена для Ubuntu 18.04.
+Instructions for Ubuntu 18.04.
 
-1. Устанавливаем необходимые пакеты в систему
+1. Install necessary packages
 
 .. code-block:: bash
 
@@ -12,13 +12,13 @@
     sudo apt install -y git
     sudo apt install -y python3 python3-venv
 
-2. Клонируем проект
+2. Clone the project
 
 .. code-block:: bash
 
     git clone https://gitlab.informatics.ru/2019-2020/online/s101/group-04/dmess.git
 
-3. Настраиваем virtualenv и пакеты в нём
+3. Set up virtualenv and packages inside it
 
 .. code-block:: bash
 
@@ -30,28 +30,28 @@
     pip install -r ci/pylint_requirements.txt
     pip install -r ci/docs_requirements.txt
 
-4. Выполняем базовые действия в django
+4. Set up Django
 
 .. code-block:: bash
 
     python manage.py migrate
-    python manage.py createsuperuser --username vasya --email 1@abc.net   # указать пароль promprog
+    python manage.py createsuperuser --username vasya --email 1@abc.net   # password: promprog
     python manage.py collectstatic
 
-5. Создаём документацию проекта.
+5. Create documentation.
 
 .. code-block:: bash
 
     cd docs
     make html
 
-6. После этого можно отключить virtualenv, для настройки он больше не понадобится
+6. Deactivate virtualenv, it is not necessary anymore.
 
 .. code-block:: bash
 
     deactivate
 
-7. Устанавливаем docker
+7. Install docker.
 
 .. code-block:: bash
 
@@ -60,9 +60,9 @@
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
     sudo apt update
     sudo apt install docker-ce
-    sudo usermod -aG docker ${USER}    # После этой команды нужно перезалогиниться
+    sudo usermod -aG docker ${USER}    # Relogin after this command
 
-8. Устанавливаем node.js и npm в систему
+8. Install node.js and npm
 
 .. code-block:: bash
 
@@ -70,10 +70,9 @@
     sudo apt-get install -y nodejs
     curl -L https://npmjs.org/install.sh | sudo sh
 
-9. Устанавливаем необходимые пакеты в проекте.
-Фронтенд состоит из двух частей, клиентской и админской, каждая в своей папке. Поэтому команды дублируются.
-
+9. Install necessary packages for frontend.
+There are two parts in frontend - User and Admin, so you need to dublicade the command in two folders: fronetnd and frontend/Admin.
 .. code-block:: bash
 
-    cd frontend   # Здесь лежит клиентский фронтенд
+    cd frontend   # User's frontend
     npm install

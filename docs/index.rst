@@ -21,7 +21,7 @@ Welcome to Dmess's documentation!
    patterns.rst
    load_testing.rst
 
-Указатели
+Indexes
 =========
 
 * :ref:`genindex`

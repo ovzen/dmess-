@@ -1,42 +1,42 @@
-Запуск сервера (вариант для разработки)
+Server start (developer server)
 =======================================
 
 
-1. Запустить redis
+1. Start redis
 
 .. code-block:: bash
 
     docker run -p 6379:6379 -d --restart always redis:2.8
 
-2. Активировать виртуальное окружение
+2. Activate virtualvenv
 
 .. code-block:: bash
 
     source venv/bin/activate
 
-3. Запустить django-сервер (в отдельном терминале)
+3. Start django-сервер (in different terminal)
 
 .. code-block:: bash
 
     python manage.py runserver
 
-4. Запустить celery (в отдельном терминале)
+4. Start celery (in different terminal)
 
 .. code-block:: bash
 
     export GITLAB_PRIVATE_TOKEN=<private_token>
     celery worker -B -A dmess --loglevel=debug --concurrency=4
 
-5. Запустить vue-cli для клиентского фронтенда (в отдельном терминале)
+5. Start vue-cli for User frontend (in different terminal)
 
 .. code-block:: bash
 
-    cd frontend          # указан путь от корневой папки проекта
+    cd frontend          # path from the main project folder
     npm run serve
 
-6. Запустить vue-cli для админского фронтенда (в отдельном терминале)
+6. Start vue-cli for Admin frontend (in different terminal)
 
 .. code-block:: bash
 
-    cd frontend/Admin    # указан путь от корневой папки проекта
+    cd frontend/Admin    # path from the main project folder
     npm run serve
