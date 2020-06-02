@@ -23,7 +23,7 @@
             color="primary"
             @click="SendMessage(Message,type)"
           >
-            отправить
+            Send message
           </v-btn>
         </v-form>
       </v-card-text>

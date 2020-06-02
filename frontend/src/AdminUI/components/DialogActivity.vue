@@ -69,7 +69,7 @@ export default {
           sortable: false,
           align: 'center'
         },
-        { text: 'Create date',
+        { text: 'Created',
           value: 'create_date',
           align: 'center',
           sortable: true,

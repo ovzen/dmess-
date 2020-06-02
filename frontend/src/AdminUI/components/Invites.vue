@@ -95,7 +95,7 @@ export default {
         text: 'Code',
         value: 'code'
       },
-      { text: 'Created at', value: 'created_at' },
+      { text: 'Created', value: 'created_at' },
       { text: 'Is active', value: 'is_active' },
       { text: 'For user', value: 'for_user' },
       { text: 'Used at', value: 'used_at' },
