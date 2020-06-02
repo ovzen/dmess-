@@ -156,7 +156,7 @@
     >
       <v-card tile>
         <v-list
-          color="basic"
+          color="background_user"
           dark
           height="80"
           class="pt-1"
@@ -263,7 +263,7 @@
               v-for="tab in tabs"
               :key="tab.name"
               icon
-              :class="['tab-button', { active: currentTab.name === tab.name }]"
+              :class="['tab-button', { 'basic--text': currentTab.name === tab.name }]"
               @click="currentTab = tab"
             >
               <v-tooltip top>
@@ -392,6 +392,7 @@ export default {
     } else {
       console.warn('The current user was not found')
     }
+    this.$vuetify.theme.dark = (localStorage.getItem('Dark') === 'true')
   },
   mounted () {
     let Vue = this
@@ -426,7 +427,6 @@ export default {
         )
       )
     }
-    
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
@@ -497,8 +497,5 @@ export default {
 #app {
   color: #2c3e50;
   height: 100vh;
-  .active {
-  color: #6202EE
-}
 }
 </style>

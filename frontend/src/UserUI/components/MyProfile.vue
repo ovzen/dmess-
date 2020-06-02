@@ -284,6 +284,7 @@
           </v-list-item>
 
           <v-list-item
+            :disabled="edit"
             @click="exit()"
           >
             <v-list-item-action>

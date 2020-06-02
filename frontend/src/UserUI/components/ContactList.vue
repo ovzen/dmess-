@@ -27,6 +27,7 @@
         :key="contact.id"
       >
         <v-list-item
+          color="sidebar_select"
           :to="'/UserProfile/' + contact.id"
         >
           <v-list-item-avatar v-if="contact.profile.avatar">
@@ -52,7 +53,9 @@
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>
+            <v-list-item-title
+              class="black--text"
+            >
               {{ getUserName(contact) }}
             </v-list-item-title>
             <v-list-item-subtitle>

@@ -178,8 +178,9 @@
     <file-pond
       ref="pond"
       name="image"
-      :style="'position:fixed;width:450px;color:'+ (!$vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white) +';background-color: ' + ($vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white) + ';border-radius:.5em;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
-      label-idle="Drop files here..."
+      class="background_white black--text"
+      :style="'position:fixed;width:450px;border-radius:.5em;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
+      label-idle="Click to select a file or drop it here"
       :allow-multiple="false"
       :files="myFiles"
       :drop-on-page="true"
@@ -550,7 +551,6 @@ export default {
   font-weight: 500;
   font-size: 10px;
   letter-spacing: 1.5px;
-  color: rgba(0, 0, 0, 0.54);
 }
 
 </style>
