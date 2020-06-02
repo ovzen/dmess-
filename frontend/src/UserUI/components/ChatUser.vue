@@ -404,11 +404,11 @@ export default {
             })
           )
         }
+        this.myFiles = []
+        this.imageUrl = ''
+        this.hide = false
+        this.message = ''
       }
-      this.myFiles = []
-      this.imageUrl = ''
-      this.hide = false
-      this.message = ''
     },
     updateDialog () {
       this.$disconnect()
@@ -440,19 +440,20 @@ export default {
     getMessage () {
       this.$options.sockets.onmessage = data => {
         console.log(data)
-        let computedMessageId = (this.messages[0].id || this.messages[this.messages.length + 1].id) + 1
         this.messages.unshift({
-          id: computedMessageId,
+          id: JSON.parse(data.data).id,
           text: JSON.parse(data.data).message,
           user: JSON.parse(data.data).author,
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1),
-          image_url: JSON.parse(data.data).image_url
+          image_url: JSON.parse(data.data).image_url,
+          name: JSON.parse(data.data).name,
+          extension: JSON.parse(data.data).extension
         })
         this.getDialogsData()
         this.dialogMessagesLength += 1
         var Data = this
         Vue.nextTick(function () {
-          Data.$vuetify.goTo(document.getElementById('Message_' + computedMessageId))
+          Data.$vuetify.goTo(document.getElementById('Message_' + JSON.parse(data.data).id))
         })
         api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/')
       }

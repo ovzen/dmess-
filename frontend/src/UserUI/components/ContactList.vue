@@ -199,7 +199,9 @@ export default {
       )
     }
     UpdateContants.onmessage = function (event) {
-      Vue.addUser(JSON.parse(event.data).data)
+      if (JSON.parse(event.data).data) {
+        Vue.addUser((JSON.parse(event.data).data))
+      }
     }
   },
   methods: {
