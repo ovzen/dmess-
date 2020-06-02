@@ -28,15 +28,20 @@ def markdown_convert(**kwargs):
 
 @app.task()
 def gitlab_metrics_fetch():
-    gl = gitlab.Gitlab(settings.GITLAB_DOMAIN_URL, private_token=os.environ['GITLAB_PRIVATE_TOKEN'])
+    gl = gitlab.Gitlab(
+        settings.GITLAB_DOMAIN_URL, private_token=os.environ['GITLAB_PRIVATE_TOKEN']
+    )
     project = gl.projects.get(settings.GITLAB_PROJECT_ID)
 
     metrics = {
         GitlabMetrics.CURRENT_BRANCHES: project.branches.list(as_list=False).total,
         GitlabMetrics.COMMITS: project.commits.list(as_list=False).total,
-        GitlabMetrics.OPENED_ISSUES: project.issues.list(state='opened', as_list=False).total,
-        GitlabMetrics.OPENED_MERGE_REQUESTS: project.mergerequests.list(state='opened', as_list=False).total,
+        GitlabMetrics.OPENED_ISSUES: project.issues.list(
+            state='opened', as_list=False
+        ).total,
+        GitlabMetrics.OPENED_MERGE_REQUESTS: project.mergerequests.list(
+            state='opened', as_list=False
+        ).total,
     }
-    for k, v in metrics.items():
-        GitlabMetrics(key=k, value=v).save()
-    return None
+    for key, value in metrics.items():
+        GitlabMetrics(key=key, value=value).save()

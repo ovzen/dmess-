@@ -1,9 +1,12 @@
 # coding=utf-8
+"""
+Main Models
+"""
+
 import uuid
 
 from coverage.annotate import os
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.timesince import timesince
 
@@ -14,7 +17,11 @@ class UserProfile(models.Model):
     аватар, статус и т.п.
     """
 
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='profile', primary_key=True)
+    user = models.OneToOneField(
+        to=User, on_delete=models.CASCADE,
+        related_name='profile',
+        primary_key=True
+    )
     avatar = models.ImageField(
         upload_to='avatars',
         null=True,
@@ -29,10 +36,14 @@ class UserProfile(models.Model):
     last_online = models.DateTimeField(auto_now=True)
 
     def status(self):
-        return f'last seen {timesince(self.last_online)} ago' if not self.is_online else 'online'
+        return (f'last seen {timesince(self.last_online)} ago'
+                if not self.is_online else 'online')
 
 
 class Contact(models.Model):
+    """
+    The Contact Model
+    """
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE,
         related_name='users'
@@ -47,6 +58,9 @@ class Contact(models.Model):
 
 
 class Dialog(models.Model):
+    """
+    The Dialog Model
+    """
     create_date = models.DateTimeField(auto_now_add=True)
     users = models.ManyToManyField(User)
     name = models.CharField(max_length=200, blank=True)
@@ -57,10 +71,14 @@ class Dialog(models.Model):
 
     def unread_messages(self):
         messages = self.message_set.filter(is_read=False)
-        return {user.id: messages.exclude(user=user).count() for user in self.users.get_queryset()}
+        return {user.id: messages.exclude(user=user).count()
+                for user in self.users.get_queryset()}
 
 
 class Message(models.Model):
+    """
+    The Message Model
+    """
     text = models.TextField(max_length=2000)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
@@ -78,6 +96,9 @@ class Message(models.Model):
 
 
 class WikiPage(models.Model):
+    """
+    The WikiPage Model
+    """
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     message = models.OneToOneField(to=Message, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)

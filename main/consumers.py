@@ -1,21 +1,20 @@
+import json
 from datetime import datetime
 
 from asgiref.sync import async_to_sync
 from channels.db import database_sync_to_async
 from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketConsumer
-import json
 
+from rest_framework import status
 from django.core.serializers.json import DjangoJSONEncoder
-from djangochannelsrestframework.consumers import AsyncAPIConsumer
+
 from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
 from djangochannelsrestframework.mixins import RetrieveModelMixin
 from djangochannelsrestframework.observer import model_observer
-from djangochannelsrestframework.observer.generics import ObserverModelInstanceMixin
 from djangochannelsrestframework.permissions import IsAuthenticated
-from rest_framework import status
 
-from main.models import Message, Dialog, UserProfile
+from main.models import Message, UserProfile
 from main import models, serializers
 
 
@@ -48,7 +47,9 @@ class ChatConsumer(WebsocketConsumer):
         if author == "":
             author = 'AnonymousUser'
 
-        message_obj = Message(user=author, text=message, dialog_id=self.chat_number, image_url=image)
+        message_obj = Message(
+            user=author, text=message, dialog_id=self.chat_number, image_url=image
+        )
         message_obj.save()
 
         # Send message to room group
@@ -58,7 +59,9 @@ class ChatConsumer(WebsocketConsumer):
                 'type': 'chat_message',
                 'message': message,
                 'author': author.id,
-                'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder),
+                'create_date': json.dumps(
+                    message_obj.create_date, cls=DjangoJSONEncoder
+                ),
                 'image_url': image,
                 'name': message_obj.name,
                 'extension': message_obj.extension,
@@ -185,7 +188,8 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
     @action()
     async def subscribe_to_user(self, pk, **kwargs):
         user = await database_sync_to_async(self.get_object)(pk=pk)
-        print(f'You have successfully subscribed to user {user.username} with id: {user.id}')
+        print(f'You have successfully subscribed to user'
+              f' {user.username} with id: {user.id}')
         await self.user_change_handler.subscribe(user=user)
         return None, status.HTTP_201_CREATED
 

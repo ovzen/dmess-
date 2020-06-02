@@ -1,3 +1,7 @@
+"""
+Main Serializers
+"""
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -5,6 +9,9 @@ from main import models
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    """
+    The UserProfile Serializer
+    """
     status = serializers.CharField(read_only=True)
 
     class Meta:
@@ -13,6 +20,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    The User Serializer
+    """
     profile = UserProfileSerializer()
 
     class Meta:
@@ -31,6 +41,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    """
+    The Message Serializer
+    """
     name = serializers.CharField(read_only=True)
     extension = serializers.CharField(read_only=True)
 
@@ -40,6 +53,9 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class DialogSerializer(serializers.ModelSerializer):
+    """
+    The Dialog Serializer
+    """
     last_message = MessageSerializer(read_only=True)
     unread_messages = serializers.DictField(read_only=True)
 
@@ -57,12 +73,18 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    """
+    The Contact Serializer
+    """
     class Meta:
         model = models.Contact
         fields = ['id', 'contact']
 
 
 class WikiPageSerializer(serializers.ModelSerializer):
+    """
+    The WikiPageSerializer
+    """
     class Meta:
         model = models.WikiPage
         fields = '__all__'

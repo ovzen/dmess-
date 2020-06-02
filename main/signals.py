@@ -1,16 +1,16 @@
 """signals.py - собрание функций, привязанных к изменениям моделей django"""
 from django.dispatch import receiver
-
 from django.db.models.signals import post_save
+
 from rest_registration.signals import user_registered
-
-from main.models import WikiPage, UserProfile, User, Message
-from admin.models import Invite, InviteAlreadyUsed
-from main.serializers import DialogSerializer
-
-from main.tasks import markdown_convert
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+
+from admin.models import Invite, InviteAlreadyUsed
+
+from main.models import WikiPage, UserProfile, User, Message
+from main.serializers import DialogSerializer
+from main.tasks import markdown_convert
 
 
 @receiver(post_save, sender=WikiPage)

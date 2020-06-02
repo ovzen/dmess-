@@ -1,3 +1,7 @@
+"""
+Main Views
+"""
+
 from django.contrib.auth.models import User
 from django.core.files.storage import default_storage
 from django.shortcuts import render
@@ -108,8 +112,7 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
-        else:
-            return Message.objects.filter(dialog__users=user)
+        return Message.objects.filter(dialog__users=user)
 
     @action(detail=False, methods=['post'])
     def image_upload(self, request):
@@ -132,8 +135,7 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
-        else:
-            return WikiPage.objects.filter(dialog__users=user)
+        return WikiPage.objects.filter(dialog__users=user)
 
 
 def landing_view(request):
