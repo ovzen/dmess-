@@ -172,7 +172,12 @@
 
 <script>
 import api from '../api'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+
+let UpdateContants = new WebSocket(
+  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
+)
+
 export default {
   name: 'ContactList',
   data: () => ({
@@ -181,8 +186,25 @@ export default {
   computed: {
     ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName', 'getContactsByName'])
   },
+  mounted () {
+    let Vue = this
+    UpdateContants.onopen = function () {
+      UpdateContants.send(
+        JSON.stringify(
+          {
+            action: 'subscribe_to_contacts',
+            request_id: Vue.getUserId
+          }
+        )
+      )
+    }
+    UpdateContants.onmessage = function (event) {
+      Vue.addUser(event.data)
+    }
+  },
   methods: {
     ...mapActions(['getUserData']),
+    ...mapMutations(['addUser']),
     getUserName (user) {
       if (typeof user !== 'undefined') {
         if (user.first_name && user.last_name) {
