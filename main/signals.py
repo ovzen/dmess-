@@ -1,6 +1,4 @@
 """signals.py - собрание функций, привязанных к изменениям моделей django"""
-import json
-
 from django.dispatch import receiver
 
 from django.db.models.signals import post_save

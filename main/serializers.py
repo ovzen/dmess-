@@ -1,7 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from main import models
 
@@ -33,7 +31,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    user_detail = UserSerializer(source='user', read_only=True)
+    name = serializers.CharField(read_only=True)
+    extension = serializers.CharField(read_only=True)
 
     class Meta:
         model = models.Message
@@ -42,7 +41,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class DialogSerializer(serializers.ModelSerializer):
     last_message = MessageSerializer(read_only=True)
-    users_detail = UserSerializer(source='users', many=True, read_only=True)
     unread_messages = serializers.DictField(read_only=True)
 
     class Meta:
@@ -59,20 +57,9 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-    User = UserSerializer(read_only=True, source='user')
-    Contact = UserSerializer(read_only=True, source='contact')
-
     class Meta:
         model = models.Contact
-        fields = '__all__'
-        extra_kwargs = {'user': {'write_only': True}, 'contact': {'write_only': True}}
-        validators = [
-            UniqueTogetherValidator(
-                queryset=models.Contact.objects.all(),
-                fields=['user', 'contact'],
-                message='You have already added this contact.'
-            )
-        ]
+        fields = ['id', 'contact']
 
 
 class WikiPageSerializer(serializers.ModelSerializer):
@@ -80,14 +67,3 @@ class WikiPageSerializer(serializers.ModelSerializer):
         model = models.WikiPage
         fields = '__all__'
         read_only_fields = ['image']
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['name'] = user.username
-        # ...
-        return token

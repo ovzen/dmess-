@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card>
       <v-card-title>
-        DialogActivity / Созданные диалоги
+        Dialog Activity / Созданные диалоги
         <v-spacer />
         <v-text-field
           v-model="search"
@@ -13,59 +13,129 @@
         />
       </v-card-title>
       <v-data-table
+        :loading="loading"
+        loading-text="Загрузка... Пожалуйста подождите / Loading... Please wait"
         :headers="headers"
         :items="Dialogs"
         :search="search"
-        :sort-by="['Dialog Name', 'URL', 'Datetime']"
         :sort-desc="[false, true]"
         multi-sort
+        :custom-filter="filter"
         class="elevation-1"
-      />
+      >
+        <template v-slot:item.users="{ item }">
+          {{ formatUsers(item.users) }}
+        </template>
+        <template v-slot:item.create_date="{ item }">
+          {{ formatTime(item.create_date) }}
+        </template>
+        <template v-slot:item.check_dialog="{ item }">
+          <v-btn
+            color="succes"
+            small
+            @click="GoToChat(item)"
+          >
+            Перейти
+          </v-btn>
+        </template>
+      </v-data-table>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import api from '../api'
+import moment from 'moment'
 export default {
   name: 'DialogActivity',
   data: () => ({
     search: '',
-    headers: [
-      {
-        text: 'Dialog Name',
-        align: 'start',
-        value: 'DialogName'
-      },
-      { text: 'url', value: 'url' },
-      { text: 'Date Time', value: 'DateTime' }
-    ],
-    Dialogs: [
-      {
-        DialogName: 'somechat1',
-        DateTime: '2020-03-11 13:53:19.368414',
-        url: '/somechat1/'
-      },
-      {
-        DialogName: 'somechat2',
-        DateTime: '2020-03-7 13:53:19.368414',
-        url: '/somechat2/'
-      },
-      {
-        DialogName: 'somechat3',
-        DateTime: '2020-03-9 13:53:19.368414',
-        url: '/somechat3/'
-      },
-      {
-        DialogName: 'somechat4',
-        DateTime: '2020-03-10 13:53:19.368414',
-        url: '/somechat4/'
+    loading: true,
+    dialog: false,
+    users: [],
+    Dialogs: []
+  }),
+  computed: {
+    headers () {
+      return [
+        {
+          text: 'ID',
+          value: 'id',
+          sortable: false
+        },
+        {
+          text: 'Пользователи / Users',
+          value: 'users',
+          sortable: false,
+          align: 'center'
+        },
+        { text: 'Дата создания / create date',
+          value: 'create_date',
+          align: 'center',
+          sortable: true,
+          sort: (a, b) => {
+            if (moment(a) < moment(b)) {
+              return 1
+            }
+            if (moment(a) > moment(b)) {
+              return -1
+            } return 0
+          }
+        },
+        { text: 'Переход в диалог',
+          value: 'check_dialog',
+          sortable: false,
+          align: 'center'
+        }
+      ]
+    }
+  },
+  mounted () {
+    this.update()
+  },
+  methods: {
+    filter: (value, search, item) => {
+      console.log(moment(value).format('DD.MM.YYYY hh:mm').indexOf(search))
+      return (item.id.indexOf(search) > -1) || (moment(item.create_date).format('DD.MM.YYYY hh:mm').indexOf(search) > -1)
+    },
+    update () {
+      api.axios.get('/api/dialog/').then(res => {
+        this.Dialogs = res.data.results
+        this.loading = false
+        for (let dialog in this.Dialogs) {
+          for (let user in this.Dialogs[dialog].users) {
+            api.axios.get('/api/users/' + this.Dialogs[dialog].users[user] + '/').then(res => {
+              if (this.users.filter(us => us.id === this.Dialogs[dialog].users[user]).length === 0) { this.users.push(res.data) }
+            })
+          }
+        }
+      })
+    },
+    formatTime (datetime) {
+      if (datetime) {
+        return moment(String(datetime)).format('DD.MM.YYYY hh:mm')
       }
-    ]
-  })
+    },
+    formatUsers (users) {
+      let str = ''
+      for (let user in users) {
+        if (typeof this.users.find(us => us.id === users[user]) !== 'undefined') {
+          str = str + this.users.find(us => us.id === users[user]).username + ' '
+        }
+      }
+      return str
+    },
+    GoToChat (item) {
+      window.location.pathname = '/ChatUser/' + item.id + '/'
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.v-card {
+  margin:20px
+}
 .container {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #2c3e50;

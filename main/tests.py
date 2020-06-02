@@ -111,17 +111,6 @@ class ContactTestCase(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_contact(self):
-        url = reverse('contact-list')
-        data = {
-            'user': 2,
-            'contact': 1
-        }
-        response_1 = self.client.post(url, data, format='json')
-        response_2 = self.client.post(url, data, format='json')
-        self.assertEqual(response_1.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response_2.status_code, status.HTTP_400_BAD_REQUEST)
-
     def test_get_contact(self):
         url_valid = reverse('contact-detail', kwargs={'pk': 1})
         url_invalid = reverse('contact-detail', kwargs={'pk': 42})

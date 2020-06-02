@@ -1,12 +1,22 @@
 from datetime import datetime
 
 from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
 from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketConsumer
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder
+from djangochannelsrestframework.consumers import AsyncAPIConsumer
+from djangochannelsrestframework.decorators import action
+from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
+from djangochannelsrestframework.mixins import RetrieveModelMixin
+from djangochannelsrestframework.observer import model_observer
+from djangochannelsrestframework.observer.generics import ObserverModelInstanceMixin
+from djangochannelsrestframework.permissions import IsAuthenticated
+from rest_framework import status
 
 from main.models import Message, Dialog, UserProfile
+from main import models, serializers
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -33,11 +43,12 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        image = text_data_json['image_url']
         author = self.scope["user"]
         if author == "":
             author = 'AnonymousUser'
 
-        message_obj = Message(user=author, text=message, dialog_id=self.chat_number)
+        message_obj = Message(user=author, text=message, dialog_id=self.chat_number, image_url=image)
         message_obj.save()
 
         # Send message to room group
@@ -46,30 +57,34 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'author': author.username,
-                'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder)
+                'author': author.id,
+                'create_date': json.dumps(message_obj.create_date, cls=DjangoJSONEncoder),
+                'image_url': image,
+                'name': message_obj.name,
+                'extension': message_obj.extension,
+                'id': message_obj.id
             }
         )
 
     # Receive message from dialog group
     def chat_message(self, event):
-        message = event['message']
-        author = event['author']
-        create_date = event['create_date']
-
         # Send message to WebSocket
         self.send(text_data=json.dumps({
-            'message': message,
-            'author': author,
-            'create_date': create_date
+            'message': event['message'],
+            'author': event['author'],
+            'create_date': event['create_date'],
+            'image_url': event['image_url'],
+            'extension': event['extension'],
+            'name': event['name'],
+            'id': event['id']
         }))
 
 
 class System(WebsocketConsumer):
     def connect(self):
-        User = UserProfile.objects.get(user=self.scope['user'])
-        User.is_online = True
-        User.save()
+        profile = UserProfile.objects.get(user=self.scope['user'])
+        profile.is_online = True
+        profile.save()
         async_to_sync(self.channel_layer.group_add)(
             'system',
             self.channel_name
@@ -81,11 +96,12 @@ class System(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave dialog group
-        User = UserProfile.objects.get(user=self.scope['user'])
+        user_id = self.scope['user'].id
+        user = models.User.objects.get(pk=user_id)
         print('exit')
-        User.is_online = False
-        User.last_online = datetime.now()
-        User.save()
+        user.profile.is_online = False
+        user.profile.last_online = datetime.now()
+        user.profile.save()
 
     # Receive message from WebSocket
     def receive(self, text_data):
@@ -150,3 +166,71 @@ class DialogNotificationConsumer(AsyncJsonWebsocketConsumer):
         decoupling will help you as things grow.
         """
         await self.send_json(event["content"])
+
+
+class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
+    queryset = models.User.objects.all()
+    serializer_class = serializers.UserSerializer
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    @action()
+    async def subscribe_to_contacts(self, **kwargs):
+        user = self.scope['user']
+        print(f'user {user.id} has subscribed to it\'s contact list')
+        await self.user_change_handler.subscribe(user_contacts=user)
+        return None, status.HTTP_201_CREATED
+
+    @action()
+    async def subscribe_to_user(self, pk, **kwargs):
+        user = await database_sync_to_async(self.get_object)(pk=pk)
+        print(f'You have successfully subscribed to user {user.username} with id: {user.id}')
+        await self.user_change_handler.subscribe(user=user)
+        return None, status.HTTP_201_CREATED
+
+    async def handle_observed_action(self, **kwargs):
+        print(kwargs)
+        data, response_status = await self.retrieve(**kwargs)
+        message_action = kwargs.pop('action')
+
+        await self.reply(
+            action=message_action,
+            data=data,
+        )
+
+    @model_observer(models.User)
+    async def user_change_handler(self, message, observer=None, **kwargs):
+        await self.handle_observed_action(**message)
+
+    @user_change_handler.groups_for_signal
+    def user_change_handler(self, instance: models.User, **kwargs):
+        # this block of code is called very often *DO NOT make DB QUERIES HERE*
+        yield f'-pk__{instance.pk}'
+        for user in instance.users.all():
+            yield f'-contacts__user__{user.pk}'
+
+    @user_change_handler.groups_for_consumer
+    def user_change_handler(self, user_contacts=None, user=None, **kwargs):
+        # This is called when you subscribe/unsubscribe
+        if user_contacts is not None:
+            yield f'-contacts__user__{user_contacts.pk}'
+        if user is not None:
+            yield f'-pk__{user.pk}'
+
+    @model_observer(models.UserProfile)
+    async def user_profile_change_handler(self, message, observer=None, **kwargs):
+        await self.handle_observed_action(**message)
+
+    @user_profile_change_handler.groups_for_signal
+    def user_profile_change_handler(self, instance: models.UserProfile, **kwargs):
+        yield f'-pk__{instance.user.pk}'
+        for user in instance.user.users.all():
+            yield f'-contacts__user__{user.pk}'
+
+    @user_profile_change_handler.groups_for_consumer
+    def user_change_handler(self, user_contacts=None, user=None, **kwargs):
+        if user_contacts is not None:
+            yield f'-contacts__user__{user_contacts.pk}'
+        if user is not None:
+            yield f'-pk__{user.pk}'

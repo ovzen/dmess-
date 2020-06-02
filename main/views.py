@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
+from django.core.files.storage import default_storage
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import action
 from rest_framework import mixins
 
@@ -40,16 +40,17 @@ class UserViewSet(mixins.ListModelMixin,
     permission_classes = [IsAdminUserOrReadOnly]
     search_fields = ['username', 'first_name', 'last_name', 'email']
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_contact(self, request, pk=None):
         user = self.get_object()
         contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
-        return Response(
-            {'status': f'{user.username} {"successfully added" if created else "is already"} in your contact list'}
-        )
+        return Response(status=201 if created else 400)
 
 
-class ContactViewSet(viewsets.ModelViewSet):
+class ContactViewSet(mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
     serializer_class = serializers.ContactSerializer
 
     def get_queryset(self):
@@ -103,9 +104,19 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     filterset_fields = '__all__'
     ordering_fields = ['id', 'create_date']
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return super().get_queryset()
+        else:
+            return Message.objects.filter(dialog__users=user)
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = serializers.MyTokenObtainPairSerializer
+    @action(detail=False, methods=['post'])
+    def image_upload(self, request):
+        image = request.FILES['image']
+        image_name = default_storage.save(image.name, image)
+        image_url = default_storage.url(image_name)
+        return Response({"image_url": image_url})
 
 
 class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
@@ -116,6 +127,13 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     serializer_class = serializers.WikiPageSerializer
     queryset = WikiPage.objects.all()
     filterset_fields = ['title', 'dialog', 'message']
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return super().get_queryset()
+        else:
+            return WikiPage.objects.filter(dialog__users=user)
 
 
 def landing_view(request):
