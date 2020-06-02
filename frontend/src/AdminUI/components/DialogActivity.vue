@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card>
       <v-card-title>
-        Dialog Activity / Созданные диалоги
+        Dialog Activity
         <v-spacer />
         <v-text-field
           v-model="search"
@@ -14,7 +14,7 @@
       </v-card-title>
       <v-data-table
         :loading="loading"
-        loading-text="Загрузка... Пожалуйста подождите / Loading... Please wait"
+        loading-text="Loading... Please wait"
         :headers="headers"
         :items="Dialogs"
         :search="search"
@@ -35,7 +35,7 @@
             small
             @click="GoToChat(item)"
           >
-            Перейти
+            To the chat
           </v-btn>
         </template>
       </v-data-table>
@@ -64,12 +64,12 @@ export default {
           sortable: false
         },
         {
-          text: 'Пользователи / Users',
+          text: 'Users',
           value: 'users',
           sortable: false,
           align: 'center'
         },
-        { text: 'Дата создания / create date',
+        { text: 'Create date',
           value: 'create_date',
           align: 'center',
           sortable: true,
@@ -82,7 +82,7 @@ export default {
             } return 0
           }
         },
-        { text: 'Переход в диалог',
+        { text: 'Actions',
           value: 'check_dialog',
           sortable: false,
           align: 'center'
