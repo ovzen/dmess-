@@ -163,6 +163,7 @@
         </span>
       </div>
     </v-row>
+    <span v-observe-visibility="visibilityChanged" />
     <v-dialog
       v-model="dialog"
       content-class="elevation-0"
@@ -175,6 +176,17 @@
         @click="dialog=false"
       />
     </v-dialog>
+    <v-btn
+      color="warning"
+      fixed
+      class="basic_text"
+      :style="'right:' + (scroll ? -60 : 5) +'px;transition: right 0.25s;bottom:60px;'"
+      fab
+      dark
+      @click="toLastMessage()"
+    >
+      <v-icon>mdi-arrow-down</v-icon>
+    </v-btn>
     <file-pond
       ref="pond"
       name="image"
@@ -223,10 +235,10 @@
         @keyup.enter="sendMessage()"
       />
       <Emoji
-        :style="'padding-right: 28px; margin-left: 10px;background:' + ($vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white)"
+        class="background_white"
+        style="padding-right: 28px; margin-left: 10px;"
         @click="selectedEmoji"
       />
-
       <v-btn
         icon
         color="basic"
@@ -260,9 +272,11 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import FilePondPluginGetFile from 'filepond-plugin-get-file'
 import './css/filepond-plugin-get-file.min.css'
+import VueObserveVisibility from 'vue-observe-visibility'
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginGetFile)
 Vue.directive('linkified', linkify)
 require('./css/vue-chat-emoji.css')
+Vue.use(VueObserveVisibility)
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -282,6 +296,7 @@ export default {
     message: '',
     myFiles: [],
     hide: false,
+    scroll: true,
     dialogMessagesLength: 0,
     dialogId: 0,
     imageUrl: '',
@@ -309,6 +324,15 @@ export default {
     this.$disconnect()
   },
   methods: {
+    toLastMessage () {
+      var Data = this
+      Vue.nextTick(function () {
+        Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[0].id), { duration: 450, offset: 0 })
+      })
+    },
+    visibilityChanged (isVisible, entry) {
+      this.scroll = isVisible
+    },
     handleFilePondInit: function () {
       console.log('FilePond has initialized')
     },

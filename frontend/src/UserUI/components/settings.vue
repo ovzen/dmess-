@@ -114,8 +114,7 @@ export default {
   },
   methods: {
     saveTheme () {
-      console.log(this.$vuetify.theme.dark)
-      localStorage.setItem('Dark', this.$vuetify.theme.dark);
+      localStorage.setItem('Dark', this.$vuetify.theme.dark)
     },
     getUserStaff  () {
       this.loading = true

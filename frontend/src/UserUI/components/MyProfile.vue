@@ -317,6 +317,7 @@ import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import api from '../api'
 import jwt from 'jsonwebtoken'
+import { mapMutations, mapGetters } from 'vuex'
 Vue.use(VueCookie)
 export default {
   name: 'MyProfile',
@@ -327,6 +328,7 @@ export default {
     edit: false
   }),
   computed: {
+    ...mapGetters(['getClient']),
     getUserInitials () {
       if (typeof this.UserProfile !== 'undefined') {
         if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
@@ -342,8 +344,10 @@ export default {
     this.get_data()
   },
   methods: {
+    ...mapMutations(['addUser']),
     get_data () {
       this.loading = true
+      this.UserProfile = this.getClient
       api.axios
         .get('/api/users/' + this.user_id + '/')
         .then(res => {
@@ -373,6 +377,7 @@ export default {
         .then(res => {
           console.log(res)
           if (res.status === 200) {
+            this.addUser(res.data)
             this.get_data()
           }
         })

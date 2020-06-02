@@ -40,8 +40,19 @@ export default ({
     getUserById: state => id => {
       return state.users.find(user => user.id === parseInt(id))
     },
+    getContactsByName: state => username => {
+      return state.users.filter(user => ((user.username.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.first_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.last_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (username !== ' ' ? ((user.first_name + ' ' + user.last_name).toLowerCase().indexOf(username.toLowerCase()) > -1) : false)) &&
+       typeof user.is_contact !== 'undefined' && typeof user.is_client === 'undefined')
+    },
     getUsersByName: state => username => {
-      return state.users.filter(user => user.username.toLowerCase().indexOf(username.toLowerCase()) > -1 && typeof user.is_contact === 'undefined' && typeof user.is_client === 'undefined')
+      return state.users.filter(user => ((user.username.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.first_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.last_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (username !== ' ' ? ((user.first_name + ' ' + user.last_name).toLowerCase().indexOf(username.toLowerCase()) > -1) : false)) &&
+       typeof user.is_contact === 'undefined' && typeof user.is_client === 'undefined')
     }
   },
 

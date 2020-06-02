@@ -23,7 +23,7 @@
       v-if="getContacts.length"
     >
       <div
-        v-for="contact in (userSearch ? SortContacts : getContacts)"
+        v-for="contact in (userSearch ? getContactsByName(userSearch) : getContacts)"
         :key="contact.id"
       >
         <v-list-item
@@ -68,7 +68,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider
-          v-if="!(SortContacts[SortContacts.length-1].id == contact.id) || !userSearch"
+          v-if="!(getContactsByName(userSearch)[getContactsByName(userSearch).length-1].id == contact.id) || !userSearch"
           inset
         />
       </div>
@@ -179,10 +179,7 @@ export default {
     userSearch: ''
   }),
   computed: {
-    ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName']),
-    SortContacts () {
-      return this.getContacts.filter(contact => { return contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
-    }
+    ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName', 'getContactsByName'])
   },
   methods: {
     ...mapActions(['getUserData']),

@@ -264,7 +264,7 @@
               :key="tab.name"
               icon
               :class="['tab-button', { 'basic--text': currentTab.name === tab.name }]"
-              @click="currentTab = tab"
+              @click="changeTab(tab)"
             >
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
@@ -312,12 +312,14 @@ let ws1 = new WebSocket(
 Vue.use(VueCookie)
 var tabs = [
   {
+    id: 0,
     name: 'mdi-account-circle',
     display_name: 'Contacts',
     component: {
     }
   },
   {
+    id: 1,
     name: 'mdi-message-text',
     display_name: 'Dialogs',
     component: {
@@ -332,6 +334,7 @@ var tabs = [
   },
   */
   {
+    id: 2,
     name: 'mdi-settings',
     display_name: 'Settings',
     component: {
@@ -393,6 +396,11 @@ export default {
       console.warn('The current user was not found')
     }
     this.$vuetify.theme.dark = (localStorage.getItem('Dark') === 'true')
+    if (this.tabs.find(tab => tab.id == localStorage.getItem('Tab'))) {
+      this.currentTab = this.tabs[localStorage.getItem('Tab')]
+    } else {
+      this.currentTab = this.tabs[1]
+    }
   },
   mounted () {
     let Vue = this
@@ -430,6 +438,10 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
+    changeTab (tab) {
+      this.currentTab = tab
+      localStorage.setItem('Tab', tab.id)
+    },
     getUserName (user) {
       if (typeof user !== 'undefined') {
         if (user.first_name && user.last_name) {
