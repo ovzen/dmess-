@@ -9,7 +9,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        exclude = ('user', 'last_online')
+        exclude = ('user', 'is_online', 'last_online')
 
 
 class UserSerializer(serializers.ModelSerializer):
