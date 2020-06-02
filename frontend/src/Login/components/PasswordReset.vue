@@ -1,34 +1,36 @@
-<template v-if="this.login_required === true">
-  <v-container class="fill-height">
-    <v-flex
-      d-flex
-      justify-center
-    >
-      <v-container class="pa-12">
-        <p>To be continued...</p>
+<template>
+  <v-container fluid>
+    <template v-if="login_required === true">
+      <v-container class="fill-height">
+        <v-flex
+          d-flex
+          justify-center
+        >
+          <v-container class="pa-12">
+            <p>To be continued...</p>
+          </v-container>
+        </v-flex>
       </v-container>
-    </v-flex>
-  </v-container>
-</template>
-<template v-else>
-  <v-container class="fill-height">
-    <v-flex
-      d-flex
-      justify-center
-    >
-      <v-container class="pa-12">
-        <p class="text-center display-2 font-weight-light">
-          Verify your email
-        </p>
-        <v-card-text class="text-center">
-          You will need to verify your email to reset your password
-        </v-card-text>
-        <v-container>
-          <v-flex
-            d-flex
-            justify-center
-          >
-            <pre>
+    </template>
+    <template v-else>
+      <v-container class="fill-height">
+        <v-flex
+          d-flex
+          justify-center
+        >
+          <v-container class="pa-12">
+            <p class="text-center display-2 font-weight-light">
+              Verify your email
+            </p>
+            <v-card-text class="text-center">
+              You will need to verify your email to reset your password
+            </v-card-text>
+            <v-container>
+              <v-flex
+                d-flex
+                justify-center
+              >
+                <pre>
 ___________________________________________________
 |\                                                /|
 | \                                              / |
@@ -41,16 +43,17 @@ ___________________________________________________
 |                                                  |
 |__________________________________________________|
             </pre>
-          </v-flex>
-        </v-container>
-        <v-card-text class="text-center pa-12">
-          An email has been sent to <strong> user_email@abc.com</strong> with a link to reset your account password.<br>
-          If you have not received the mail after a few minutes, please check your spam folder.
-        </v-card-text>
+              </v-flex>
+            </v-container>
+            <v-card-text class="text-center pa-12">
+              An email has been sent to <strong> user_email@abc.com</strong> with a link to reset your account password.<br>
+              If you have not received the mail after a few minutes, please check your spam folder.
+            </v-card-text>
+          </v-container>
+        </v-flex>
       </v-container>
-    </v-flex>
+    </template>
   </v-container>
-
 </template>
 
 <script>
