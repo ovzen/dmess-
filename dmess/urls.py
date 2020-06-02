@@ -42,7 +42,7 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     url(r'^docs/', schema_view),
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
-    path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/admin/', include('admin.urls')),
     re_path('landing/', views.landing_view),

@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'admin.apps.AdminConfig',
     'channels',
     'django_filters',
-    'rest_registration'
+    'rest_registration',
+    'djangochannelsrestframework'
 ]
 
 REST_FRAMEWORK = {

@@ -12,17 +12,17 @@
           size="100px"
         >
           <v-skeleton-loader
-            v-if="loading"
+            v-if="checkThatUser"
             type="avatar"
             class="mx-auto"
           />
           <div v-else>
             <v-avatar
-              v-if="UserProfile.profile.avatar"
+              v-if="getThatUser.profile.avatar"
               size="100px"
             >
               <v-img
-                :src="UserProfile.profile.avatar"
+                :src="getThatUser.profile.avatar"
               />
             </v-avatar>
             <v-avatar
@@ -33,7 +33,7 @@
               <span
                 class="display-1 white--text"
               >
-                {{ getUserAvatar }}
+                {{ MakeAvatar }}
               </span>
             </v-avatar>
           </div>
@@ -42,7 +42,7 @@
           class="ml-4"
         >
           <v-skeleton-loader
-            v-if="loading"
+            v-if="checkThatUser"
             type="list-item-two-line"
             class="mx-auto"
           />
@@ -50,13 +50,13 @@
             <v-list-item-title
               class="headline"
             >
-              {{ getUserName(UserProfile) }}
+              {{ getUserName(getThatUser) }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <span
-                :class="(UserProfile.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+                :class="(getThatUser.profile.status === 'online' ? 'basic_text--text text--lighten' : 'text_second--text')"
               >
-                {{ UserProfile.profile.status }}
+                {{ getThatUser.profile.status }}
               </span>
             </v-list-item-subtitle>
           </div>
@@ -71,12 +71,12 @@
         class="ml-9 mt-4"
       >
         <div
-          class="pt-5 overline basic--text"
+          class="pt-5 overline basic_text--text"
         >
           BIO
         </div>
         <v-skeleton-loader
-          v-if="loading"
+          v-if="checkThatUser"
           type="text"
           class="mx-auto"
           style="width:75%;position:absolute;left:10%;"
@@ -85,23 +85,23 @@
           v-else
           class="body-2 black--text"
         >
-          {{ UserProfile.profile.bio }}
+          {{ getThatUser.profile.bio }}
         </div>
 
         <v-divider
-          v-if="!loading"
+          v-if="!checkThatUser"
           width="538"
           class="mb-2"
         />
 
         <div
-          class="pt-2 overline basic--text"
+          class="pt-2 overline basic_text--text"
           style="margin-top:10px"
         >
           USERNAME
         </div>
         <v-skeleton-loader
-          v-if="loading"
+          v-if="checkThatUser"
           type="text"
           class="mx-auto"
           style="width:75%;position:absolute;left:10%"
@@ -110,21 +110,21 @@
           v-else
           class="body-2 black--text"
         >
-          {{ UserProfile.username }}
+          {{ getThatUser.username }}
         </div>
         <v-divider
-          v-if="!loading"
+          v-if="!checkThatUser"
           width="538"
           class="mb-1"
         />
 
         <div
-          class="pt-4 overline basic--text"
+          class="pt-4 overline basic_text--text"
         >
           EMAIL
         </div>
         <v-skeleton-loader
-          v-if="loading"
+          v-if="checkThatUser"
           type="text"
           class="mx-auto"
           style="width:75%;position:absolute;left:10%"
@@ -133,10 +133,10 @@
           v-else
           class="body-2 black--text"
         >
-          {{ UserProfile.email || 'Эл. почта не указана' }}
+          {{ getThatUser.email || 'Эл. почта не указана' }}
         </div>
         <v-divider
-          v-if="!loading"
+          v-if="!checkThatUser"
           width="538"
         />
       </v-card-text>
@@ -145,7 +145,7 @@
           class="mt-12"
         >
           <v-list-item
-            @click="add_contact()"
+            @click="add_Сontact($route.params.Userid)"
           >
             <v-list-item-action>
               <v-icon
@@ -197,68 +197,44 @@
 
 <script>
 import api from '../api'
-import jwt from 'jsonwebtoken'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'UserProfile',
   data: () => ({
-    loading: true,
-    UserProfile: undefined,
-    current_user_id: undefined
   }),
   computed: {
-    getUserAvatar () {
-      if (typeof this.UserProfile !== 'undefined') {
-        if (this.UserProfile.first_name !== '' && this.UserProfile.last_name !== '') {
-          return (this.UserProfile.first_name[0] + this.UserProfile.last_name[0]).toUpperCase()
-        } else {
-          return this.UserProfile.username[0].toUpperCase()
+    ...mapGetters(['getUserById', 'checkUserById', 'getUserId']),
+    getThatUser () {
+      return this.getUserById(this.$route.params.Userid)
+    },
+    checkThatUser () {
+      return !this.checkUserById(this.$route.params.Userid)
+    },
+    MakeAvatar () {
+      if (typeof this.getThatUser !== 'undefined') {
+        if (this.getThatUser.first_name !== '' && this.getThatUser.last_name !== '') {
+          return this.getThatUser.first_name[0] + this.getThatUser.last_name[0]
         }
-      } return ''
+        if (this.getThatUser.first_name !== '') {
+          return this.getThatUser.first_name[0]
+        }
+        if (this.getThatUser.last_name !== '') {
+          return this.getThatUser.last_name[0]
+        }
+        if (this.getThatUser.username !== '') {
+          return this.getThatUser.username[0]
+        }
+      }
+      return '...'
     }
   },
-  watch: {
-    // при изменениях маршрута запрашиваем данные снова
-    $route: ['get_data']
-  },
   created () {
-    this.get_data()
-    if (this.$cookie.get('Authentication')) {
-      this.current_user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
-    } else {
-      console.warn('The current user was not found')
+    if (this.checkThatUser) {
+      this.getUserData(this.$route.params.Userid)
     }
   },
   methods: {
-    get_data () {
-      this.loading = true
-      api.axios
-        .get('/api/users/' + this.$route.params.Userid + '/')
-        .then(res => {
-          this.UserProfile = res.data
-          this.loading = false
-        })
-        .catch(error => {
-          alert(error)
-        })
-    },
-    add_contact () {
-      api.axios.post('/api/contacts/', {
-        user: jwt.decode(this.$cookie.get('Authentication')).user_id,
-        contact: this.$route.params.Userid
-      }).then(res => {
-        if (res.status === 201) {
-          this.$root.$children[0].getContacts()
-          this.$root.$children[0].findedUsers = this.$root.$children[0].findedUsers.filter(user => {
-            console.log(user.id, ' ', this.$route.params.Userid)
-            if (user.id === parseInt(this.$route.params.Userid)) {
-              return false
-            }
-            return true
-          })
-          this.$root.$children[0].$forceUpdate()
-        }
-      })
-    },
+    ...mapActions(['getUserData', 'add_Сontact']),
     findChat () {
       api.axios
         .get('/api/dialog/', {
@@ -272,7 +248,7 @@ export default {
           } else {
             api.axios
               .post('/api/dialog/', {
-                users: [this.current_user_id, this.$route.params.Userid]
+                users: [this.getUserId, this.$route.params.Userid]
               })
               .then(response => {
                 if (response && response.data && response.data.id) {

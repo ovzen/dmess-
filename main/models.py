@@ -1,6 +1,7 @@
 # coding=utf-8
 import uuid
 
+from coverage.annotate import os
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -32,8 +33,17 @@ class UserProfile(models.Model):
 
 
 class Contact(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='user')
-    contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='contact')
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE,
+        related_name='users'
+    )
+    contact = models.ForeignKey(
+        to=User, on_delete=models.CASCADE,
+        related_name='contacts'
+    )
+
+    class Meta:
+        unique_together = ['user', 'contact']
 
 
 class Dialog(models.Model):
@@ -55,7 +65,16 @@ class Message(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
+    image_url = models.CharField(max_length=200, default=False, null=True)
     is_read = models.BooleanField(default=False)
+
+    @property
+    def extension(self):
+        return os.path.splitext(self.image_url)[1]
+
+    @property
+    def name(self):
+        return os.path.basename(self.image_url)
 
 
 class WikiPage(models.Model):

@@ -9,6 +9,10 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "filepond": "^4.14.0",
+    "filepond-plugin-file-validate-type": "^1.2.5",
+    "filepond-plugin-get-file": "^1.0.3",
+    "filepond-plugin-image-preview": "^4.6.4",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "node-sass": "^4.13.1",
@@ -16,10 +20,12 @@
     "vue": "^2.5.22",
     "vue-chat-emoji": "^1.1.21",
     "vue-cookie": "^1.1.4",
+    "vue-filepond": "^6.0.2",
+    "vue-linkify": "^1.0.1",
     "vue-native-websocket": "^2.0.14",
     "vue-router": "^3.1.5",
     "vuetify": "^2.1.0",
-    "vuex": "^3.1.2",
+    "vuex": "^3.4.0",
     "webpack-bundle-tracker": "^0.4.3"
   },
   "devDependencies": {

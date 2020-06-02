@@ -19,7 +19,7 @@
           <div v-else>
             <v-avatar
               size="100px"
-              :color="( edit ? 'background_grey' : 'basic')"
+              :color="( edit ? 'background_grey' : 'basic_text')"
             >
               <span
                 v-if="!edit && !UserProfile.profile.avatar"
@@ -71,7 +71,7 @@
               class="headline"
             >
               <div
-                class="overline basic--text"
+                class="overline basic_text--text"
               >
                 Name
               </div>
@@ -103,7 +103,7 @@
 
             <v-list-item-subtitle>
               <div
-                class="pt-2 overline basic--text"
+                class="pt-2 overline basic_text--text"
               >
                 Surname
               </div>
@@ -139,7 +139,7 @@
         class="ml-9"
       >
         <div
-          class="pt-5 overline basic--text"
+          class="pt-5 overline basic_text--text"
         >
           BIO
         </div>
@@ -171,7 +171,7 @@
         />
 
         <div
-          class="pt-2 overline basic--text"
+          class="pt-2 overline basic_text--text"
           style="margin-top:10px"
         >
           USERNAME
@@ -203,7 +203,7 @@
         />
 
         <div
-          class="pt-4 overline basic--text"
+          class="pt-4 overline basic_text--text"
         >
           EMAIL
         </div>

@@ -34,6 +34,7 @@
           <v-toolbar
             flat
             color="white"
+            style="height:0px"
           >
             <v-spacer />
             <v-dialog

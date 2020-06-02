@@ -123,32 +123,13 @@
       </v-card>
     </div>
     <v-card
-      class="pa-2 flex-grow-1"
+      class="flex-grow-1"
       min-width="120"
+      style="min-height:394px"
       outlined
       elevation="12"
     >
-      <v-card-title>
-        Employees stat
-        <v-spacer />
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        />
-      </v-card-title>
-
-      <v-data-table
-        :headers="headers"
-        :items="Users"
-        :search="search"
-        :sort-by="['Username', 'Datetime']"
-        :sort-desc="[false, true]"
-        multi-sort
-        class="elevation-1"
-      />
+      <Employees />
     </v-card>
 
     <v-card
@@ -291,8 +272,10 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import Employees from './Employees'
 export default {
   name: 'Dashboard',
+  components: { Employees },
   data: () => ({
     search: '',
     type: 'primary',
@@ -353,7 +336,7 @@ export default {
   methods: {
     startInterval: function () {
       setInterval(() => {
-          this.minutes_went = this.initial_time.fromNow()
+        this.minutes_went = this.initial_time.fromNow()
       }, 60000)
     },
     getGitlabMetrics () {
