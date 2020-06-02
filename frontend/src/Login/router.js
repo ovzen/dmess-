@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './components/Login'
 import Register from './components/Register'
+import Verification from './components/Verification'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/register/:registercode/',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/verify/',
+      name: 'Verification',
+      component: Verification
     }
   ]
 })
