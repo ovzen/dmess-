@@ -10,5 +10,6 @@ websocket_urlpatterns = [
         name='dialog_notifications'
     ),
     path('ws/users/', consumers.UserAPIConsumer),
+    path('ws/messages/', consumers.MessageAPIConsumer),
     re_path(r'ws/chat/(?P<chat_number>[\w-]+)/$', consumers.ChatConsumer)
 ]

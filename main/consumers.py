@@ -5,15 +5,22 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketConsumer
 import json
 
+from rest_framework import status
 from django.core.serializers.json import DjangoJSONEncoder
+
 from djangochannelsrestframework.consumers import AsyncAPIConsumer
 from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
-from djangochannelsrestframework.mixins import RetrieveModelMixin
 from djangochannelsrestframework.observer import model_observer
+from djangochannelsrestframework import permissions
+from djangochannelsrestframework.mixins import (
+    RetrieveModelMixin,
+    PatchModelMixin,
+    UpdateModelMixin,
+    CreateModelMixin,
+    DeleteModelMixin,
+)
 from djangochannelsrestframework.observer.generics import ObserverModelInstanceMixin
-from djangochannelsrestframework.permissions import IsAuthenticated
-from rest_framework import status
 
 from main.models import Message, Dialog, UserProfile
 from main import models, serializers
@@ -172,7 +179,7 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [
-        IsAuthenticated
+        permissions.IsAuthenticated
     ]
 
     @action()
@@ -234,3 +241,60 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
             yield f'-contacts__user__{user_contacts.pk}'
         if user is not None:
             yield f'-pk__{user.pk}'
+
+
+class MessageAPIConsumer(PatchModelMixin,
+                         RetrieveModelMixin,
+                         UpdateModelMixin,
+                         CreateModelMixin,
+                         DeleteModelMixin,
+                         GenericAsyncAPIConsumer):
+    queryset = models.Message.objects.all()
+    serializer_class = serializers.MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def filter_queryset(self, queryset, **kwargs):
+        user = self.scope.get('user')
+        if user.is_staff:
+            return queryset
+        else:
+            return queryset.filter(dialog__users=user)
+
+    @database_sync_to_async
+    def get_dialog(self, **kwargs):
+        try:
+            return models.Dialog.objects.get(**kwargs)
+        except models.Dialog.DoesNotExist:
+            return None
+
+    @action()
+    async def subscribe_to_messages_in_dialog(self, dialog_id, **kwargs):
+        user = self.scope.get('user')
+        dialog = await self.get_dialog(pk=dialog_id, users=user)
+        if dialog:
+            self.message_in_dialog_change_handler.subscribe(instance=dialog)
+            return None, status.HTTP_201_CREATED
+        else:
+            return None, status.HTTP_404_NOT_FOUND
+
+    # @model_observer(models.Message)
+    # async def message_in_dialog_change_handler(self, message, observer=None, **kwargs):
+    #     print(message)
+    #     data, response_status = await self.retrieve(**message)
+    #     message_action = message.pop('action')
+    #
+    #     await self.reply(
+    #         action=message_action,
+    #         data=data,
+    #         status=response_status
+    #     )
+    #
+    # @message_in_dialog_change_handler.groups_for_signal
+    # def message_in_dialog_change_handler(self, instance: models.Message, **kwargs):
+    #     print('signal', f'-d__{instance.dialog_id}')
+    #     yield f'-d__{instance.dialog_id}'
+    #
+    # @message_in_dialog_change_handler.groups_for_consumer
+    # def message_in_dialog_change_handler(self, dialog: models.Dialog, **kwargs):
+    #     print('consumer', f'-d__{dialog.id}')
+    #     yield f'-d__{dialog.id}'

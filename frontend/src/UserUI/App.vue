@@ -308,6 +308,9 @@ import { mapActions, mapGetters } from 'vuex'
 let ws1 = new WebSocket(
   (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
 )
+let ws2 = new WebSocket(
+  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/messages/'
+)
 
 Vue.use(VueCookie)
 var tabs = [
@@ -422,6 +425,18 @@ export default {
             action: 'subscribe_to_user',
             request_id: 1,
             pk: 3
+          }
+        )
+      )
+    }
+
+    ws2.onopen = function(){
+      ws2.send(
+        JSON.stringify(
+          {
+            action: 'subscribe_to_messages_in_dialog',
+            request_id: 1,
+            dialog_id: 'f0f61fbc-28f9-4613-b73a-47a78fa136e3'
           }
         )
       )
