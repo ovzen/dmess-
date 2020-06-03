@@ -303,7 +303,7 @@ import SystemInfo from './components/SystemInfo'
 import settings from './components/settings'
 import ContactList from './components/ContactList'
 import DialogsList from './components/DialogsList'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 let UpdateContants = new WebSocket(
   (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
@@ -427,7 +427,7 @@ export default {
     UpdateContants.onmessage = function (event) {
       console.log(JSON.parse(event.data).data)
       if (JSON.parse(event.data).data) {
-        Vue.getUserData((JSON.parse(event.data).data.id))
+        Vue.addUser((JSON.parse(event.data).data.id))
       }
     }
 
@@ -435,6 +435,7 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
+    ...mapMutations(['addUser']),
     changeTab (tab) {
       this.currentTab = tab
       localStorage.setItem('Tab', tab.id)
