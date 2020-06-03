@@ -283,7 +283,7 @@ export default {
   methods: {
     validateField () {
       if (this.$refs.passwords) {
-        this.$refs.passwords.validate();
+        this.$refs.passwords.validate()
       }
     },
     GoToLogin () {
@@ -310,14 +310,14 @@ export default {
           })
           .catch(error => {
             if (error.response.status === 400) {
-              this.notificationErrors = error.response.data[Object.keys(error.response.data)[0]].join(' ');
-              this.snackbar = (error);
+              this.notificationErrors = error.response.data[Object.keys(error.response.data)[0]].join(' ')
+              this.snackbar = (error)
               Object.values(error.response.data).forEach(error => {
                 if (error.length) {
-                  this.usernameError = (error);
-                  setTimeout(() => { this.usernameError = null }, 3000);
+                  this.usernameError = (error)
+                  setTimeout(() => { this.usernameError = null }, 3000)
                 }
-              });
+              })
             }
           })
           .then(data => {

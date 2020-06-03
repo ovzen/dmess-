@@ -85,15 +85,14 @@
                     </u>
                   </a>
                   <v-card-text>
-                    <a>
+                    <router-link to="/reset/">
                       <u
                         class="text--secondary caption"
                         style="font-style: normal; font-family: Roboto;"
-                        @click="send_reset_password_link(login)"
                       >
                         FORGOT PASSWORD?
                       </u>
-                    </a>
+                    </router-link>
                   </v-card-text>
                 </v-card-text>
               </v-card-actions>
@@ -107,7 +106,6 @@
 
 <script>
 import api from '../api'
-import jwt from 'jsonwebtoken'
 import Vue from 'vue'
 import VueCookie from 'vue-cookie'
 Vue.use(VueCookie)
@@ -146,46 +144,19 @@ export default {
         .catch(err => {
           if (err !== 0) {
             this.error_text = 'Invalid Login or Password'
-            console.log(err)
           } else if (err === 0) {
             this.error_text = ''
           }
         })
         .then(res => {
           if (res) {
-            console.log(res.data)
             this.$cookie.set('Authentication', res.data.access, {
               expires: '5m'
             })
             localStorage.setItem('UpdateKey', res.data.refresh)
-            this.button =
-              'Приветствуем ' +
-              jwt.decode(this.$cookie.get('Authentication')).name
-            console.log(jwt.decode(this.$cookie.get('Authentication')))
             window.location.href = this.next
-        }
-        })
-    },
-    send_reset_password_link (login) {
-      if (login.length) {
-        api.axios
-        .post('/api/accounts/send-reset-password-link/', {
-          login: login
-        })
-        .catch(err => {
-          if (err !== 0) {
-            this.error_text = 'Unknown or invalid login'
-            console.log(err)
-          } else if (err === 0) {
-            this.error_text = ''
           }
         })
-        .then(res => {
-          if (res && res.status === 200) {
-            this.$router.push('/reset-password/')
-          }
-        })
-      }
     },
     FocusOn (value) {
       this.$nextTick(() => {
