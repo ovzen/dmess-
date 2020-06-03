@@ -305,6 +305,10 @@ import ContactList from './components/ContactList'
 import DialogsList from './components/DialogsList'
 import { mapActions, mapGetters } from 'vuex'
 
+let UpdateContants = new WebSocket(
+  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
+)
+
 Vue.use(VueCookie)
 var tabs = [
   {
@@ -410,6 +414,22 @@ export default {
     this.getUserData(this.getUserId)
     this.getContactsData()
     this.getDialogsData(this.getUserId)
+    UpdateContants.onopen = function () {
+      UpdateContants.send(
+        JSON.stringify(
+          {
+            action: 'subscribe_to_contacts',
+            request_id: Vue.getUserId
+          }
+        )
+      )
+    }
+    UpdateContants.onmessage = function (event) {
+      console.log(JSON.parse(event.data).data)
+      if (JSON.parse(event.data).data) {
+        Vue.getUserData((JSON.parse(event.data).data.id))
+      }
+    }
 
     // Эксперименты Федора
   },
