@@ -132,7 +132,7 @@
         indeterminate
         size="36"
         style="position: relative; right:50%;margin-top: 25px;margin-bottom: 25px;"
-        color="primary"
+        color="basic"
       />
     </v-row>
     <v-row
