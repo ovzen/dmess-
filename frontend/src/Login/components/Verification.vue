@@ -1,23 +1,23 @@
 <template>
   <v-container class="fill-height">
-    <v-flex
-      d-flex
-      justify-center
-    >
-      <v-container class="pa-12">
-        <p class="text-center display-2 font-weight-light">
-          Verify your email
-        </p>
-        <v-card-text class="text-center">
-          You will need to verify your email to complete registration
-        </v-card-text>
-        <v-container>
-          <v-flex
-            d-flex
-            justify-center
-          >
-            <pre>
-___________________________________________________
+        <v-flex
+          d-flex
+          justify-center
+        >
+          <v-container class="pa-12">
+            <p class="text-center display-2 font-weight-light">
+              Password retrieval
+            </p>
+            <v-card-text class="text-center subtitle-1 text--secondary">
+              A reset password link has been sent to vasya@yandex.ru email.
+            </v-card-text>
+            <v-container>
+              <v-flex
+                d-flex
+                justify-center
+              >
+                <pre>
+ __________________________________________________
 |\                                                /|
 | \                                              / |
 |  \                                            /  |
@@ -29,14 +29,15 @@ ___________________________________________________
 |                                                  |
 |__________________________________________________|
             </pre>
-          </v-flex>
-        </v-container>
-        <v-card-text class="text-center pa-12">
-          An email has been sent to your inbox with a link to verify your account.<br>
-          If you have not received the mail after a few minutes, please check your spam folder.
-        </v-card-text>
+              </v-flex>
+            </v-container>
+            <v-card-text class="text-center text--secondary subtitle-1 pa-5">
+              If you have not received the email after a few minutes, please check your spam folder.
+            </v-card-text>
+          </v-container>
+        </v-flex>
       </v-container>
-    </v-flex>
+    </template>
   </v-container>
 </template>
 
