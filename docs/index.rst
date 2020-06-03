@@ -21,7 +21,7 @@
    patterns.rst
    load_testing.rst
 
-Указатели
+Indexes
 =========
 
 * :ref:`genindex`
