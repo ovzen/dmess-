@@ -405,6 +405,14 @@ export default {
     this.updateDialog()
     this.getMessage()
     this.UpdateUserInDialog()
+    MessageWS.onmessage = function (event) {
+      console.log(event.data)
+      let data = JSON.parse(event.data)
+      if (data.action === 'patch') {
+        console.log('PATCH!!!', Vue.messages[0].id, data.data.id)
+        Vue.$set(Vue.messages, Vue.messages.findIndex(message => message.id === data.data.id), data.data)
+      }
+    }
     MessageWS.onopen = function () {
       MessageWS.send(
         JSON.stringify(
