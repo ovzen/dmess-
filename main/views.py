@@ -30,6 +30,7 @@ class CountModelMixin:
         return Response(content)
 
 
+# pylint: disable=too-many-ancestors
 class UserViewSet(mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
@@ -59,6 +60,7 @@ class UserViewSet(mixins.ListModelMixin,
         return Response(status=201 if created else 400)
 
 
+# pylint: disable=too-many-ancestors
 class ContactViewSet(mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.DestroyModelMixin,
@@ -70,6 +72,7 @@ class ContactViewSet(mixins.ListModelMixin,
         return Contact.objects.filter(user=user)
 
 
+# pylint: disable=too-many-ancestors
 class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с диалогами
@@ -105,6 +108,7 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
         )
 
 
+# pylint: disable=too-many-ancestors
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     Send all messages from chat
@@ -135,6 +139,7 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
         return Response({"image_url": image_url})
 
 
+# pylint: disable=too-many-ancestors
 class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с вики-страницей

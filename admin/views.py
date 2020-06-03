@@ -18,6 +18,7 @@ from main.models import UserProfile
 User = get_user_model()
 
 
+# pylint: disable=too-many-ancestors
 class InviteViewSet(viewsets.ModelViewSet):
     """
     The ViewSet for Invites
