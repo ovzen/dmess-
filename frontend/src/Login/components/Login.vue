@@ -52,14 +52,6 @@
                         @click:append="vanish = !vanish"
                         @keyup.enter="auth(login, password)"
                       />
-                      <a>
-                        <u
-                          class="text--secondary"
-                          @click="send_reset_password_link(login)"
-                        >
-                          Forgot your password?
-                        </u>
-                      </a>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -78,16 +70,28 @@
               </v-card-actions>
 
               <v-card-actions class="text-center">
-                <v-card-text class="text--secondary caption mb-10">
+                <v-card-text class="text--secondary caption ">
                   DON`T HAVE AN ACCOUNT?
                   <a>
                     <u
                       class="text--secondary"
+                      style="font-style: normal; font-family: Roboto;"
                       @click="GoToRegister()"
                     >
                       SIGN UP!
                     </u>
                   </a>
+                  <v-card-text>
+                      <a>
+                        <u
+                          class="text--secondary caption"
+                          style="font-style: normal; font-family: Roboto;"
+                          @click="send_reset_password_link(login)"
+                        >
+                          FORGOT PASSWORD?
+                        </u>
+                      </a>
+                  </v-card-text>
                 </v-card-text>
               </v-card-actions>
             </v-container>
