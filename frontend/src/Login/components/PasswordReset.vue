@@ -1,108 +1,109 @@
 <template>
-  <v-container>
-    <template v-if="reset_mode === true">
-      <v-container
-        class="fill-height"
-        fluid
+  <v-container
+    class="fill-height"
+    fluid
+  >
+    <v-flex
+      justify-center
+      d-flex
+    >
+      <v-col
+        md="7"
+        lg="8"
+        xl="5"
+        justify-center
       >
-        <v-flex
-          justify-center
-          d-flex
-        >
-          <v-col
-            md="7"
-            lg="8"
-            xl="5"
-            justify-center
-          >
-            <v-card class="elevation-12">
-              <v-layout>
-                <v-img
-                  src="/static/reg.JPG"
-                />
-                <v-container>
-                  <v-toolbar-title class="text-center pt-7 text--secondary">
-                    Password Reset
-                  </v-toolbar-title>
-                  <div>
-                    <v-window>
-                      <v-window-item>
-                        <v-card-text>
-                          <v-row justify="center">
-                            <v-col
-                              md="9"
-                              lg="10"
-                              xl="9"
-                            >
-                              <v-text-field
-                                v-model="password"
-                                :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
-                                :type="vanish ? 'text' : 'password'"
-                                clearable
-                                label="Your new password"
-                                hint="Password must contain letters and numbers"
-                                required
-                                outlined
-                                name="password"
-                                :rules="passwordRules"
-                                @click:append="vanish = !vanish"
-                              />
+        <v-card class="elevation-12">
+          <v-layout>
+            <v-footer
+              width="60vh"
+              style="background: linear-gradient(324.48deg, #EE9002 0%, #CE54FC 81.58%);"
+            />
+            <v-container>
+              <v-toolbar-title class="text-center pt-7 text--secondary">
+                Password Reset
+              </v-toolbar-title>
+              <div>
+                <v-window>
+                  <v-window-item>
+                    <v-card-text>
+                      <v-row justify="center">
+                        <v-col
+                          md="9"
+                          lg="10"
+                          xl="9"
+                        >
+                          <v-text-field
+                            v-model="password"
+                            :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="vanish ? 'text' : 'password'"
+                            clearable
+                            label="Your new password"
+                            hint="Password must contain letters and numbers"
+                            required
+                            outlined
+                            name="password"
+                            :rules="passwordRules"
+                            @click:append="vanish = !vanish"
+                          />
 
-                              <v-text-field
-                                ref="repeatpassword"
-                                v-model="repeatpassword"
-                                :error-messages="usernameError"
-                                :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
-                                :type="vanish ? 'text' : 'password'"
-                                clearable
-                                label="Repeat Password"
-                                hint="Repeat your password"
-                                required
-                                outlined
-                                name="Repeat_password"
-                                :rules="repeatpasswordRules"
-                                @click:append="vanish = !vanish"
-                                @keyup.enter="reset_password(password, repeatpassword)"
-                              />
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
-                      </v-window-item>
-                    </v-window>
-                  </div>
-                  <v-card-actions>
-                    <v-row justify="space-around">
-                     <v-btn
-                        :disabled="password == '' || password != repeatpassword"
-                        tile
-                        outlined
-                        color="purple darken-4"
-                        @click="reset_password(password, repeatpassword)"
-                      >
-                        I promise not to forget it again!
-                      </v-btn>
-                    </v-row>
-                  </v-card-actions>
-                  <v-snackbar
-                    v-model="snackbar"
-                    :multi-line="multiLine"
+                          <v-text-field
+                            ref="repeatpassword"
+                            v-model="repeatpassword"
+                            :error-messages="usernameError"
+                            :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="vanish ? 'text' : 'password'"
+                            clearable
+                            label="Repeat Password"
+                            hint="Repeat your password"
+                            required
+                            outlined
+                            name="Repeat_password"
+                            :rules="repeatpasswordRules"
+                            @click:append="vanish = !vanish"
+                            @keyup.enter="reset_password(password, repeatpassword)"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-window-item>
+                </v-window>
+              </div>
+              <v-card-actions>
+                <v-row justify="space-around">
+                  <v-btn
+                    :disabled="password == '' || password != repeatpassword"
+                    tile
+                    outlined
+                    color="purple darken-4"
+                    class="mb-8"
+                    @click="reset_password(password, repeatpassword)"
                   >
-                    {{ notificationErrors }}
-                    <v-btn
-                      color="red"
-                      text
-                      @click="snackbar = false"
-                    >
-                      Close
-                    </v-btn>
-                  </v-snackbar>
-                </v-container>
-              </v-layout>
-            </v-card>
-          </v-col>
-        </v-flex>
-      </v-container>
-    </template>
+                    submit new password
+                  </v-btn>
+                </v-row>
+              </v-card-actions>
+
+              <v-snackbar
+                v-model="snackbar"
+                :multi-line="multiLine"
+              >
+                {{ notificationErrors }}
+                <v-btn
+                  color="red"
+                  text
+                  @click="snackbar = false"
+                >
+                  Close
+                </v-btn>
+              </v-snackbar>
+            </v-container>
+          </v-layout>
+        </v-card>
+      </v-col>
+    </v-flex>
+  </v-container>
+</template>
     <template v-else>
       <v-container class="fill-height">
         <v-flex
@@ -113,8 +114,8 @@
             <p class="text-center display-2 font-weight-light">
               Verify your email
             </p>
-            <v-card-text class="text-center">
-              You have to verify your email in order to reset your password
+            <v-card-text class="text-center subtitle-1 text--secondary">
+              You will need to verify your email to complete registration.
             </v-card-text>
             <v-container>
               <v-flex
@@ -122,7 +123,7 @@
                 justify-center
               >
                 <pre>
-___________________________________________________
+ __________________________________________________
 |\                                                /|
 | \                                              / |
 |  \                                            /  |
@@ -136,9 +137,9 @@ ___________________________________________________
             </pre>
               </v-flex>
             </v-container>
-            <v-card-text class="text-center pa-12">
-              An email has been sent to your inbox with a link to reset your account password.<br>
-              If you have not received the mail after a few minutes, please check your spam folder.
+            <v-card-text class="text-center text--secondary subtitle-1 pa-5">
+              A verification mail has been sent to <span class="font-weight-bold">vasya@yandex.ru</span> with a link to verify your account.<br>
+              If you have not received the email after a few minutes, please check your spam folder.
             </v-card-text>
           </v-container>
         </v-flex>
