@@ -5,11 +5,25 @@
 """
 
 import uuid
+import os
+from json import JSONEncoder
 
-from coverage.annotate import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timesince import timesince
+from uuid import UUID
+
+
+JSONEncoder_old_default = JSONEncoder.default
+
+
+def json_encoder_new_default(self, o):
+    if isinstance(o, UUID):
+        return str(o)
+    return JSONEncoder_old_default(self, o)
+
+
+JSONEncoder.default = json_encoder_new_default
 
 
 class UserProfile(models.Model):

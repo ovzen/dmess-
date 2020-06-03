@@ -328,7 +328,7 @@ class MessageAPIConsumer(PatchModelMixin,
     async def message_in_dialog_change_handler(self, message, observer=None, **kwargs):
         print(message)
         data, response_status = await self.retrieve(**message)
-        data['dialog'] = str(data['dialog'])  # UUID не сериализуется библиотекой
+        # data['dialog'] = str(data['dialog'])  # UUID не сериализуется библиотекой
         message_action = message.pop('action')
 
         await self.reply(

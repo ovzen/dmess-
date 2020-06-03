@@ -54,7 +54,7 @@ class MessageSerializer(serializers.ModelSerializer):
     """
     The Message Serializer
     """
-    dialog = serializers.CharField(source='dialog_id')
+    # dialog = serializers.CharField(source='dialog_id')
     name = serializers.CharField(read_only=True)
     extension = serializers.CharField(read_only=True)
 
