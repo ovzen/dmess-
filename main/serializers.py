@@ -45,8 +45,8 @@ class UserSerializer(serializers.ModelSerializer):
             setattr(instance, key, value)
         for key, value in profile_data.items():
             setattr(instance.profile, key, value)
-        instance.profile.save()
         instance.save()
+        instance.profile.save()
         return instance
 
 
