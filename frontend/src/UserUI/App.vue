@@ -44,11 +44,16 @@
             v-else
             color="basic"
           >
-            <span
-              class="white--text"
+            <v-avatar
+              size="36px"
+              color="basic"
             >
-              {{ getUserInitials(DialogUser) }}
-            </span>
+              <span
+                class="white--text"
+              >
+                {{ getUserInitials(DialogUser) }}
+              </span>
+            </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -192,11 +197,16 @@
                 v-else
                 color="background_white"
               >
-                <span
-                  class="basic--text"
+                <v-avatar
+                  size="36px"
+                  color="basic"
                 >
-                  {{ MakeAvatar }}
-                </span>
+                  <span
+                    class="basic--text"
+                  >
+                    {{ MakeAvatar }}
+                  </span>
+                </v-avatar>
               </v-list-item-avatar>
             </router-link>
           </v-list-item>
@@ -430,7 +440,7 @@ export default {
       )
     }
 
-    ws2.onopen = function(){
+    ws2.onopen = function () {
       ws2.send(
         JSON.stringify(
           {
@@ -441,7 +451,6 @@ export default {
         )
       )
     }
-    
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
