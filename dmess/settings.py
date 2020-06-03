@@ -251,9 +251,17 @@ REST_REGISTRATION = {
     'VERIFICATION_FROM_EMAIL': EMAIL_HOST_USER,
     'REGISTER_VERIFICATION_AUTO_LOGIN': True,
     'REGISTER_VERIFICATION_ONE_TIME_USE': True,
+    'REGISTER_VERIFICATION_EMAIL_TEMPLATES': {
+        'html_body': 'email/register/register_completion.html',
+        'subject': 'email/register/register_subject.txt'
+    },
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
     'RESET_PASSWORD_VERIFICATION_URL': '/auth/reset-password/',
     'RESET_PASSWORD_VERIFICATION_ONE_TIME_USE': True,
+    'RESET_PASSWORD_VERIFICATION_EMAIL_TEMPLATES': {
+        'html_body': 'email/reset_password/reset_completion.html',
+        'subject': 'email/reset_password/reset_subject.txt'
+    },
     'PROFILE_SERIALIZER_CLASS': 'main.serializers.UserSerializer',
     'REGISTER_SERIALIZER_PASSWORD_CONFIRM': False
 }
