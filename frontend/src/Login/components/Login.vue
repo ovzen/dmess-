@@ -15,7 +15,10 @@
       >
         <v-card class="elevation-12">
           <v-layout>
-            <v-img src="/static/log.JPG" />
+            <v-footer
+              width="60vh"
+              style="background: linear-gradient(324.48deg, #4402EE 0%, #CE54FC 81.58%);"
+            />
             <v-container>
               <v-toolbar-title class="text-center pt-7 text--secondary">
                 Sign in
