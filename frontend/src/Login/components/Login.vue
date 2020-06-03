@@ -15,7 +15,10 @@
       >
         <v-card class="elevation-12">
           <v-layout>
-            <v-img src="/static/log.JPG" />
+            <v-footer
+              width="60vh"
+              style="background: linear-gradient(324.48deg, #4402EE 0%, #CE54FC 81.58%);"
+            />
             <v-container>
               <v-toolbar-title class="text-center pt-7 text--secondary">
                 Sign in
@@ -70,16 +73,27 @@
               </v-card-actions>
 
               <v-card-actions class="text-center">
-                <v-card-text class="text--secondary caption mb-10">
+                <v-card-text class="text--secondary caption ">
                   DON`T HAVE AN ACCOUNT?
                   <a>
                     <u
                       class="text--secondary"
+                      style="font-style: normal; font-family: Roboto;"
                       @click="GoToRegister()"
                     >
                       SIGN UP!
                     </u>
                   </a>
+                  <v-card-text>
+                    <router-link to="/reset/">
+                      <u
+                        class="text--secondary caption"
+                        style="font-style: normal; font-family: Roboto;"
+                      >
+                        FORGOT PASSWORD?
+                      </u>
+                    </router-link>
+                  </v-card-text>
                 </v-card-text>
               </v-card-actions>
             </v-container>
@@ -92,7 +106,6 @@
 
 <script>
 import api from '../api'
-import jwt from 'jsonwebtoken'
 import Vue from 'vue'
 import VueCookie from 'vue-cookie'
 Vue.use(VueCookie)
@@ -131,22 +144,18 @@ export default {
         .catch(err => {
           if (err !== 0) {
             this.error_text = 'Invalid Login or Password'
-            console.log(err)
           } else if (err === 0) {
             this.error_text = ''
           }
         })
         .then(res => {
-          console.log(res.data)
-          this.$cookie.set('Authentication', res.data.access, {
-            expires: '5m'
-          })
-          localStorage.setItem('UpdateKey', res.data.refresh)
-          this.button =
-            'Приветствуем ' +
-            jwt.decode(this.$cookie.get('Authentication')).name
-          console.log(jwt.decode(this.$cookie.get('Authentication')))
-          window.location.href = this.next
+          if (res) {
+            this.$cookie.set('Authentication', res.data.access, {
+              expires: '5m'
+            })
+            localStorage.setItem('UpdateKey', res.data.refresh)
+            window.location.href = this.next
+          }
         })
     },
     FocusOn (value) {

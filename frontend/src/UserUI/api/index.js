@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router'
 import VueCookie from 'vue-cookie'
 axios.interceptors.request.use(
   function (config) {
@@ -9,7 +10,17 @@ axios.interceptors.request.use(
   }, function (error) {
     return Promise.reject(error)
   })
-
+axios.interceptors.response.use((response) => {
+  return response
+}, (error) => {
+  if (error.response.status === 404) {
+    router.push({ path: '/404' })
+  }
+  if (error.response.status === 500) {
+    router.push({ path: '/500' })
+  }
+  return Promise.reject(error)
+})
 export default {
   urls: {
     news: '/news',

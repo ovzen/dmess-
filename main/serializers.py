@@ -1,40 +1,61 @@
+"""
+Сериализаторы главных моделей базы данных.
+Преимущественно относятся к клиентской и общей части приложения.
+"""
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from main import models
-from main.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    status = serializers.CharField()
+    """
+    The UserProfile Serializer
+    """
+    status = serializers.CharField(read_only=True)
 
     class Meta:
         model = models.UserProfile
-        exclude = ('user','last_online')
+        exclude = ('user', 'is_online', 'last_online')
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    The User Serializer
+    """
     profile = UserProfileSerializer()
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'is_staff')
+        read_only_fields = ('is_staff',)
 
     def update(self, instance, validated_data):
+        """
+        Обновляет поля в моделе пользователя и профиль,
+        привязанный к ней
+        :param User instance: экземляр пользователя
+        :param dict validated_data: валидированные данные
+        :return: сохраненный экземляр пользователя
+        :rtype: User
+        """
         profile_data = validated_data.pop('profile')
         for key, value in validated_data.items():
             setattr(instance, key, value)
         for key, value in profile_data.items():
             setattr(instance.profile, key, value)
-        instance.profile.save()
         instance.save()
+        instance.profile.save()
         return instance
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    user_detail = UserSerializer(source='user', read_only=True)
+    """
+    The Message Serializer
+    """
+    name = serializers.CharField(read_only=True)
+    extension = serializers.CharField(read_only=True)
 
     class Meta:
         model = models.Message
@@ -42,8 +63,10 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class DialogSerializer(serializers.ModelSerializer):
+    """
+    The Dialog Serializer
+    """
     last_message = MessageSerializer(read_only=True)
-    users_detail = UserSerializer(source='users', many=True, read_only=True)
     unread_messages = serializers.DictField(read_only=True)
 
     class Meta:
@@ -59,37 +82,20 @@ class DialogSerializer(serializers.ModelSerializer):
     #         )
 
 
-
 class ContactSerializer(serializers.ModelSerializer):
-    User = UserSerializer(read_only=True, source='user')
-    Contact = UserSerializer(read_only=True, source='contact')
-
+    """
+    The Contact Serializer
+    """
     class Meta:
         model = models.Contact
-        fields = '__all__'
-        extra_kwargs = {'user': {'write_only': True}, 'contact': {'write_only': True}}
-        validators = [
-            UniqueTogetherValidator(
-                queryset=models.Contact.objects.all(),
-                fields=['user', 'contact'],
-                message='You have already added this contact.'
-            )
-        ]
+        fields = ['id', 'contact']
 
 
 class WikiPageSerializer(serializers.ModelSerializer):
+    """
+    The WikiPageSerializer
+    """
     class Meta:
         model = models.WikiPage
         fields = '__all__'
         read_only_fields = ['image']
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['name'] = user.username
-        # ...
-        return token

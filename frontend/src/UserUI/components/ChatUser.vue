@@ -1,78 +1,286 @@
 <template>
-  <div>
-    <v-container
-      v-for="(message, i) in messages"
-      :key="i"
-      py-2
+  <div style="height:100%;">
+    <v-row
+      v-if="messages.length > 0"
+      class="d-flex flex-column-reverse"
+      style="padding-bottom:0px;height:100%;"
+      align="end"
     >
-      <div
-        v-if="isOwnMessage(message.user_detail.username)"
-        class="text-left"
+      <v-container
+        v-for="(message, i) in messages"
+        :id="'Message_' + message.id"
+        :key="message.id"
+        py-2
       >
         <v-card
-          max-width="460px"
-          class="float-right d-flex"
-          style="border-radius: 20px;"
-          flat
+          v-if="isNewDate(message, messages[i+1])"
+          style="border-radius: 15px;width:min-content"
+          class="d-inline-flex align-content-center"
+          color="background_white"
         >
-          <v-card-text>
+          <v-card-text
+            style="padding: 8px"
+          >
             <span
-              class="font-weight-light message_color--text"
+              class="message_color--text message"
             >
-              {{ message.text }}
-            </span>
-            <span
-              class="float-right ml-2"
-            >
-              {{ formatTime(message.create_date) }}
+              {{ getDay(message.create_date) }}
             </span>
           </v-card-text>
         </v-card>
-      </div>
-      <v-container
-        class="d-flex"
-        py-0
-      >
         <div
-          v-if="!isOwnMessage(message.user_detail.username)"
+          v-if="isOwnMessage(message.user)"
           class="text-left"
         >
           <v-card
             style="border-radius: 20px;"
             max-width="460px"
-            class="d-flex"
-            color="background_pink"
+            class="d-flex align-content-start flex-wrap flex-shrink-1"
             flat
+            min-width="200px"
           >
-            <v-card-text>
-              <span
-                class="font-weight-light message_color--text"
-              >
-                {{ message.text }}
-              </span>
-              <span
-                class="float-right ml-2"
-              >
-                {{ formatTime(message.create_date) }}
-              </span>
+            <v-container
+              class="d-inline-flex align-content-center"
+              pb-0
+              mb-0
+            >
+              <v-img
+                v-if="message.extension === '.png' || message.extension === '.jpeg'"
+                style="border-radius: 4px"
+                :src="message.image_url"
+                max-width="440px"
+                min-width="200px"
+                @click="dialog=true,link=message.image_url"
+              />
+            </v-container>
+            <v-card-text
+              style="padding-top: 3px"
+            >
+              <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
             </v-card-text>
+            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
+                            <span
+                class="float-right overline"
+              >
+                {{ getTime(message.create_date) }}
+              </span>
+            </v-card-actions>
           </v-card>
         </div>
+        <v-container
+          class="d-flex flex-row-reverse"
+          py-0
+        >
+          <div
+            v-if="!isOwnMessage(message.user)"
+            class="text-left"
+          >
+            <v-card
+              style="border-radius: 20px;"
+              max-width="460px"
+              class="d-flex align-content-start flex-wrap flex-shrink-1"
+              color="background_pink"
+              flat
+              min-width="200px"
+            >
+              <v-container
+                class="d-inline-flex align-content-center"
+                pb-0
+                mb-0
+              >
+                <v-img
+                  v-if="message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg'"
+                  :src="message.image_url"
+                  max-width="440px"
+                  min-width="200px"
+                  @click="dialog=true,link=message.image_url"
+                /><file-pond
+                  v-if="!(message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg') && message.image_url"
+                  ref="pond2"
+                  name="image"
+                  :disabled="true"
+                  style="max-width=440px;min-width:400px;border-radius:.5em;"
+                  :files="[message.image_url]"
+                  class-name="123"
+                  :instant-upload="false"
+                  :allow-download-by-url="true"
+                  label-idle="Drop files here..."
+                />
+              </v-container>
+              <v-card-text
+                style="padding-top: 3px"
+              >
+                <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
+              </v-card-text>
+            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
+                            <span
+                class="float-right overline"
+              >
+                {{ getTime(message.create_date) }}
+              </span>
+            </v-card-actions>
+            </v-card>
+          </div>
+        </v-container>
       </v-container>
-    </v-container>
-    <ChatInput />
+      <v-progress-circular
+        v-if="messages.length < dialogMessagesLength"
+        indeterminate
+        size="36"
+        style="position: relative; right:50%;margin-top: 25px;margin-bottom: 25px;"
+        color="basic"
+      />
+    </v-row>
+    <v-row
+      v-else
+      align="center"
+      justify="center"
+      style="padding-bottom:56px;height:100%;"
+    >
+      <div class="d-flex flex-column">
+        <span
+          v-if="messages.length === 0"
+          style="font-weight: 300;
+              font-size: 96px;
+              line-height: 112px;
+              text-align: center;
+              letter-spacing: -1.5px;"
+          class="smile_color--text"
+        >
+          ¯\_(ツ)_/¯
+        </span>
+        <span
+          v-if="messages.length === 0"
+          style="font-family: Roboto;
+              font-style: normal;
+              font-weight: 500;
+              font-size: 14px;
+              line-height: 16px;
+              text-align: center;
+              letter-spacing: 0.75px;
+              text-transform: uppercase;
+              padding-top:15px"
+          class="smile_color--text"
+        >
+          there are no messages yet
+        </span>
+      </div>
+    </v-row>
+    <span v-observe-visibility="visibilityChanged" />
+    <v-dialog
+      v-model="dialog"
+      content-class="elevation-0"
+    >
+      <v-img
+        contain
+        style="box-shadow: none !important"
+        max-height="85vh"
+        :src="link"
+        @click="dialog=false"
+      />
+    </v-dialog>
+    <v-btn
+      color="warning"
+      fixed
+      class="basic_text"
+      :style="'right:' + (scroll ? -60 : 5) +'px;transition: right 0.25s;bottom:60px;'"
+      fab
+      dark
+      @click="toLastMessage()"
+    >
+      <v-icon>mdi-arrow-down</v-icon>
+    </v-btn>
+    <file-pond
+      ref="pond"
+      name="image"
+      class="background_white black--text"
+      :style="'position:fixed;width:450px;border-radius:.5em;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
+      label-idle="Click to select a file or drop it here"
+      :allow-multiple="false"
+      :files="myFiles"
+      :drop-on-page="true"
+      :drop-on-element="false"
+      server="/api/messages/image_upload/"
+      @init="handleFilePondInit"
+      @addfile="beforeupload"
+      @processfile="afterupload"
+    />
+    <v-footer
+      color="background_white"
+      fixed
+      inset
+      app
+      class="d-inline-flex"
+      style="padding:5px;box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 0px 2px rgba(0, 0, 0, 0.14);"
+    >
+      <v-btn
+        icon
+        color="#9f9f9f"
+        class="align-self-sm-end"
+        style="margin-bottom:5px"
+        @click="hide=!hide"
+      >
+        <v-icon>
+          mdi-paperclip
+        </v-icon>
+      </v-btn>
+      <v-textarea
+        ref="myTextArea"
+        v-model="message"
+        auto-grow
+        autofocus
+        rows="1"
+        placeholder="Message"
+        hide-details
+        color="false"
+        style="margin-top:-5px;margin-bottom:7px"
+        @keydown.enter.prevent=""
+        @keyup.enter="sendMessage()"
+      />
+      <Emoji
+        class="background_white"
+        style="padding-right: 28px; margin-left: 10px;"
+        :open="smiles"
+        @click="selectedEmoji"
+      />
+      <v-btn
+        icon
+        color="basic"
+        :disabled="loading || !(message !== '' || imageUrl !== '')"
+        class="align-self-sm-end"
+        style="margin-bottom:5px"
+        @click="sendMessage()"
+      >
+        <v-icon>
+          mdi-send
+        </v-icon>
+      </v-btn>
+    </v-footer>
   </div>
 </template>
 
 <script>
-import ChatInput from './ChatInput'
+import { mapActions, mapGetters } from 'vuex'
+import { VueChatEmoji, emojis } from 'vue-chat-emoji'
 import api from '../api'
 import VueNativeSock from 'vue-native-websocket'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
-
+import linkify from 'vue-linkify'
+import vueFilePond from 'vue-filepond'
+import './css/filepond.min.css'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import FilePondPluginGetFile from 'filepond-plugin-get-file'
+import './css/filepond-plugin-get-file.min.css'
+import VueObserveVisibility from 'vue-observe-visibility'
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginGetFile)
+Vue.directive('linkified', linkify)
+require('./css/vue-chat-emoji.css')
+Vue.use(VueObserveVisibility)
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -83,59 +291,209 @@ Vue.use(
 )
 export default {
   name: 'ChatUser',
-  components: { ChatInput },
+  components: {
+    FilePond,
+    Emoji: VueChatEmoji
+  },
   data: () => ({
     messages: [],
-    diailogId: 0
+    message: '',
+    myFiles: [],
+    hide: false,
+    scroll: true,
+    dialogMessagesLength: 0,
+    dialogId: 0,
+    imageUrl: '',
+    dialog: false,
+    loading: false,
+    smiles: false,
+    fileExtension: null,
+    link: ''
   }),
+  computed: {
+    ...mapGetters(['getUserId', 'getUsersByDialogId'])
+  },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: ['updateDialog']
   },
+  beforeMount () {
+    setTimeout(this.GetOldMessages, 1000)
+  },
   mounted () {
     this.updateDialog()
     this.getMessage()
+    this.UpdateUserInDialog()
   },
   beforeDestroy () {
     this.$disconnect()
   },
   methods: {
+    toLastMessage () {
+      var Data = this
+      Vue.nextTick(function () {
+        Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[0].id), { duration: 450, offset: 0 })
+      })
+    },
+    visibilityChanged (isVisible, entry) {
+      this.scroll = isVisible
+    },
+    handleFilePondInit: function () {
+      console.log('FilePond has initialized')
+    },
+    ...mapActions(['getDialogsData', 'getUserData']),
+    beforeupload (file, progress) {
+      console.log('beforeupload', file, progress)
+      this.fileExtension = progress.fileExtension
+      this.loading = true
+      this.hide = true
+      const pond = FilePond.create()
+      pond.addFile('./ChatUser.vue')
+    },
+    afterupload (file, progress) {
+      console.log('afterupload', file, progress)
+      this.imageUrl = progress.serverId
+      this.loading = false
+    },
+    decodeEmojiCode (str) {
+      return emojis.decodeEmoji(str)
+    },
+    selectedEmoji (args) {
+      this.message += args.emoji
+      this.smiles = true
+      setTimeout(() => { this.smiles = false }, 25)
+    },
+    CheckIsVisible (el) {
+      var rect = el.getBoundingClientRect()
+      var elemTop = rect.top
+      var elemBottom = rect.bottom
+      var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight)
+      return isVisible
+    },
+    GetOldMessages () {
+      if (this.dialogMessagesLength > 0 && this.messages.length > 0) {
+        if (this.dialogMessagesLength > this.messages.length && this.CheckIsVisible(document.getElementById('Message_' + this.messages[this.messages.length - 1].id))) {
+          console.log('visible')
+          api.axios
+            .get('/api/messages/', { params: { dialog: this.dialogId, limit: 30, offset: this.messages.length, ordering: '-create_date' } })
+            .then(response => {
+              if (response.status === 200) {
+                if (response.data.count > 0) {
+                  let length = this.messages.length
+                  this.messages = this.messages.concat(response.data.results)
+                  var Data = this
+                  Vue.nextTick(function () {
+                    Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[length].id), { duration: 0 })
+                  })
+                }
+              }
+            })
+        }
+      }
+      setTimeout(this.GetOldMessages, 1000)
+    },
+    sendMessage () {
+      console.log(this.$refs)
+      if (!this.loading && (this.message !== '' || this.imageUrl !== '')) {
+        console.log('messagetext: ', this.message)
+        if (this.imageUrl === '') {
+          this.$socket.send(
+            JSON.stringify({
+              message: emojis.encodeEmoji(this.message),
+              image_url: ''
+            })
+          )
+        } else {
+          this.$socket.send(
+            JSON.stringify({
+              message: emojis.encodeEmoji(this.message),
+              image_url: JSON.parse(this.imageUrl).image_url
+            })
+          )
+        }
+        this.myFiles = []
+        this.imageUrl = ''
+        this.hide = false
+        this.message = ''
+      }
+    },
     updateDialog () {
       this.$disconnect()
+      this.message = ''
       this.messages = []
-      this.diailogId = this.$route.params.id
+      this.dialogId = this.$route.params.id
+      api.axios.get('/api/messages/count/', { params: { dialog: this.dialogId } }).then(res => { this.dialogMessagesLength = res.data.count })
       api.axios
-        .get('/api/messages/', { params: { dialog: this.diailogId } })
+        .get('/api/messages/', { params: { dialog: this.dialogId, limit: 30, ordering: '-create_date' } })
         .then(response => {
-          if (response.data) {
+          if (response.status === 200) {
             this.messages = this.messages.concat(response.data.results)
+            if (response.data.count > 0) {
+              var Data = this
+              Vue.nextTick(function () {
+                Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[0].id), { duration: 0 })
+              })
+            }
           }
         })
         .catch(error => console.log(error))
-      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.diailogId + '/')
-      api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
+      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.dialogId + '/')
+      api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/').then(res => {
+        if (res.status === 200) {
+          this.getDialogsData()
+        }
+      })
     },
     getMessage () {
       this.$options.sockets.onmessage = data => {
-        this.messages.push({
-          id: this.messages.length,
+        console.log(data)
+        this.messages.unshift({
+          id: JSON.parse(data.data).id,
           text: JSON.parse(data.data).message,
-          user_detail: { username: JSON.parse(data.data).author },
-          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1)
+          user: JSON.parse(data.data).author,
+          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1),
+          image_url: JSON.parse(data.data).image_url,
+          name: JSON.parse(data.data).name,
+          extension: JSON.parse(data.data).extension
         })
-        console.log(JSON.parse(data.data))
-        api.axios.post('/api/dialog/' + this.diailogId + '/read_messages/')
+        this.getDialogsData()
+        this.dialogMessagesLength += 1
+        var Data = this
+        Vue.nextTick(function () {
+          Data.$vuetify.goTo(document.getElementById('Message_' + JSON.parse(data.data).id))
+        })
+        api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/')
       }
     },
-    isOwnMessage (author) {
-      return author === jwt.decode(this.$cookie.get('Authentication')).name
+    UpdateUserInDialog () {
+      if (typeof this.getUsersByDialogId(this.$route.params.id) !== 'undefined') {
+        this.getUserData([this.getUsersByDialogId(this.$route.params.id)[0].id, true])
+      }
+      setTimeout(this.UpdateUserInDialog, 30000)
     },
-    formatTime (datetime) {
+    isOwnMessage (author) {
+      return author !== jwt.decode(this.$cookie.get('Authentication')).user_id
+    },
+    getTime (datetime) {
       if (datetime) {
-        if (moment(datetime).isBefore(moment(), 'day')) {
-          return moment(String(datetime)).format('DD.MM.YYYY')
+        return moment(String(datetime)).format('HH:mm')
+      }
+    },
+    getDay (datetime) {
+      if (datetime) {
+        if (moment(datetime).isSame(moment(), 'day')) {
+          return 'Today'
         } else {
-          return moment(String(datetime)).format('hh:mm')
+          return moment(String(datetime)).format('DD.MM.YYYY')
+        }
+      }
+    },
+    isNewDate (message, previousMessage) {
+      if (message.id === this.messages[this.messages.length - 1].id) {
+        return true
+      } else if (previousMessage) {
+        if (moment(message.create_date).isAfter(moment(previousMessage.create_date), 'day')) {
+          return true
         }
       }
     }
@@ -190,4 +548,37 @@ export default {
   flex-direction: column;
   position: relative;
 }
+.composer-popover.active {
+  bottom: -100px !important;
+  left:200px !important;
+}
+.filepond--root {
+  background-color: #fff;
+}
+.v-image__image{
+  width:100%;
+  height:100%;
+}
+.test{
+  background: rgba(0, 0, 0, 0.1);
+}
+.filepond--item-panel{
+  background: rgba(0, 0, 0, 0.1) !important
+}
+.message {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  }
+.time-text {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+
 </style>

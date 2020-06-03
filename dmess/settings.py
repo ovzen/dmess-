@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'admin.apps.AdminConfig',
     'channels',
     'django_filters',
-    'rest_registration'
+    'rest_registration',
+    'djangochannelsrestframework'
 ]
 
 REST_FRAMEWORK = {
@@ -78,7 +79,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter'
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter'
     ]
 }
 WSGIPassAuthorization = 'On'
@@ -185,7 +187,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT=os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "templates/static/")
@@ -218,12 +220,12 @@ SWAGGER_SETTINGS = {
         'patch',
         'delete'
     ],
-    "api_key": '', # An API key
+    "api_key": '',  # An API key
     "is_authenticated": False,  # Set to True to enforce user authentication,
     "is_superuser": False,  # Set to True to enforce admin only access
 }
 
-LOGIN_URL = '/auth/'
+LOGIN_URL = '/landing/'
 
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
@@ -245,9 +247,21 @@ FIXTURE_DIRS = [
 ]
 
 REST_REGISTRATION = {
-    'REGISTER_VERIFICATION_ENABLED': False,
+    'REGISTER_VERIFICATION_URL': '/auth/verify/',
+    'VERIFICATION_FROM_EMAIL': EMAIL_HOST_USER,
+    'REGISTER_VERIFICATION_AUTO_LOGIN': True,
+    'REGISTER_VERIFICATION_ONE_TIME_USE': True,
+    'REGISTER_VERIFICATION_EMAIL_TEMPLATES': {
+        'html_body': 'email/register/register_completion.html',
+        'subject': 'email/register/register_subject.txt'
+    },
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
-    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
+    'RESET_PASSWORD_VERIFICATION_URL': '/auth/reset-password/',
+    'RESET_PASSWORD_VERIFICATION_ONE_TIME_USE': True,
+    'RESET_PASSWORD_VERIFICATION_EMAIL_TEMPLATES': {
+        'html_body': 'email/reset_password/reset_completion.html',
+        'subject': 'email/reset_password/reset_subject.txt'
+    },
     'PROFILE_SERIALIZER_CLASS': 'main.serializers.UserSerializer',
     'REGISTER_SERIALIZER_PASSWORD_CONFIRM': False
 }

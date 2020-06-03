@@ -1,5 +1,5 @@
 # Django
-Django==3.0.5
+Django==3.0.6
 django-filter==2.2.0
 django-admin-tools==0.9.0
 django-webpack-loader== 0.7.0
@@ -13,27 +13,18 @@ django-rest-registration==0.5.6
 # Websocket
 channels==2.4.0
 channels-redis==2.4.2
+djangochannelsrestframework
 
 # Image processing
-Pillow==7.1.1
-
-# Documentation
-Sphinx==3.0.1
-sphinx-rtd-theme==0.4.3
-
-# Code style
-pylint==2.4.4
-pylint-django==2.0.14
+Pillow==7.1.2
 
 # Background tasks
 celery==4.4.2
-redis==3.4.1
+redis==3.5.2
 
 # Markdown handling
-Markdown==3.2.1
+Markdown==3.2.2
 
 # Other
-pytz==2019.3
 feedparser==5.2.1
-coverage==5.1
 python-gitlab==2.2.0

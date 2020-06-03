@@ -15,8 +15,9 @@
       >
         <v-card class="elevation-12">
           <v-layout>
-            <v-img
-              src="/static/reg.JPG"
+            <v-footer
+              width="60vh"
+              style="background: linear-gradient(325.92deg, #00A89D 0%, #42D5FF 87.16%);"
             />
             <v-container>
               <v-toolbar-title class="text-center pt-7 text--secondary">
@@ -119,6 +120,7 @@
                           <v-text-field
                             ref="repeatpassword"
                             v-model="repeatpassword"
+                            :error-messages="usernameError"
                             :append-icon="vanish ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="vanish ? 'text' : 'password'"
                             clearable
@@ -146,9 +148,9 @@
                     :disabled="step === 1"
                     @click="step--"
                   >
-                    <v-card-text class="text-center headline white--text">
-                      ←
-                    </v-card-text>
+                    <v-icon class="text-center headline white--text">
+                      mdi-arrow-left
+                    </v-icon>
                   </v-btn>
 
                   <v-btn
@@ -167,13 +169,25 @@
                     color="purple darken-4"
                     @click="step++"
                   >
-                    <v-card-text class="text-center headline white--text">
-                      →
-                    </v-card-text>
+                    <v-icon class="text-center headline white--text">
+                      mdi-arrow-right
+                    </v-icon>
                   </v-btn>
                 </v-row>
               </v-card-actions>
-
+              <v-snackbar
+                v-model="snackbar"
+                :multi-line="multiLine"
+              >
+                {{ notificationErrors }}
+                <v-btn
+                  color="red"
+                  text
+                  @click="snackbar = false"
+                >
+                  Close
+                </v-btn>
+              </v-snackbar>
               <v-card-actions class="text-center">
                 <v-card-text class="text--secondary caption mb-10">
                   ALREADY HAVE AN ACCOUNT?
@@ -215,6 +229,10 @@ export default {
     next: '',
     vanish: false,
     step: 1,
+    usernameError: null,
+    multiLine: true,
+    snackbar: false,
+    notificationErrors: null,
     loginRules: [
       v => !!v || 'Login is required',
       v => (v || '').length >= 2 || `Minimal length of username is 2 symbols`
@@ -265,7 +283,7 @@ export default {
   methods: {
     validateField () {
       if (this.$refs.passwords) {
-        this.$refs.passwords.validate();
+        this.$refs.passwords.validate()
       }
     },
     GoToLogin () {
@@ -291,29 +309,20 @@ export default {
           }
           })
           .catch(error => {
-            if (error.response.status === 400) {   
+            if (error.response.status === 400) {
+              this.notificationErrors = error.response.data[Object.keys(error.response.data)[0]].join(' ')
+              this.snackbar = (error)
               Object.values(error.response.data).forEach(error => {
                 if (error.length) {
-                  alert(error);
+                  this.usernameError = (error)
+                  setTimeout(() => { this.usernameError = null }, 3000)
                 }
-              });
+              })
             }
           })
           .then(data => {
             if (data && data.status === 201) {
-              api.axios
-                .post('/api/token/', {
-                  username: username,
-                  password: password
-                })
-                .then(res => {
-                  console.log(res.data)
-                  this.$cookie.set('Authentication', res.data.access, {
-                    expires: '5m'
-                  })
-                  localStorage.setItem('UpdateKey', res.data.refresh)
-                  window.location.href = this.next
-                })
+              this.$router.push('/verify/')
             }
           })
       }

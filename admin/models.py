@@ -1,5 +1,9 @@
-import datetime
+"""
+Admin Models
+"""
+
 import uuid
+from django.utils import timezone
 
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -8,10 +12,15 @@ User = get_user_model()
 
 
 class InviteAlreadyUsed(Exception):
-    pass
+    """
+    The InviteAlreadyUsed Exception
+    """
 
 
 class Invite(models.Model):
+    """
+    The Invite Model
+    """
     code = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
@@ -26,11 +35,14 @@ class Invite(models.Model):
         self.is_active = False
         user.is_staff = True
         user.save()
-        self.used_at = datetime.datetime.now()
+        self.used_at = timezone.now()
         self.for_user = user
 
 
 class GitlabMetrics(models.Model):
+    """
+    The Gitlab Metrics Model
+    """
     OPENED_ISSUES = 1
     OPENED_MERGE_REQUESTS = 2
     CURRENT_BRANCHES = 3

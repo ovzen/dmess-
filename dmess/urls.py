@@ -14,14 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.urls import path, include, re_path
+from django.conf.urls import url
 from django.conf.urls.static import static
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
+
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework.routers import SimpleRouter
-from django.urls import path, include, re_path
 from rest_framework_swagger.views import get_swagger_view
-from django.conf.urls import url
+
 from dmess import settings
 from main import views
 
@@ -41,13 +44,14 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     url(r'^docs/', schema_view),
     path('django_admin/', admin.site.urls),
     path('admin_tools/', include('admin_tools.urls')),
-    path('api/token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/admin/', include('admin.urls')),
+    re_path('landing/', views.landing_view),
     re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
     re_path(
         'admin/',
-        login_required(TemplateView.as_view(template_name="admin.html")),
+        staff_member_required(TemplateView.as_view(template_name="admin.html")),
         name="adminUI"
     ),
     re_path(

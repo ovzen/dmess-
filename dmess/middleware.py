@@ -1,13 +1,17 @@
-import datetime
+"""
+Dmess Middleware
+"""
 
 from channels.auth import UserLazyObject
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
-from django.contrib.auth.models import User, AnonymousUser
+
 from rest_framework import authentication
 from rest_framework_simplejwt import exceptions
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
+
+from django.contrib.auth.models import User, AnonymousUser
 
 
 class AuthMiddleware:
@@ -24,11 +28,9 @@ class AuthMiddleware:
                     authenticated = JWTTokenUserAuthentication().get_user(val_token).id
                     if authenticated:
                         request.user = User.objects.get(id=authenticated)
-                        request.user.last_login = datetime.datetime.now()
-                        request.user.save()
                     else:
                         request.user = AnonymousUser
-                except exceptions.AuthenticationFailed:
+                except (exceptions.AuthenticationFailed, User.DoesNotExist):
                     request.user = AnonymousUser
             except InvalidToken:
                 return self.get_response(request)
@@ -92,12 +94,9 @@ class DRFAuthentication(authentication.BaseAuthentication):
                     authenticated = JWTTokenUserAuthentication().get_user(val_token).id
                     if authenticated:
                         user = User.objects.get(id=authenticated)
-                        user.last_login = datetime.datetime.now()
-                        user.save()
                         return user, None
-                    else:
-                        return AnonymousUser
-                except exceptions.AuthenticationFailed:
+                    return AnonymousUser
+                except (exceptions.AuthenticationFailed, User.DoesNotExist):
                     return None
             except InvalidToken:
                 return None
