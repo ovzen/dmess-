@@ -5,6 +5,7 @@
 
 from django.contrib.auth.models import User
 from django.core.files.storage import default_storage
+from django.db import IntegrityError
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -56,10 +57,11 @@ class UserViewSet(mixins.ListModelMixin,
         :rtype: Response
         """
         user = self.get_object()
-        contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
-        return Response(
-            status=status.HTTP_400_BAD_REQUEST if created else status.HTTP_400_BAD_REQUEST
-        )
+        try:
+            Contact.objects.create(user=request.user, contact=user)
+            return Response(status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
     def delete_contact(self, request, pk=None):
