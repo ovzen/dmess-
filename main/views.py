@@ -61,7 +61,7 @@ class UserViewSet(mixins.ListModelMixin,
             status=status.HTTP_400_BAD_REQUEST if created else status.HTTP_400_BAD_REQUEST
         )
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
     def delete_contact(self, request, pk=None):
         """
         Удаляет из списка контактов юзера
