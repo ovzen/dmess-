@@ -134,7 +134,7 @@ export default ({
       })
     },
     remove_Сontact (context, payload) {
-      api.axios.post('/api/users/' + payload + '/delete_contact/').then(res => {
+      api.axios.delete('/api/users/' + payload + '/delete_contact/').then(res => {
         if (res.status === 204) {
           context.commit('removeContact', payload)
         }
