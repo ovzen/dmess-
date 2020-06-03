@@ -172,7 +172,7 @@
 
 <script>
 import api from '../api'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ContactList',
@@ -183,6 +183,7 @@ export default {
     ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName', 'getContactsByName'])
   },
   methods: {
+    ...mapActions(['getUserData']),
     getUserName (user) {
       if (typeof user !== 'undefined') {
         if (user.first_name && user.last_name) {
@@ -197,15 +198,20 @@ export default {
       }
     },
     getUsersBySearch () {
-      api.axios.get('/api/users/', {
-        params: {
-          search: this.userSearch
+      clearTimeout(this._timerId)
+      this._timerId = setTimeout(() => {
+        if (this.userSearch) {
+          api.axios.get('/api/users/', {
+            params: {
+              search: this.userSearch
+            }
+          }).then(res => {
+            for (let user in res.data.results) {
+              this.getUserData(res.data.results[user].id)
+            }
+          })
         }
-      }).then(res => {
-        for (let user in res.data.results) {
-          this.getUserData(res.data.results[user].id)
-        }
-      })
+      }, 500)
     },
     clearSearch () {
       this.userSearch = ''

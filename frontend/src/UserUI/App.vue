@@ -44,11 +44,17 @@
             v-else
             color="basic"
           >
-            <span
-              class="white--text"
+            <v-avatar
+              size="36px"
+              color="basic"
             >
-              {{ getUserInitials(DialogUser) }}
-            </span>
+              <span
+                class="white--text"
+                style="padding-left:3.5px"
+              >
+                {{ getUserInitials(DialogUser) }}
+              </span>
+            </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -433,7 +439,7 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
-    ...mapMutations(['addUser']),
+    ...mapMutations(['addUser', 'DeleteDialog']),
     changeTab (tab) {
       this.currentTab = tab
       localStorage.setItem('Tab', tab.id)
@@ -480,8 +486,8 @@ export default {
       this.$disconnect()
     },
     deleteChat () {
-      api.axios.delete('/api/dialog/' + this.$route.params.id + '/')
-      this.getDialogsData(this.getUserId)
+      api.axios.delete('/api/dialog/' + this.$route.params.id + '/').then()
+      this.DeleteDialog(this.$route.params.id)
       this.$router.go(-1)
     },
     updateToken () {

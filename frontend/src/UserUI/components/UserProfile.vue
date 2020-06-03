@@ -170,12 +170,12 @@
 
           <v-list-item
             v-else
-            @click="add_Сontact($route.params.Userid)"
+            @click="remove_Сontact($route.params.Userid)"
           >
             <v-list-item-action>
               <v-icon
                 class="ml-3 pb-4"
-                color="basic"
+                color="red"
               >
                 mdi-minus
               </v-icon>
@@ -259,7 +259,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUserData', 'add_Сontact']),
+    ...mapActions(['getUserData', 'add_Сontact', 'remove_Сontact']),
     findChat () {
       api.axios
         .get('/api/dialog/', {

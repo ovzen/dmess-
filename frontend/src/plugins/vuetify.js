@@ -26,7 +26,7 @@ export default new Vuetify({
         sidebar_select: 'D7B7FD'
       },
       dark: {
-        basic: 'D7B7FD',
+        basic: '#D7B7FD',
         basic_text: '#D7B7FD',
         text_second: '#ffffff',
         background_main: '#141414',

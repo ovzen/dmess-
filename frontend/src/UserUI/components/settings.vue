@@ -45,7 +45,7 @@
         <v-list-item-title
           class="pl-7 pb-2"
         >
-          Dark Theme [BETA]
+          Dark Theme
         </v-list-item-title>
         <v-divider
           class="ml-7"

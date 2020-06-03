@@ -84,6 +84,11 @@ export default ({
       let User = state.users.find(user => user.id === parseInt(payload))
       User.is_contact = true
       Vue.set(state.users, state.users.findIndex(user => user.id === parseInt(payload)), User)
+    },
+    removeContact: (state, payload) => {
+      let User = state.users.find(user => user.id === parseInt(payload))
+      User.is_contact = undefined
+      Vue.set(state.users, state.users.findIndex(user => user.id === parseInt(payload)), User)
     }
   },
 
@@ -125,6 +130,13 @@ export default ({
       api.axios.post('/api/users/' + payload + '/add_contact/').then(res => {
         if (res.status === 201) {
           context.commit('addContact', payload)
+        }
+      })
+    },
+    remove_Сontact (context, payload) {
+      api.axios.delete('/api/users/' + payload + '/delete_contact/').then(res => {
+        if (res.status === 204) {
+          context.commit('removeContact', payload)
         }
       })
     }

@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import api from '../api'
 import jwt from 'jsonwebtoken'
 import VueCookie from 'vue-cookie'
 import Vue from 'vue'
@@ -35,74 +34,6 @@ export default {
       this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
     } else {
       console.warn('The current user was not found')
-    }
-  },
-  methods: {
-    FindChat (ChatName) {
-      if (ChatName) {
-        api.axios
-          .get('/api/dialog/', {
-            params: {
-              name: ChatName
-            }
-          })
-          .then(response => {
-            if (response.data.length > 0) {
-              this.$router.push('ChatUser/' + response.data[0].id)
-            } else {
-              api.axios
-                .post('/api/dialog/', {
-                  name: ChatName,
-                  users: [this.user_id]
-                })
-                .then(response => {
-                  console.log('post response:', response)
-                  if (response && response.data && response.data.id) {
-                    this.$router.push('ChatUser/' + response.data.id)
-                  }
-                })
-            }
-          })
-      }
-    },
-    Exit () {
-      localStorage.removeItem('jwt')
-      this.$cookie.delete('Authentication')
-      location.reload()
-    },
-    Register (username, password) {
-      if (username && password) {
-        api.axios
-          .post('/api/register/', {
-            username: username,
-            password: password
-          })
-          .catch(error => {
-            if (error.response.status === 400) {
-              alert('Пользователь с таким именем уже существует')
-            }
-          })
-      }
-    },
-    auth (username, password) {
-      api.axios
-        .post('/api/token/', {
-          username: username,
-          password: password
-        })
-        .then(res => {
-          console.log(res.data)
-          this.$cookie.set('Authentication', res.data.access, {
-            expires: '5m'
-          })
-          this.button = 'Приветствуем ' + jwt.decode(this.$cookie.get('Authentication')).name
-        })
-        .catch(error => {
-          if (error.response.status === 401) {
-            this.button = 'Ошибка неправильное имя пользователя или пароль'
-          }
-          console.log(error.response.status)
-        })
     }
   }
 }

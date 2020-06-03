@@ -5,8 +5,9 @@
 
 from django.contrib.auth.models import User
 from django.core.files.storage import default_storage
+from django.db import IntegrityError
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -56,8 +57,28 @@ class UserViewSet(mixins.ListModelMixin,
         :rtype: Response
         """
         user = self.get_object()
-        contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
-        return Response(status=201 if created else 400)
+        try:
+            Contact.objects.create(user=request.user, contact=user)
+            return Response(status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
+    def delete_contact(self, request, pk=None):
+        """
+        Удаляет из списка контактов юзера
+        :param request: запрос
+        :param pk: primary-key пользователя
+        :return: статус 204 если создан новый контакт, иначе 400
+        :rtype: Response
+        """
+        user = self.get_object()
+        try:
+            contact = Contact.objects.get(user=request.user, contact=user)
+            contact.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Contact.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 # pylint: disable=too-many-ancestors
