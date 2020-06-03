@@ -112,7 +112,7 @@
         >
           <v-container class="pa-12">
             <p class="text-center display-2 font-weight-light">
-              Verify your email
+              your email
             </p>
             <v-card-text class="text-center subtitle-1 text--secondary">
               You will need to verify your email to complete registration.

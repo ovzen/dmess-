@@ -1,22 +1,22 @@
 <template>
   <v-container class="fill-height">
-        <v-flex
-          d-flex
-          justify-center
-        >
-          <v-container class="pa-12">
-            <p class="text-center display-2 font-weight-light">
-              Password retrieval
-            </p>
-            <v-card-text class="text-center subtitle-1 text--secondary">
-              A reset password link has been sent to vasya@yandex.ru email.
-            </v-card-text>
-            <v-container>
-              <v-flex
-                d-flex
-                justify-center
-              >
-                <pre>
+    <v-flex
+      d-flex
+      justify-center
+    >
+      <v-container class="pa-12">
+        <p class="text-center display-2 font-weight-light">
+          your email
+        </p>
+        <v-card-text class="text-center subtitle-1 text--secondary">
+          A reset password link has been sent to <span class="font-weight-bold">vasya@yandex.ru</span>email.
+        </v-card-text>
+        <v-container>
+          <v-flex
+            d-flex
+            justify-center
+          >
+            <pre>
  __________________________________________________
 |\                                                /|
 | \                                              / |
@@ -29,15 +29,13 @@
 |                                                  |
 |__________________________________________________|
             </pre>
-              </v-flex>
-            </v-container>
-            <v-card-text class="text-center text--secondary subtitle-1 pa-5">
-              If you have not received the email after a few minutes, please check your spam folder.
-            </v-card-text>
-          </v-container>
-        </v-flex>
+          </v-flex>
+        </v-container>
+        <v-card-text class="text-center text--secondary subtitle-1 pa-5">
+          If you have not received the email after a few minutes, please check your spam folder.
+        </v-card-text>
       </v-container>
-    </template>
+    </v-flex>
   </v-container>
 </template>
 
