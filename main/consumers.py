@@ -227,7 +227,7 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         print(kwargs)
         data, response_status = await self.retrieve(**kwargs)
         message_action = kwargs.pop('action')
-
+        print(data)
         await self.reply(
             action=message_action,
             data=data,
