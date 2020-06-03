@@ -436,7 +436,7 @@ export default {
           {
             action: 'subscribe_to_messages_in_dialog',
             request_id: 1,
-            dialog_id: 'f0f61fbc-28f9-4613-b73a-47a78fa136e3'
+            dialog_id: '35f9da67-6afa-4749-a460-0a374c2f3595'
           }
         )
       )

@@ -271,30 +271,33 @@ class MessageAPIConsumer(PatchModelMixin,
     async def subscribe_to_messages_in_dialog(self, dialog_id, **kwargs):
         user = self.scope.get('user')
         dialog = await self.get_dialog(pk=dialog_id, users=user)
+        print(dialog.id)
+        print('ПОДПИСКААА')
         if dialog:
-            self.message_in_dialog_change_handler.subscribe(instance=dialog)
+            await self.message_in_dialog_change_handler.subscribe(dialog=dialog)
             return None, status.HTTP_201_CREATED
         else:
             return None, status.HTTP_404_NOT_FOUND
 
-    # @model_observer(models.Message)
-    # async def message_in_dialog_change_handler(self, message, observer=None, **kwargs):
-    #     print(message)
-    #     data, response_status = await self.retrieve(**message)
-    #     message_action = message.pop('action')
-    #
-    #     await self.reply(
-    #         action=message_action,
-    #         data=data,
-    #         status=response_status
-    #     )
-    #
-    # @message_in_dialog_change_handler.groups_for_signal
-    # def message_in_dialog_change_handler(self, instance: models.Message, **kwargs):
-    #     print('signal', f'-d__{instance.dialog_id}')
-    #     yield f'-d__{instance.dialog_id}'
-    #
-    # @message_in_dialog_change_handler.groups_for_consumer
-    # def message_in_dialog_change_handler(self, dialog: models.Dialog, **kwargs):
-    #     print('consumer', f'-d__{dialog.id}')
-    #     yield f'-d__{dialog.id}'
+    @model_observer(models.Message)
+    async def message_in_dialog_change_handler(self, message, observer=None, **kwargs):
+        print(message)
+        data, response_status = await self.retrieve(**message)
+        data['dialog'] = str(data['dialog'])  # UUID не сериализуется библиотекой
+        message_action = message.pop('action')
+
+        await self.reply(
+            action=message_action,
+            data=data,
+            status=response_status
+        )
+
+    @message_in_dialog_change_handler.groups_for_signal
+    def message_in_dialog_change_handler(self, instance: models.Message, **kwargs):
+        print('SIGNAL', f'-d__{instance.dialog_id}')
+        yield f'-d__{instance.dialog_id}'
+
+    @message_in_dialog_change_handler.groups_for_consumer
+    def message_in_dialog_change_handler(self, dialog: models.Dialog, **kwargs):
+        print('consumer', f'-d__{dialog.id}')
+        yield f'-d__{dialog.id}'
