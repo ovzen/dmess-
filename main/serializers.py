@@ -17,7 +17,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        exclude = ('user', 'last_online')
+        exclude = ('user', 'last_online', 'is_online')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'is_staff')
+        read_only_fields = ('is_staff',)
 
     def update(self, instance, validated_data):
         """
