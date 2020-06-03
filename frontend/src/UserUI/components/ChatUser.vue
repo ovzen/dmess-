@@ -7,13 +7,13 @@
       align="end"
     >
       <v-container
-        v-for="message in messages"
+        v-for="(message, i) in messages"
         :id="'Message_' + message.id"
         :key="message.id"
         py-2
       >
         <v-card
-          v-if="isNewDate(message)"
+          v-if="isNewDate(message, messages[i+1])"
           style="border-radius: 15px;width:min-content"
           class="d-inline-flex align-content-center"
           color="background_white"
@@ -481,16 +481,12 @@ export default {
         }
       }
     },
-    isNewDate (message) {
-      if (message.id === 1) {
+    isNewDate (message, previousMessage) {
+      if (message.id === this.messages[this.messages.length - 1].id) {
         return true
-      } else {
-        let previousMessage = this.messages.find(item => item.id === message.id - 1)
-        if (previousMessage) {
-          let previousMessageDate = previousMessage.create_date
-          if (moment(message.create_date).isAfter(moment(previousMessageDate), 'day')) {
-            return true
-          }
+      } else if (previousMessage) {
+        if (moment(message.create_date).isAfter(moment(previousMessage.create_date), 'day')) {
+          return true
         }
       }
     }

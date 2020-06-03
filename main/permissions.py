@@ -1,3 +1,7 @@
+"""
+Специальные разрешения для использования в представлениях (view)
+"""
+
 from rest_framework import permissions
 
 
