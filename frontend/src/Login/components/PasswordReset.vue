@@ -3,6 +3,7 @@
     class="fill-height"
     fluid
   >
+  <template v-if="reset_mode === true">
     <v-flex
       justify-center
       d-flex
@@ -102,27 +103,26 @@
         </v-card>
       </v-col>
     </v-flex>
-  </v-container>
-</template>
-    <template v-else>
-      <v-container class="fill-height">
-        <v-flex
-          d-flex
-          justify-center
-        >
-          <v-container class="pa-12">
-            <p class="text-center display-2 font-weight-light">
-              your email
-            </p>
-            <v-card-text class="text-center subtitle-1 text--secondary">
-              You will need to verify your email to complete registration.
-            </v-card-text>
-            <v-container>
-              <v-flex
-                d-flex
-                justify-center
-              >
-                <pre>
+  </template>
+  <template v-else>
+    <v-container class="fill-height">
+      <v-flex
+        d-flex
+        justify-center
+      >
+        <v-container class="pa-12">
+          <p class="text-center display-2 font-weight-light">
+            your email
+          </p>
+          <v-card-text class="text-center subtitle-1 text--secondary">
+            You will need to verify your email to complete registration.
+          </v-card-text>
+          <v-container>
+            <v-flex
+              d-flex
+              justify-center
+            >
+              <pre>
  __________________________________________________
 |\                                                /|
 | \                                              / |
@@ -138,7 +138,7 @@
               </v-flex>
             </v-container>
             <v-card-text class="text-center text--secondary subtitle-1 pa-5">
-              A verification mail has been sent to <span class="font-weight-bold">vasya@yandex.ru</span> with a link to verify your account.<br>
+              A verification mail has been sent to thy email inbox with a link to verify your account.<br>
               If you have not received the email after a few minutes, please check your spam folder.
             </v-card-text>
           </v-container>

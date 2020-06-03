@@ -9,7 +9,7 @@
           your email
         </p>
         <v-card-text class="text-center subtitle-1 text--secondary">
-          A reset password link has been sent to <span class="font-weight-bold">vasya@yandex.ru</span>email.
+          A reset password link has been sent to your email.
         </v-card-text>
         <v-container>
           <v-flex
