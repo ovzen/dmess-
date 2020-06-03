@@ -174,15 +174,8 @@
               >
                 {{ getUserName(getClient) }}
               </v-list-item-title>
-              <v-list-item-subtitle
-                v-if="getClientProfile.is_online"
-              >
-                online
-              </v-list-item-subtitle>
-              <v-list-item-subtitle
-                v-else
-              >
-                offline
+              <v-list-item-subtitle>
+                {{ getClientProfile.status }}
               </v-list-item-subtitle>
             </v-list-item-content>
             <router-link
@@ -203,6 +196,7 @@
                 >
                   <span
                     class="basic--text"
+                    style="padding-left:3.5px"
                   >
                     {{ MakeAvatar }}
                   </span>
