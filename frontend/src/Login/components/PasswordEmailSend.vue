@@ -35,8 +35,7 @@
                         >
                           <v-text-field
                             ref="LoginPassword"
-                            v-model="repeatpassword"
-                            :error-messages="usernameError"
+                            v-model="login"
                             clearable
                             hint="Login specified during registration"
                             label="Login for reset"
@@ -55,7 +54,7 @@
                 <v-row justify="space-around">
                   <v-btn
                     style="margin-top:-40px"
-                    :disabled="password == '' || password != repeatpassword"
+                    :disabled="login === ''"
                     tile
                     outlined
                     color="purple darken-4"
@@ -66,19 +65,6 @@
                   </v-btn>
                 </v-row>
               </v-card-actions>
-              <v-snackbar
-                v-model="snackbar"
-                :multi-line="multiLine"
-              >
-                {{ notificationErrors }}
-                <v-btn
-                  color="red"
-                  text
-                  @click="snackbar = false"
-                >
-                  Close
-                </v-btn>
-              </v-snackbar>
               <v-card-actions
                 class="text-center"
                 style="margin-bottom:-60px;margin-top:-30px"

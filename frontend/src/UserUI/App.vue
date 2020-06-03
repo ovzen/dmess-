@@ -44,11 +44,16 @@
             v-else
             color="basic"
           >
-            <span
-              class="white--text"
+            <v-avatar
+              size="36px"
+              color="basic"
             >
-              {{ getUserInitials(DialogUser) }}
-            </span>
+              <span
+                class="white--text"
+              >
+                {{ getUserInitials(DialogUser) }}
+              </span>
+            </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -192,11 +197,16 @@
                 v-else
                 color="background_white"
               >
-                <span
-                  class="basic--text"
+                <v-avatar
+                  size="36px"
+                  color="basic"
                 >
-                  {{ MakeAvatar }}
-                </span>
+                  <span
+                    class="basic--text"
+                  >
+                    {{ MakeAvatar }}
+                  </span>
+                </v-avatar>
               </v-list-item-avatar>
             </router-link>
           </v-list-item>
@@ -307,6 +317,9 @@ import { mapActions, mapGetters } from 'vuex'
 
 let ws1 = new WebSocket(
   (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
+)
+let ws2 = new WebSocket(
+  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/messages/'
 )
 
 Vue.use(VueCookie)
@@ -426,7 +439,18 @@ export default {
         )
       )
     }
-    
+
+    ws2.onopen = function () {
+      ws2.send(
+        JSON.stringify(
+          {
+            action: 'subscribe_to_messages_in_dialog',
+            request_id: 1,
+            dialog_id: '35f9da67-6afa-4749-a460-0a374c2f3595'
+          }
+        )
+      )
+    }
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
