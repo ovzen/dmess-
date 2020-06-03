@@ -35,7 +35,7 @@
 .. code-block:: bash
 
     python manage.py migrate
-    python manage.py createsuperuser --username vasya --email 1@abc.net   # password: promprog
+    python manage.py createsuperuser --username vasya --email 1@abc.net   # пароль: promprog
     python manage.py collectstatic
 
 5. Создаём документацию проекта.
