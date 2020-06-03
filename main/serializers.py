@@ -1,3 +1,8 @@
+"""
+Сериализаторы главных моделей базы данных.
+Преимущественно относятся к клиентской и общей части приложения.
+"""
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -5,6 +10,9 @@ from main import models
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    """
+    The UserProfile Serializer
+    """
     status = serializers.CharField(read_only=True)
 
     class Meta:
@@ -13,6 +21,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    The User Serializer
+    """
     profile = UserProfileSerializer()
 
     class Meta:
@@ -20,6 +31,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'is_staff')
 
     def update(self, instance, validated_data):
+        """
+        Обновляет поля в моделе пользователя и профиль,
+        привязанный к ней
+        :param User instance: экземляр пользователя
+        :param dict validated_data: валидированные данные
+        :return: сохраненный экземляр пользователя
+        :rtype: User
+        """
         profile_data = validated_data.pop('profile')
         for key, value in validated_data.items():
             setattr(instance, key, value)
@@ -31,6 +50,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    """
+    The Message Serializer
+    """
     name = serializers.CharField(read_only=True)
     extension = serializers.CharField(read_only=True)
 
@@ -40,6 +62,9 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class DialogSerializer(serializers.ModelSerializer):
+    """
+    The Dialog Serializer
+    """
     last_message = MessageSerializer(read_only=True)
     unread_messages = serializers.DictField(read_only=True)
 
@@ -57,12 +82,18 @@ class DialogSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    """
+    The Contact Serializer
+    """
     class Meta:
         model = models.Contact
         fields = ['id', 'contact']
 
 
 class WikiPageSerializer(serializers.ModelSerializer):
+    """
+    The WikiPageSerializer
+    """
     class Meta:
         model = models.WikiPage
         fields = '__all__'
