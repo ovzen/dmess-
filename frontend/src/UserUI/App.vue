@@ -199,7 +199,6 @@
               >
                 <v-avatar
                   size="36px"
-                  color="basic"
                 >
                   <span
                     class="basic--text"
@@ -429,15 +428,6 @@ export default {
           }
         )
       )
-      ws1.send(
-        JSON.stringify(
-          {
-            action: 'subscribe_to_user',
-            request_id: 1,
-            pk: 3
-          }
-        )
-      )
     }
 
     ws2.onopen = function () {
@@ -446,7 +436,7 @@ export default {
           {
             action: 'subscribe_to_messages_in_dialog',
             request_id: 1,
-            dialog_id: '35f9da67-6afa-4749-a460-0a374c2f3595'
+            dialog_id: 'e694a9de-ebe0-496c-82c6-889472b18698'
           }
         )
       )
