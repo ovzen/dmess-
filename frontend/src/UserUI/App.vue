@@ -210,7 +210,7 @@
         <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
         <DialogsList v-if="currentTab.name == 'mdi-message-text'" />
         <settings
-          v-if="currentTab.name == 'mdi-settings'"
+          v-if="currentTab.name == 'mdi-cog'"
         />
         <v-footer
           absolute
@@ -332,7 +332,7 @@ var tabs = [
   },
   */
   {
-    name: 'mdi-settings',
+    name: 'mdi-cog',
     display_name: 'Settings',
     component: {
     }
