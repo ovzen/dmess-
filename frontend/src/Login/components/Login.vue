@@ -82,15 +82,15 @@
                     </u>
                   </a>
                   <v-card-text>
-                      <a>
-                        <u
-                          class="text--secondary caption"
-                          style="font-style: normal; font-family: Roboto;"
-                          @click="send_reset_password_link(login)"
-                        >
-                          FORGOT PASSWORD?
-                        </u>
-                      </a>
+                    <a>
+                      <u
+                        class="text--secondary caption"
+                        style="font-style: normal; font-family: Roboto;"
+                        @click="send_reset_password_link(login)"
+                      >
+                        FORGOT PASSWORD?
+                      </u>
+                    </a>
                   </v-card-text>
                 </v-card-text>
               </v-card-actions>
