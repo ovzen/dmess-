@@ -33,7 +33,7 @@
           class="text-left"
         >
           <v-card
-            style="border-radius: 20px;width:min-content"
+            style="border-radius: 20px;"
             max-width="460px"
             class="d-flex align-content-start flex-wrap flex-shrink-1"
             flat
@@ -56,17 +56,15 @@
             <v-card-text
               style="padding-top: 3px"
             >
-              <span
-                class="message_color--text message"
-              >
-                {{ decodeEmojiCode(message.text) }}
-              </span>
-              <span
-                class="float-right time-text"
+              <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
+            </v-card-text>
+            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
+                            <span
+                class="float-right overline"
               >
                 {{ getTime(message.create_date) }}
               </span>
-            </v-card-text>
+            </v-card-actions>
           </v-card>
         </div>
         <v-container
@@ -78,7 +76,7 @@
             class="text-left"
           >
             <v-card
-              style="border-radius: 20px;width:min-content"
+              style="border-radius: 20px;"
               max-width="460px"
               class="d-flex align-content-start flex-wrap flex-shrink-1"
               color="background_pink"
@@ -112,17 +110,15 @@
               <v-card-text
                 style="padding-top: 3px"
               >
-                <span
-                  class="message_color--text message"
-                >
-                  {{ decodeEmojiCode(message.text) }}
-                </span>
-                <span
-                  class="float-right time-text"
-                >
-                  {{ getTime(message.create_date) }}
-                </span>
+                <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
               </v-card-text>
+            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
+                            <span
+                class="float-right overline"
+              >
+                {{ getTime(message.create_date) }}
+              </span>
+            </v-card-actions>
             </v-card>
           </div>
         </v-container>
