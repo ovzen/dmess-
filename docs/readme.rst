@@ -1,14 +1,14 @@
 README
 ======
 
-Project "Digital messages"
+Проект "Digital messages"
 -------------------------
 
-**Goal**
+**Цель**
 
-Provide users with a messenger service
+Предоставить пользователю сервис для обмена мгновенными сообщениями
 
-**Technology stack:**
+**Tехнологический стек:**
 
 * python 3.6
 * django 3.0+

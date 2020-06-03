@@ -51,4 +51,4 @@ django и django rest framework, пишем новые тесты.
 
     coverage html -i --omit=venv/*
 
-После этой команды в проекте появится папка htmlcov, в которой надо открыть index.html
+После этой команды в проекте появится папка htmlcov, в которой надо открыть index.html.
