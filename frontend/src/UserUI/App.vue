@@ -198,11 +198,15 @@
                 v-else
                 color="background_white"
               >
-                <span
-                  class="basic--text"
+                <v-avatar
+                  size="36px"
                 >
-                  {{ MakeAvatar }}
-                </span>
+                  <span
+                    class="basic--text"
+                  >
+                    {{ MakeAvatar }}
+                  </span>
+                </v-avatar>
               </v-list-item-avatar>
             </router-link>
           </v-list-item>
