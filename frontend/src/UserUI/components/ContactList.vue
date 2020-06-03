@@ -198,15 +198,20 @@ export default {
       }
     },
     getUsersBySearch () {
-      api.axios.get('/api/users/', {
-        params: {
-          search: this.userSearch
+      clearTimeout(this._timerId)
+      this._timerId = setTimeout(() => {
+        if (this.userSearch) {
+          api.axios.get('/api/users/', {
+            params: {
+              search: this.userSearch
+            }
+          }).then(res => {
+            for (let user in res.data.results) {
+              this.getUserData(res.data.results[user].id)
+            }
+          })
         }
-      }).then(res => {
-        for (let user in res.data.results) {
-          this.getUserData(res.data.results[user].id)
-        }
-      })
+      }, 500)
     },
     clearSearch () {
       this.userSearch = ''

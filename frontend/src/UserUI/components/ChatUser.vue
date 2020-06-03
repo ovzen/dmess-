@@ -244,6 +244,7 @@
       <Emoji
         class="background_white"
         style="padding-right: 28px; margin-left: 10px;"
+        :open="smiles"
         @click="selectedEmoji"
       />
       <v-btn
@@ -309,6 +310,7 @@ export default {
     imageUrl: '',
     dialog: false,
     loading: false,
+    smiles: false,
     fileExtension: null,
     link: ''
   }),
@@ -362,6 +364,8 @@ export default {
     },
     selectedEmoji (args) {
       this.message += args.emoji
+      this.smiles = true
+      setTimeout(() => { this.smiles = false }, 25)
     },
     CheckIsVisible (el) {
       var rect = el.getBoundingClientRect()
