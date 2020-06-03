@@ -213,16 +213,16 @@ export default {
     MakeAvatar (UserProfile) {
       if (typeof UserProfile !== 'undefined') {
         if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
-          return UserProfile.first_name[0] + UserProfile.last_name[0]
+          return UserProfile.first_name[0].toUpperCase() + UserProfile.last_name[0].toUpperCase()
         }
         if (UserProfile.first_name !== '') {
-          return UserProfile.first_name[0]
+          return UserProfile.first_name[0].toUpperCase()
         }
         if (UserProfile.last_name !== '') {
-          return UserProfile.last_name[0]
+          return UserProfile.last_name[0].toUpperCase()
         }
         if (UserProfile.username !== '') {
-          return UserProfile.username[0]
+          return UserProfile.username[0].toUpperCase()
         }
       }
       return '...'
