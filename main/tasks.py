@@ -1,4 +1,6 @@
-"""tasks.py - celery-задачи проекта"""
+"""
+celery-задачи приложения
+"""
 
 import os
 
@@ -11,10 +13,10 @@ from dmess.celery import app
 from main.models import WikiPage
 
 
-
 @app.task()
 def markdown_convert(**kwargs):
-    """Отложенное задание для преобразования markdown-поля в модели в html-код.
+    """
+    Отложенное задание для преобразования markdown-поля в модели в html-код.
 
     Берём markdown-текст, преобразовываем в html и записываем обратно в модель
     :param kwargs: словарь с параметрами. Должен содержать ключ id (primary key в модели WikiPage)
@@ -28,6 +30,12 @@ def markdown_convert(**kwargs):
 
 @app.task()
 def gitlab_metrics_fetch():
+    """
+    Регулярное задание, забирающее последнии данные о репозитории проекта с Gitlab.
+
+    Берем данные, c помощью api, и записываем в модель GitlabMetrics в формате key: value
+    :return: None
+    """
     gl = gitlab.Gitlab(
         settings.GITLAB_DOMAIN_URL, private_token=os.environ['GITLAB_PRIVATE_TOKEN']
     )

@@ -1,4 +1,6 @@
-"""signals.py - собрание функций, привязанных к изменениям моделей django"""
+"""
+Функции-сигналы, привязанные к изменениям моделей django
+"""
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
@@ -50,12 +52,24 @@ def user_invite_processing(user, request, **kwargs):
 
 @receiver(post_save, sender=Message)
 def dialog_ws_notification(**kwargs):
+    """
+    Следит на изменением сообщений,
+    и отправляет сигнал в диалог,
+    в котором оно было сохранено
+    """
     dialog = kwargs['instance'].dialog
     for user in dialog.users.all():
         send_notification(user, dialog)
 
 
 def send_notification(user, dialog):
+    """
+    Формирует ответ об изменении сообщения
+    и отправляет уведомление в группу диалога
+    :param main.models.User user: пользователь в диалоге
+    :param main.models.Dialog dialog: диалог пользователя
+    :return: None
+    """
     group_name = f'dialogs_user_{user.id}'
     serializer = DialogSerializer(dialog)
     channel_layer = get_channel_layer()

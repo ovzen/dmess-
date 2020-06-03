@@ -1,5 +1,5 @@
 """
-Main Routing
+Маршрутизация WS соединений в приложении
 """
 
 from django.urls import re_path, path

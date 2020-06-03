@@ -1,5 +1,6 @@
 """
-Main Serializers
+Сериализаторы главных моделей базы данных.
+Преимущественно относятся к клиентской и общей части приложения.
 """
 
 from django.contrib.auth.models import User
@@ -30,6 +31,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile', 'is_staff')
 
     def update(self, instance, validated_data):
+        """
+        Обновляет поля в моделе пользователя и профиль,
+        привязанный к ней
+        :param User instance: экземляр пользователя
+        :param dict validated_data: валидированные данные
+        :return: сохраненный экземляр пользователя
+        :rtype: User
+        """
         profile_data = validated_data.pop('profile')
         for key, value in validated_data.items():
             setattr(instance, key, value)

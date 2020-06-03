@@ -1,6 +1,7 @@
 # coding=utf-8
 """
-Main Models
+Главные модели базы данных.
+Преимущественно относятся к клиентской и общей части приложения.
 """
 
 import uuid
@@ -36,13 +37,18 @@ class UserProfile(models.Model):
     last_online = models.DateTimeField(auto_now=True)
 
     def status(self):
+        """
+        Формирует строку статуса пользователя.
+        :return: строка статуса
+        """
         return (f'last seen {timesince(self.last_online)} ago'
                 if not self.is_online else 'online')
 
 
 class Contact(models.Model):
     """
-    The Contact Model
+    Реализует хранение контактов.
+    Каждая сущность уникальна.
     """
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE,
@@ -59,7 +65,7 @@ class Contact(models.Model):
 
 class Dialog(models.Model):
     """
-    The Dialog Model
+    Реализует сущность диалога
     """
     create_date = models.DateTimeField(auto_now_add=True)
     users = models.ManyToManyField(User)
@@ -67,9 +73,19 @@ class Dialog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     def last_message(self):
+        """
+        :return: Последнее сообщение в диалоге
+        :rtype: Message
+        """
         return self.message_set.order_by('-create_date').first()
 
     def unread_messages(self):
+        """
+        Возвращает количество непрочитанных сообщений в диалоге
+        для каждого пользователя, в виде словаря.
+        :return: Словарь вида user_id: message_count
+        :rtype: dict
+        """
         messages = self.message_set.filter(is_read=False)
         return {user.id: messages.exclude(user=user).count()
                 for user in self.users.get_queryset()}
@@ -77,7 +93,7 @@ class Dialog(models.Model):
 
 class Message(models.Model):
     """
-    The Message Model
+    Реализует хранение сообщений в диалоге.
     """
     text = models.TextField(max_length=2000)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -88,16 +104,23 @@ class Message(models.Model):
 
     @property
     def extension(self):
+        """
+        :return: Расширение приложенного файла
+        """
         return os.path.splitext(self.image_url)[1]
 
     @property
     def name(self):
+        """
+        :return: Имя приложенного файла
+        """
         return os.path.basename(self.image_url)
 
 
 class WikiPage(models.Model):
     """
-    The WikiPage Model
+    Реализует хранение вики-страниц.
+    В текущем релизе проекта не используется.
     """
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     message = models.OneToOneField(to=Message, on_delete=models.CASCADE)

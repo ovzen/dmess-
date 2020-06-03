@@ -1,5 +1,6 @@
 """
-Main Views
+Предстваления (views) главных моделей базы данных.
+Преимущественно относятся к клиентской и общей части приложения.
 """
 
 from django.contrib.auth.models import User
@@ -46,6 +47,13 @@ class UserViewSet(mixins.ListModelMixin,
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_contact(self, request, pk=None):
+        """
+        Добавляет в список контактов юзера
+        :param request: запрос
+        :param pk: primary-key пользователя
+        :return: статус 201 если создан новый контакт, иначе 400
+        :rtype: Response
+        """
         user = self.get_object()
         contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
         return Response(status=201 if created else 400)
@@ -116,6 +124,11 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
 
     @action(detail=False, methods=['post'])
     def image_upload(self, request):
+        """
+        Действие для загрузки картинок и привязки их к сообщениям.
+        :param request:
+        :return:
+        """
         image = request.FILES['image']
         image_name = default_storage.save(image.name, image)
         image_url = default_storage.url(image_name)
@@ -139,6 +152,11 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
 
 
 def landing_view(request):
+    """
+    Рендерит статическую лендинг-страницу.
+    :param request:
+    :return:
+    """
     context = {
         'online_stat': UserProfile.objects.filter(is_online=True).count(),
         'registers_stat': User.objects.count(),
