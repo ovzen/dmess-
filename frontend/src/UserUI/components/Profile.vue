@@ -7,13 +7,13 @@
       <v-list-item>
         <v-list-item-content>
           <div class="overline mb-4">
-            Профиль пользователя
+            User Profile
           </div>
           <v-list-item-title class="headline mb-1 indigo--text">
-            Имя пользователя: {{ username }}
+            Username: {{ username }}
           </v-list-item-title>
           <v-list-item-subtitle>User ID: {{ id }}</v-list-item-subtitle>
-          <v-list-item-subtitle>Статус пользователя: {{ status }}</v-list-item-subtitle>
+          <v-list-item-subtitle>User Status: {{ status }}</v-list-item-subtitle>
           <v-list-item-subtitle>e-mail: {{ email }}</v-list-item-subtitle>
           <!-- <v-list-item-subtitle>Дата регистрации: {{ createdDate }}</v-list-item-subtitle> -->
         </v-list-item-content>
@@ -61,7 +61,7 @@ export default {
         })
         .catch(error => {
           if (error.response.status === 401) {
-            this.message = 'Ошибка авторизации'
+            this.message = 'Authorization error'
           }
         })
     }

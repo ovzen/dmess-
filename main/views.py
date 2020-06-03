@@ -15,7 +15,7 @@ from main.permissions import IsAdminUserOrReadOnly
 # noinspection PyUnresolvedReferences
 class CountModelMixin:
     """
-    Add count action to ModelViewSet
+    Добавляет действие count (количество) к ModelViewSet
     """
 
     @action(detail=False)
@@ -54,6 +54,9 @@ class ContactViewSet(mixins.ListModelMixin,
     serializer_class = serializers.ContactSerializer
 
     def get_queryset(self):
+        """
+        Фильтрует queryset контактов по тем, в которых состоит пользователь
+        """
         user = self.request.user
         return Contact.objects.filter(user=user)
 
@@ -68,6 +71,9 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     filterset_fields = ['users', 'name', 'id']
 
     def get_queryset(self):
+        """
+        Фильтрует queryset диалогов по тем, в которых состоит пользователь
+        """
         user = self.request.user
         return Dialog.objects.filter(users=user)
 
@@ -95,7 +101,7 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
 
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
-    Send all messages from chat
+    ViewSet для работы с сообщениями
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.MessageSerializer
@@ -105,6 +111,9 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     ordering_fields = ['id', 'create_date']
 
     def get_queryset(self):
+        """
+        Фильтрует queryset сообщений по текущему пользователю
+        """
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
@@ -113,6 +122,12 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
 
     @action(detail=False, methods=['post'])
     def image_upload(self, request):
+        """
+        Принимает на вход картинку, загружает ее на сервер и отдает
+        обратно ссылку на файл.
+        :param request:
+        :return: Response
+        """
         image = request.FILES['image']
         image_name = default_storage.save(image.name, image)
         image_url = default_storage.url(image_name)
@@ -129,6 +144,9 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     filterset_fields = ['title', 'dialog', 'message']
 
     def get_queryset(self):
+        """
+        Фильтрует queryset вики-страниц по тем, в диалоге которых состоит юзер
+        """
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
