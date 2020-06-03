@@ -145,6 +145,7 @@
           class="mt-12"
         >
           <v-list-item
+            v-if="typeof getThatUser.is_contact === 'undefined'"
             @click="add_Сontact($route.params.Userid)"
           >
             <v-list-item-action>
@@ -160,6 +161,30 @@
                 class="pb-4 body-1 black--text"
               >
                 Add to contact list
+              </v-list-item-title>
+              <v-divider
+                width="538"
+              />
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item
+            v-else
+            @click="add_Сontact($route.params.Userid)"
+          >
+            <v-list-item-action>
+              <v-icon
+                class="ml-3 pb-4"
+                color="basic"
+              >
+                mdi-minus
+              </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title
+                class="pb-4 body-1 black--text"
+              >
+                Remove from contact list
               </v-list-item-title>
               <v-divider
                 width="538"
