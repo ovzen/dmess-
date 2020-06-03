@@ -46,7 +46,6 @@
           >
             <v-avatar
               size="36px"
-              color="basic"
             >
               <span
                 class="white--text"
@@ -199,7 +198,6 @@
               >
                 <v-avatar
                   size="36px"
-                  color="basic"
                 >
                   <span
                     class="basic--text"
