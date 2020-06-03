@@ -1,14 +1,17 @@
-import datetime
+"""
+Dmess Middleware
+"""
 
 from channels.auth import UserLazyObject
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
-from django.contrib.auth.models import User, AnonymousUser
+
 from rest_framework import authentication
 from rest_framework_simplejwt import exceptions
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
-from django.contrib.auth.models import User
+
+from django.contrib.auth.models import User, AnonymousUser
 
 
 class AuthMiddleware:
@@ -92,8 +95,7 @@ class DRFAuthentication(authentication.BaseAuthentication):
                     if authenticated:
                         user = User.objects.get(id=authenticated)
                         return user, None
-                    else:
-                        return AnonymousUser
+                    return AnonymousUser
                 except (exceptions.AuthenticationFailed, User.DoesNotExist):
                     return None
             except InvalidToken:

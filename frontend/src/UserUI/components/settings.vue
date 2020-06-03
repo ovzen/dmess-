@@ -3,10 +3,15 @@
     <v-divider />
     <v-col>
       <p
-        class="basic_text--text overline font-weight-medium pa-2"
-        style="text-decoration-line: underline; text-transform: uppercase; letter-spacing: 1.5px;"
+        class="basic_text--text font-weight-medium pa-2"
+        style="font-family: Roboto;
+              font-size: 18px !important;
+              line-height: 16px;
+              font-style: normal;
+              font-weight: normal;
+              margin-bottom:-3px"
       >
-        SETTINGS
+        Settings
       </p>
     </v-col>
     <v-list-item
@@ -34,12 +39,13 @@
         v-model="$vuetify.theme.dark"
         class="pb-2"
         color="basic"
+        @change="saveTheme()"
       />
       <v-list-item-content>
         <v-list-item-title
           class="pl-7 pb-2"
         >
-          Dark Theme [BETA]
+          Dark Theme
         </v-list-item-title>
         <v-divider
           class="ml-7"
@@ -107,6 +113,9 @@ export default {
     this.getUserStaff()
   },
   methods: {
+    saveTheme () {
+      localStorage.setItem('Dark', this.$vuetify.theme.dark)
+    },
     getUserStaff  () {
       this.loading = true
       api.axios

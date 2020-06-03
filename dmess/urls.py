@@ -14,15 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.urls import path, include, re_path
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
+
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework.routers import SimpleRouter
-from django.urls import path, include, re_path
 from rest_framework_swagger.views import get_swagger_view
-from django.conf.urls import url
+
 from dmess import settings
 from main import views
 
@@ -59,4 +61,3 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     ),
     path('admin_tools/', include('admin_tools.urls')),
 ]
-
