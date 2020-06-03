@@ -1,9 +1,16 @@
+"""
+Admin Serializers
+"""
+
 from rest_framework import serializers
 
 from admin.models import Invite
 
 
 class InviteSerializer(serializers.ModelSerializer):
+    """
+    The Invite Serializer
+    """
     class Meta:
         model = Invite
         fields = '__all__'
