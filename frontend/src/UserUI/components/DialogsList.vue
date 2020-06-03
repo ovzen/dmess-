@@ -26,6 +26,7 @@
       >
         <v-list-item
           :to="{ name: 'ChatUser', params: { id: dialog.id } }"
+          color="sidebar_select"
         >
           <v-list-item-avatar>
             <v-avatar
@@ -51,12 +52,15 @@
             />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>
+            <v-list-item-title
+              class="black--text"
+            >
               {{ getContactName(getUsersByDialog(dialog)[0]) }}
             </v-list-item-title>
             <v-list-item-subtitle style="min-width:10px;min-height:18.67px;">
               <span
-                style="color:#757575; font-size:115%;"
+                class="back_button--text"
+                style="font-size:115%;"
               >
                 {{ (dialog.last_message ? (dialog.last_message.text ? decodeEmojiCode(dialog.last_message.text) : (dialog.last_message.image_url ? 'Image' : ' ')) : ' ') }}
               </span>

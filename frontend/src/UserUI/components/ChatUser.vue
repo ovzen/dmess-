@@ -33,7 +33,7 @@
           class="text-left"
         >
           <v-card
-            style="border-radius: 20px;width:min-content"
+            style="border-radius: 20px;"
             max-width="460px"
             class="d-flex align-content-start flex-wrap flex-shrink-1"
             flat
@@ -56,17 +56,15 @@
             <v-card-text
               style="padding-top: 3px"
             >
-              <span
-                class="message_color--text message"
-              >
-                {{ decodeEmojiCode(message.text) }}
-              </span>
-              <span
-                class="float-right time-text"
+              <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
+            </v-card-text>
+            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
+                            <span
+                class="float-right overline"
               >
                 {{ getTime(message.create_date) }}
               </span>
-            </v-card-text>
+            </v-card-actions>
           </v-card>
         </div>
         <v-container
@@ -78,7 +76,7 @@
             class="text-left"
           >
             <v-card
-              style="border-radius: 20px;width:min-content"
+              style="border-radius: 20px;"
               max-width="460px"
               class="d-flex align-content-start flex-wrap flex-shrink-1"
               color="background_pink"
@@ -112,17 +110,15 @@
               <v-card-text
                 style="padding-top: 3px"
               >
-                <span
-                  class="message_color--text message"
-                >
-                  {{ decodeEmojiCode(message.text) }}
-                </span>
-                <span
-                  class="float-right time-text"
-                >
-                  {{ getTime(message.create_date) }}
-                </span>
+                <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
               </v-card-text>
+            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
+                            <span
+                class="float-right overline"
+              >
+                {{ getTime(message.create_date) }}
+              </span>
+            </v-card-actions>
             </v-card>
           </div>
         </v-container>
@@ -163,6 +159,7 @@
         </span>
       </div>
     </v-row>
+    <span v-observe-visibility="visibilityChanged" />
     <v-dialog
       v-model="dialog"
       content-class="elevation-0"
@@ -175,11 +172,23 @@
         @click="dialog=false"
       />
     </v-dialog>
+    <v-btn
+      color="warning"
+      fixed
+      class="basic_text"
+      :style="'right:' + (scroll ? -60 : 5) +'px;transition: right 0.25s;bottom:60px;'"
+      fab
+      dark
+      @click="toLastMessage()"
+    >
+      <v-icon>mdi-arrow-down</v-icon>
+    </v-btn>
     <file-pond
       ref="pond"
       name="image"
-      :style="'position:fixed;width:450px;color:'+ (!$vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white) +';background-color: ' + ($vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white) + ';border-radius:.5em;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
-      label-idle="Drop files here..."
+      class="background_white black--text"
+      :style="'position:fixed;width:450px;border-radius:.5em;left:' + this.$vuetify.application.left +'px;max-height:80%;transition-duration: .25s;bottom:' + (hide ? '20' : '-100') + 'px'"
+      label-idle="Click to select a file or drop it here"
       :allow-multiple="false"
       :files="myFiles"
       :drop-on-page="true"
@@ -222,10 +231,10 @@
         @keyup.enter="sendMessage()"
       />
       <Emoji
-        :style="'padding-right: 28px; margin-left: 10px;background:' + ($vuetify.theme.dark ? this.$vuetify.theme.themes.dark.background_white : this.$vuetify.theme.themes.light.background_white)"
+        class="background_white"
+        style="padding-right: 28px; margin-left: 10px;"
         @click="selectedEmoji"
       />
-
       <v-btn
         icon
         color="basic"
@@ -259,9 +268,11 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import FilePondPluginGetFile from 'filepond-plugin-get-file'
 import './css/filepond-plugin-get-file.min.css'
+import VueObserveVisibility from 'vue-observe-visibility'
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginGetFile)
 Vue.directive('linkified', linkify)
 require('./css/vue-chat-emoji.css')
+Vue.use(VueObserveVisibility)
 Vue.use(VueCookie)
 Vue.use(
   VueNativeSock,
@@ -281,6 +292,7 @@ export default {
     message: '',
     myFiles: [],
     hide: false,
+    scroll: true,
     dialogMessagesLength: 0,
     dialogId: 0,
     imageUrl: '',
@@ -308,6 +320,15 @@ export default {
     this.$disconnect()
   },
   methods: {
+    toLastMessage () {
+      var Data = this
+      Vue.nextTick(function () {
+        Data.$vuetify.goTo(document.getElementById('Message_' + Data.messages[0].id), { duration: 450, offset: 0 })
+      })
+    },
+    visibilityChanged (isVisible, entry) {
+      this.scroll = isVisible
+    },
     handleFilePondInit: function () {
       console.log('FilePond has initialized')
     },
@@ -379,11 +400,11 @@ export default {
             })
           )
         }
+        this.myFiles = []
+        this.imageUrl = ''
+        this.hide = false
+        this.message = ''
       }
-      this.myFiles = []
-      this.imageUrl = ''
-      this.hide = false
-      this.message = ''
     },
     updateDialog () {
       this.$disconnect()
@@ -415,19 +436,20 @@ export default {
     getMessage () {
       this.$options.sockets.onmessage = data => {
         console.log(data)
-        let computedMessageId = (this.messages[0].id || this.messages[this.messages.length + 1].id) + 1
         this.messages.unshift({
-          id: computedMessageId,
+          id: JSON.parse(data.data).id,
           text: JSON.parse(data.data).message,
           user: JSON.parse(data.data).author,
           create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1),
-          image_url: JSON.parse(data.data).image_url
+          image_url: JSON.parse(data.data).image_url,
+          name: JSON.parse(data.data).name,
+          extension: JSON.parse(data.data).extension
         })
         this.getDialogsData()
         this.dialogMessagesLength += 1
         var Data = this
         Vue.nextTick(function () {
-          Data.$vuetify.goTo(document.getElementById('Message_' + computedMessageId))
+          Data.$vuetify.goTo(document.getElementById('Message_' + JSON.parse(data.data).id))
         })
         api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/')
       }
@@ -546,7 +568,6 @@ export default {
   font-weight: 500;
   font-size: 10px;
   letter-spacing: 1.5px;
-  color: rgba(0, 0, 0, 0.54);
 }
 
 </style>
