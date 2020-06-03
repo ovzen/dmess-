@@ -30,7 +30,7 @@
         </v-card>
         <div
           v-if="isOwnMessage(message.user)"
-          class="text-left"
+          class="text-left message-hover"
         >
           <v-card
             style="border-radius: 20px;"
@@ -54,12 +54,16 @@
               />
             </v-container>
             <v-card-text
-              style="padding-top: 3px"
+              style="padding-top: 3px; padding-bottom: 0px"
             >
-              <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
+              <span
+                class="message_color--text message"
+              >
+                {{ decodeEmojiCode(message.text) }}
+              </span>
             </v-card-text>
-            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
-                            <span
+            <v-card-actions style="padding-top: 0px; margin-left: auto">
+              <span
                 class="float-right overline"
               >
                 {{ getTime(message.create_date) }}
@@ -108,17 +112,89 @@
                 />
               </v-container>
               <v-card-text
-                style="padding-top: 3px"
+                style="padding-top: 3px; padding-bottom: 0px"
               >
-                <span class="message_color--text message">{{ decodeEmojiCode(message.text) }}</span>
+                <div
+                  class="d-flex flex-column-reverse"
+                >
+                  <div class="message-hover">
+                    <span
+                      class="message_color--text message"
+                    >
+                      {{ decodeEmojiCode(message.text) }}
+                    </span>
+                  </div>
+                  <div class="menu-hover mt-n7">
+                    <div class="rounded-menu d-flex flex-row-reverse">
+                      <div class="rounded-menu flex-row-reverse elevation-6">
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              icon
+                              style="width:23px; height:20px;"
+                              v-on="on"
+                              @click="messageUpdate(message)"
+                            >
+                              <v-icon
+                                style="font-size:18px;"
+                                color="black"
+                              >
+                                mdi-pencil
+                              </v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Edit message</span>
+                        </v-tooltip>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              icon
+                              style="width:23px; height:20px;"
+                              v-on="on"
+                              @click="deleteMessage(message.id)"
+                            >
+                              <v-icon
+                                style="font-size:18px;"
+                                color="black"
+                              >
+                                mdi-delete-forever
+                              </v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Delete message</span>
+                        </v-tooltip>
+                        <v-tooltip top>
+                          <template
+                            v-slot:activator="{ on }"
+                            class="white"
+                          >
+                            <v-btn
+                              icon
+                              style="width:23px; height:20px;"
+                              v-on="on"
+                            >
+                              <v-icon
+                                style="font-size:18px;"
+                                color="black"
+                              >
+                                mdi-dots-vertical
+                              </v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Something more</span>
+                        </v-tooltip>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </v-card-text>
-            <v-card-actions style="padding-top: 0px; margin-left: auto; margin-top: -20px">
-                            <span
-                class="float-right overline"
-              >
-                {{ getTime(message.create_date) }}
-              </span>
-            </v-card-actions>
+              <v-card-actions style="padding-top: 0px; margin-left: auto">
+                <span
+                  class="float-right overline"
+                >
+                  {{ getTime(message.create_date) }}
+                </span>
+              </v-card-actions>
             </v-card>
           </div>
         </v-container>
@@ -289,6 +365,9 @@ Vue.use(
     connectManually: true
   }
 )
+let MessageWS = new WebSocket(
+  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/messages/'
+)
 export default {
   name: 'ChatUser',
   components: {
@@ -308,6 +387,7 @@ export default {
     loading: false,
     smiles: false,
     fileExtension: null,
+    updateMessage: undefined,
     link: ''
   }),
   computed: {
@@ -321,14 +401,42 @@ export default {
     setTimeout(this.GetOldMessages, 1000)
   },
   mounted () {
+    let Vue = this
     this.updateDialog()
     this.getMessage()
     this.UpdateUserInDialog()
+    MessageWS.onopen = function () {
+      MessageWS.send(
+        JSON.stringify(
+          {
+            action: 'subscribe_to_messages_in_dialog',
+            request_id: Vue.getUserId,
+            dialog_id: Vue.$route.params.id
+          }
+        )
+      )
+    }
   },
   beforeDestroy () {
     this.$disconnect()
   },
   methods: {
+    messageUpdate (message) {
+      this.updateMessage = message
+      this.message = message.text
+    },
+    deleteMessage (id) {
+      let Vue = this
+      MessageWS.send(
+        JSON.stringify(
+          {
+            'action': 'delete',
+            'request_id': Vue.getUserId,
+            'pk': id
+          }
+        )
+      )
+    },
     toLastMessage () {
       var Data = this
       Vue.nextTick(function () {
@@ -394,7 +502,7 @@ export default {
     },
     sendMessage () {
       console.log(this.$refs)
-      if (!this.loading && (this.message !== '' || this.imageUrl !== '')) {
+      if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage === 'undefined') {
         console.log('messagetext: ', this.message)
         if (this.imageUrl === '') {
           this.$socket.send(
@@ -415,6 +523,24 @@ export default {
         this.imageUrl = ''
         this.hide = false
         this.message = ''
+      }
+      if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage !== 'undefined') {
+        let Vue = this
+        MessageWS.send(
+          JSON.stringify(
+            {
+              pk: Vue.updateMessage.id,
+              action: 'patch',
+              request_id: Vue.getUserId,
+              data: {
+                id: Vue.updateMessage.id,
+                text: Vue.message
+              }
+            }
+          )
+        )
+        this.message = ''
+        this.updateMessage = undefined
       }
     },
     updateDialog () {
@@ -516,6 +642,25 @@ export default {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   background-color:rgba(0,0,0,0.7);
 }
+
+.menu-hover {
+  opacity: 0;
+  visibility: hidden;
+  transition-duration: 0.2s;
+}
+
+.menu-hover:hover {
+  opacity: 1;
+  visibility: visible;
+}
+
+.message-hover:hover + .menu-hover {
+  opacity: 1;
+  visibility: visible;
+}
+.rounded-menu {
+  border-radius: 10px;
+}
 .rounded-card{
     border-radius:50px;
 }
@@ -558,12 +703,6 @@ export default {
 .v-image__image{
   width:100%;
   height:100%;
-}
-.test{
-  background: rgba(0, 0, 0, 0.1);
-}
-.filepond--item-panel{
-  background: rgba(0, 0, 0, 0.1) !important
 }
 .message {
   font-family: Roboto;
