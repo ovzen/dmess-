@@ -127,6 +127,13 @@
           </div>
         </v-container>
       </v-container>
+      <v-progress-circular
+        v-if="messages.length < dialogMessagesLength"
+        indeterminate
+        size="36"
+        style="position: relative; right:50%;margin-top: 25px;margin-bottom: 25px;"
+        color="primary"
+      />
     </v-row>
     <v-row
       v-else

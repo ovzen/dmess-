@@ -172,7 +172,7 @@
 
 <script>
 import api from '../api'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ContactList',
@@ -183,6 +183,7 @@ export default {
     ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName', 'getContactsByName'])
   },
   methods: {
+    ...mapActions(['getUserData']),
     getUserName (user) {
       if (typeof user !== 'undefined') {
         if (user.first_name && user.last_name) {
