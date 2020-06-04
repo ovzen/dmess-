@@ -241,7 +241,7 @@
               <v-card-title
                 class="headline"
               >
-                We're so sorry, but we haven't kept up to develop this feature.
+                We're so sorry, but we didn't have time to develop this feature.
               </v-card-title>
 
               <v-card-text>
@@ -365,11 +365,11 @@ export default {
         if (this.getUsersByDialogId(this.$route.params.id).length > 0) {
           return this.getUsersByDialogId(this.$route.params.id)[0]
         } else {
-          return { username: 'Произошла ошибка', profile: { avatar: null, status: '' }
+          return { username: 'Error..', profile: { avatar: null, status: '' }
           }
         }
       }
-      return { username: 'Загрузка...', profile: { avatar: null, status: 'Загрузка...' } }
+      return { username: 'Loading...', profile: { avatar: null, status: 'Loading...' } }
     },
     MakeAvatar () {
       if (typeof this.getClient !== 'undefined') {
