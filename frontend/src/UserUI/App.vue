@@ -174,15 +174,8 @@
               >
                 {{ getUserName(getClient) }}
               </v-list-item-title>
-              <v-list-item-subtitle
-                v-if="getClientProfile.is_online"
-              >
-                online
-              </v-list-item-subtitle>
-              <v-list-item-subtitle
-                v-else
-              >
-                offline
+              <v-list-item-subtitle>
+                {{ getClientProfile.status }}
               </v-list-item-subtitle>
             </v-list-item-content>
             <router-link
@@ -203,6 +196,7 @@
                 >
                   <span
                     class="basic--text"
+                    style="padding-left:3.5px"
                   >
                     {{ MakeAvatar }}
                   </span>
@@ -359,7 +353,8 @@ export default {
     tabs: tabs,
     dialogForDeleteChat: false,
     currentTab: tabs[1],
-    dialogForPlusButton: false
+    dialogForPlusButton: false,
+    chatid: undefined
   }),
   computed: {
     ...mapGetters(['getUserId', 'getClient', 'getClientProfile', 'getDialogsList', 'getUsersByDialogId']),
@@ -400,6 +395,7 @@ export default {
     $route: ['disconnect']
   },
   created () {
+    this.chatid = this.$route.params.id
     if (this.$cookie.get('Authentication')) {
       this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
     } else {
@@ -487,7 +483,30 @@ export default {
       this.$router.go(-1)
     },
     disconnect () {
-      this.$disconnect()
+      let Vue = this
+      if (this.chatid) {
+        this.$socket.send(
+          JSON.stringify(
+            {
+              action: 'unsubscribe_to_messages_in_dialog',
+              request_id: Vue.getUserId,
+              dialog_id: Vue.chatid
+            }
+          )
+        )
+      }
+      if (this.$route.params.id) {
+        this.$socket.send(
+          JSON.stringify(
+            {
+              action: 'subscribe_to_messages_in_dialog',
+              request_id: Vue.getUserId,
+              dialog_id: Vue.$route.params.id
+            }
+          )
+        )
+      }
+      this.chatid = this.$route.params.id
     },
     deleteChat () {
       api.axios.delete('/api/dialog/' + this.$route.params.id + '/').then()

@@ -368,16 +368,7 @@ Vue.directive('linkified', linkify)
 require('./css/vue-chat-emoji.css')
 Vue.use(VueObserveVisibility)
 Vue.use(VueCookie)
-Vue.use(
-  VueNativeSock,
-  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + window.location.search.slice(1, 99) + '/',
-  {
-    connectManually: true
-  }
-)
-let MessageWS = new WebSocket(
-  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/messages/'
-)
+Vue.use(VueNativeSock, (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/messages/')
 export default {
   name: 'ChatUser',
   components: {
@@ -415,8 +406,8 @@ export default {
     this.updateDialog()
     this.getMessage()
     this.UpdateUserInDialog()
-    MessageWS.onopen = function () {
-      MessageWS.send(
+    this.$options.sockets.onopen = function () {
+      this.$socket.send(
         JSON.stringify(
           {
             action: 'subscribe_to_messages_in_dialog',
@@ -428,8 +419,15 @@ export default {
     }
   },
   beforeDestroy () {
-    this.$disconnect()
-    MessageWS.close()
+    this.$socket.send(
+      JSON.stringify(
+        {
+          action: 'unsubscribe_to_messages_in_dialog',
+          request_id: Vue.getUserId,
+          dialog_id: Vue.$route.params.id
+        }
+      )
+    )
   },
   methods: {
     messageUpdate (message) {
@@ -438,7 +436,7 @@ export default {
     },
     deleteMessage (id) {
       let Vue = this
-      MessageWS.send(
+      this.$socket.send(
         JSON.stringify(
           {
             'action': 'delete',
@@ -517,7 +515,7 @@ export default {
       if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage === 'undefined') {
         console.log('messagetext: ', this.message)
         if (this.imageUrl === '') {
-          MessageWS.send(
+          this.$socket.send(
             JSON.stringify({
               action: 'create',
               request_id: Vue.getUserId,
@@ -529,7 +527,7 @@ export default {
             })
           )
         } else {
-          MessageWS.send(
+          this.$socket.send(
             JSON.stringify({
               action: 'create',
               request_id: Vue.getUserId,
@@ -547,7 +545,7 @@ export default {
         this.message = ''
       }
       if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage !== 'undefined') {
-        MessageWS.send(
+        this.$socket.send(
           JSON.stringify(
             {
               pk: Vue.updateMessage.id,
@@ -565,7 +563,6 @@ export default {
       }
     },
     updateDialog () {
-      this.$disconnect()
       this.message = ''
       this.messages = []
       this.dialogId = this.$route.params.id
@@ -584,7 +581,6 @@ export default {
           }
         })
         .catch(error => console.log(error))
-      this.$connect((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + this.dialogId + '/')
       api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/').then(res => {
         if (res.status === 200) {
           this.getDialogsData()
@@ -592,20 +588,21 @@ export default {
       })
     },
     getMessage () {
-      MessageWS.onmessage = event => {
+      this.$options.sockets.onmessage = event => {
         console.log(event)
         let vue = this
         let action = JSON.parse(event.data).action
+        let status = JSON.parse(event.data).response_status
         let data = JSON.parse(event.data).data
         if (action === 'patch' || action === 'update') {
           console.log('PATCH!!!', vue.messages[0].id, data.id)
           vue.$set(vue.messages, vue.messages.findIndex(message => message.id === data.id), data)
         }
-        if (action === 'create') {
+        if (action === 'create' && status !== 201) {
           this.messages.unshift({
             id: data.id,
             text: data.text,
-            user: data.author,
+            user: data.user,
             create_date: data.create_date,
             image_url: data.image_url,
             name: data.name,
