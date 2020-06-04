@@ -165,9 +165,12 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
     async def handle_observed_action(self, **kwargs):
         """Формирует и отправляет ответ на сторону клиента"""
         print(kwargs)
-        data, response_status = await self.retrieve(**kwargs)
-        message_action = kwargs.pop('action')
-        print(data)
+        message_action = kwargs.get('action')
+        if message_action == 'delete':
+            data, response_status = {'id': kwargs['pk']}, status.HTTP_204_NO_CONTENT
+        else:
+            data, response_status = await self.retrieve(**kwargs)
+
         await self.reply(
             action=message_action,
             data=data,
@@ -184,11 +187,10 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         Группы, в которые отправляется сигнал при событии
         изменения модели пользователя
         """
-
         yield f'-pk__{instance.pk}'
-        for user in instance.users.all():
-            print(f'СИГНАЛ ЮЗЕР -contacts__user__{user.pk}')
-            yield f'-contacts__user__{user.pk}'
+        # for user in instance.users.all():
+        #         #     print(f'СИГНАЛ ЮЗЕР -contacts__user__{user.pk}')
+        #         #     yield f'-contacts__user__{user.pk}'
 
     @user_change_handler.groups_for_consumer
     def user_change_handler(self, user_contacts=None, user=None, **kwargs):
@@ -212,9 +214,9 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         изменения модели профиля пользователя
         """
         yield f'-pk__{instance.user.pk}'
-        for user in instance.user.users.all():
-            print(f'СИГНАЛ ПРОФИЛЬ -contacts__user__{user.pk}')
-            yield f'-contacts__user__{user.pk}'
+        # for user in instance.user.users.all():
+        #     print(f'СИГНАЛ ПРОФИЛЬ -contacts__user__{user.pk}')
+        #     yield f'-contacts__user__{user.pk}'
 
     @user_profile_change_handler.groups_for_consumer
     def user_change_handler(self, user_contacts=None, user=None, **kwargs):
