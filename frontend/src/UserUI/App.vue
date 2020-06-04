@@ -309,10 +309,6 @@ import ContactList from './components/ContactList'
 import DialogsList from './components/DialogsList'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
-let UpdateContants = new WebSocket(
-  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
-)
-
 Vue.use(VueCookie)
 var tabs = [
   {
@@ -357,7 +353,7 @@ export default {
     chatid: undefined
   }),
   computed: {
-    ...mapGetters(['getUserId', 'getClient', 'getClientProfile', 'getDialogsList', 'getUsersByDialogId']),
+    ...mapGetters(['getUserId', 'getClient', 'getClientProfile', 'getDialogsList', 'getUsersByDialogId', 'UpdateContants']),
     Route () {
       return this.$route
     },
@@ -421,10 +417,10 @@ export default {
     })
     setInterval(this.updateToken, 1000)
     this.getUserData(this.getUserId)
-    this.getContactsData()
+    this.getContactsData(this.UpdateContants)
     this.getDialogsData(this.getUserId)
-    UpdateContants.onopen = function () {
-      UpdateContants.send(
+    this.UpdateContants.onopen = function () {
+      Vue.UpdateContants.send(
         JSON.stringify(
           {
             action: 'subscribe_to_contacts',
@@ -433,7 +429,7 @@ export default {
         )
       )
     }
-    UpdateContants.onmessage = function (event) {
+    this.UpdateContants.onmessage = function (event) {
       console.log(JSON.parse(event.data).data)
       if (JSON.parse(event.data).data) {
         Vue.addUser((JSON.parse(event.data).data))

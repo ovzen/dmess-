@@ -465,12 +465,10 @@ export default {
       this.fileExtension = progress.fileExtension
       this.loading = true
       this.hide = true
-      const pond = FilePond.create()
-      pond.addFile('./ChatUser.vue')
     },
     afterupload (file, progress) {
       console.log('afterupload', file, progress)
-      this.imageUrl = progress.serverId
+      this.imageUrl = JSON.parse(progress.serverId).image_url
       this.loading = false
     },
     decodeEmojiCode (str) {
@@ -522,24 +520,18 @@ export default {
       let Vue = this
       if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage === 'undefined') {
         console.log('messagetext: ', this.message)
-        if (this.imageUrl === '') {
-          this.$socket.send(
-            JSON.stringify({
-              action: 'create',
-              request_id: Vue.getUserId,
-              data: {
-                text: emojis.encodeEmoji(this.message),
-                dialog: Vue.$route.params.id,
-                image_url: this.image_url,
-                user: Vue.getUserId
-              }
-            })
-          )
-        }
-        this.myFiles = []
-        this.imageUrl = ''
-        this.hide = false
-        this.message = ''
+        this.$socket.send(
+          JSON.stringify({
+            action: 'create',
+            request_id: Vue.getUserId,
+            data: {
+              text: emojis.encodeEmoji(this.message),
+              dialog: Vue.$route.params.id,
+              image_url: Vue.imageUrl,
+              user: Vue.getUserId
+            }
+          })
+        )
       }
       if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage !== 'undefined') {
         this.$socket.send(
@@ -555,9 +547,11 @@ export default {
             }
           )
         )
-        this.message = ''
-        this.updateMessage = undefined
       }
+      this.message = ''
+      this.updateMessage = undefined
+      this.myFiles = []
+      this.imageUrl = ''
     },
     updateDialog () {
       this.message = ''

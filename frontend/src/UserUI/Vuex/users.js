@@ -9,10 +9,16 @@ export default ({
   state: {
     user_id: jwt.decode(VueCookie.get('Authentication')).user_id,
     contacts: [],
-    users: []
+    users: [],
+    ws: new WebSocket(
+      (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
+    )
   },
 
   getters: {
+    UpdateContants: state => {
+      return state.ws
+    },
     getUserId: state => {
       return state.user_id
     },
@@ -109,11 +115,17 @@ export default ({
           .catch(error => console.log(error))
       }
     },
-    getContactsData (context) {
+    getContactsData (context, payload) {
       api.axios.get('/api/contacts/').then(res => {
         if (res.status === 200) {
           context.commit('makeContact', res.data.results)
           for (let contact in res.data.results) {
+            context.state.ws.send(
+              JSON.stringify({
+                action: 'subscribe_to_user',
+                pk: res.data.results[contact].contact,
+                request_id: context.state.user_id
+              }))
             api.axios
               .get('/api/users/' + res.data.results[contact].contact + '/')
               .then(ress => {
@@ -129,6 +141,12 @@ export default ({
     add_Сontact (context, payload) {
       api.axios.post('/api/users/' + payload + '/add_contact/').then(res => {
         if (res.status === 201) {
+          context.state.ws.send(
+            JSON.stringify({
+              action: 'subscribe_to_user',
+              pk: payload,
+              request_id: context.state.user_id
+            }))
           context.commit('addContact', payload)
         }
       })
@@ -136,6 +154,12 @@ export default ({
     remove_Сontact (context, payload) {
       api.axios.delete('/api/users/' + payload + '/delete_contact/').then(res => {
         if (res.status === 204) {
+          context.state.ws.send(
+            JSON.stringify({
+              action: 'unsubscribe_to_user',
+              pk: payload,
+              request_id: context.state.user_id
+            }))
           context.commit('removeContact', payload)
         }
       })
