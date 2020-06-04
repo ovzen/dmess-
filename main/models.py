@@ -113,7 +113,7 @@ class Message(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
-    image_url = models.CharField(max_length=200, default=False, null=True)
+    image_url = models.CharField(max_length=200, blank=True)
     is_read = models.BooleanField(default=False)
 
     @property
@@ -121,14 +121,16 @@ class Message(models.Model):
         """
         :return: Расширение приложенного файла
         """
-        return os.path.splitext(self.image_url)[1]
+        if self.image_url:
+            return os.path.splitext(self.image_url)[1]
 
     @property
     def name(self):
         """
         :return: Имя приложенного файла
         """
-        return os.path.basename(self.image_url)
+        if self.image_url:
+            return os.path.basename(self.image_url)
 
 
 class WikiPage(models.Model):

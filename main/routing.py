@@ -15,5 +15,4 @@ websocket_urlpatterns = [
     ),
     path('ws/users/', consumers.UserAPIConsumer),
     path('ws/messages/', consumers.MessageAPIConsumer),
-    re_path(r'ws/chat/(?P<chat_number>[\w-]+)/$', consumers.ChatConsumer)
 ]
