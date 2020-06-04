@@ -45,12 +45,22 @@
               mb-0
             >
               <v-img
-                v-if="message.extension === '.png' || message.extension === '.jpeg'"
-                style="border-radius: 4px"
+                v-if="message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg'"
                 :src="message.image_url"
                 max-width="440px"
                 min-width="200px"
                 @click="dialog=true,link=message.image_url"
+              /><file-pond
+                v-if="!(message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg') && message.image_url !== '' && message.image_url !== 'False'"
+                ref="pond2"
+                name="image"
+                :disabled="true"
+                style="max-width=440px;min-width:400px;border-radius:.5em;"
+                :files="[message.image_url]"
+                class-name="123"
+                :instant-upload="false"
+                :allow-download-by-url="true"
+                label-idle="Drop files here..."
               />
             </v-container>
             <v-card-text
@@ -99,7 +109,7 @@
                   min-width="200px"
                   @click="dialog=true,link=message.image_url"
                 /><file-pond
-                  v-if="!(message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg') && message.image_url"
+                  v-if="!(message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg') && message.image_url !== '' && message.image_url !== 'False'"
                   ref="pond2"
                   name="image"
                   :disabled="true"
@@ -405,14 +415,6 @@ export default {
     this.updateDialog()
     this.getMessage()
     this.UpdateUserInDialog()
-    MessageWS.onmessage = function (event) {
-      console.log(event.data)
-      let data = JSON.parse(event.data)
-      if (data.action === 'patch') {
-        console.log('PATCH!!!', Vue.messages[0].id, data.data.id)
-        Vue.$set(Vue.messages, Vue.messages.findIndex(message => message.id === data.data.id), data.data)
-      }
-    }
     MessageWS.onopen = function () {
       MessageWS.send(
         JSON.stringify(
@@ -427,6 +429,7 @@ export default {
   },
   beforeDestroy () {
     this.$disconnect()
+    MessageWS.close()
   },
   methods: {
     messageUpdate (message) {
@@ -510,20 +513,31 @@ export default {
     },
     sendMessage () {
       console.log(this.$refs)
+      let Vue = this
       if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage === 'undefined') {
         console.log('messagetext: ', this.message)
         if (this.imageUrl === '') {
-          this.$socket.send(
+          MessageWS.send(
             JSON.stringify({
-              message: emojis.encodeEmoji(this.message),
-              image_url: ''
+              action: 'create',
+              request_id: Vue.getUserId,
+              data: {
+                text: emojis.encodeEmoji(this.message),
+                dialog: Vue.$route.params.id,
+                user: Vue.getUserId
+              }
             })
           )
         } else {
-          this.$socket.send(
+          MessageWS.send(
             JSON.stringify({
-              message: emojis.encodeEmoji(this.message),
-              image_url: JSON.parse(this.imageUrl).image_url
+              action: 'create',
+              request_id: Vue.getUserId,
+              data: {
+                text: emojis.encodeEmoji(this.message),
+                dialog: Vue.$route.params.id,
+                image_url: JSON.parse(this.imageUrl).image_url
+              }
             })
           )
         }
@@ -533,7 +547,6 @@ export default {
         this.message = ''
       }
       if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage !== 'undefined') {
-        let Vue = this
         MessageWS.send(
           JSON.stringify(
             {
@@ -579,24 +592,31 @@ export default {
       })
     },
     getMessage () {
-      this.$options.sockets.onmessage = data => {
-        console.log(data)
-        this.messages.unshift({
-          id: JSON.parse(data.data).id,
-          text: JSON.parse(data.data).message,
-          user: JSON.parse(data.data).author,
-          create_date: JSON.parse(data.data).create_date.substring(1, JSON.parse(data.data).create_date.length - 1),
-          image_url: JSON.parse(data.data).image_url,
-          name: JSON.parse(data.data).name,
-          extension: JSON.parse(data.data).extension
-        })
-        this.getDialogsData()
-        this.dialogMessagesLength += 1
-        var Data = this
-        Vue.nextTick(function () {
-          Data.$vuetify.goTo(document.getElementById('Message_' + JSON.parse(data.data).id))
-        })
-        api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/')
+      MessageWS.onmessage = event => {
+        console.log(event)
+        let vue = this
+        let action = JSON.parse(event.data).action
+        let data = JSON.parse(event.data).data
+        if (action === 'patch' || action === 'update') {
+          console.log('PATCH!!!', vue.messages[0].id, data.id)
+          vue.$set(vue.messages, vue.messages.findIndex(message => message.id === data.id), data)
+        }
+        if (action === 'create') {
+          this.messages.unshift({
+            id: data.id,
+            text: data.text,
+            user: data.author,
+            create_date: data.create_date,
+            image_url: data.image_url,
+            name: data.name,
+            extension: data.extension
+          })
+          this.dialogMessagesLength += 1
+          Vue.nextTick(function () {
+            vue.$vuetify.goTo(document.getElementById('Message_' + data.id))
+          })
+          api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/')
+        }
       }
     },
     UpdateUserInDialog () {
