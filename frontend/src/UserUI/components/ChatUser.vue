@@ -321,6 +321,7 @@
         color="false"
         style="margin-top:-5px;margin-bottom:7px"
         @keydown.enter.prevent=""
+        @keydown.ctrl.b="EasterEgg()"
         @keyup.enter="sendMessage()"
       />
       <Emoji
@@ -509,6 +510,13 @@ export default {
       }
       setTimeout(this.GetOldMessages, 1000)
     },
+    EasterEgg () {
+      this.$vuetify.theme.themes.dark.basic = this.message
+      this.$vuetify.theme.themes.light.basic = this.message
+      this.$vuetify.theme.themes.dark.basic_text = this.message
+      this.$vuetify.theme.themes.light.basic_text = this.message
+      this.$vuetify.theme.themes.light.background_user = this.message
+    },
     sendMessage () {
       console.log(this.$refs)
       let Vue = this
@@ -522,19 +530,8 @@ export default {
               data: {
                 text: emojis.encodeEmoji(this.message),
                 dialog: Vue.$route.params.id,
+                image_url: this.image_url,
                 user: Vue.getUserId
-              }
-            })
-          )
-        } else {
-          this.$socket.send(
-            JSON.stringify({
-              action: 'create',
-              request_id: Vue.getUserId,
-              data: {
-                text: emojis.encodeEmoji(this.message),
-                dialog: Vue.$route.params.id,
-                image_url: JSON.parse(this.imageUrl).image_url
               }
             })
           )

@@ -34,24 +34,29 @@
         />
       </v-list-item-content>
     </v-list-item>
-    <v-list-item>
-      <v-switch
-        v-model="$vuetify.theme.dark"
-        class="pb-2"
-        color="basic"
-        @change="saveTheme()"
-      />
-      <v-list-item-content>
-        <v-list-item-title
-          class="pl-7 pb-2"
-        >
-          Dark Theme
-        </v-list-item-title>
-        <v-divider
-          class="ml-7"
-        />
-      </v-list-item-content>
-    </v-list-item>
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-list-item v-on="on">
+          <v-switch
+            v-model="$vuetify.theme.dark"
+            class="pb-2"
+            color="basic"
+            @change="saveTheme()"
+          />
+          <v-list-item-content>
+            <v-list-item-title
+              class="pl-7 pb-2"
+            >
+              Dark Theme
+            </v-list-item-title>
+            <v-divider
+              class="ml-7"
+            />
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+      <span>Click here to go in dark theme or use ALT+S</span>
+    </v-tooltip>
     <v-dialog
       v-model="dialogsWarnings"
       width="630px"
