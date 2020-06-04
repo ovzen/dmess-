@@ -66,6 +66,7 @@
           <v-combobox
             v-model="color"
             :items="items"
+            color="basic"
             label="Select or write your's favorite color in hex"
           />
           <v-btn
@@ -155,6 +156,7 @@ export default {
       this.$vuetify.theme.themes.dark.basic_text = this.color
       this.$vuetify.theme.themes.light.basic_text = this.color
       this.$vuetify.theme.themes.light.background_user = this.color
+      this.$vuetify.theme.themes.dark.primary = this.color
     },
     saveTheme () {
       localStorage.setItem('Dark', this.$vuetify.theme.dark)

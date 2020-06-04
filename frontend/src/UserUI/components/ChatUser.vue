@@ -605,6 +605,9 @@ export default {
           })
           api.axios.post('/api/dialog/' + this.dialogId + '/read_messages/')
         }
+        if (action === 'delete' && data !== null) {
+          this.messages.splice(this.messages.findIndex(message => message.id === data.id), 1)
+        }
       }
     },
     UpdateUserInDialog () {
