@@ -250,6 +250,18 @@ class MessageAPIConsumer(PatchModelMixin,
         else:
             return None, status.HTTP_404_NOT_FOUND
 
+    @action()
+    async def unsubscribe_to_messages_in_dialog(self, dialog_id, **kwargs):
+        user = self.scope.get('user')
+        dialog = await self.get_dialog(pk=dialog_id, users=user)
+        print(dialog.id)
+        print('вы отписалист от диалога')
+        if dialog:
+            await self.message_in_dialog_change_handler.unsubscribe(dialog=dialog)
+            return None, status.HTTP_204_NO_CONTENT
+        else:
+            return None, status.HTTP_404_NOT_FOUND
+
     @model_observer(models.Message)
     async def message_in_dialog_change_handler(self, message, observer=None, **kwargs):
         print(message)
