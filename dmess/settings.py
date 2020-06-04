@@ -30,7 +30,7 @@ if not DEBUG:
 else:
     SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
     DB_PASSWORD = 'define_me'
-    EMAIL_PASSWORD = 'helloworld'
+    EMAIL_PASSWORD = 'xAJ9ZnvJBc'
 
 ALLOWED_HOSTS = [
     'messenger.savink.in',
@@ -230,8 +230,8 @@ LOGIN_URL = '/landing/'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'noreply@asmirnov.me'
-EMAIL_HOST_PASSWORD = EMAIL_PASSWORD # 'helloworld'
+EMAIL_HOST_USER = 'noreply@d-messenger.ml'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
