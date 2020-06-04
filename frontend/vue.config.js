@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
       },
       'auth': {
         entry: './src/Login/main.js',
-        template: 'public/Auth.html',
+        template: 'public/auth.html',
         title: 'Auth',
         chunks: [ 'chunk-vendors', 'chunk-common', 'Login' ]
       }
