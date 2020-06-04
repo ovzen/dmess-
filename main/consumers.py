@@ -144,7 +144,7 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         return None, status.HTTP_201_CREATED
 
     @action()
-    async def К(self, pk, **kwargs):
+    async def subscribe_to_user(self, pk, **kwargs):
         """Действие подписки на пользователя по его id"""
         user = await database_sync_to_async(self.get_object)(pk=pk)
         print(f'You have successfully subscribed to user'
