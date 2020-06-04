@@ -33,7 +33,7 @@
           class="text-left"
         >
           <v-card
-            style="border-radius: 20px;"
+            style="border-radius: 20px; width: max-content;"
             max-width="460px"
             class="d-flex align-content-start flex-wrap flex-shrink-1"
             flat
@@ -76,7 +76,7 @@
             class="text-left"
           >
             <v-card
-              style="border-radius: 20px;"
+              style="border-radius: 20px; width: max-content;"
               max-width="460px"
               class="d-flex align-content-start flex-wrap flex-shrink-1"
               color="background_pink"
