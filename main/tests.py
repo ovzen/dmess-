@@ -173,6 +173,7 @@ class ContactTestCase(APITestCase):
         response_1 = self.client.get(url_valid, format='json')
         response_2 = self.client.get(url_invalid, format='json')
         self.assertEqual(response_1.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_1.data, {'id': 1, 'contact': 2})
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_contact(self):
@@ -255,6 +256,27 @@ class UserTestCase(APITestCase):
         url = reverse('user-detail', kwargs={'pk': 3}) + 'add_contact/'
         self.client.post(url, 1, format='json')
         self.assertEqual(Contact.objects.filter(user=1, contact=3).exists(), True)
+
+    def test_delete_contact(self):
+        """
+        Test delete method (delete contact) on user-detail
+        :return: None
+        """
+        url = reverse('user-detail', kwargs={'pk': 2}) + 'delete_contact/'
+        self.client.delete(url)
+        self.assertEqual(Contact.objects.filter(user=1, contact=2).exists(), False)
+
+    def test_invalid_delete_contact(self):
+        """
+        Test delete method (delete contact) on user-detail with invalid request
+        :return: None
+        """
+        user = User.objects.get(id=3)
+        client = APIClient()
+        client.force_authenticate(user=user)
+        url = reverse('user-detail', kwargs={'pk': 2}) + 'delete_contact/'
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_user(self):
         """
