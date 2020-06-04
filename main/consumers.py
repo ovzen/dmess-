@@ -224,11 +224,6 @@ class MessageAPIConsumer(PatchModelMixin,
     serializer_class = serializers.MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action()
-    def create(self, data, **kwargs):
-        data['user'] = self.scope['user']
-        super().create(data, **kwargs)
-
     def filter_queryset(self, queryset, **kwargs):
         user = self.scope.get('user')
         if user.is_staff:
