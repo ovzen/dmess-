@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card>
       <v-card-title>
-        Users / Пользователи
+        Users
         <v-spacer />
         <v-text-field
           v-model="search"
@@ -17,12 +17,12 @@
           small
           @click="close(),dialog=true"
         >
-          Создать пользователя
+          Create user
         </v-btn>
       </v-card-title>
       <v-data-table
         :loading="loading"
-        loading-text="Загрузка... Пожалуйста подождите / Loading... Please wait"
+        loading-text="Loading... Please wait"
         :headers="headers"
         :items="Users"
         :search="search"
@@ -71,7 +71,7 @@
                       >
                         <v-text-field
                           v-model="editedItem.username"
-                          label="Имя пользователя / Username"
+                          label="Username"
                         />
                       </v-col>
                       <v-col
@@ -82,7 +82,7 @@
                       >
                         <v-text-field
                           v-model="editedItem.password"
-                          label="Пароль / password"
+                          label="Password"
                         />
                       </v-col>
                       <v-col
@@ -92,7 +92,7 @@
                       >
                         <v-text-field
                           v-model="editedItem.first_name"
-                          label="Имя / First name"
+                          label="First name"
                         />
                       </v-col>
                       <v-col
@@ -102,7 +102,7 @@
                       >
                         <v-text-field
                           v-model="editedItem.last_name"
-                          label="Фамилия / Last name"
+                          label="Last name"
                         />
                       </v-col>
                       <v-col
@@ -112,7 +112,7 @@
                       >
                         <v-text-field
                           v-model="editedItem.email"
-                          label="Эл почта / Email"
+                          label="Email"
                         />
                       </v-col>
                     </v-row>
@@ -180,10 +180,10 @@ export default {
         text: 'ID',
         value: 'id'
       },
-      { text: 'Имя пользователя / Username', value: 'username' },
-      { text: 'Имя / First name', value: 'first_name' },
-      { text: 'Фамилия / Last name', value: 'last_name' },
-      { text: 'Эл почта / Email', value: 'email' },
+      { text: 'Username', value: 'username' },
+      { text: 'First name', value: 'first_name' },
+      { text: 'Last name', value: 'last_name' },
+      { text: 'Email', value: 'email' },
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     dialog: false,
@@ -208,7 +208,7 @@ export default {
   }),
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'Новый пользователь / New User' : 'Изменение пользователя / Edit User'
+      return this.editedIndex === -1 ? 'New User' : 'Edit User'
     }
   },
   mounted () {

@@ -13,7 +13,7 @@
     </v-card-title>
     <v-data-table
       :loading="loading"
-      loading-text="Загрузка... Пожалуйста подождите / Loading... Please wait"
+      loading-text="Loading... Please wait"
       :headers="headers"
       :page.sync="page"
       :items-per-page="5"
@@ -44,10 +44,10 @@ export default {
         text: 'ID',
         value: 'id'
       },
-      { text: 'Имя пользователя / Username', value: 'username' },
-      { text: 'Имя / First name', value: 'first_name' },
-      { text: 'Фамилия / Last name', value: 'last_name' },
-      { text: 'Статус / Status', value: 'profile.status', sortable: false }
+      { text: 'Username', value: 'username' },
+      { text: 'First name', value: 'first_name' },
+      { text: 'Last name', value: 'last_name' },
+      { text: 'Status', value: 'profile.status', sortable: false }
     ],
     Users: [],
     page: 1,
