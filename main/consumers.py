@@ -264,10 +264,14 @@ class MessageAPIConsumer(PatchModelMixin,
 
     @model_observer(models.Message)
     async def message_in_dialog_change_handler(self, message, observer=None, **kwargs):
-        print(message)
-        data, response_status = await self.retrieve(**message)
-        # data['dialog'] = str(data['dialog'])  # UUID не сериализуется библиотекой
+        print('hahaha', message)
+
         message_action = message.pop('action')
+
+        if message_action == 'delete':
+            data, response_status = None, status.HTTP_204_NO_CONTENT
+        else:
+            data, response_status = await self.retrieve(**message)
 
         await self.reply(
             action=message_action,
