@@ -607,6 +607,7 @@ export default {
         }
         if (action === 'delete' && data !== null) {
           this.messages.splice(this.messages.findIndex(message => message.id === data.id), 1)
+          this.dialogMessagesLength -= 1
         }
       }
     },
