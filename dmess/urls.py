@@ -48,7 +48,7 @@ urlpatterns = router.urls + static(settings.MEDIA_URL, document_root=settings.ME
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/admin/', include('admin.urls')),
     re_path('landing/', views.landing_view),
-    re_path('auth/', TemplateView.as_view(template_name="Auth.html"), name='Auth'),
+    re_path('auth/', TemplateView.as_view(template_name="auth.html"), name='Auth'),
     re_path(
         'admin/',
         staff_member_required(TemplateView.as_view(template_name="admin.html")),
