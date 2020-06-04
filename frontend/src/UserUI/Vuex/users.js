@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import jwt from 'jsonwebtoken'
+import jwt, { verify } from 'jsonwebtoken'
 import VueCookie from 'vue-cookie'
 import api from '../api'
 
@@ -40,52 +40,55 @@ export default ({
     getUserById: state => id => {
       return state.users.find(user => user.id === parseInt(id))
     },
+    getContactsByName: state => username => {
+      return state.users.filter(user => ((user.username.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.first_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.last_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (username !== ' ' ? ((user.first_name + ' ' + user.last_name).toLowerCase().indexOf(username.toLowerCase()) > -1) : false)) &&
+       typeof user.is_contact !== 'undefined' && typeof user.is_client === 'undefined')
+    },
     getUsersByName: state => username => {
-      return state.users.filter(user => user.username.toLowerCase().indexOf(username.toLowerCase()) > -1 && typeof user.is_contact === 'undefined' && typeof user.is_client === 'undefined')
+      return state.users.filter(user => ((user.username.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.first_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (user.last_name.toLowerCase().indexOf(username.toLowerCase()) > -1) ||
+      (username !== ' ' ? ((user.first_name + ' ' + user.last_name).toLowerCase().indexOf(username.toLowerCase()) > -1) : false)) &&
+       typeof user.is_contact === 'undefined' && typeof user.is_client === 'undefined')
     }
   },
 
   mutations: {
     addUser: (state, payload) => {
-      if (state.users.filter(user => user.id === payload.id).length === 0) {
-        if (payload.id === state.user_id) {
-          payload.is_client = true
-          if (typeof state.users[0] !== 'undefined') {
-            if (state.users[0].id !== state.user_id) {
-              state.users.unshift(payload)
-            } else {
-              state.users[0] = payload
-            }
-          } else {
-            state.users[0] = payload
-          }
-        } else {
-          for (let contact in state.contacts) {
-            console.log(state.contacts[contact].contact)
-            if (state.contacts[contact].contact === payload.id) {
-              payload.is_contact = true
-              state.users.push(payload)
-              return 0
-            }
-          }
-          state.users.push(payload)
+      let index = state.users.findIndex(user => user.id === payload.id)
+      for (let contact in state.contacts) {
+        if (state.contacts[contact].contact === payload.id) {
+          payload.is_contact = true
         }
+      }
+      if (payload.id === state.user_id) {
+        payload.is_client = true
+      }
+      if (index > -1) {
+        Vue.set(state.users, parseInt(index), payload)
       } else {
-        if (state.users.length === 0) {
-          state.users[0] = payload
+        if (typeof payload.is_client === 'undefined') {
+          state.users.push(payload)
         } else {
-          for (let contact in state.contacts) {
-            console.log(state.contacts[contact].contact)
-            if (state.contacts[contact].contact === payload.id) {
-              payload.is_contact = true
-            }
-          }
-          state.users[state.users.findIndex(user => user.id === payload.id)] = payload
+          state.users.unshift(payload)
         }
       }
     },
-    addContact: (state, payload) => {
+    makeContact: (state, payload) => {
       state.contacts = payload
+    },
+    addContact: (state, payload) => {
+      let User = state.users.find(user => user.id === parseInt(payload))
+      User.is_contact = true
+      Vue.set(state.users, state.users.findIndex(user => user.id === parseInt(payload)), User)
+    },
+    removeContact: (state, payload) => {
+      let User = state.users.find(user => user.id === parseInt(payload))
+      User.is_contact = undefined
+      Vue.set(state.users, state.users.findIndex(user => user.id === parseInt(payload)), User)
     }
   },
 
@@ -109,7 +112,7 @@ export default ({
     getContactsData (context) {
       api.axios.get('/api/contacts/').then(res => {
         if (res.status === 200) {
-          context.commit('addContact', res.data.results)
+          context.commit('makeContact', res.data.results)
           for (let contact in res.data.results) {
             api.axios
               .get('/api/users/' + res.data.results[contact].contact + '/')
@@ -120,6 +123,20 @@ export default ({
               })
               .catch(error => console.log(error))
           }
+        }
+      })
+    },
+    add_Сontact (context, payload) {
+      api.axios.post('/api/users/' + payload + '/add_contact/').then(res => {
+        if (res.status === 201) {
+          context.commit('addContact', payload)
+        }
+      })
+    },
+    remove_Сontact (context, payload) {
+      api.axios.delete('/api/users/' + payload + '/delete_contact/').then(res => {
+        if (res.status === 204) {
+          context.commit('removeContact', payload)
         }
       })
     }

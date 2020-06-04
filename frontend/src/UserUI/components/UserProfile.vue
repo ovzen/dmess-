@@ -50,11 +50,11 @@
             <v-list-item-title
               class="headline"
             >
-              {{ getThatUser.username }}
+              {{ getUserName(getThatUser) }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <span
-                :class="(getThatUser.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+                :class="(getThatUser.profile.status === 'online' ? 'basic_text--text text--lighten' : 'text_second--text')"
               >
                 {{ getThatUser.profile.status }}
               </span>
@@ -71,7 +71,7 @@
         class="ml-9 mt-4"
       >
         <div
-          class="pt-5 overline basic--text"
+          class="pt-5 overline basic_text--text"
         >
           BIO
         </div>
@@ -95,7 +95,7 @@
         />
 
         <div
-          class="pt-2 overline basic--text"
+          class="pt-2 overline basic_text--text"
           style="margin-top:10px"
         >
           USERNAME
@@ -119,7 +119,7 @@
         />
 
         <div
-          class="pt-4 overline basic--text"
+          class="pt-4 overline basic_text--text"
         >
           EMAIL
         </div>
@@ -145,7 +145,8 @@
           class="mt-12"
         >
           <v-list-item
-            @click="add_contact()"
+            v-if="typeof getThatUser.is_contact === 'undefined'"
+            @click="add_Сontact($route.params.Userid)"
           >
             <v-list-item-action>
               <v-icon
@@ -160,6 +161,30 @@
                 class="pb-4 body-1 black--text"
               >
                 Add to contact list
+              </v-list-item-title>
+              <v-divider
+                width="538"
+              />
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item
+            v-else
+            @click="remove_Сontact($route.params.Userid)"
+          >
+            <v-list-item-action>
+              <v-icon
+                class="ml-3 pb-4"
+                color="red"
+              >
+                mdi-minus
+              </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title
+                class="pb-4 body-1 black--text"
+              >
+                Remove from contact list
               </v-list-item-title>
               <v-divider
                 width="538"
@@ -234,22 +259,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUserData']),
-    add_contact () {
-      api.axios.post('/api/users/' + this.$route.params.Userid + '/add_contact/').then(res => {
-        if (res.status === 201) {
-          this.$root.$children[0].getContacts()
-          this.$root.$children[0].findedUsers = this.$root.$children[0].findedUsers.filter(user => {
-            console.log(user.id, ' ', this.$route.params.Userid)
-            if (user.id === parseInt(this.$route.params.Userid)) {
-              return false
-            }
-            return true
-          })
-          this.$root.$children[0].$forceUpdate()
-        }
-      })
-    },
+    ...mapActions(['getUserData', 'add_Сontact', 'remove_Сontact']),
     findChat () {
       api.axios
         .get('/api/dialog/', {

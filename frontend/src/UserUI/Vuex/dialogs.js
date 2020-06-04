@@ -28,6 +28,9 @@ export default ({
       let dialogIndex = dialogsArr.findIndex(dialog => dialog.id === payload.id)
       dialogsArr[dialogIndex].unread_messages = payload.unread_messages
       dialogsArr[dialogIndex].last_message = payload.last_message
+    },
+    DeleteDialog: (state, payload) => {
+      state.dialogs.splice(state.dialogs.findIndex(dialog => dialog.id === payload), 1)
     }
   },
 

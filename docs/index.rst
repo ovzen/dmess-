@@ -12,15 +12,7 @@ Welcome to Dmess's documentation!
 
    user_guide.rst
    admin_guide.rst
-   modules/docs
-   readme
-   vue_page
-   swagger
-   prepare.rst
-   run.rst
-   tests.rst
-   patterns.rst
-   load_testing.rst
+   developers/index.rst
 
 Указатели
 =========

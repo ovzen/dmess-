@@ -15,8 +15,9 @@
       >
         <v-card class="elevation-12">
           <v-layout>
-            <v-img
-              src="/static/reg.JPG"
+            <v-footer
+              width="60vh"
+              style="background: linear-gradient(325.92deg, #00A89D 0%, #42D5FF 87.16%);"
             />
             <v-container>
               <v-toolbar-title class="text-center pt-7 text--secondary">
@@ -282,7 +283,7 @@ export default {
   methods: {
     validateField () {
       if (this.$refs.passwords) {
-        this.$refs.passwords.validate();
+        this.$refs.passwords.validate()
       }
     },
     GoToLogin () {
@@ -309,31 +310,19 @@ export default {
           })
           .catch(error => {
             if (error.response.status === 400) {
-              this.notificationErrors = error.response.data[Object.keys(error.response.data)[0]].join(' ');
-              this.snackbar = (error);
+              this.notificationErrors = error.response.data[Object.keys(error.response.data)[0]].join(' ')
+              this.snackbar = (error)
               Object.values(error.response.data).forEach(error => {
                 if (error.length) {
-                  this.usernameError = (error);
-                  setTimeout(() => { this.usernameError = null }, 3000);
+                  this.usernameError = (error)
+                  setTimeout(() => { this.usernameError = null }, 3000)
                 }
-              });
+              })
             }
           })
           .then(data => {
             if (data && data.status === 201) {
-              api.axios
-                .post('/api/token/', {
-                  username: username,
-                  password: password
-                })
-                .then(res => {
-                  console.log(res.data)
-                  this.$cookie.set('Authentication', res.data.access, {
-                    expires: '5m'
-                  })
-                  localStorage.setItem('UpdateKey', res.data.refresh)
-                  window.location.href = this.next
-                })
+              this.$router.push('/verify/')
             }
           })
       }
