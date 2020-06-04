@@ -269,7 +269,7 @@ class MessageAPIConsumer(PatchModelMixin,
         message_action = message.pop('action')
 
         if message_action == 'delete':
-            data, response_status = None, status.HTTP_204_NO_CONTENT
+            data, response_status = {'id': message_action['pk']}, status.HTTP_204_NO_CONTENT
         else:
             data, response_status = await self.retrieve(**message)
 
