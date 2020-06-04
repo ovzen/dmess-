@@ -123,7 +123,7 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
      Для этого следует отправить:
     ```json
     {
-        action: 'subscribe_to_contacts',
+        action: 'subscribe_to_user',
         request_id: <CLIENT_USER_ID: int>,
         pk: <SUBSCRIPTION_USER_ID>
     }
@@ -151,6 +151,16 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
               f' {user.username} with id: {user.id}')
         await self.user_change_handler.subscribe(user=user)
         return None, status.HTTP_201_CREATED
+
+    @action()
+    async def unsubscribe_to_user(self, pk, **kwargs):
+        """Действие подписки на пользователя по его id"""
+        user = await database_sync_to_async(self.get_object)(pk=pk)
+
+        print(f'ДИЗЛАЙК ОТПИСКА user'
+              f' {user.username} with id: {user.id}')
+        await self.user_change_handler.unsubscribe(user=user)
+        return None, status.HTTP_204_NO_CONTENT
 
     async def handle_observed_action(self, **kwargs):
         """Формирует и отправляет ответ на сторону клиента"""
