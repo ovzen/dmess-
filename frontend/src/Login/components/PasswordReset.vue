@@ -138,7 +138,7 @@
               </v-flex>
             </v-container>
             <v-card-text class="text-center text--secondary subtitle-1 pa-5">
-              A verification mail has been sent to the email inbox with a link to verify your account.<br>
+              A verification mail has been sent to thy email inbox with a link to verify your account.<br>
               If you have not received the email after a few minutes, please check your spam folder.
             </v-card-text>
           </v-container>
