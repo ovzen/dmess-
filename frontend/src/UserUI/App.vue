@@ -415,6 +415,9 @@ export default {
       if (key === 'Escape' && Vue.$route.fullPath !== '/') {
         Vue.$router.push('/')
       }
+      if (key === 's' && (event.altKey)) {
+        Vue.$vuetify.theme.dark = !Vue.$vuetify.theme.dark
+      }
     })
     setInterval(this.updateToken, 1000)
     this.getUserData(this.getUserId)
