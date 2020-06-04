@@ -144,7 +144,7 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         return None, status.HTTP_201_CREATED
 
     @action()
-    async def subscribe_to_user(self, pk, **kwargs):
+    async def К(self, pk, **kwargs):
         """Действие подписки на пользователя по его id"""
         user = await database_sync_to_async(self.get_object)(pk=pk)
         print(f'You have successfully subscribed to user'
@@ -174,8 +174,10 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         Группы, в которые отправляется сигнал при событии
         изменения модели пользователя
         """
+
         yield f'-pk__{instance.pk}'
         for user in instance.users.all():
+            print(f'СИГНАЛ ЮЗЕР -contacts__user__{user.pk}')
             yield f'-contacts__user__{user.pk}'
 
     @user_change_handler.groups_for_consumer
@@ -201,6 +203,7 @@ class UserAPIConsumer(RetrieveModelMixin, GenericAsyncAPIConsumer):
         """
         yield f'-pk__{instance.user.pk}'
         for user in instance.user.users.all():
+            print(f'СИГНАЛ ПРОФИЛЬ -contacts__user__{user.pk}')
             yield f'-contacts__user__{user.pk}'
 
     @user_profile_change_handler.groups_for_consumer
@@ -263,13 +266,13 @@ class MessageAPIConsumer(PatchModelMixin,
             return None, status.HTTP_404_NOT_FOUND
 
     @model_observer(models.Message)
-    async def message_in_dialog_change_handler(self, message, observer=None, **kwargs):
+    async def message_in_dialog_change_handler(self, message: dict, observer=None, **kwargs):
         print('hahaha', message)
 
-        message_action = message.pop('action')
+        message_action = message.get('action')
 
         if message_action == 'delete':
-            data, response_status = {'id': message_action['pk']}, status.HTTP_204_NO_CONTENT
+            data, response_status = {'id': message['pk']}, status.HTTP_204_NO_CONTENT
         else:
             data, response_status = await self.retrieve(**message)
 
