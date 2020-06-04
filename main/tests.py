@@ -12,7 +12,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
-from main.models import UserProfile, Contact
+from main.models import UserProfile, Contact, Message
 
 
 class DialogTestCase(APITestCase):
@@ -29,6 +29,7 @@ class DialogTestCase(APITestCase):
         user = User.objects.get(id=1)
         self.client = APIClient()
         self.client.force_authenticate(user=user)
+        Message.objects.create(user=user, text='hello!', dialog_id='644804bf-13c9-47d4-b70b-a9b95f44b7b4')
 
     def test_get_dialogs_list(self):
         """
@@ -84,16 +85,21 @@ class DialogTestCase(APITestCase):
         self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
 
-    # def test_read_messages(self):
-    #     url = reverse(
-    #     'dialog-detail', kwargs={'pk': '644804bf-13c9-47d4-b70b-a9b95f44b7b4'}
-    #     ) + 'read_messages/'
-    #     response = self.client.post(url, format='json')
-    #     self.assertEqual(
-    #     Message.objects.filter(
-    #     user=2, dialog='644804bf-13c9-47d4-b70b-a9b95f44b7b4'
-    #     ).first().is_read, True
-    #     )
+    def test_read_messages(self):
+        """
+        Test post method on dialog-detail (/read_messages/)
+        :return: None
+        """
+        url = reverse(
+            'dialog-detail', kwargs={'pk': '644804bf-13c9-47d4-b70b-a9b95f44b7b4'}
+        ) + 'read_messages/'
+        other_user = User.objects.get(id=2)
+        client = APIClient()
+        client.force_authenticate(user=other_user)
+        response = client.post(url, format='json')
+        self.assertTrue(
+            Message.objects.filter(user=1, dialog='644804bf-13c9-47d4-b70b-a9b95f44b7b4').first().is_read
+        )
 
 
 class MessageTestCase(APITestCase):
@@ -110,6 +116,7 @@ class MessageTestCase(APITestCase):
         user = User.objects.get(id=1)
         self.client = APIClient()
         self.client.force_authenticate(user=user)
+        Message.objects.create(user=user, text='hello!', dialog_id='644804bf-13c9-47d4-b70b-a9b95f44b7b4')
 
     def test_get_messages_list(self):
         """
@@ -119,32 +126,17 @@ class MessageTestCase(APITestCase):
         url = reverse('message-list')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
 
-    # def test_create_message(self):
-    #     url = reverse('message-list')
-    #     data = {
-    #         'text': 'test',
-    #         'user': 1,
-    #         'dialog': '644804bf-13c9-47d4-b70b-a9b95f44b7b4'
-    #     }
-    #     response = self.client.post(url, data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    # def test_get_message(self):
-    #     url_valid = reverse('message-detail', kwargs={'pk': 1})
-    #     url_invalid = reverse('message-detail', kwargs={'pk': 42})
-    #     response_1 = self.client.get(url_valid, format='json')
-    #     response_2 = self.client.get(url_invalid, format='json')
-    #     self.assertEqual(response_1.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
-
-    # def test_delete_message(self):
-    #     url_valid = reverse('message-detail', kwargs={'pk': 1})
-    #     url_invalid = reverse('message-detail', kwargs={'pk': 42})
-    #     response_1 = self.client.delete(url_valid, format='json')
-    #     response_2 = self.client.delete(url_invalid, format='json')
-    #     self.assertEqual(response_1.status_code, status.HTTP_204_NO_CONTENT)
-    #     self.assertEqual(response_2.status_code, status.HTTP_404_NOT_FOUND)
+    def test_post_image_upload(self):
+        """
+        Test post method on message
+        :return: None
+        """
+        url = '/api/messages/image_upload/'
+        with open("templates/static/favicon.ico", "rb") as data:
+            response = self.client.post(url, {'image': data})
+        self.assertTrue('media/favicon' in response.data['image_url'])
 
 
 class ContactTestCase(APITestCase):
@@ -281,6 +273,7 @@ class UserProfileCreationTestCase(unittest.TestCase):
     """
     The TestCase for UserProfile creation
     """
+
     def test_user_profile_creation(self):
         """
         Test creation of UserProfile when User is created
