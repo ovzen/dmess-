@@ -7,7 +7,7 @@
 
    modules.rst
    load_testing.rst
-   readme
+   tech_stack.rst
    vue_page
    swagger
    prepare.rst
