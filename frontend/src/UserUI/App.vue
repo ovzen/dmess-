@@ -44,11 +44,17 @@
             v-else
             color="basic"
           >
-            <span
-              class="white--text"
+            <v-avatar
+              size="36px"
+              color="basic"
             >
-              {{ getUserInitials(DialogUser) }}
-            </span>
+              <span
+                class="white--text"
+                style="padding-left:3.5px"
+              >
+                {{ getUserInitials(DialogUser) }}
+              </span>
+            </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title
@@ -156,7 +162,7 @@
     >
       <v-card tile>
         <v-list
-          color="basic"
+          color="background_user"
           dark
           height="80"
           class="pt-1"
@@ -168,15 +174,8 @@
               >
                 {{ getUserName(getClient) }}
               </v-list-item-title>
-              <v-list-item-subtitle
-                v-if="getClientProfile.is_online"
-              >
-                online
-              </v-list-item-subtitle>
-              <v-list-item-subtitle
-                v-else
-              >
-                offline
+              <v-list-item-subtitle>
+                {{ getClientProfile.status }}
               </v-list-item-subtitle>
             </v-list-item-content>
             <router-link
@@ -192,11 +191,16 @@
                 v-else
                 color="background_white"
               >
-                <span
-                  class="basic--text"
+                <v-avatar
+                  size="36px"
                 >
-                  {{ MakeAvatar }}
-                </span>
+                  <span
+                    class="basic--text"
+                    style="padding-left:3.5px"
+                  >
+                    {{ MakeAvatar }}
+                  </span>
+                </v-avatar>
               </v-list-item-avatar>
             </router-link>
           </v-list-item>
@@ -210,7 +214,7 @@
         <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
         <DialogsList v-if="currentTab.name == 'mdi-message-text'" />
         <settings
-          v-if="currentTab.name == 'mdi-settings'"
+          v-if="currentTab.name == 'mdi-cog'"
         />
         <v-footer
           absolute
@@ -263,8 +267,8 @@
               v-for="tab in tabs"
               :key="tab.name"
               icon
-              :class="['tab-button', { active: currentTab.name === tab.name }]"
-              @click="currentTab = tab"
+              :class="['tab-button', { 'basic--text': currentTab.name === tab.name }]"
+              @click="changeTab(tab)"
             >
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
@@ -303,21 +307,23 @@ import SystemInfo from './components/SystemInfo'
 import settings from './components/settings'
 import ContactList from './components/ContactList'
 import DialogsList from './components/DialogsList'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
-let ws1 = new WebSocket(
+let UpdateContants = new WebSocket(
   (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
 )
 
 Vue.use(VueCookie)
 var tabs = [
   {
+    id: 0,
     name: 'mdi-account-circle',
     display_name: 'Contacts',
     component: {
     }
   },
   {
+    id: 1,
     name: 'mdi-message-text',
     display_name: 'Dialogs',
     component: {
@@ -332,7 +338,8 @@ var tabs = [
   },
   */
   {
-    name: 'mdi-settings',
+    id: 2,
+    name: 'mdi-cog',
     display_name: 'Settings',
     component: {
     }
@@ -392,6 +399,12 @@ export default {
     } else {
       console.warn('The current user was not found')
     }
+    this.$vuetify.theme.dark = (localStorage.getItem('Dark') === 'true')
+    if (this.tabs.find(tab => tab.id == localStorage.getItem('Tab'))) {
+      this.currentTab = this.tabs[localStorage.getItem('Tab')]
+    } else {
+      this.currentTab = this.tabs[1]
+    }
   },
   mounted () {
     let Vue = this
@@ -405,10 +418,8 @@ export default {
     this.getUserData(this.getUserId)
     this.getContactsData()
     this.getDialogsData(this.getUserId)
-
-    // Эксперименты Федора
-    ws1.onopen = function () {
-      ws1.send(
+    UpdateContants.onopen = function () {
+      UpdateContants.send(
         JSON.stringify(
           {
             action: 'subscribe_to_contacts',
@@ -416,19 +427,21 @@ export default {
           }
         )
       )
-      ws1.send(
-        JSON.stringify(
-          {
-            action: 'subscribe_to_user',
-            request_id: 1,
-            pk: 3
-          }
-        )
-      )
+    }
+    UpdateContants.onmessage = function (event) {
+      console.log(JSON.parse(event.data).data)
+      if (JSON.parse(event.data).data) {
+        Vue.addUser((JSON.parse(event.data).data))
+      }
     }
   },
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
+    ...mapMutations(['addUser', 'DeleteDialog']),
+    changeTab (tab) {
+      this.currentTab = tab
+      localStorage.setItem('Tab', tab.id)
+    },
     getUserName (user) {
       if (typeof user !== 'undefined') {
         if (user.first_name && user.last_name) {
@@ -471,8 +484,8 @@ export default {
       this.$disconnect()
     },
     deleteChat () {
-      api.axios.delete('/api/dialog/' + this.$route.params.id + '/')
-      this.getDialogsData(this.getUserId)
+      api.axios.delete('/api/dialog/' + this.$route.params.id + '/').then()
+      this.DeleteDialog(this.$route.params.id)
       this.$router.go(-1)
     },
     updateToken () {

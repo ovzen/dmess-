@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
       'vuetify'
     ],
     outputDir: './dist/',
-    publicPath: 'http://127.0.0.1:8000/',
+    publicPath: 'https://d-messenger.ml/',
     assetsDir: 'static',
     pages: {
       'index': {

@@ -1,7 +1,13 @@
+"""
+Предстваления (views) главных моделей базы данных.
+Преимущественно относятся к клиентской и общей части приложения.
+"""
+
 from django.contrib.auth.models import User
 from django.core.files.storage import default_storage
+from django.db import IntegrityError
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -25,6 +31,7 @@ class CountModelMixin:
         return Response(content)
 
 
+# pylint: disable=too-many-ancestors
 class UserViewSet(mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
@@ -42,11 +49,39 @@ class UserViewSet(mixins.ListModelMixin,
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_contact(self, request, pk=None):
+        """
+        Добавляет в список контактов юзера
+        :param request: запрос
+        :param pk: primary-key пользователя
+        :return: статус 201 если создан новый контакт, иначе 400
+        :rtype: Response
+        """
         user = self.get_object()
-        contact, created = Contact.objects.get_or_create(user=request.user, contact=user)
-        return Response(status=201 if created else 400)
+        try:
+            Contact.objects.create(user=request.user, contact=user)
+            return Response(status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
+    def delete_contact(self, request, pk=None):
+        """
+        Удаляет из списка контактов юзера
+        :param request: запрос
+        :param pk: primary-key пользователя
+        :return: статус 204 если создан новый контакт, иначе 400
+        :rtype: Response
+        """
+        user = self.get_object()
+        try:
+            contact = Contact.objects.get(user=request.user, contact=user)
+            contact.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Contact.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# pylint: disable=too-many-ancestors
 class ContactViewSet(mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.DestroyModelMixin,
@@ -61,6 +96,7 @@ class ContactViewSet(mixins.ListModelMixin,
         return Contact.objects.filter(user=user)
 
 
+# pylint: disable=too-many-ancestors
 class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с диалогами
@@ -99,6 +135,7 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
         )
 
 
+# pylint: disable=too-many-ancestors
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с сообщениями
@@ -117,16 +154,14 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
-        else:
-            return Message.objects.filter(dialog__users=user)
+        return Message.objects.filter(dialog__users=user)
 
     @action(detail=False, methods=['post'])
     def image_upload(self, request):
         """
-        Принимает на вход картинку, загружает ее на сервер и отдает
-        обратно ссылку на файл.
+        Действие для загрузки картинок и привязки их к сообщениям.
         :param request:
-        :return: Response
+        :return:
         """
         image = request.FILES['image']
         image_name = default_storage.save(image.name, image)
@@ -134,6 +169,7 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
         return Response({"image_url": image_url})
 
 
+# pylint: disable=too-many-ancestors
 class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
     ViewSet для работы с вики-страницей
@@ -150,11 +186,15 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
-        else:
-            return WikiPage.objects.filter(dialog__users=user)
+        return WikiPage.objects.filter(dialog__users=user)
 
 
 def landing_view(request):
+    """
+    Рендерит статическую лендинг-страницу.
+    :param request:
+    :return:
+    """
     context = {
         'online_stat': UserProfile.objects.filter(is_online=True).count(),
         'registers_stat': User.objects.count(),

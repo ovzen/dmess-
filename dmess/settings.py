@@ -30,7 +30,7 @@ if not DEBUG:
 else:
     SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
     DB_PASSWORD = 'define_me'
-    EMAIL_PASSWORD = 'helloworld'
+    EMAIL_PASSWORD = 'xAJ9ZnvJBc'
 
 ALLOWED_HOSTS = [
     'messenger.savink.in',
@@ -230,8 +230,8 @@ LOGIN_URL = '/landing/'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'noreply@asmirnov.me'
-EMAIL_HOST_PASSWORD = EMAIL_PASSWORD # 'helloworld'
+EMAIL_HOST_USER = 'noreply@d-messenger.ml'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
@@ -247,9 +247,21 @@ FIXTURE_DIRS = [
 ]
 
 REST_REGISTRATION = {
-    'REGISTER_VERIFICATION_ENABLED': False,
+    'REGISTER_VERIFICATION_URL': '/auth/verify/',
+    'VERIFICATION_FROM_EMAIL': EMAIL_HOST_USER,
+    'REGISTER_VERIFICATION_AUTO_LOGIN': True,
+    'REGISTER_VERIFICATION_ONE_TIME_USE': True,
+    'REGISTER_VERIFICATION_EMAIL_TEMPLATES': {
+        'html_body': 'email/register/register_completion.html',
+        'subject': 'email/register/register_subject.txt'
+    },
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
-    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
+    'RESET_PASSWORD_VERIFICATION_URL': '/auth/reset-password/',
+    'RESET_PASSWORD_VERIFICATION_ONE_TIME_USE': True,
+    'RESET_PASSWORD_VERIFICATION_EMAIL_TEMPLATES': {
+        'html_body': 'email/reset_password/reset_completion.html',
+        'subject': 'email/reset_password/reset_subject.txt'
+    },
     'PROFILE_SERIALIZER_CLASS': 'main.serializers.UserSerializer',
     'REGISTER_SERIALIZER_PASSWORD_CONFIRM': False
 }
