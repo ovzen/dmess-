@@ -406,7 +406,7 @@ export default {
     let Vue = this
     this.updateDialog()
     this.getMessage()
-    this.UpdateUserInDialog()
+    setTimeout(this.UpdateUserInDialog, 1000)
     this.$options.sockets.onopen = function () {
       this.$socket.send(
         JSON.stringify(
@@ -611,7 +611,6 @@ export default {
       if (typeof this.getUsersByDialogId(this.$route.params.id) !== 'undefined') {
         this.getUserData([this.getUsersByDialogId(this.$route.params.id)[0].id, true])
       }
-      setTimeout(this.UpdateUserInDialog, 30000)
     },
     isOwnMessage (author) {
       return author !== jwt.decode(this.$cookie.get('Authentication')).user_id

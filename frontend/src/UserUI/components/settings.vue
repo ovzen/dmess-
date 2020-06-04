@@ -57,6 +57,31 @@
       </template>
       <span>Click here to go in dark theme or use ALT+S</span>
     </v-tooltip>
+
+    <v-list-item
+      style="height: 36px"
+    >
+      <v-list-item-content>
+        <v-container class="d-flex">
+          <v-combobox
+            v-model="color"
+            :items="items"
+            label="Select or write your's favorite color in hex"
+          />
+          <v-btn
+            icon
+            color="basic"
+            class="align-self-sm-center"
+            @click="setColor()"
+          >
+            <v-icon>
+              mdi-palette
+            </v-icon>
+          </v-btn>
+        </v-container>
+      </v-list-item-content>
+    </v-list-item>
+
     <v-dialog
       v-model="dialogsWarnings"
       width="630px"
@@ -111,13 +136,26 @@ export default {
   data: () => ({
     dialogsWarnings: false,
     userId: undefined,
-    userIsStaff: false
+    userIsStaff: false,
+    color: '',
+    items: [
+      '#66CCFF',
+      '#DA7',
+      '#77AAB'
+    ]
   }),
   created () {
     this.userId = jwt.decode(this.$cookie.get('Authentication')).user_id
     this.getUserStaff()
   },
   methods: {
+    setColor () {
+      this.$vuetify.theme.themes.dark.basic = this.color
+      this.$vuetify.theme.themes.light.basic = this.color
+      this.$vuetify.theme.themes.dark.basic_text = this.color
+      this.$vuetify.theme.themes.light.basic_text = this.color
+      this.$vuetify.theme.themes.light.background_user = this.color
+    },
     saveTheme () {
       localStorage.setItem('Dark', this.$vuetify.theme.dark)
     },
