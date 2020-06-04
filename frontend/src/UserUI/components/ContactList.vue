@@ -6,7 +6,7 @@
         v-model="userSearch"
         clearable
         solo
-        background-color="grey lighten-2"
+        background-color="search"
         dense
         flat
         color="basic"
@@ -23,10 +23,11 @@
       v-if="getContacts.length"
     >
       <div
-        v-for="contact in (userSearch ? SortContacts : getContacts)"
+        v-for="contact in (userSearch ? getContactsByName(userSearch) : getContacts)"
         :key="contact.id"
       >
         <v-list-item
+          color="sidebar_select"
           :to="'/UserProfile/' + contact.id"
         >
           <v-list-item-avatar v-if="contact.profile.avatar">
@@ -52,12 +53,14 @@
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>
-              {{ contact.username }}
+            <v-list-item-title
+              class="black--text"
+            >
+              {{ getUserName(contact) }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <span
-                :class="(contact.profile.status === 'online' ? 'basic--text text--lighten' : 'text_second--text')"
+                :class="(contact.profile.status === 'online' ? 'basic_text--text text--lighten' : 'text_second--text')"
               >
                 {{ contact.profile.status }}
               </span>
@@ -65,7 +68,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider
-          v-if="!(SortContacts[SortContacts.length-1].id == contact.id) || !userSearch"
+          v-if="!(getContactsByName(userSearch)[getContactsByName(userSearch).length-1].id == contact.id) || !userSearch"
           inset
         />
       </div>
@@ -133,7 +136,7 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                {{ user.username }}
+                {{ getUserName(user) }}
               </v-list-item-title>
               <v-list-item-subtitle>
                 <span
@@ -169,30 +172,46 @@
 
 <script>
 import api from '../api'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'ContactList',
   data: () => ({
     userSearch: ''
   }),
   computed: {
-    ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName']),
-    SortContacts () {
-      return this.getContacts.filter(contact => { return contact.username.toLowerCase().indexOf(this.userSearch.toLowerCase()) > -1 })
-    }
+    ...mapGetters(['getUserId', 'getContacts', 'getContactsId', 'getClient', 'getClientProfile', 'getUsersByName', 'getContactsByName'])
   },
   methods: {
     ...mapActions(['getUserData']),
+    getUserName (user) {
+      if (typeof user !== 'undefined') {
+        if (user.first_name && user.last_name) {
+          return (user.first_name + ' ' + user.last_name)
+        } else if (user.first_name) {
+          return user.first_name
+        } else if (user.last_name) {
+          return user.last_name
+        } else {
+          return user.username
+        }
+      }
+    },
     getUsersBySearch () {
-      api.axios.get('/api/users/', {
-        params: {
-          search: this.userSearch
+      clearTimeout(this._timerId)
+      this._timerId = setTimeout(() => {
+        if (this.userSearch) {
+          api.axios.get('/api/users/', {
+            params: {
+              search: this.userSearch
+            }
+          }).then(res => {
+            for (let user in res.data.results) {
+              this.getUserData(res.data.results[user].id)
+            }
+          })
         }
-      }).then(res => {
-        for (let user in res.data.results) {
-          this.getUserData(res.data.results[user].id)
-        }
-      })
+      }, 500)
     },
     clearSearch () {
       this.userSearch = ''
@@ -200,16 +219,16 @@ export default {
     MakeAvatar (UserProfile) {
       if (typeof UserProfile !== 'undefined') {
         if (UserProfile.first_name !== '' && UserProfile.last_name !== '') {
-          return UserProfile.first_name[0] + UserProfile.last_name[0]
+          return UserProfile.first_name[0].toUpperCase() + UserProfile.last_name[0].toUpperCase()
         }
         if (UserProfile.first_name !== '') {
-          return UserProfile.first_name[0]
+          return UserProfile.first_name[0].toUpperCase()
         }
         if (UserProfile.last_name !== '') {
-          return UserProfile.last_name[0]
+          return UserProfile.last_name[0].toUpperCase()
         }
         if (UserProfile.username !== '') {
-          return UserProfile.username[0]
+          return UserProfile.username[0].toUpperCase()
         }
       }
       return '...'
