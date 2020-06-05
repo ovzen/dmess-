@@ -211,11 +211,13 @@
       <div
         id="dynamic-component"
       >
-        <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
-        <DialogsList v-if="currentTab.name == 'mdi-message-text'" />
-        <settings
-          v-if="currentTab.name == 'mdi-cog'"
-        />
+        <keep-alive>
+          <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
+          <DialogsList v-if="currentTab.name == 'mdi-message-text'" />
+          <settings
+            v-if="currentTab.name == 'mdi-cog'"
+          />
+        </keep-alive>
         <v-footer
           absolute
           padless
@@ -398,6 +400,9 @@ export default {
       console.warn('The current user was not found')
     }
     this.$vuetify.theme.dark = (localStorage.getItem('Dark') === 'true')
+    if (localStorage.getItem('customColor') !== null) {
+      this.setColor(localStorage.getItem('customColor'))
+    }
     if (this.tabs.find(tab => tab.id == localStorage.getItem('Tab'))) {
       this.currentTab = this.tabs[localStorage.getItem('Tab')]
     } else {
@@ -439,6 +444,14 @@ export default {
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
     ...mapMutations(['addUser', 'DeleteDialog']),
+    setColor (color) {
+      this.$vuetify.theme.themes.dark.basic = color
+      this.$vuetify.theme.themes.light.basic = color
+      this.$vuetify.theme.themes.dark.basic_text = color
+      this.$vuetify.theme.themes.light.basic_text = color
+      this.$vuetify.theme.themes.light.background_user = color
+      this.$vuetify.theme.themes.dark.primary = color
+    },
     changeTab (tab) {
       this.currentTab = tab
       localStorage.setItem('Tab', tab.id)
@@ -534,7 +547,7 @@ export default {
   color: #2c3e50;
   height: 100vh;
   .active {
-  color: #6202EE
-}
+    color: #6202EE
+  }
 }
 </style>

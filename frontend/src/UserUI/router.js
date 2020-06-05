@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from './components/Main'
-import ChatUser from './components/ChatUser'
-import UserProfile from './components/UserProfile'
-import MyProfile from './components/MyProfile'
-import Error500 from './components/Error500.vue'
-import Error404 from './components/Error404.vue'
+const Main = () => import('./components/Main')
+const ChatUser = () => import('./components/ChatUser')
+const UserProfile = () => import('./components/UserProfile')
+const MyProfile = () => import('./components/MyProfile')
+const Error500 = () => import('./components/Error500.vue')
+const Error404 = () => import('./components/Error404.vue')
 Vue.use(Router)
 
 const router = new Router({
