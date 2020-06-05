@@ -160,7 +160,7 @@
                               icon
                               style="width:23px; height:20px;"
                               v-on="on"
-                              @click="deleteMessage(message.id)"
+                              @click="removeId = message.id, removeDialog = true"
                             >
                               <v-icon
                                 style="font-size:18px;"
@@ -228,6 +228,41 @@
         @click="dialog=false"
       />
     </v-dialog>
+    <v-dialog
+      v-model="removeDialog"
+      max-width="700"
+    >
+      <v-card>
+        <v-card-title
+          class="headline"
+        >
+          Delete message
+        </v-card-title>
+
+        <v-card-text>
+          Do you really want to delete this message? <br> This change cannot be undone.
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="basic"
+            text
+            @click="removeDialog = false"
+          >
+            Cancel
+          </v-btn>
+
+          <v-btn
+            color="red"
+            text
+            @click="deleteMessage(removeId), removeDialog = false"
+          >
+            DELETE
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -247,7 +282,9 @@ export default {
   },
   data: () => ({
     link: '',
-    dialog: false
+    dialog: false,
+    removeDialog: false,
+    removeId: null
   }),
   mounted () {
     var Data = this

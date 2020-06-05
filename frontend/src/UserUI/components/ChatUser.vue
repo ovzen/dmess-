@@ -12,41 +12,7 @@
       :is-new-date="isNewDate"
       :get-day="getDay"
     />
-    <v-row
-      v-else
-      align="center"
-      justify="center"
-      style="padding-bottom:56px;height:100%;"
-    >
-      <div class="d-flex flex-column">
-        <span
-          v-if="messages.length === 0"
-          style="font-weight: 300;
-              font-size: 96px;
-              line-height: 112px;
-              text-align: center;
-              letter-spacing: -1.5px;"
-          class="smile_color--text"
-        >
-          ¯\_(ツ)_/¯
-        </span>
-        <span
-          v-if="messages.length === 0"
-          style="font-family: Roboto;
-              font-style: normal;
-              font-weight: 500;
-              font-size: 14px;
-              line-height: 16px;
-              text-align: center;
-              letter-spacing: 0.75px;
-              text-transform: uppercase;
-              padding-top:15px"
-          class="smile_color--text"
-        >
-          there are no messages yet
-        </span>
-      </div>
-    </v-row>
+    <NoMessages v-else />
     <span v-observe-visibility="visibilityChanged" />
     <v-btn
       color="warning"
@@ -148,6 +114,7 @@ import FilePondPluginGetFile from 'filepond-plugin-get-file'
 import './css/filepond-plugin-get-file.min.css'
 import VueObserveVisibility from 'vue-observe-visibility'
 const MessagesList = () => import('./MessagesList')
+const NoMessages = () => import('./NoMessages')
 let FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginGetFile)
 Vue.directive('linkified', linkify)
 require('./css/vue-chat-emoji.css')
@@ -159,7 +126,8 @@ export default {
   components: {
     FilePond,
     Emoji: VueChatEmoji,
-    MessagesList
+    MessagesList,
+    NoMessages
   },
   data: () => ({
     messages: [],
@@ -299,6 +267,10 @@ export default {
             }
           })
         )
+        this.message = ''
+        this.updateMessage = undefined
+        this.myFiles = []
+        this.imageUrl = ''
       }
       if (!this.loading && (this.message !== '' || this.imageUrl !== '') && typeof this.updateMessage !== 'undefined') {
         this.$socket.send(
@@ -314,11 +286,11 @@ export default {
             }
           )
         )
+        this.message = ''
+        this.updateMessage = undefined
+        this.myFiles = []
+        this.imageUrl = ''
       }
-      this.message = ''
-      this.updateMessage = undefined
-      this.myFiles = []
-      this.imageUrl = ''
     },
     updateDialog () {
       this.message = ''

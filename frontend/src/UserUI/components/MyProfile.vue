@@ -285,7 +285,7 @@
 
           <v-list-item
             :disabled="edit"
-            @click="exit()"
+            @click="dialogLogout = true"
           >
             <v-list-item-action>
               <v-icon
@@ -303,30 +303,35 @@
               </v-list-item-title>
               <v-dialog
                 v-model="dialogLogout"
-                max-width="365"
+                max-width="700"
               >
                 <v-card>
                   <v-card-title
                     class="headline"
                   >
-                    Do you really want to get out?
+                    Logout
                   </v-card-title>
+
+                  <v-card-text>
+                    Do you really want to logout?
+                  </v-card-text>
+
                   <v-card-actions>
                     <v-spacer />
                     <v-btn
-                      color="basic darken-1"
+                      color="basic"
                       text
                       @click="dialogLogout = false"
                     >
-                      NO
+                      Cancel
                     </v-btn>
 
                     <v-btn
-                      color="basic darken-1"
+                      color="red"
                       text
-                      @click="exit()"
+                      @click="exit(), dialogLogout = false"
                     >
-                      YES
+                      logout
                     </v-btn>
                   </v-card-actions>
                 </v-card>

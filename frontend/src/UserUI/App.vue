@@ -50,7 +50,6 @@
             >
               <span
                 class="white--text"
-                style="padding-left:3.5px"
               >
                 {{ getUserInitials(DialogUser) }}
               </span>
@@ -196,7 +195,6 @@
                 >
                   <span
                     class="basic--text"
-                    style="padding-left:3.5px"
                   >
                     {{ MakeAvatar }}
                   </span>
