@@ -8,6 +8,7 @@ import json
 import unittest
 
 from django.contrib.auth.models import User
+from django.forms import model_to_dict
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
@@ -29,7 +30,6 @@ class DialogTestCase(APITestCase):
         user = User.objects.get(id=1)
         self.client = APIClient()
         self.client.force_authenticate(user=user)
-        Message.objects.create(user=user, text='hello!', dialog_id='644804bf-13c9-47d4-b70b-a9b95f44b7b4')
 
     def test_get_dialogs_list(self):
         """
@@ -116,7 +116,6 @@ class MessageTestCase(APITestCase):
         user = User.objects.get(id=1)
         self.client = APIClient()
         self.client.force_authenticate(user=user)
-        Message.objects.create(user=user, text='hello!', dialog_id='644804bf-13c9-47d4-b70b-a9b95f44b7b4')
 
     def test_get_messages_list(self):
         """
