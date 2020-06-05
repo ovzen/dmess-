@@ -311,7 +311,7 @@ thumb
 sketch
 
 
-frontend/webpack-stats.json
+#frontend/webpack-stats.json
 main/static_root/
 
 daphne.sock.lock
