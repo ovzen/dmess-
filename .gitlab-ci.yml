@@ -38,6 +38,11 @@ stages:
 
 coverage:
   stage: test
+  
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+
   script:
     - pip install -r ci/test_requirements.txt
     - celery worker -B -A dmess --loglevel=debug --concurrency=4 &
