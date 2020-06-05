@@ -18,7 +18,8 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 
 
-DEBUG = not os.path.exists('dmess_secrets.txt')
+# DEBUG = not os.path.exists('dmess_secrets.txt')
+DEBUG = True
 
 
 if not DEBUG:
