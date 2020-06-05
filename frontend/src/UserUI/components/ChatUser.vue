@@ -24,7 +24,7 @@
         </v-card>
         <div v-if="isOwnMessage(message.user)" class="text-left">
           <v-card
-            style="border-radius: 20px;"
+            style="border-radius: 20px; width: max-content;"
             max-width="460px"
             class="d-flex align-content-start flex-wrap flex-shrink-1"
             flat
@@ -51,7 +51,7 @@
         <v-container class="d-flex flex-row-reverse" py-0>
           <div v-if="!isOwnMessage(message.user)" class="text-left">
             <v-card
-              style="border-radius: 20px;"
+              style="border-radius: 20px; width: max-content;"
               max-width="460px"
               class="d-flex align-content-start flex-wrap flex-shrink-1"
               color="background_pink"

@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
       'vuetify'
     ],
     outputDir: './dist/',
-    publicPath: 'http://127.0.0.1:8000/',
+    publicPath: 'https://d-messenger.ml/',
     assetsDir: 'static',
     pages: {
       'index': {
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
       },
       'auth': {
         entry: './src/Login/main.js',
-        template: 'public/auth.html',
+        template: 'public/Auth.html',
         title: 'Auth',
         chunks: [ 'chunk-vendors', 'chunk-common', 'Login' ]
       }

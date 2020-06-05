@@ -21,7 +21,7 @@ from main.permissions import IsAdminUserOrReadOnly
 # noinspection PyUnresolvedReferences
 class CountModelMixin:
     """
-    Add count action to ModelViewSet
+    Добавляет действие count (количество) к ModelViewSet
     """
 
     @action(detail=False)
@@ -89,6 +89,9 @@ class ContactViewSet(mixins.ListModelMixin,
     serializer_class = serializers.ContactSerializer
 
     def get_queryset(self):
+        """
+        Фильтрует queryset контактов по тем, в которых состоит пользователь
+        """
         user = self.request.user
         return Contact.objects.filter(user=user)
 
@@ -104,6 +107,9 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
     filterset_fields = ['users', 'name', 'id']
 
     def get_queryset(self):
+        """
+        Фильтрует queryset диалогов по тем, в которых состоит пользователь
+        """
         user = self.request.user
         return Dialog.objects.filter(users=user)
 
@@ -132,7 +138,7 @@ class DialogViewSet(viewsets.ModelViewSet, CountModelMixin):
 # pylint: disable=too-many-ancestors
 class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     """
-    Send all messages from chat
+    ViewSet для работы с сообщениями
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.MessageSerializer
@@ -142,6 +148,9 @@ class MessageViewSet(viewsets.ModelViewSet, CountModelMixin):
     ordering_fields = ['id', 'create_date']
 
     def get_queryset(self):
+        """
+        Фильтрует queryset сообщений по текущему пользователю
+        """
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
@@ -171,6 +180,9 @@ class WikiPageViewSet(viewsets.ModelViewSet, CountModelMixin):
     filterset_fields = ['title', 'dialog', 'message']
 
     def get_queryset(self):
+        """
+        Фильтрует queryset вики-страниц по тем, в диалоге которых состоит юзер
+        """
         user = self.request.user
         if user.is_staff:
             return super().get_queryset()
