@@ -146,13 +146,13 @@
           <v-text-field
             v-model="Message"
             :rules="Required"
-            label="Сообщение"
+            label="Message"
             required
           />
           <v-select
             v-model="type"
             :items="types"
-            label="Тип сообщения"
+            label="Message type"
             required
           />
           <v-img
@@ -164,7 +164,7 @@
             color="basic"
             @click="SendMessage(Message,type)"
           >
-            отправить
+            send
           </v-btn>
         </v-form>
       </v-card-text>

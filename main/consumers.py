@@ -24,9 +24,10 @@ from main.models import UserProfile
 
 class System(WebsocketConsumer):
     def connect(self):
-        profile = UserProfile.objects.get(user=self.scope['user'])
-        profile.is_online = True
-        profile.save()
+        user_id = self.scope['user'].id
+        user = models.User.objects.get(pk=user_id)
+        user.profile.is_online = True
+        user.profile.save()
         async_to_sync(self.channel_layer.group_add)(
             'system',
             self.channel_name

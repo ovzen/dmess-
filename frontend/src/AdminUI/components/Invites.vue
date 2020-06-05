@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card>
       <v-card-title>
-        Invites / Приглашения
+        Invites
         <v-spacer />
         <v-text-field
           v-model="search"
@@ -17,12 +17,12 @@
           small
           @click="Create()"
         >
-          Создать приглашение
+          Create invite
         </v-btn>
       </v-card-title>
       <v-data-table
         :loading="loading"
-        loading-text="Загрузка... Пожалуйста подождите / Loading... Please wait"
+        loading-text="Loading... Please wait"
         :headers="headers"
         :items="Invites"
         :search="search"
@@ -41,10 +41,10 @@
           />
         </template>
         <template v-slot:item.for_user="{ item }">
-          {{ item.for_user || 'Не использовано' }}
+          {{ item.for_user || 'Not used' }}
         </template>
         <template v-slot:item.used_at="{ item }">
-          {{ DecodeTime(item.used_at) || 'Не использовано' }}
+          {{ DecodeTime(item.used_at) || 'Not used' }}
         </template>
         <template v-slot:item.reg_btn="{ item }">
           <v-tooltip
@@ -61,10 +61,10 @@
                 @blur="on.blur"
                 @click="CopyLink(item)"
               >
-                Получить ссылку
+                Get the link
               </v-btn>
             </template>
-            <span>Скопировано в буфер обмена / Copied!</span>
+            <span>Copied!</span>
           </v-tooltip>
         </template>
         <template v-slot:item.del_btn="{ item }">
@@ -92,15 +92,15 @@ export default {
     loading: true,
     headers: [
       {
-        text: 'Код / Code',
+        text: 'Code',
         value: 'code'
       },
-      { text: 'Дата создания / Created at', value: 'created_at' },
-      { text: 'Активно / Is active', value: 'is_active' },
-      { text: 'Кем использовано / For user', value: 'for_user' },
-      { text: 'Время использования / Used at', value: 'used_at' },
-      { text: 'Получить ссылку / Copy Link for registration', value: 'reg_btn', align: 'center', sortable: false },
-      { text: 'Удалить / Delete', value: 'del_btn', align: 'center', sortable: false }
+      { text: 'Created', value: 'created_at' },
+      { text: 'Is active', value: 'is_active' },
+      { text: 'For user', value: 'for_user' },
+      { text: 'Used at', value: 'used_at' },
+      { text: 'Copy Link for registration', value: 'reg_btn', align: 'center', sortable: false },
+      { text: 'Delete', value: 'del_btn', align: 'center', sortable: false }
     ],
     Invites: [
     ]
@@ -117,7 +117,7 @@ export default {
     },
     Create () {
       api.axios.post('/api/admin/invites/').catch(res => {
-        alert('Ошибка')
+        alert('Error')
       }).then(res => {
         console.log(res)
         if (res.status === 201) {
@@ -129,7 +129,7 @@ export default {
     },
     Edit (item) {
       api.axios.put('/api/admin/invites/' + item.code + '/', { is_active: !item.is_active }).catch(res => {
-        alert('Ошибка')
+        alert('Error')
       }).then(res => {
         if (res.status === 200) {
           this.loading = true
@@ -143,7 +143,7 @@ export default {
     },
     deleteItem (item) {
       api.axios.delete('/api/admin/invites/' + item.code + '/').catch(res => {
-        alert('Ошибка')
+        alert('Error')
       }).then(res => {
         if (res.status === 204) {
           this.loading = true

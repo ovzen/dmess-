@@ -1,10 +1,10 @@
-Установка и настройка swagger
+Установка и работа со swagger
 =============================
 
 Установка swagger
 -----------------
 
-1. Установить swagger (необязательно, если requirements.txt установлены):
+1. Установить swagger (необязательно, если все пункты requirements.txt установлены):
 
 pip install django-rest-swagger
 
@@ -13,6 +13,7 @@ pip install django-rest-swagger
     /venv/lib/python3.6/site-packages/rest_framework_swagger/templates/rest_framework_swagger/
 
     Строчку `{% load staticfiles %}` На `{% load static %}`
+
 3. После запуска серверов документация доступна по адресу `http://127.0.0.1:8000/docs/`
 
 Описание API функции

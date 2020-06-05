@@ -30,7 +30,7 @@ if not DEBUG:
 else:
     SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
     DB_PASSWORD = 'define_me'
-    EMAIL_PASSWORD = 'helloworld'
+    EMAIL_PASSWORD = 'xAJ9ZnvJBc'
 
 ALLOWED_HOSTS = [
     'messenger.savink.in',
@@ -198,17 +198,6 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
 
-# Channels
-ASGI_APPLICATION = 'dmess.routing.application'
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
-
 SWAGGER_SETTINGS = {
     "exclude_namespaces": [], # List URL namespaces to ignore
     "api_version": '0.1',  # Specify your API's version
@@ -230,10 +219,10 @@ LOGIN_URL = '/landing/'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'noreply@asmirnov.me'
-EMAIL_HOST_PASSWORD = EMAIL_PASSWORD # 'helloworld'
+EMAIL_HOST_USER = 'noreply@d-messenger.ml'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 
-REDIS_HOST = 'localhost'
+REDIS_HOST = os.environ['REDIS_HOST'] if 'REDIS_HOST' in os.environ else 'localhost'
 REDIS_PORT = '6379'
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
@@ -241,6 +230,17 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 
 GITLAB_DOMAIN_URL = 'https://gitlab.informatics.ru'
 GITLAB_PROJECT_ID = 1932
+
+# Channels
+ASGI_APPLICATION = 'dmess.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(REDIS_HOST, 6379)],
+        },
+    },
+}
 
 FIXTURE_DIRS = [
     'main/fixtures',

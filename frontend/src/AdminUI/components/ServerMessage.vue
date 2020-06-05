@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card>
       <v-card-title>
-        Server Message / Сообщение всем пользователям
+        Server Message
         <v-spacer />
       </v-card-title>
       <v-card-text>
@@ -10,20 +10,20 @@
           <v-text-field
             v-model="Message"
             :rules="Required"
-            label="Сообщение"
+            label="Message"
             required
           />
           <v-select
             v-model="type"
             :items="types"
-            label="Тип сообщения"
+            label="Message type"
             required
           />
           <v-btn
             color="primary"
             @click="SendMessage(Message,type)"
           >
-            отправить
+            Send message
           </v-btn>
         </v-form>
       </v-card-text>
