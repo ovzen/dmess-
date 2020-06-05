@@ -6,7 +6,7 @@
     >
       <v-container class="pa-12">
         <p class="text-center display-2 font-weight-light">
-          your email
+          Verify your email
         </p>
         <v-card-text class="text-center subtitle-1 text--secondary">
           A reset password link has been sent to your email.
