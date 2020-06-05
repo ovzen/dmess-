@@ -86,7 +86,7 @@ REST_FRAMEWORK = {
 WSGIPassAuthorization = 'On'
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'CACHE': DEBUG,
+        # 'CACHE': DEBUG,
         'BUNDLE_DIR_NAME': '/bundles/',  # must end with slash
         'STATS_FILE': os.path.join(BASE_DIR, 'frontend/webpack-stats.json'),
     }
