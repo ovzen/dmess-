@@ -155,7 +155,7 @@
       <div
         v-else
         class="d-flex flex-column justify-center align-center fill-height"
-        style="height:69vh"
+        style="padding-top: 140px;"
       >
         <div>
           <p class="display-2 text-center grey--text">
