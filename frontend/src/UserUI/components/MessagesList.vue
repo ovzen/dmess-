@@ -27,72 +27,18 @@
             </span>
           </v-card-text>
         </v-card>
-        <div
-          v-if="isOwnMessage(message.user)"
-          class="text-left message-hover"
-        >
-          <v-card
-            style="border-radius: 20px;"
-            max-width="460px"
-            class="d-flex align-content-start flex-wrap flex-shrink-1"
-            flat
-            min-width="200px"
-          >
-            <v-container
-              class="d-inline-flex align-content-center"
-              pb-0
-              mb-0
-            >
-              <v-img
-                v-if="message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg'"
-                :src="message.image_url"
-                max-width="440px"
-                min-width="200px"
-                @click="dialog=true,link=message.image_url"
-              /><file-pond
-                v-if="!(message.extension === '.png' || message.extension === '.jpeg' || message.extension === '.jpg') && message.image_url !== '' && message.image_url !== 'False'"
-                ref="pond2"
-                name="image"
-                :disabled="true"
-                style="max-width=440px;min-width:400px;border-radius:.5em;"
-                :files="[message.image_url]"
-                class-name="123"
-                :instant-upload="false"
-                :allow-download-by-url="true"
-                label-idle="Drop files here..."
-              />
-            </v-container>
-            <v-card-text
-              style="padding-top: 3px; padding-bottom: 0px"
-            >
-              <span
-                class="message_color--text message"
-              >
-                {{ decodeEmojiCode(message.text) }}
-              </span>
-            </v-card-text>
-            <v-card-actions style="padding-top: 0px; margin-left: auto">
-              <span
-                class="float-right overline"
-              >
-                {{ getTime(message.create_date) }}
-              </span>
-            </v-card-actions>
-          </v-card>
-        </div>
         <v-container
-          class="d-flex flex-row-reverse"
+          :class="'d-flex ' + (!isOwnMessage(message.user) ? 'flex-row-reverse' : '')"
           py-0
         >
           <div
-            v-if="!isOwnMessage(message.user)"
             class="text-left"
           >
             <v-card
               style="border-radius: 20px;"
               max-width="460px"
               class="d-flex align-content-start flex-wrap flex-shrink-1"
-              color="background_pink"
+              :color="(!isOwnMessage(message.user) ?'background_pink' : 'background_white')"
               flat
               min-width="200px"
             >
@@ -126,14 +72,17 @@
                 <div
                   class="d-flex flex-column-reverse"
                 >
-                  <div class="message-hover">
+                  <div :class="(!isOwnMessage(message.user) ? 'message-hover' : '')">
                     <span
                       class="message_color--text message"
                     >
                       {{ decodeEmojiCode(message.text) }}
                     </span>
                   </div>
-                  <div class="menu-hover mt-n7">
+                  <div
+                    v-if="!isOwnMessage(message.user)"
+                    class="menu-hover mt-n7"
+                  >
                     <div class="rounded-menu d-flex flex-row-reverse">
                       <div class="rounded-menu flex-row-reverse elevation-6">
                         <v-tooltip top>
