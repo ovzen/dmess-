@@ -3,6 +3,8 @@ image: python:latest
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
 
 
 cache:
@@ -36,9 +38,10 @@ stages:
 
 coverage:
   stage: test
-
+  
   rules:
     - if: $CI_COMMIT_BRANCH == 'develop'
+
 
   script:
     - pip install -r ci/test_requirements.txt
