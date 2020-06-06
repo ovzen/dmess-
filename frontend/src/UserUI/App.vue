@@ -50,7 +50,6 @@
             >
               <span
                 class="white--text"
-                style="padding-left:3.5px"
               >
                 {{ getUserInitials(DialogUser) }}
               </span>
@@ -196,7 +195,6 @@
                 >
                   <span
                     class="basic--text"
-                    style="padding-left:3.5px"
                   >
                     {{ MakeAvatar }}
                   </span>
@@ -211,11 +209,13 @@
       <div
         id="dynamic-component"
       >
-        <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
-        <DialogsList v-if="currentTab.name == 'mdi-message-text'" />
-        <settings
-          v-if="currentTab.name == 'mdi-cog'"
-        />
+        <keep-alive>
+          <ContactList v-if="currentTab.name == 'mdi-account-circle'" />
+          <DialogsList v-if="currentTab.name == 'mdi-message-text'" />
+          <settings
+            v-if="currentTab.name == 'mdi-cog'"
+          />
+        </keep-alive>
         <v-footer
           absolute
           padless
@@ -309,10 +309,6 @@ import ContactList from './components/ContactList'
 import DialogsList from './components/DialogsList'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
-let UpdateContants = new WebSocket(
-  (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/users/'
-)
-
 Vue.use(VueCookie)
 var tabs = [
   {
@@ -353,10 +349,11 @@ export default {
     tabs: tabs,
     dialogForDeleteChat: false,
     currentTab: tabs[1],
-    dialogForPlusButton: false
+    dialogForPlusButton: false,
+    chatid: undefined
   }),
   computed: {
-    ...mapGetters(['getUserId', 'getClient', 'getClientProfile', 'getDialogsList', 'getUsersByDialogId']),
+    ...mapGetters(['getUserId', 'getClient', 'getClientProfile', 'getDialogsList', 'getUsersByDialogId', 'UpdateContants']),
     Route () {
       return this.$route
     },
@@ -394,12 +391,16 @@ export default {
     $route: ['disconnect']
   },
   created () {
+    this.chatid = this.$route.params.id
     if (this.$cookie.get('Authentication')) {
       this.user_id = jwt.decode(this.$cookie.get('Authentication')).user_id
     } else {
       console.warn('The current user was not found')
     }
     this.$vuetify.theme.dark = (localStorage.getItem('Dark') === 'true')
+    if (localStorage.getItem('customColor') !== null) {
+      this.setColor(localStorage.getItem('customColor'))
+    }
     if (this.tabs.find(tab => tab.id == localStorage.getItem('Tab'))) {
       this.currentTab = this.tabs[localStorage.getItem('Tab')]
     } else {
@@ -413,13 +414,16 @@ export default {
       if (key === 'Escape' && Vue.$route.fullPath !== '/') {
         Vue.$router.push('/')
       }
+      if (key === 's' && (event.altKey)) {
+        Vue.$vuetify.theme.dark = !Vue.$vuetify.theme.dark
+      }
     })
     setInterval(this.updateToken, 1000)
     this.getUserData(this.getUserId)
-    this.getContactsData()
+    this.getContactsData(this.UpdateContants)
     this.getDialogsData(this.getUserId)
-    UpdateContants.onopen = function () {
-      UpdateContants.send(
+    this.UpdateContants.onopen = function () {
+      Vue.UpdateContants.send(
         JSON.stringify(
           {
             action: 'subscribe_to_contacts',
@@ -428,7 +432,7 @@ export default {
         )
       )
     }
-    UpdateContants.onmessage = function (event) {
+    this.UpdateContants.onmessage = function (event) {
       console.log(JSON.parse(event.data).data)
       if (JSON.parse(event.data).data) {
         Vue.addUser((JSON.parse(event.data).data))
@@ -438,6 +442,14 @@ export default {
   methods: {
     ...mapActions(['getUserData', 'getContactsData', 'getDialogsData']),
     ...mapMutations(['addUser', 'DeleteDialog']),
+    setColor (color) {
+      this.$vuetify.theme.themes.dark.basic = color
+      this.$vuetify.theme.themes.light.basic = color
+      this.$vuetify.theme.themes.dark.basic_text = color
+      this.$vuetify.theme.themes.light.basic_text = color
+      this.$vuetify.theme.themes.light.background_user = color
+      this.$vuetify.theme.themes.dark.primary = color
+    },
     changeTab (tab) {
       this.currentTab = tab
       localStorage.setItem('Tab', tab.id)
@@ -481,7 +493,30 @@ export default {
       this.$router.go(-1)
     },
     disconnect () {
-      this.$disconnect()
+      let Vue = this
+      if (this.chatid) {
+        this.$socket.send(
+          JSON.stringify(
+            {
+              action: 'unsubscribe_to_messages_in_dialog',
+              request_id: Vue.getUserId,
+              dialog_id: Vue.chatid
+            }
+          )
+        )
+      }
+      if (this.$route.params.id) {
+        this.$socket.send(
+          JSON.stringify(
+            {
+              action: 'subscribe_to_messages_in_dialog',
+              request_id: Vue.getUserId,
+              dialog_id: Vue.$route.params.id
+            }
+          )
+        )
+      }
+      this.chatid = this.$route.params.id
     },
     deleteChat () {
       api.axios.delete('/api/dialog/' + this.$route.params.id + '/').then()
@@ -510,7 +545,7 @@ export default {
   color: #2c3e50;
   height: 100vh;
   .active {
-  color: #6202EE
-}
+    color: #6202EE
+  }
 }
 </style>

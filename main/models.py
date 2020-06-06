@@ -5,11 +5,25 @@
 """
 
 import uuid
+import os
+from json import JSONEncoder
 
-from coverage.annotate import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timesince import timesince
+from uuid import UUID
+
+
+JSONEncoder_old_default = JSONEncoder.default
+
+
+def json_encoder_new_default(self, o):
+    if isinstance(o, UUID):
+        return str(o)
+    return JSONEncoder_old_default(self, o)
+
+
+JSONEncoder.default = json_encoder_new_default
 
 
 class UserProfile(models.Model):
@@ -95,11 +109,11 @@ class Message(models.Model):
     """
     Реализует хранение сообщений в диалоге.
     """
-    text = models.TextField(max_length=2000)
+    text = models.TextField(max_length=2000, blank=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     dialog = models.ForeignKey(to=Dialog, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
-    image_url = models.CharField(max_length=200, default=False, null=True)
+    image_url = models.CharField(max_length=200, blank=True)
     is_read = models.BooleanField(default=False)
 
     @property
@@ -107,14 +121,16 @@ class Message(models.Model):
         """
         :return: Расширение приложенного файла
         """
-        return os.path.splitext(self.image_url)[1]
+        if self.image_url:
+            return os.path.splitext(self.image_url)[1]
 
     @property
     def name(self):
         """
         :return: Имя приложенного файла
         """
-        return os.path.basename(self.image_url)
+        if self.image_url:
+            return os.path.basename(self.image_url)
 
 
 class WikiPage(models.Model):
