@@ -35,7 +35,7 @@ else:
 ALLOWED_HOSTS = [
     'messenger.savink.in',
     'd-messenger.ml'
-] #if not DEBUG else []
+] if not DEBUG else []
 
 
 # Application definition
