@@ -12,7 +12,6 @@ export default new Router({
   mode: 'history',
   base: '/auth/',
   routes: [
-    { path: '/', redirect: '/login/' },
     {
       path: '/login/',
       name: 'Login',
@@ -42,6 +41,7 @@ export default new Router({
       path: '/reset-password/',
       name: 'PasswordReset',
       component: PasswordReset
-    }
+    },
+    { path: '*', redirect: '/login/' }
   ]
 })

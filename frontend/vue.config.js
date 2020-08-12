@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
         entry: './src/Login/main.js',
         template: 'public/Auth.html',
         title: 'Auth',
-        chunks: [ 'chunk-vendors', 'chunk-common', 'Login' ]
+        chunks: [ 'chunk-vendors', 'chunk-common', 'auth' ]
       }
     }
   }
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV === 'production') {
         entry: './src/Login/main.js',
         template: 'public/auth.html',
         title: 'Auth',
-        chunks: [ 'chunk-vendors', 'chunk-common', 'Login' ]
+        chunks: [ 'chunk-vendors', 'chunk-common', 'auth' ]
       }
     },
     chainWebpack: config => {
