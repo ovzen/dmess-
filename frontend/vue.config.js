@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
       'vuetify'
     ],
     outputDir: './dist/',
-    publicPath: 'https://d-messenger.ml/',
+    publicPath: 'https://d-mess.net/',
     assetsDir: 'static',
     pages: {
       'index': {
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
       },
       'auth': {
         entry: './src/Login/main.js',
-        template: 'public/Auth.html',
+        template: 'public/auth.html',
         title: 'Auth',
         chunks: [ 'chunk-vendors', 'chunk-common', 'auth' ]
       }
@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
       'vuetify'
     ],
     outputDir: './dist/',
-    publicPath: 'http://127.0.0.1:8080/',
+    publicPath: 'https://0.0.0.0:8080/',
     assetsDir: 'static',
     pages: {
       'index': {
@@ -70,12 +70,12 @@ if (process.env.NODE_ENV === 'production') {
         .set('__STATIC__', 'static')
 
       config.devServer
-        .public('http://127.0.0.1:8080/')
+        .public('0.0.0.0:8080/')
         .host('127.0.0.1')
         .port(8080)
         .hotOnly(true)
         .watchOptions({ poll: 1000 })
-        .https(false)
+        .https(true)
         .headers({ 'Access-Control-Allow-Origin': ['\*'] })
     }
   }

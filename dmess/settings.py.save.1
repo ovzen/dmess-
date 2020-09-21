@@ -18,7 +18,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 
 
-DEBUG = not os.path.exists('dmess_secrets.txt')
+DEBUG = os.path.exists('dmess_secrets.txt')
 
 
 if not DEBUG:
@@ -29,12 +29,12 @@ if not DEBUG:
     f.close()
 else:
     SECRET_KEY = '3*o15!9d%u_m^hi98f-sdt84ec9@6oy+(z9=0s-sc79i2y+1ko'
-    DB_PASSWORD = '2u0i0CKy9J'
+    DB_PASSWORD = 'define_me'
     EMAIL_PASSWORD = 'xAJ9ZnvJBc'
 
 ALLOWED_HOSTS = [
-    'd-mess.net',
-    '0.0.0.0'
+    'd-messenger.ml',
+    'd-mess.net'
 ] if not DEBUG else []
 
 
@@ -134,10 +134,8 @@ WSGI_APPLICATION = 'dmess.wsgi.application'
 if DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
+            'ENGINE': 'django.db.backend.mysql',
             'NAME': 'digital_db',
-            'USER': 'digital_user',
-            'PASSWORD': '2u0i0CKy9J',
         }
     }
 else:
@@ -221,7 +219,7 @@ LOGIN_URL = '/landing/'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'support@d-mess.net'
+EMAIL_HOST_USER = 'noreply@d-messenger.ml'
 EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 
 REDIS_HOST = os.environ['REDIS_HOST'] if 'REDIS_HOST' in os.environ else 'localhost'
@@ -286,5 +284,3 @@ LOGGING = {
         },
     },
 }
-
-DEBUG = True
