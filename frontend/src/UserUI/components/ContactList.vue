@@ -95,8 +95,7 @@
       <v-divider />
       <h1
         class="basic--text"
-        style="font-family: Roboto;
-                    font-style: normal;
+        style="font-style: normal;
                     font-weight: 500;
                     font-size: 16px;
                     line-height: 16px;

@@ -4,8 +4,7 @@
     <v-col>
       <p
         class="basic_text--text font-weight-medium pa-2"
-        style="font-family: Roboto;
-              font-size: 18px !important;
+        style="font-size: 18px !important;
               line-height: 16px;
               font-style: normal;
               font-weight: normal;

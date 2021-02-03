@@ -51,7 +51,6 @@ export default {
 .main_smile {
   margin-bottom: 32px;
   margin-left: -36px;
-  font-family: Roboto;
   font-style: normal;
   font-weight: 300;
   font-size: 96px;
@@ -61,7 +60,6 @@ export default {
 }
 .main_smile_text {
   margin-top: 32px;
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;

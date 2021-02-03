@@ -14,8 +14,7 @@
           text
           small
           class="back_button--text"
-          style="font-family: Roboto;
-                font-style: normal;
+          style="font-style: normal;
                 font-weight: 500;
                 font-size: 10px;
                 line-height: 16px;

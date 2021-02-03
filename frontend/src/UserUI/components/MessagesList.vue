@@ -322,7 +322,6 @@ export default {
   height:100%;
 }
 .message {
-  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -330,7 +329,6 @@ export default {
   letter-spacing: 0.25px;
   }
 .time-text {
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 10px;
