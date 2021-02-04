@@ -13,7 +13,7 @@ mysqlclient==2.0.1
 
 # DRF
 djangorestframework
-djangorestframework-simplejwt==4.4.0
+djangorestframework-simplejwt
 django-rest-swagger==2.2.0
 django-rest-registration==0.5.6
 
