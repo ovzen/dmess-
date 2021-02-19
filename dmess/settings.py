@@ -147,7 +147,7 @@ else:
             'NAME': 'digital_db',
             'USER': 'digital_user',
             'PASSWORD': '2u0i0CKy9J',
-            'HOST': 'localhost',
+            'HOST': '127.0.0.1',
             'PORT': '3306',
         }
     }
